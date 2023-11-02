@@ -35,7 +35,6 @@ const ProfileScreen = (props: ProfileScreenProps) => {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);

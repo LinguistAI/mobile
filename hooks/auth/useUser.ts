@@ -19,8 +19,6 @@ const useUser = () => {
     try {
       await SecureStore.setItemAsync("user", JSON.stringify(details));
       setUser(details);
-      console.log("User details stored successfully");
-      console.log(details);
     } catch (error) {
       // Handle error
       console.error("Error storing user details: ", error);

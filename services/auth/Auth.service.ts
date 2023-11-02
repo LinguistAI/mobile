@@ -1,4 +1,4 @@
-import { axiosBase } from "..";
+import { axiosBase, axiosSecure } from "..";
 import { APIResponse } from "../../types/common";
 
 export async function login(loginDto: LoginDto) {
@@ -18,8 +18,8 @@ export async function register(registerDto: RegisterDto) {
 }
 
 export async function changePassword(changePasswordDto: ChangePasswordDto) {
-  const res = await axiosBase.post<APIResponse<RRegister>>(
-    "/auth/changePassword",
+  const res = await axiosSecure.put<APIResponse<string>>( // does not have any data in response so the type is redundant
+    "/auth/change-password",
     changePasswordDto
   );
   return res;

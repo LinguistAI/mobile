@@ -25,11 +25,10 @@ export const axiosSecure = axios.create({
 
 axiosSecure.interceptors.request.use(
   async (config) => {
-    const user = (await SecureStorage.getItemAsync(
-      "user"
-    )) as unknown as StoredUserInfoWithTokens;
+    const ssUser = await SecureStorage.getItemAsync("user");
+    const user = JSON.parse(ssUser as string) as StoredUserInfoWithTokens;
     if (!config?.headers!["Authorization"]) {
-      config.headers!["Authorization"] = `Bearer ${user.accessToken}`;
+      config.headers!["Authorization"] = `Bearer ${user["accessToken"]}`;
     }
 
     return config;

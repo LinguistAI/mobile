@@ -25,6 +25,32 @@ export async function changePassword(changePasswordDto: ChangePasswordDto) {
   return res;
 }
 
-export async function resetPasswordRequest() {}
+export async function requestPasswordReset(
+  requestPasswordResetDto: RequestPasswordResetDto
+) {
+  const res = await axiosBase.post<APIResponse<string>>( // does not have any data in response so the type is redundant
+    "/auth/request-reset",
+    requestPasswordResetDto
+  );
+  return res;
+}
 
-export async function resetPasswordConfirm() {}
+export async function requestPasswordCode(
+  passwordResetCodeDto: PasswordResetCodeDto
+) {
+  const res = await axiosBase.post<APIResponse<string>>( // does not have any data in response so the type is redundant
+    "/auth/validate-reset",
+    passwordResetCodeDto
+  );
+  return res;
+}
+
+export async function saveResetPassword(
+  passwordResetSaveDto: PasswordResetSaveDto
+) {
+  const res = await axiosBase.put<APIResponse<string>>( // does not have any data in response so the type is redundant
+    "/auth/reset-password",
+    passwordResetSaveDto
+  );
+  return res;
+}

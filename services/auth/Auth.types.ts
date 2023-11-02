@@ -27,3 +27,18 @@ interface ChangePasswordDto {
   oldPassword: string;
   newPassword: string;
 }
+
+type RequestPasswordResetDto = {
+  email: string;
+};
+
+type PasswordResetCodeDto = {
+  email: string;
+  resetCode: string;
+};
+
+type PasswordResetSaveDto = {
+  email: string;
+  newPassword: string;
+  resetCode: string;
+};

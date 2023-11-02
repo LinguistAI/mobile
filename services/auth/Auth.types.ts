@@ -24,5 +24,6 @@ interface RLogin {
 }
 
 interface ChangePasswordDto {
-  password: string;
+  oldPassword: string;
+  newPassword: string;
 }

@@ -10,6 +10,7 @@ import LandingScreen from "./screens/LandingScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { CustomErrorBoundary } from "./screens/errors/ErrorBoundary";
+import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 
 const queryClient = new QueryClient();
 
@@ -39,7 +40,7 @@ export default function App() {
             />
             <Stack.Screen
               name="Change Password"
-              component={ForgotPasswordScreen}
+              component={ChangePasswordScreen}
             />
           </Stack.Navigator>
           <Notifications />

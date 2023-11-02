@@ -4,7 +4,7 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import EmailTextInput from "../components/input/EmailTextInput";
 import Colors from "../theme/colors";
@@ -12,11 +12,12 @@ import PasswordInputWithRequirements from "../containers/PasswordInputWithRequir
 import { Requirement } from "../containers/PasswordInputWithRequirements/Requirement";
 import PasswordTextInput from "../components/input/PasswordTextInput";
 import { useMutation } from "@tanstack/react-query";
-import { register } from "../services/auth/Auth.service";
+import { changePassword, register } from "../services/auth/Auth.service";
 import { generateErrorResponseMessage } from "../utils/httpUtils";
 import useNotifications from "../hooks/useNotifications";
 
 type ForgotPasswordFormValues = {
+  oldPassword: string;
   password: string;
   repeatPassword: string;
 };
@@ -29,18 +30,18 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
   const { add } = useNotifications();
   const methods = useForm<ForgotPasswordFormValues>({
     defaultValues: {
+      oldPassword: "",
       password: "",
       repeatPassword: "",
     },
     mode: "onSubmit",
   });
-  const { mutate: registerMutate, isPending } = useMutation({
-    mutationKey: ["register"],
-    mutationFn: (registerDto: RegisterDto) =>
-      register({
-        email: registerDto.email,
-        password: registerDto.password,
-        username: registerDto.username,
+  const { mutate: changePasswordMutate, isPending } = useMutation({
+    mutationKey: ["changePassword"],
+    mutationFn: (changePasswordDto: ChangePasswordDto) =>
+      changePassword({
+        oldPassword: changePasswordDto.oldPassword,
+        newPassword: changePasswordDto.newPassword,
       }),
     onSuccess: (data) => {
       add({
@@ -52,7 +53,7 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
 
       props.navigation.reset({
         index: 0,
-        routes: [{ name: "Login" }],
+        routes: [{ name: "Main" }],
       });
     },
     onError: (error: any) => {
@@ -68,10 +69,11 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
   const onSubmit = async (data: ForgotPasswordFormValues) => {
     const values = methods.getValues();
     const changePasswordDTO: ChangePasswordDto = {
-      password: values.password,
+      oldPassword: values.oldPassword,
+      newPassword: values.password,
     };
     // TODO: Add change password mutate
-    // registerMutate(changePasswordDTO);
+    changePasswordMutate(changePasswordDTO);
   };
 
   const onError = (errors: any, e: any) => {
@@ -100,9 +102,17 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
   ];
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <FormProvider {...methods}>
         <View style={styles.mainSection}>
+          <PasswordTextInput
+            placeholder="Old password"
+            label="Old password"
+            name="oldPassword"
+            rules={{
+              required: "Old password is required!",
+            }}
+          />
           <PasswordInputWithRequirements
             requirements={passwordRequirements}
             name="password"
@@ -120,16 +130,15 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
                 "Passwords must match!",
             }}
           />
-          <Text style={styles.hintText}>
-            You will receive an email to create a new password if your email
-            exists in our system.
-          </Text>
-          <PrimaryButton onPress={methods.handleSubmit(onSubmit, onError)}>
-            Change Password
+          <PrimaryButton
+            loading={isPending}
+            onPress={methods.handleSubmit(onSubmit, onError)}
+          >
+            CHANGE PASSWORD
           </PrimaryButton>
         </View>
       </FormProvider>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -138,13 +147,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 32,
     padding: 20,
-    justifyContent: "flex-start",
-  },
-  hintText: {
-    color: Colors.gray[600],
   },
   mainSection: {
-    flex: 5,
+    flex: 1,
+    marginVertical: 12,
+    padding: 20,
     gap: 15,
   },
 });

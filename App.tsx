@@ -5,12 +5,14 @@ import { atom } from "jotai";
 import { SafeAreaView } from "react-native";
 import Notifications from "./containers/NotificationsContainer/Notifications";
 import BottomNavigation from "./navigation/BottomNavigation";
-import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
+import ForgotPasswordScreen from "./screens/forgot_password/ForgotPasswordScreen";
 import LandingScreen from "./screens/LandingScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { CustomErrorBoundary } from "./screens/errors/ErrorBoundary";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
+import ForgotPasswordCodeScreen from "./screens/forgot_password/ForgotPasswordCodeScreen";
+import ForgotPasswordNewPasswordScreen from "./screens/forgot_password/ForgotPasswordNewPasswordScreen";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,14 @@ export default function App() {
             <Stack.Screen
               name="Forgot Password"
               component={ForgotPasswordScreen}
+            />
+            <Stack.Screen
+              name="Forgot Password Code"
+              component={ForgotPasswordCodeScreen}
+            />
+            <Stack.Screen
+              name="Forgot Password New Password"
+              component={ForgotPasswordNewPasswordScreen}
             />
             <Stack.Screen
               name="Change Password"

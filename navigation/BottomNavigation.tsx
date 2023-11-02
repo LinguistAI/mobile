@@ -5,6 +5,7 @@ import LeaderboardScreen from "../screens/LeaderboardScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import IonIcons from "@expo/vector-icons/Ionicons";
+import { Pressable } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +26,12 @@ const BottomNavigation = () => {
         component={ChatScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <IonIcons name="chatbox-outline" size={size} color={color} />
+            <IonIcons
+              // onPress={{navigator.navigate('Chat')}}
+              name="chatbox-outline"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />

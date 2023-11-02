@@ -5,43 +5,47 @@ import {
   useForm,
 } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../components/PrimaryButton";
-import EmailTextInput from "../components/input/EmailTextInput";
-import Colors from "../theme/colors";
-import PasswordInputWithRequirements from "../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
-import { Requirement } from "../containers/PasswordInputWithRequirements/Requirement";
-import PasswordTextInput from "../components/input/PasswordTextInput";
+import PrimaryButton from "../../components/PrimaryButton";
+import PasswordInputWithRequirements from "../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
+import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
+import PasswordTextInput from "../../components/input/PasswordTextInput";
 import { useMutation } from "@tanstack/react-query";
-import { changePassword, register } from "../services/auth/Auth.service";
-import { generateErrorResponseMessage } from "../utils/httpUtils";
-import useNotifications from "../hooks/useNotifications";
+import {
+  changePassword,
+  register,
+  saveResetPassword,
+} from "../../services/auth/Auth.service";
+import { generateErrorResponseMessage } from "../../utils/httpUtils";
+import useNotifications from "../../hooks/useNotifications";
 
-type ChangePasswordFormValues = {
-  oldPassword: string;
+type ForgotPasswordNewPasswordFormValues = {
   password: string;
   repeatPassword: string;
 };
 
-interface ChangePasswordScreenProps {
+interface ForgotPasswordNewPasswordScreenProps {
   navigation: any;
+  route: any;
 }
 
-const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
+const ForgotPasswordNewPasswordScreen = (
+  props: ForgotPasswordNewPasswordScreenProps
+) => {
   const { add } = useNotifications();
-  const methods = useForm<ChangePasswordFormValues>({
+  const methods = useForm<ForgotPasswordNewPasswordFormValues>({
     defaultValues: {
-      oldPassword: "",
       password: "",
       repeatPassword: "",
     },
     mode: "onSubmit",
   });
-  const { mutate: changePasswordMutate, isPending } = useMutation({
-    mutationKey: ["changePassword"],
-    mutationFn: (changePasswordDto: ChangePasswordDto) =>
-      changePassword({
-        oldPassword: changePasswordDto.oldPassword,
-        newPassword: changePasswordDto.newPassword,
+  const { mutate: savePasswordMutate, isPending } = useMutation({
+    mutationKey: ["saveResetPassword"],
+    mutationFn: (passwordResetSaveDto: PasswordResetSaveDto) =>
+      saveResetPassword({
+        email: passwordResetSaveDto.email,
+        resetCode: passwordResetSaveDto.resetCode,
+        newPassword: passwordResetSaveDto.newPassword,
       }),
     onSuccess: (data) => {
       add({
@@ -53,7 +57,7 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
 
       props.navigation.reset({
         index: 0,
-        routes: [{ name: "Main", screen: "Profile" }],
+        routes: [{ name: "Login" }],
       });
     },
     onError: (error: any) => {
@@ -66,14 +70,15 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
     },
   });
 
-  const onSubmit = async (data: ChangePasswordFormValues) => {
+  const onSubmit = async (data: ForgotPasswordNewPasswordFormValues) => {
     const values = methods.getValues();
-    const changePasswordDTO: ChangePasswordDto = {
-      oldPassword: values.oldPassword,
+    const passwordResetSaveDTO: PasswordResetSaveDto = {
+      email: props.route.params.email,
+      resetCode: props.route.params.resetCode,
       newPassword: values.password,
     };
     // TODO: Add change password mutate
-    changePasswordMutate(changePasswordDTO);
+    savePasswordMutate(passwordResetSaveDTO);
   };
 
   const onError = (errors: any, e: any) => {
@@ -105,14 +110,6 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
     <ScrollView style={styles.container}>
       <FormProvider {...methods}>
         <View style={styles.mainSection}>
-          <PasswordTextInput
-            placeholder="Old password"
-            label="Old password"
-            name="oldPassword"
-            rules={{
-              required: "Old password is required!",
-            }}
-          />
           <PasswordInputWithRequirements
             requirements={passwordRequirements}
             name="password"
@@ -156,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChangePasswordScreen;
+export default ForgotPasswordNewPasswordScreen;

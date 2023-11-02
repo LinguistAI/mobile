@@ -16,7 +16,7 @@ import { changePassword, register } from "../services/auth/Auth.service";
 import { generateErrorResponseMessage } from "../utils/httpUtils";
 import useNotifications from "../hooks/useNotifications";
 
-type ForgotPasswordFormValues = {
+type ChangePasswordFormValues = {
   oldPassword: string;
   password: string;
   repeatPassword: string;
@@ -28,7 +28,7 @@ interface ChangePasswordScreenProps {
 
 const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
   const { add } = useNotifications();
-  const methods = useForm<ForgotPasswordFormValues>({
+  const methods = useForm<ChangePasswordFormValues>({
     defaultValues: {
       oldPassword: "",
       password: "",
@@ -66,7 +66,7 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
     },
   });
 
-  const onSubmit = async (data: ForgotPasswordFormValues) => {
+  const onSubmit = async (data: ChangePasswordFormValues) => {
     const values = methods.getValues();
     const changePasswordDTO: ChangePasswordDto = {
       oldPassword: values.oldPassword,

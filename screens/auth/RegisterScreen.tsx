@@ -1,10 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet, View } from "react-native";
-import ActionIcon from "../../components/ActionIcon";
 import PrimaryButton from "../../components/PrimaryButton";
 import EmailTextInput from "../../components/input/EmailTextInput";
 import PasswordTextInput from "../../components/input/PasswordTextInput";
@@ -13,10 +9,7 @@ import PasswordInputWithRequirements from "../../containers/PasswordInputWithReq
 import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
 import useNotifications from "../../hooks/useNotifications";
 import { login, register } from "../../services/auth";
-import {
-  generateErrorResponseMessage,
-  isStatusOk,
-} from "../../utils/httpUtils";
+import { generateErrorResponseMessage } from "../../utils/httpUtils";
 
 type RegisterFormValues = {
   userName: string;

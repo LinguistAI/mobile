@@ -4,13 +4,16 @@ import { StyleSheet, View } from "react-native";
 import ActionIcon from "../../components/ActionIcon";
 import MultilineTextInput from "../../components/input/MultilineTextInput";
 import Colors from "../../theme/colors";
+import { ChatMessage, ChatMessageSender } from "../../types/common";
 
-const ChatTextInputContainer = () => {
+interface ChatTextInputContainerProps {
+  isPending: boolean;
+  onSend: (chatMessage: ChatMessage) => void;
+}
+
+const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   const [text, setText] = useState("");
 
-  const handleSend = () => {
-    console.log("send");
-  };
   return (
     <View style={styles.innerBorder}>
       <View style={styles.innerContainer}>
@@ -23,10 +26,23 @@ const ChatTextInputContainer = () => {
         </View>
         <View style={{ flex: 1 }}>
           <ActionIcon
+            disabled={props.isPending}
             icon={
-              <Ionicons name="send" size={24} color={Colors.primary[600]} />
+              <Ionicons
+                name="send"
+                size={24}
+                color={props.isPending ? Colors.gray[300] : Colors.primary[600]}
+              />
             }
-            onPress={handleSend}
+            onPress={() => {
+              const chatMessage: ChatMessage = {
+                sender: ChatMessageSender.user,
+                content: text,
+                timestamp: new Date(),
+              };
+              props.onSend(chatMessage);
+              setText("");
+            }}
           />
         </View>
       </View>

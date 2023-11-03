@@ -1,18 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
 import Colors from "../theme/colors";
+import { ChatMessage, ChatMessageSender } from "../types/common";
 
-interface ChatMessageProps {
-  message: string;
-  isSent: boolean;
+interface ChatMessageComponentProps {
+  chatMessage: ChatMessage;
 }
 
-const ChatMessage = (props: ChatMessageProps) => {
-  const { message, isSent } = props;
+const ChatMessageComponent = (props: ChatMessageComponentProps) => {
+  const { chatMessage } = props;
   // TODO: Add message time to the chat message
 
   return (
-    <View style={[styles.container, isSent ? styles.sent : styles.received]}>
-      <Text style={styles.message}>{message}</Text>
+    <View
+      style={[
+        styles.container,
+        chatMessage.sender == ChatMessageSender.user
+          ? styles.sent
+          : styles.received,
+      ]}
+    >
+      <Text style={styles.message}>{chatMessage.content}</Text>
     </View>
   );
 };
@@ -38,4 +45,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatMessage;
+export default ChatMessageComponent;

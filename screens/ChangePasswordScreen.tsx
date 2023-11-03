@@ -1,20 +1,20 @@
+import { useMutation } from "@tanstack/react-query";
 import {
   FormProvider,
   SubmitErrorHandler,
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import EmailTextInput from "../components/input/EmailTextInput";
-import Colors from "../theme/colors";
+import PasswordTextInput from "../components/input/PasswordTextInput";
 import PasswordInputWithRequirements from "../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
 import { Requirement } from "../containers/PasswordInputWithRequirements/Requirement";
-import PasswordTextInput from "../components/input/PasswordTextInput";
-import { useMutation } from "@tanstack/react-query";
-import { changePassword, register } from "../services/auth/Auth.service";
-import { generateErrorResponseMessage } from "../utils/httpUtils";
 import useNotifications from "../hooks/useNotifications";
+import { changePassword, register } from "../services/auth/Auth.service";
+import Colors from "../theme/colors";
+import { generateErrorResponseMessage } from "../utils/httpUtils";
 
 type ChangePasswordFormValues = {
   oldPassword: string;
@@ -102,7 +102,7 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <FormProvider {...methods}>
         <View style={styles.mainSection}>
           <PasswordTextInput
@@ -138,7 +138,7 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
           </PrimaryButton>
         </View>
       </FormProvider>
-    </ScrollView>
+    </View>
   );
 };
 

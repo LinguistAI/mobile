@@ -105,50 +105,48 @@ const RegisterScreen = (props: RegisterScreenProps) => {
   ];
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <FormProvider {...methods}>
-          <PrimaryTextInput
-            defaultValue=""
-            name="userName"
-            rules={{
-              required: "Username is required!",
-              pattern: {
-                value: /^.{3,}$/,
-                message: "Username must be at least 3 characters long!",
-              },
-            }}
-            label="Username"
-            placeholder="Username"
-          />
+    <View style={styles.container}>
+      <FormProvider {...methods}>
+        <PrimaryTextInput
+          defaultValue=""
+          name="userName"
+          rules={{
+            required: "Username is required!",
+            pattern: {
+              value: /^.{3,}$/,
+              message: "Username must be at least 3 characters long!",
+            },
+          }}
+          label="Username"
+          placeholder="Username"
+        />
 
-          <EmailTextInput name="email" />
-          <PasswordInputWithRequirements
-            requirements={passwordRequirements}
-            name="password"
-            label="Password"
-            placeholder="Password"
-          />
-          <PasswordTextInput
-            placeholder="Repeat password"
-            label="Repeat password"
-            name="repeatPassword"
-            rules={{
-              required: "Repeating password is required!",
-              validate: (value: string) =>
-                value === methods.getValues("password") ||
-                "Passwords must match!",
-            }}
-          />
-          <PrimaryButton
-            loading={isPending}
-            onPress={methods.handleSubmit(onSubmit, onError)}
-          >
-            REGISTER
-          </PrimaryButton>
-        </FormProvider>
-      </View>
-    </ScrollView>
+        <EmailTextInput name="email" />
+        <PasswordInputWithRequirements
+          requirements={passwordRequirements}
+          name="password"
+          label="Password"
+          placeholder="Password"
+        />
+        <PasswordTextInput
+          placeholder="Repeat password"
+          label="Repeat password"
+          name="repeatPassword"
+          rules={{
+            required: "Repeating password is required!",
+            validate: (value: string) =>
+              value === methods.getValues("password") ||
+              "Passwords must match!",
+          }}
+        />
+        <PrimaryButton
+          loading={isPending}
+          onPress={methods.handleSubmit(onSubmit, onError)}
+        >
+          REGISTER
+        </PrimaryButton>
+      </FormProvider>
+    </View>
   );
 };
 

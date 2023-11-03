@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import {
   FormProvider,
   SubmitErrorHandler,
@@ -6,17 +7,16 @@ import {
 } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../../components/PrimaryButton";
+import PasswordTextInput from "../../components/input/PasswordTextInput";
 import PasswordInputWithRequirements from "../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
 import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
-import PasswordTextInput from "../../components/input/PasswordTextInput";
-import { useMutation } from "@tanstack/react-query";
+import useNotifications from "../../hooks/useNotifications";
 import {
   changePassword,
   register,
   saveResetPassword,
 } from "../../services/auth/Auth.service";
 import { generateErrorResponseMessage } from "../../utils/httpUtils";
-import useNotifications from "../../hooks/useNotifications";
 
 type ForgotPasswordNewPasswordFormValues = {
   password: string;
@@ -107,7 +107,7 @@ const ForgotPasswordNewPasswordScreen = (
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <FormProvider {...methods}>
         <View style={styles.mainSection}>
           <PasswordInputWithRequirements
@@ -135,7 +135,7 @@ const ForgotPasswordNewPasswordScreen = (
           </PrimaryButton>
         </View>
       </FormProvider>
-    </ScrollView>
+    </View>
   );
 };
 

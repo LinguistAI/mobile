@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import {
   FormProvider,
   SubmitErrorHandler,
@@ -7,18 +8,17 @@ import {
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../../components/PrimaryButton";
 import EmailTextInput from "../../components/input/EmailTextInput";
-import Colors from "../../theme/colors";
+import PasswordTextInput from "../../components/input/PasswordTextInput";
 import PasswordInputWithRequirements from "../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
 import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
-import PasswordTextInput from "../../components/input/PasswordTextInput";
-import { useMutation } from "@tanstack/react-query";
+import useNotifications from "../../hooks/useNotifications";
 import {
   changePassword,
   register,
   requestPasswordReset,
 } from "../../services/auth/Auth.service";
+import Colors from "../../theme/colors";
 import { generateErrorResponseMessage } from "../../utils/httpUtils";
-import useNotifications from "../../hooks/useNotifications";
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -85,7 +85,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <FormProvider {...methods}>
         <View style={styles.mainSection}>
           <EmailTextInput />
@@ -97,7 +97,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
           </PrimaryButton>
         </View>
       </FormProvider>
-    </ScrollView>
+    </View>
   );
 };
 

@@ -5,12 +5,14 @@ import Colors from "../theme/colors";
 interface ActionIconProps {
   icon: React.ReactElement;
   onPress: () => void;
+  disabled?: boolean;
 }
 
-const ActionIcon = ({ icon, onPress }: ActionIconProps) => {
+const ActionIcon = ({ icon, onPress, disabled }: ActionIconProps) => {
   return (
     <View>
       <Pressable
+        disabled={disabled}
         onPress={onPress}
         style={({ pressed }) => {
           return [styles.innerContainer, pressed && styles.pressed];

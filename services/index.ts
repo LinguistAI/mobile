@@ -23,6 +23,14 @@ export const axiosSecure = axios.create({
   withCredentials: true,
 });
 
+export const axiosOpenAI = axios.create({
+  baseURL: "https://api.openai.com/v1",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+  },
+});
+
 axiosSecure.interceptors.request.use(
   async (config) => {
     const ssUser = await SecureStorage.getItemAsync("user");

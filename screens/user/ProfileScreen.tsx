@@ -1,15 +1,15 @@
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 import {
-  View,
   Image,
   StyleSheet,
   Text,
   Touchable,
   TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import Colors from "../theme/colors";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import SecondaryButton from "../components/SecondaryButton";
+import SecondaryButton from "../../components/SecondaryButton";
+import Colors from "../../theme/colors";
 
 const avatarPlaceholderImg = require("../assets/profile-default.jpg");
 
@@ -34,7 +34,6 @@ const ProfileScreen = (props: ProfileScreenProps) => {
       aspect: [4, 3],
       quality: 1,
     });
-
 
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);

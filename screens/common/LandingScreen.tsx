@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../components/PrimaryButton";
-import SecondaryButton from "../components/SecondaryButton";
-import Title from "../components/Title";
-import Colors from "../theme/colors";
 import { useMutation } from "@tanstack/react-query";
-import { checkAuth } from "../services/auth";
-import useNotifications from "../hooks/useNotifications";
 import { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import PrimaryButton from "../../components/PrimaryButton";
+import SecondaryButton from "../../components/SecondaryButton";
+import Title from "../../components/Title";
+import useNotifications from "../../hooks/useNotifications";
+import { checkAuth } from "../../services/auth";
+import Colors from "../../theme/colors";
 
 interface LandingScreenProps {
   navigation: any;

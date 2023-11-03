@@ -4,16 +4,19 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet, View } from "react-native";
-import ActionIcon from "../components/ActionIcon";
-import PrimaryButton from "../components/PrimaryButton";
-import EmailTextInput from "../components/input/EmailTextInput";
-import PasswordTextInput from "../components/input/PasswordTextInput";
-import PrimaryTextInput from "../components/input/PrimaryTextInput";
-import PasswordInputWithRequirements from "../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
-import { Requirement } from "../containers/PasswordInputWithRequirements/Requirement";
-import useNotifications from "../hooks/useNotifications";
-import { login, register } from "../services/auth";
-import { generateErrorResponseMessage, isStatusOk } from "../utils/httpUtils";
+import ActionIcon from "../../components/ActionIcon";
+import PrimaryButton from "../../components/PrimaryButton";
+import EmailTextInput from "../../components/input/EmailTextInput";
+import PasswordTextInput from "../../components/input/PasswordTextInput";
+import PrimaryTextInput from "../../components/input/PrimaryTextInput";
+import PasswordInputWithRequirements from "../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
+import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
+import useNotifications from "../../hooks/useNotifications";
+import { login, register } from "../../services/auth";
+import {
+  generateErrorResponseMessage,
+  isStatusOk,
+} from "../../utils/httpUtils";
 
 type RegisterFormValues = {
   userName: string;

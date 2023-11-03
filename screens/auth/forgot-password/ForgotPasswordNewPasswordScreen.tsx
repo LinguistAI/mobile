@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import {
   FormProvider,
   SubmitErrorHandler,
@@ -5,18 +6,17 @@ import {
   useForm,
 } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../../components/PrimaryButton";
-import PasswordInputWithRequirements from "../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
-import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
-import PasswordTextInput from "../../components/input/PasswordTextInput";
-import { useMutation } from "@tanstack/react-query";
+import PrimaryButton from "../../../components/PrimaryButton";
+import PasswordTextInput from "../../../components/input/PasswordTextInput";
+import PasswordInputWithRequirements from "../../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
+import { Requirement } from "../../../containers/PasswordInputWithRequirements/Requirement";
+import useNotifications from "../../../hooks/useNotifications";
 import {
   changePassword,
   register,
   saveResetPassword,
-} from "../../services/auth/Auth.service";
-import { generateErrorResponseMessage } from "../../utils/httpUtils";
-import useNotifications from "../../hooks/useNotifications";
+} from "../../../services/auth/Auth.service";
+import { generateErrorResponseMessage } from "../../../utils/httpUtils";
 
 type ForgotPasswordNewPasswordFormValues = {
   password: string;

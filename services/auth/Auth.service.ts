@@ -1,11 +1,6 @@
 import { axiosBase, axiosSecure } from "..";
 import { APIResponse } from "../../types/common";
 
-export async function checkAuth() {
-  const res = await axiosSecure.get<APIResponse<string>>("/auth/test");
-  return res;
-}
-
 export async function login(loginDto: LoginDto) {
   const res = await axiosBase.post<APIResponse<RLogin>>(
     "/auth/login",

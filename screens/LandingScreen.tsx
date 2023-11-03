@@ -3,46 +3,12 @@ import PrimaryButton from "../components/PrimaryButton";
 import SecondaryButton from "../components/SecondaryButton";
 import Title from "../components/Title";
 import Colors from "../theme/colors";
-import { useMutation } from "@tanstack/react-query";
-import { checkAuth } from "../services/auth";
-import useNotifications from "../hooks/useNotifications";
-import { useEffect } from "react";
 
 interface LandingScreenProps {
   navigation: any;
 }
 
 const LandingScreen = (props: LandingScreenProps) => {
-  const { add } = useNotifications();
-
-  const { mutate: checkAuthMutate } = useMutation({
-    mutationKey: ["checkAuth"],
-    mutationFn: () => checkAuth(),
-    onSuccess: (res) => {
-      console.log(res.data.data);
-      add({
-        body: "Your authentication is still valid",
-        title: "Success!",
-        type: "success",
-        time: 5000,
-      });
-
-      props.navigation.reset({
-        index: 0,
-        routes: [{ name: "Main", screen: "Profile" }],
-      });
-    },
-
-    onError: (error: any) => {
-      console.log("Error contuining auth");
-      console.log(error);
-    },
-  });
-
-  useEffect(() => {
-    checkAuthMutate();
-  }, []);
-
   const navigateLogin = () => {
     props.navigation.navigate("Login");
   };

@@ -1,6 +1,5 @@
-import { axiosBase, axiosOpenAI, axiosSecure } from "..";
-import { APIResponse } from "../../types/common";
-import { OpenAIChatRequestDto } from "../../types/common/Chat.types";
+import { axiosOpenAI } from ".";
+import { OpenAIChatRequestDto } from "../types/common/Chat.types";
 
 export async function sendChatMessage(
   openAIChatRequestDto: OpenAIChatRequestDto

@@ -10,7 +10,7 @@ import {
   OpenAIChatRequestDto,
 } from "../types/common";
 import * as SecureStore from "expo-secure-store";
-import { sendChatMessage } from "../services/auth/Chat.service";
+import { sendChatMessage } from "../services/Chat.service";
 import { useMutation } from "@tanstack/react-query";
 import useNotifications from "../hooks/useNotifications";
 import { generateErrorResponseMessage } from "../utils/httpUtils";
@@ -20,9 +20,6 @@ const ChatScreen = () => {
   const initialChatMessages: ChatMessage[] = [];
   const [chatMessages, setChatMessages] =
     useState<ChatMessage[]>(initialChatMessages);
-  const openai = new OpenAI({
-    apiKey: "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",
-  });
 
   useEffect(() => {
     try {
@@ -46,8 +43,6 @@ const ChatScreen = () => {
       SecureStore.setItemAsync("chatMessages", JSON.stringify(newChatMessages));
     }
   };
-
-  
 
   const onReceive = (newChatMessage: ChatMessage) => {
     const newChatMessages: ChatMessage[] = [...chatMessages, newChatMessage];

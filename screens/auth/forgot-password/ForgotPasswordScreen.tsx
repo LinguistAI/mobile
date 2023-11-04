@@ -6,19 +6,19 @@ import {
   useForm,
 } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../../components/PrimaryButton";
-import EmailTextInput from "../../components/input/EmailTextInput";
-import PasswordTextInput from "../../components/input/PasswordTextInput";
-import PasswordInputWithRequirements from "../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
-import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
-import useNotifications from "../../hooks/useNotifications";
+import PrimaryButton from "../../../components/PrimaryButton";
+import EmailTextInput from "../../../components/input/EmailTextInput";
+import PasswordTextInput from "../../../components/input/PasswordTextInput";
+import PasswordInputWithRequirements from "../../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
+import { Requirement } from "../../../containers/PasswordInputWithRequirements/Requirement";
+import useNotifications from "../../../hooks/useNotifications";
 import {
   changePassword,
   register,
   requestPasswordReset,
-} from "../../services/auth/Auth.service";
-import Colors from "../../theme/colors";
-import { generateErrorResponseMessage } from "../../utils/httpUtils";
+} from "../../../services/auth/Auth.service";
+import Colors from "../../../theme/colors";
+import { generateErrorResponseMessage } from "../../../utils/httpUtils";
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -85,7 +85,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <FormProvider {...methods}>
         <View style={styles.mainSection}>
           <EmailTextInput />
@@ -97,7 +97,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
           </PrimaryButton>
         </View>
       </FormProvider>
-    </View>
+    </ScrollView>
   );
 };
 

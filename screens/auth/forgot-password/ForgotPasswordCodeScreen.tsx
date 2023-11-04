@@ -3,6 +3,7 @@
 Concept: https://dribbble.com/shots/5476562-Forgot-Password-Verification/attachments
 
 */
+import React, { useState } from "react";
 import {
   Animated,
   Image,
@@ -11,8 +12,9 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
 
+import { useMutation } from "@tanstack/react-query";
+import { FormProvider, useForm } from "react-hook-form";
 import {
   CodeField,
   Cursor,
@@ -20,15 +22,13 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import useNotifications from "../../hooks/useNotifications";
-import { FormProvider, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { generateErrorResponseMessage } from "../../utils/httpUtils";
+import PrimaryButton from "../../../components/PrimaryButton";
+import useNotifications from "../../../hooks/useNotifications";
 import {
-  requestPasswordCode as resetPasswordCode,
   requestPasswordReset,
-} from "../../services/auth";
-import PrimaryButton from "../../components/PrimaryButton";
+  requestPasswordCode as resetPasswordCode,
+} from "../../../services/auth";
+import { generateErrorResponseMessage } from "../../../utils/httpUtils";
 
 const CELL_SIZE = 45;
 const CELL_BORDER_RADIUS = 8;

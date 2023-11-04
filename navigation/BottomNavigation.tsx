@@ -1,11 +1,11 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../screens/HomeScreen";
-import ChatScreen from "../screens/ChatScreen";
-import LeaderboardScreen from "../screens/LeaderboardScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 import IonIcons from "@expo/vector-icons/Ionicons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Pressable } from "react-native";
+import ChatScreen from "../screens/ChatScreen";
+import HomeScreen from "../screens/HomeScreen";
+import LeaderboardScreen from "../screens/LeaderboardScreen";
+import ProfileScreen from "../screens/user/ProfileScreen";
+import SettingsScreen from "../screens/user/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 

@@ -1,5 +1,5 @@
 import { axiosOpenAI } from ".";
-import { OpenAIChatRequestDto } from "../types/common/Chat.types";
+import { OpenAIChatRequestDto } from "../types/Chat.types";
 
 export async function sendChatMessage(
   openAIChatRequestDto: OpenAIChatRequestDto

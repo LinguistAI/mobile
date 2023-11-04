@@ -5,16 +5,16 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../components/PrimaryButton";
-import EmailTextInput from "../components/input/EmailTextInput";
-import PasswordTextInput from "../components/input/PasswordTextInput";
-import PasswordInputWithRequirements from "../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
-import { Requirement } from "../containers/PasswordInputWithRequirements/Requirement";
-import useNotifications from "../hooks/useNotifications";
-import { changePassword, register } from "../services/auth/Auth.service";
-import Colors from "../theme/colors";
-import { generateErrorResponseMessage } from "../utils/httpUtils";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import PrimaryButton from "../../components/PrimaryButton";
+import EmailTextInput from "../../components/input/EmailTextInput";
+import PasswordTextInput from "../../components/input/PasswordTextInput";
+import PasswordInputWithRequirements from "../../containers/PasswordInputWithRequirements/PasswordInputWithRequirements";
+import { Requirement } from "../../containers/PasswordInputWithRequirements/Requirement";
+import useNotifications from "../../hooks/useNotifications";
+import { changePassword, register } from "../../services/auth/Auth.service";
+import Colors from "../../theme/colors";
+import { generateErrorResponseMessage } from "../../utils/httpUtils";
 
 type ChangePasswordFormValues = {
   oldPassword: string;
@@ -102,43 +102,41 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
   ];
 
   return (
-    <View style={styles.container}>
-      <FormProvider {...methods}>
-        <View style={styles.mainSection}>
-          <PasswordTextInput
-            placeholder="Old password"
-            label="Old password"
-            name="oldPassword"
-            rules={{
-              required: "Old password is required!",
-            }}
-          />
-          <PasswordInputWithRequirements
-            requirements={passwordRequirements}
-            name="password"
-            label="Password"
-            placeholder="Password"
-          />
-          <PasswordTextInput
-            placeholder="Repeat password"
-            label="Repeat password"
-            name="repeatPassword"
-            rules={{
-              required: "Repeating password is required!",
-              validate: (value: string) =>
-                value === methods.getValues("password") ||
-                "Passwords must match!",
-            }}
-          />
-          <PrimaryButton
-            loading={isPending}
-            onPress={methods.handleSubmit(onSubmit, onError)}
-          >
-            CHANGE PASSWORD
-          </PrimaryButton>
-        </View>
-      </FormProvider>
-    </View>
+    <FormProvider {...methods}>
+      <View style={styles.mainSection}>
+        <PasswordTextInput
+          placeholder="Old password"
+          label="Old password"
+          name="oldPassword"
+          rules={{
+            required: "Old password is required!",
+          }}
+        />
+        <PasswordInputWithRequirements
+          requirements={passwordRequirements}
+          name="password"
+          label="Password"
+          placeholder="Password"
+        />
+        <PasswordTextInput
+          placeholder="Repeat password"
+          label="Repeat password"
+          name="repeatPassword"
+          rules={{
+            required: "Repeating password is required!",
+            validate: (value: string) =>
+              value === methods.getValues("password") ||
+              "Passwords must match!",
+          }}
+        />
+        <PrimaryButton
+          loading={isPending}
+          onPress={methods.handleSubmit(onSubmit, onError)}
+        >
+          CHANGE PASSWORD
+        </PrimaryButton>
+      </View>
+    </FormProvider>
   );
 };
 

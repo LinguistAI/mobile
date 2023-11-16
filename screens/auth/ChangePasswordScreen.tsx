@@ -102,43 +102,41 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <FormProvider {...methods}>
-        <View style={styles.mainSection}>
-          <PasswordTextInput
-            placeholder="Old password"
-            label="Old password"
-            name="oldPassword"
-            rules={{
-              required: "Old password is required!",
-            }}
-          />
-          <PasswordInputWithRequirements
-            requirements={passwordRequirements}
-            name="password"
-            label="Password"
-            placeholder="Password"
-          />
-          <PasswordTextInput
-            placeholder="Repeat password"
-            label="Repeat password"
-            name="repeatPassword"
-            rules={{
-              required: "Repeating password is required!",
-              validate: (value: string) =>
-                value === methods.getValues("password") ||
-                "Passwords must match!",
-            }}
-          />
-          <PrimaryButton
-            loading={isPending}
-            onPress={methods.handleSubmit(onSubmit, onError)}
-          >
-            CHANGE PASSWORD
-          </PrimaryButton>
-        </View>
-      </FormProvider>
-    </ScrollView>
+    <FormProvider {...methods}>
+      <View style={styles.mainSection}>
+        <PasswordTextInput
+          placeholder="Old password"
+          label="Old password"
+          name="oldPassword"
+          rules={{
+            required: "Old password is required!",
+          }}
+        />
+        <PasswordInputWithRequirements
+          requirements={passwordRequirements}
+          name="password"
+          label="Password"
+          placeholder="Password"
+        />
+        <PasswordTextInput
+          placeholder="Repeat password"
+          label="Repeat password"
+          name="repeatPassword"
+          rules={{
+            required: "Repeating password is required!",
+            validate: (value: string) =>
+              value === methods.getValues("password") ||
+              "Passwords must match!",
+          }}
+        />
+        <PrimaryButton
+          loading={isPending}
+          onPress={methods.handleSubmit(onSubmit, onError)}
+        >
+          CHANGE PASSWORD
+        </PrimaryButton>
+      </View>
+    </FormProvider>
   );
 };
 

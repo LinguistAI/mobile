@@ -53,7 +53,7 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
       <View style={styles.inputRoot}>
         <View style={[styles.inputContainer]}>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput]}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             value={field.value}
@@ -80,21 +80,20 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   textInput: {
-    flex: 1,
+    flexBasis: "90%",
   },
   inputContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    alignContent: "center",
     justifyContent: "space-between",
     backgroundColor: "#f3f3f3",
     borderRadius: 8,
     paddingHorizontal: 8,
+    width: "100%",
   },
   inputRoot: {
-    flex: 1,
-    height: 60,
+    height: 70,
     borderWidth: 1,
     padding: 10,
     borderColor: Colors.gray[400],

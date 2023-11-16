@@ -11,7 +11,7 @@ import {
 import SecondaryButton from "../../components/SecondaryButton";
 import Colors from "../../theme/colors";
 
-const avatarPlaceholderImg = require("../assets/profile-default.jpg");
+const avatarPlaceholderImg = require("../../assets/profile-default.jpg");
 
 interface ProfileScreenProps {
   navigation: any;

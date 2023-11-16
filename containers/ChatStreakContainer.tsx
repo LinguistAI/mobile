@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import LottieView from "lottie-react-native";
 import { useState } from "react";
-import { Modal, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Modal, StyleSheet, Text, View } from "react-native";
 import Badge from "../components/Badge";
 import { getUserChatStreak } from "../services/UserStreak.service";
 import Colors from "../theme/colors";
@@ -34,8 +34,7 @@ const StreakDisplay = ({
       </View>
     );
   }
-  if (currentStreak === highestStreak) {
-  }
+
   return (
     <View>
       <View style={styles.lottieContainer}>
@@ -64,7 +63,7 @@ const StreakDisplay = ({
             ) : (
               <Ionicons
                 name="chatbubbles"
-                size={16}
+                size={14}
                 color={Colors.gray["500"]}
               />
             );
@@ -90,12 +89,8 @@ const StreakDisplay = ({
   );
 };
 
-interface ChatStreakContainerProps {
-  visible: boolean;
-}
-
-const ChatStreakContainer = ({ visible }: ChatStreakContainerProps) => {
-  const { data: chatStreak } = useQuery({
+const ChatStreakContainer = () => {
+  const { data: chatStreak, isLoading } = useQuery({
     queryKey: ["chatStreak"],
     queryFn: () => {
       return getUserChatStreak();
@@ -104,28 +99,20 @@ const ChatStreakContainer = ({ visible }: ChatStreakContainerProps) => {
 
   const { currentStreak, highestStreak } = chatStreak?.data.data || {};
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      style={styles.root}
-    >
-      <View style={styles.modalInnerContainer}>
+    <View style={styles.modalInnerContainer}>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
         <StreakDisplay
           currentStreak={currentStreak || 0}
           highestStreak={highestStreak || 0}
         />
-      </View>
-    </Modal>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   modalInnerContainer: {
     flex: 1,
     alignItems: "center",
@@ -147,12 +134,12 @@ const styles = StyleSheet.create({
     rowGap: 10,
   },
   streakText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
   },
   streakSubtext: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "normal",
     textAlign: "center",
   },
@@ -162,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexWrap: "wrap",
     marginTop: 20,
-    gap: 10,
+    gap: 5,
   },
 });
 

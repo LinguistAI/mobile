@@ -36,5 +36,5 @@ export function getDistanceBetweenTodayAndDay(day: Day): number {
   const today = getCurrentDayOfWeek();
   const todayIndex = DaysOfWeek.findIndex((d) => d.id === today.id);
   const dayIndex = DaysOfWeek.findIndex((d) => d.id === day.id);
-  return todayIndex - dayIndex;
+  return (todayIndex - dayIndex + 7) % 7;
 }

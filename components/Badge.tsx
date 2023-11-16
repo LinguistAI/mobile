@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     borderRadius: 20,
-    padding: 14,
+    padding: 12,
     justifyContent: "center",
     alignItems: "center",
   },

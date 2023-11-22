@@ -8,7 +8,7 @@ import { ChatMessage, ChatMessageSender } from "../../types/common";
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
-  onSend: (chatMessage: ChatMessage) => void;
+  onSend: (text: string) => void;
 }
 
 const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
@@ -40,7 +40,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
                 content: text,
                 timestamp: new Date(),
               };
-              props.onSend(chatMessage);
+              props.onSend(text);
               setText("");
             }}
           />

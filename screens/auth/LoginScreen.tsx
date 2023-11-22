@@ -82,7 +82,7 @@ const LoginScreen = (props: LoginScreenProps) => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     loginMutate(data);
-
+    console.log(data);
     // props.navigation.navigate("Main");
   };
 

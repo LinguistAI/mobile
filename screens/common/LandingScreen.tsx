@@ -13,20 +13,10 @@ interface LandingScreenProps {
 }
 
 const LandingScreen = (props: LandingScreenProps) => {
-  const { add } = useNotifications();
-
   const { mutate: checkAuthMutate } = useMutation({
     mutationKey: ["checkAuth"],
     mutationFn: () => checkAuth(),
     onSuccess: (res) => {
-      console.log(res.data.data);
-      add({
-        body: "Your authentication is still valid",
-        title: "Success!",
-        type: "success",
-        time: 5000,
-      });
-
       props.navigation.reset({
         index: 0,
         routes: [{ name: "Main", screen: "Profile" }],

@@ -35,11 +35,6 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
               />
             }
             onPress={() => {
-              const chatMessage: ChatMessage = {
-                sender: ChatMessageSender.user,
-                content: text,
-                timestamp: new Date(),
-              };
               props.onSend(text);
               setText("");
             }}

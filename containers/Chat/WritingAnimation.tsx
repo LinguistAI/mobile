@@ -11,14 +11,14 @@ const WritingAnimation = () => {
       } else {
         setDots(dots + ".");
       }
-    }, 400);
+    }, 300);
 
     return () => clearInterval(interval);
   }, [dots]);
 
   return (
     <View>
-      <Text style={{ fontSize: 18, textAlign: "center" }}>{dots}</Text>
+      <Text style={{ fontSize: 20, textAlign: "center" }}>{dots}</Text>
     </View>
   );
 };

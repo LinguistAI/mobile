@@ -25,9 +25,14 @@ const ChatScreen = () => {
       <View style={styles.messagesContainer}>
         <FlatList
           data={messages}
-          renderItem={({ item }) => <ChatMessageComponent chatMessage={item} />}
+          renderItem={({ item }) => (
+            <ChatMessageComponent
+              key={item.id || item.timestamp.toString()}
+              chatMessage={item}
+            />
+          )}
           ListFooterComponent={
-            // TODO: Render if the assistant is writing
+            // TODO: Render ONLY if the assistant is writing
             <ChatMessageComponent
               isWriting={true}
               chatMessage={{
@@ -55,10 +60,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     marginHorizontal: 16,
-    marginVertical: 18,
+    marginBottom: 16,
   },
   messagesContainer: {
-    flex: 1,
+    flex: 12,
     marginHorizontal: 16,
     marginVertical: 50,
     height: "80%",

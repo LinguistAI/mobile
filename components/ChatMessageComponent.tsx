@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import WritingAnimation from "../containers/Chat/WritingAnimation";
 import Colors from "../theme/colors";
@@ -10,14 +11,21 @@ interface ChatMessageComponentProps {
 
 const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const { chatMessage, isWriting } = props;
-  // TODO: Add message time to the chat message
+  const [selectedWord, setSelectedWord] = useState<string>("");
 
-  // TODO: To display the message as it is written create an array of
   const words = chatMessage.content.split(" ");
+  const timestamp = new Date(chatMessage.timestamp);
+
+  const handleWordPress = (pressedWord: string) => {
+    const word = sanitizeWord(pressedWord);
+    setSelectedWord(word);
+  };
 
   const sanitizeWord = (word: string) => {
     return word.replace(/[^a-zA-Z ]/g, "");
   };
+
+  console.log(chatMessage);
 
   return (
     <View
@@ -31,14 +39,28 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
       {isWriting ? (
         <WritingAnimation />
       ) : (
-        <View style={styles.messageContainer}>
-          {words.map((word) => {
-            return (
-              <Pressable onPress={() => console.log(sanitizeWord(word))}>
-                <Text style={styles.message}>{word} </Text>
-              </Pressable>
-            );
-          })}
+        <View>
+          <View style={styles.messageContentContainer}>
+            {words.map((word) => {
+              return (
+                <Pressable
+                  key={chatMessage?.id}
+                  onPress={() => handleWordPress(word)}
+                >
+                  <Text style={styles.message}>{word} </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <Text
+            style={
+              chatMessage.sender == ChatMessageSender.user
+                ? styles.timestampSent
+                : styles.timestampReceived
+            }
+          >
+            {timestamp?.toLocaleTimeString() || ""}
+          </Text>
         </View>
       )}
     </View>
@@ -54,6 +76,10 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   messageContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  messageContentContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
   },
@@ -68,6 +94,16 @@ const styles = StyleSheet.create({
   message: {
     color: "white",
     fontSize: 18,
+  },
+  timestampSent: {
+    alignSelf: "flex-end",
+    fontSize: 11,
+    color: Colors.gray[700],
+  },
+  timestampReceived: {
+    alignSelf: "flex-start",
+    fontSize: 11,
+    color: Colors.gray[700],
   },
 });
 

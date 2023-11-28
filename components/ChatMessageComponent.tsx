@@ -1,31 +1,38 @@
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  GestureResponderEvent,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import WritingAnimation from "../containers/Chat/WritingAnimation";
 import Colors from "../theme/colors";
 import { ChatMessage, ChatMessageSender } from "../types/common";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
+  onWordPress: (word: string) => void;
   isWriting?: boolean;
 }
 
 const ChatMessageComponent = (props: ChatMessageComponentProps) => {
-  const { chatMessage, isWriting } = props;
-  const [selectedWord, setSelectedWord] = useState<string>("");
+  const { chatMessage, isWriting, onWordPress } = props;
 
   const words = chatMessage.content.split(" ");
   const timestamp = new Date(chatMessage.timestamp);
 
-  const handleWordPress = (pressedWord: string) => {
+  const handleWordPress = (
+    event: GestureResponderEvent,
+    pressedWord: string
+  ) => {
+    const { locationX, locationY } = event.nativeEvent;
     const word = sanitizeWord(pressedWord);
-    setSelectedWord(word);
+    onWordPress(word);
   };
 
   const sanitizeWord = (word: string) => {
     return word.replace(/[^a-zA-Z ]/g, "");
   };
-
-  console.log(chatMessage);
 
   return (
     <View
@@ -45,7 +52,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
               return (
                 <Pressable
                   key={chatMessage?.id}
-                  onPress={() => handleWordPress(word)}
+                  onPress={(event) => handleWordPress(event, word)}
                 >
                   <Text style={styles.message}>{word} </Text>
                 </Pressable>
@@ -86,10 +93,18 @@ const styles = StyleSheet.create({
   sent: {
     alignSelf: "flex-end",
     backgroundColor: Colors.primary[600],
+    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 16,
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 0,
   },
   received: {
     alignSelf: "flex-start",
     backgroundColor: Colors.gray[700],
+    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 0,
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
   },
   message: {
     color: "white",

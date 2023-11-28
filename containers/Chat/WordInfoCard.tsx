@@ -19,8 +19,11 @@ const WordInfoCard = ({
   exampleSentences,
   onDismiss,
 }: WordInfoCardProps) => {
-  // Make the wordlists global using Jotai
+  // TODO: Make the wordlists global using Jotai, also save the latest
+  // selected wordlist, and use it as the default value
   const [selectedWordList, setSelectedWordList] = useState<number>(1);
+
+  // TODO: Fetch the wordlists from the server
   const wordLists = [
     {
       name: "Nouns",
@@ -82,6 +85,7 @@ const WordInfoCard = ({
                 color={Colors.primary[600]}
               />
             }
+            // TODO: Add the word to the selected wordlist
             onPress={() => {}}
           />
         </View>

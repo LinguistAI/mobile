@@ -1,117 +1,119 @@
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  FlatList,
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import ChatMessageComponent from "../components/ChatMessageComponent";
 import ChatTextInputContainer from "../containers/Chat/ChatTextInputContainer";
-import { useEffect, useState } from "react";
-import OpenAI from "openai";
-import {
-  ChatMessage,
-  ChatMessageSender,
-  OpenAIChatMessage,
-  OpenAIChatRequestDto,
-} from "../types/common";
-import * as SecureStore from "expo-secure-store";
-import { sendChatMessage } from "../services/Chat.service";
+import WordInfoCard from "../containers/Chat/WordInfoCard";
+import { useChatMessages } from "../hooks/useChatMessages";
+import { ChatMessageSender, type ChatMessage } from "../types/common";
+import { sendChatMessage } from "../services/chat/Chat.service";
 import { useMutation } from "@tanstack/react-query";
-import useNotifications from "../hooks/useNotifications";
-import { generateErrorResponseMessage } from "../utils/httpUtils";
+import useUser from "../hooks/auth/useUser";
 
 const ChatScreen = () => {
-  const { add } = useNotifications();
-  const initialChatMessages: ChatMessage[] = [];
-  const [chatMessages, setChatMessages] =
-    useState<ChatMessage[]>(initialChatMessages);
-
-  useEffect(() => {
-    try {
-      SecureStore.getItemAsync("chatMessages").then((chatMessages) => {
-        if (chatMessages !== null) {
-          onReceiveMessages(JSON.parse(chatMessages) as ChatMessage[], false);
+  const { addMessage, isSyncing, messages } = useChatMessages({});
+  const [selectedWord, setSelectedWord] = useState<string>("");
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const { user } = useUser();
+  const { mutate: sendMessageMutate, isPending: isSendingMessage } =
+    useMutation({
+      mutationKey: ["chat", "send"],
+      mutationFn: (chatMessage: ChatMessage) =>
+        sendChatMessage(chatMessage, user.email),
+      onError: (error) => console.log(error),
+      onSuccess: (data) => {
+        const response = data.data;
+        if (!response || !response.data) {
+          return;
         }
-      });
-    } catch (error) {
-      console.error("Error retrieving chat message details: ", error);
-    }
-  }, []);
-
-  const onReceiveMessages = (
-    newChatMessage: ChatMessage[],
-    shouldSave: boolean = true
-  ) => {
-    const newChatMessages: ChatMessage[] = [...chatMessages, ...newChatMessage];
-    setChatMessages(newChatMessages);
-    if (shouldSave) {
-      SecureStore.setItemAsync("chatMessages", JSON.stringify(newChatMessages));
-    }
-  };
-
-  const onReceive = (newChatMessage: ChatMessage) => {
-    const newChatMessages: ChatMessage[] = [...chatMessages, newChatMessage];
-    setChatMessages(newChatMessages);
-    SecureStore.setItemAsync("chatMessages", JSON.stringify(newChatMessages));
-  };
-
-  const onSend = (newChatMessage: ChatMessage) => {
-    const newChatMessages: ChatMessage[] = [...chatMessages, newChatMessage];
-    setChatMessages(newChatMessages);
-    sendChatMessageMutate({
-      model: "gpt-3.5-turbo",
-      messages: newChatMessages.map((chatMessage) => {
-        return {
-          content: chatMessage.content,
-          role: chatMessage.sender,
-        } as OpenAIChatMessage;
-      }),
-      temperature: 0.5,
-      max_tokens: 256,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
+        addMessage({
+          content: response.data.answer,
+          sender: ChatMessageSender.assistant,
+          timestamp: response.timestamp,
+        });
+      },
     });
-  };
-  const { mutate: sendChatMessageMutate, isPending } = useMutation({
-    mutationKey: ["sendChatMessage"],
-    mutationFn: (openAIChatRequestDto: OpenAIChatRequestDto) =>
-      sendChatMessage({
-        model: openAIChatRequestDto.model,
-        messages: openAIChatRequestDto.messages,
-        temperature: openAIChatRequestDto.temperature,
-        max_tokens: openAIChatRequestDto.max_tokens,
-        top_p: openAIChatRequestDto.top_p,
-        frequency_penalty: openAIChatRequestDto.frequency_penalty,
-        presence_penalty: openAIChatRequestDto.presence_penalty,
-      }),
-    onSuccess: (data) => {
-      let dataLast = data as any;
-      const jsonFile = JSON.parse(dataLast["request"]["response"]);
-      const receivedMessage: ChatMessage = {
-        sender: ChatMessageSender.assistant,
-        content: jsonFile["choices"][0]["message"]["content"],
-        timestamp: new Date(),
-      };
 
-      onReceive(receivedMessage);
-    },
-    onError: (error: any) => {
-      add({
-        body: generateErrorResponseMessage(error),
-        title: "Error!",
-        type: "error",
-        time: 5000,
-      });
-    },
-  });
+  const isPending = isSyncing || isSendingMessage;
+
+  const onSend = async (text: string) => {
+    if (!text) {
+      return;
+    }
+
+    const chatMessage: ChatMessage = {
+      sender: ChatMessageSender.user,
+      content: text,
+      timestamp: new Date(),
+    };
+
+    addMessage(chatMessage); // Local update
+    sendMessageMutate(chatMessage); // Server update
+  };
+
+  const onSelectedWordDismiss = () => {
+    setSelectedWord("");
+    setModalVisible(false);
+  };
+
+  const handleWordPress = (word: string) => {
+    setSelectedWord(word);
+    setModalVisible(true);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={onSelectedWordDismiss}
+      >
+        <View style={styles.centeredView}>
+          <WordInfoCard
+            exampleSentences={["This is an example sentence"]}
+            meanings={["This is a meaning"]}
+            selectedWord={selectedWord}
+            onDismiss={onSelectedWordDismiss}
+          />
+        </View>
+      </Modal>
       <View style={styles.messagesContainer}>
         <FlatList
-          data={chatMessages}
-          renderItem={({ item }) => <ChatMessageComponent chatMessage={item} />}
-          keyExtractor={(item) => item.timestamp.toString()}
+          data={messages}
+          renderItem={({ item }) => (
+            <ChatMessageComponent
+              onWordPress={handleWordPress}
+              key={item.id || item.timestamp.toString()}
+              chatMessage={item}
+            />
+          )}
+          ListFooterComponent={
+            isSendingMessage ? (
+              <ChatMessageComponent
+                onWordPress={handleWordPress}
+                isWriting={true}
+                chatMessage={{
+                  sender: ChatMessageSender.assistant,
+                  content: "",
+                  timestamp: new Date(),
+                }}
+              />
+            ) : (
+              <></>
+            )
+          }
+          keyExtractor={(item) => item.id || item.timestamp.toString()}
         />
       </View>
       <View style={styles.textInputContainer}>
-        <ChatTextInputContainer isPending={isPending} onSend={onSend} />
+        <ChatTextInputContainer onSend={onSend} isPending={isPending} />
       </View>
     </SafeAreaView>
   );
@@ -122,16 +124,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textInputContainer: {
-    flex: 1,
     justifyContent: "flex-end",
     marginHorizontal: 16,
-    marginVertical: 18,
+    marginBottom: 16,
+    borderRadius: 48,
   },
   messagesContainer: {
-    flex: 1,
+    flex: 12,
     marginHorizontal: 16,
-    marginVertical: 50,
-    height: "80%",
+    marginTop: 50,
+  },
+  centeredView: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 12,
   },
 });
 

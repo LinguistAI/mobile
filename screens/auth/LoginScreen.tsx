@@ -41,7 +41,6 @@ const LoginScreen = (props: LoginScreenProps) => {
     mutationFn: (loginDto: LoginDto) =>
       login({ email: loginDto.email, password: loginDto.password }),
     onSuccess: (res) => {
-      console.log(res.data.data);
       add({
         body: res.data.msg,
         title: "Success!",
@@ -49,13 +48,7 @@ const LoginScreen = (props: LoginScreenProps) => {
         time: 5000,
       });
 
-      if (res.data.data) {
-        storeUserDetails(res.data.data);
-        props.navigation.reset({
-          index: 0,
-          routes: [{ name: "Main" }],
-        });
-      } else {
+      if (!res.data.data) {
         add({
           body: "Something went wrong!",
           title:
@@ -63,9 +56,16 @@ const LoginScreen = (props: LoginScreenProps) => {
           type: "error",
           time: 10000,
         });
+        return;
       }
-    },
 
+      console.log("here");
+      storeUserDetails(res.data.data);
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: "Main" }],
+      });
+    },
     onError: (error: any) => {
       add({
         body: generateErrorResponseMessage(error),
@@ -82,8 +82,6 @@ const LoginScreen = (props: LoginScreenProps) => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     loginMutate(data);
-
-    // props.navigation.navigate("Main");
   };
 
   const onError: SubmitErrorHandler<FormValues> = (errors, e) => {};

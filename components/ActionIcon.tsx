@@ -1,14 +1,21 @@
 import { ReactPropTypes } from "react";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import Colors from "../theme/colors";
 
 interface ActionIconProps {
   icon: React.ReactElement;
   onPress: () => void;
   disabled?: boolean;
+  loading?: boolean;
 }
 
-const ActionIcon = ({ icon, onPress, disabled }: ActionIconProps) => {
+const ActionIcon = ({ icon, onPress, disabled, loading }: ActionIconProps) => {
   return (
     <View>
       <Pressable
@@ -18,7 +25,8 @@ const ActionIcon = ({ icon, onPress, disabled }: ActionIconProps) => {
           return [styles.innerContainer, pressed && styles.pressed];
         }}
       >
-        {icon}
+        {loading && <ActivityIndicator />}
+        {!loading && icon}
       </Pressable>
     </View>
   );

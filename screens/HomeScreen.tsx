@@ -1,6 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import CloseIcon from "../components/CloseIcon";
 import ChatStreakContainer from "../containers/ChatStreakContainer";
 import Colors from "../theme/colors";
 
@@ -23,12 +25,11 @@ const HomeScreen = () => {
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <TouchableOpacity
-            style={styles.closeIcon}
-            onPress={() => setModalVisible(false)}
-          >
-            <Ionicons name="close" size={30} color={Colors.gray["700"]} />
-          </TouchableOpacity>
+          <CloseIcon
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          />
           <ChatStreakContainer />
         </View>
       </View>

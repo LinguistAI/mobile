@@ -14,7 +14,11 @@ import ForgotPasswordScreen from "./screens/auth/forgot-password/ForgotPasswordS
 import LandingScreen from "./screens/common/LandingScreen";
 import { CustomErrorBoundary } from "./screens/errors/ErrorBoundary";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {},
+  },
+});
 
 export default function App() {
   const Stack = createNativeStackNavigator();

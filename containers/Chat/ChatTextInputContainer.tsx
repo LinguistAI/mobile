@@ -4,7 +4,6 @@ import { StyleSheet, View } from "react-native";
 import ActionIcon from "../../components/ActionIcon";
 import MultilineTextInput from "../../components/input/MultilineTextInput";
 import Colors from "../../theme/colors";
-import { ChatMessage, ChatMessageSender } from "../../types/common";
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.gray[600],
     borderRadius: 48,
     paddingHorizontal: 16,
-    paddingVertical: 4,
   },
 });
 

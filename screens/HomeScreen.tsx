@@ -25,7 +25,11 @@ const HomeScreen = () => {
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <CloseIcon onPress={() => setModalVisible(false)} />
+          <CloseIcon
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          />
           <ChatStreakContainer />
         </View>
       </View>

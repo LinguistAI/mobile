@@ -47,6 +47,7 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
 
   const clearMessages = () => {
     setMessages([]);
+    SecureStore.setItemAsync("chatMessages", JSON.stringify([]));
   };
 
   return { messages, addMessage, removeMessage, clearMessages, isSyncing };

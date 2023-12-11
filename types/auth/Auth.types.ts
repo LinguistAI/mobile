@@ -7,3 +7,7 @@ export interface StoredUserInfoWithTokens extends StoredUserInfo {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface AccessToken {
+  accessToken: string;
+}

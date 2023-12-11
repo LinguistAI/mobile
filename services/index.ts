@@ -17,18 +17,15 @@ export const axiosBase = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+export const axiosChatbot = axios.create({
+  baseURL: "https://linguistai.app/model/api",
+  headers: { "Content-Type": "application/json" },
+});
+
 export const axiosSecure = axios.create({
   baseURL: decideBackendURL(),
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
-});
-
-export const axiosOpenAI = axios.create({
-  baseURL: "https://api.openai.com/v1",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-  },
 });
 
 axiosSecure.interceptors.request.use(
@@ -50,9 +47,15 @@ axiosSecure.interceptors.response.use(
     const prevRequest = error?.config;
     if (error?.response?.status === 403 && !prevRequest?.sent) {
       prevRequest.sent = true;
-      const user = (await SecureStorage.getItemAsync(
-        "user"
-      )) as unknown as StoredUserInfoWithTokens;
+      const userJson = await SecureStorage.getItemAsync("user");
+      if (!userJson) {
+        return;
+      }
+      const user = JSON.parse(userJson);
+      if (!user) {
+        return;
+      }
+      console.log("refreshing token");
       const res = await axios.get<{ accessToken: string }>("/auth/refresh", {
         withCredentials: true,
         headers: {

@@ -54,7 +54,9 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
                   key={chatMessage?.id}
                   onPress={(event) => handleWordPress(event, word)}
                 >
-                  <Text style={styles.message}>{word} </Text>
+                  <Text key={chatMessage?.id} style={styles.message}>
+                    {word}{" "}
+                  </Text>
                 </Pressable>
               );
             })}

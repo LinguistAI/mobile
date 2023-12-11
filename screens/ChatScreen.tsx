@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -11,24 +11,50 @@ import ChatMessageComponent from "../components/ChatMessageComponent";
 import ChatTextInputContainer from "../containers/Chat/ChatTextInputContainer";
 import WordInfoCard from "../containers/Chat/WordInfoCard";
 import { useChatMessages } from "../hooks/useChatMessages";
-import { ChatMessage, ChatMessageSender } from "../types/common";
+import { ChatMessageSender, type ChatMessage } from "../types/common";
+import { sendChatMessage } from "../services/chat/Chat.service";
+import { useMutation } from "@tanstack/react-query";
+import useUser from "../hooks/auth/useUser";
 
 const ChatScreen = () => {
-  const { addMessage, isSyncing, messages, removeMessage } = useChatMessages(
-    {}
-  );
+  const { addMessage, isSyncing, messages } = useChatMessages({});
   const [selectedWord, setSelectedWord] = useState<string>("");
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const { user } = useUser();
+  const { mutate: sendMessageMutate, isPending: isSendingMessage } =
+    useMutation({
+      mutationKey: ["chat", "send"],
+      mutationFn: (chatMessage: ChatMessage) =>
+        sendChatMessage(chatMessage, user.email),
+      onError: (error) => console.log(error),
+      onSuccess: (data) => {
+        const response = data.data;
+        if (!response || !response.data) {
+          return;
+        }
+        addMessage({
+          content: response.data.answer,
+          sender: ChatMessageSender.assistant,
+          timestamp: response.timestamp,
+        });
+      },
+    });
+
+  const isPending = isSyncing || isSendingMessage;
 
   const onSend = async (text: string) => {
+    if (!text) {
+      return;
+    }
+
     const chatMessage: ChatMessage = {
       sender: ChatMessageSender.user,
       content: text,
       timestamp: new Date(),
     };
 
-    addMessage(chatMessage);
-    // TODO: Send the message to the server
+    addMessage(chatMessage); // Local update
+    sendMessageMutate(chatMessage); // Server update
   };
 
   const onSelectedWordDismiss = () => {
@@ -69,22 +95,25 @@ const ChatScreen = () => {
             />
           )}
           ListFooterComponent={
-            // TODO: Render ONLY if the assistant is writing
-            <ChatMessageComponent
-              onWordPress={handleWordPress}
-              isWriting={true}
-              chatMessage={{
-                sender: ChatMessageSender.assistant,
-                content: "",
-                timestamp: new Date(),
-              }}
-            />
+            isSendingMessage ? (
+              <ChatMessageComponent
+                onWordPress={handleWordPress}
+                isWriting={true}
+                chatMessage={{
+                  sender: ChatMessageSender.assistant,
+                  content: "",
+                  timestamp: new Date(),
+                }}
+              />
+            ) : (
+              <></>
+            )
           }
-          keyExtractor={(item) => item.timestamp.toString()}
+          keyExtractor={(item) => item.id || item.timestamp.toString()}
         />
       </View>
       <View style={styles.textInputContainer}>
-        <ChatTextInputContainer onSend={onSend} isPending={isSyncing} />
+        <ChatTextInputContainer onSend={onSend} isPending={isPending} />
       </View>
     </SafeAreaView>
   );
@@ -95,16 +124,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textInputContainer: {
-    flex: 1,
     justifyContent: "flex-end",
     marginHorizontal: 16,
     marginBottom: 16,
+    borderRadius: 48,
   },
   messagesContainer: {
     flex: 12,
     marginHorizontal: 16,
-    marginVertical: 50,
-    height: "80%",
+    marginTop: 50,
   },
   centeredView: {
     flex: 1,

@@ -1,6 +1,7 @@
 export interface StoredUserInfo {
   email: string;
   username: string;
+  lastLogin: Date;
 }
 
 export interface StoredUserInfoWithTokens extends StoredUserInfo {

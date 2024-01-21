@@ -1,5 +1,7 @@
+import { Text } from "react-native";
+
 const WordListsScreen = () => {
-  return <div></div>;
+  return <Text>hey</Text>;
 };
 
 export default WordListsScreen;

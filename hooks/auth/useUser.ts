@@ -7,6 +7,7 @@ const emptyUserAtom = {
   email: "",
   accessToken: "",
   refreshToken: "",
+  lastLogin: new Date("1970-01-01T00:00:00.000Z"),
 };
 
 const userAtom = atom<StoredUserInfoWithTokens>(emptyUserAtom);
@@ -46,11 +47,24 @@ const useUser = () => {
     }
   };
 
+  const updateLoginTime = async () => {
+    try {
+      const userDetails = await SecureStore.getItemAsync("user");
+      if (userDetails !== null) {
+        const details = JSON.parse(userDetails);
+        details.lastLogin = new Date();
+        await SecureStore.setItemAsync("user", JSON.stringify(details));
+        setUser(details);
+      }
+    } catch (error) {}
+  };
+
   return {
     user,
     storeUserDetails,
     getUserDetails,
     clearUserDetails,
+    updateLoginTime,
   };
 };
 

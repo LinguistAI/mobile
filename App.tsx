@@ -49,7 +49,7 @@ export default function App() {
               component={ForgotPasswordCodeScreen}
             />
             <Stack.Screen
-              name="Forgot Password New Password"
+              name="New Password"
               component={ForgotPasswordNewPasswordScreen}
             />
             <Stack.Screen

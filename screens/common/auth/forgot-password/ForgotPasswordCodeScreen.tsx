@@ -247,6 +247,7 @@ const styles = StyleSheet.create({
   root: {
     minHeight: 800,
     padding: 20,
+    marginVertical: 12,
     flex: 1,
     gap: 15,
   },

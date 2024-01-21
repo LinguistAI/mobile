@@ -45,7 +45,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
     onSuccess: (data, requestPasswordResetDto) => {
       add({
         body: "We have sent an email to reset your password!",
-        title: "Success!",
+        title: "Please check your email!",
         type: "success",
         time: 5000,
       });
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
   mainSection: {
     flex: 1,
     marginVertical: 12,
-    padding: 20,
     gap: 15,
   },
 });

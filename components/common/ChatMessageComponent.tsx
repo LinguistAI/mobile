@@ -18,7 +18,6 @@ interface ChatMessageComponentProps {
 const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const { chatMessage, isWriting, onWordPress } = props;
 
-  const words = chatMessage.content.split(" ");
   const timestamp = new Date(chatMessage.timestamp);
 
   const handleWordPress = (
@@ -34,6 +33,8 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
     return word.replace(/[^a-zA-Z ]/g, "");
   };
 
+  const lines = chatMessage.content.split("\n");
+
   return (
     <View
       style={[
@@ -47,17 +48,25 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
         <WritingAnimation />
       ) : (
         <View>
-          <View style={styles.messageContentContainer}>
-            {words.map((word) => {
+          <View style={styles.messageLineContainer}>
+            {lines.map((line) => {
+              const words = line.split(" ");
+
               return (
-                <Pressable
-                  key={chatMessage?.id}
-                  onPress={(event) => handleWordPress(event, word)}
-                >
-                  <Text key={chatMessage?.id} style={styles.message}>
-                    {word}{" "}
-                  </Text>
-                </Pressable>
+                <View style={styles.messageLine}>
+                  {words.map((word) => {
+                    return (
+                      <Pressable
+                        key={chatMessage?.id}
+                        onPress={(event) => handleWordPress(event, word)}
+                      >
+                        <Text key={chatMessage?.id} style={styles.message}>
+                          {word}{" "}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
               );
             })}
           </View>
@@ -79,18 +88,16 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
 const styles = StyleSheet.create({
   container: {
     maxWidth: "80%",
-    minWidth: "10%",
+    minWidth: "20%",
     borderRadius: 12,
     padding: 8,
     marginVertical: 4,
   },
-  messageContainer: {
+  messageLineContainer: {
     flexDirection: "column",
-    justifyContent: "space-between",
   },
-  messageContentContainer: {
+  messageLine: {
     flexDirection: "row",
-    flexWrap: "wrap",
   },
   sent: {
     alignSelf: "flex-end",

@@ -35,6 +35,7 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
 
   useEffect(() => {
     if (messages.length) {
+      console.log("Saving messages to secure store");
       SecureStore.setItemAsync("chatMessages", JSON.stringify(messages));
     }
   }, [messages]);

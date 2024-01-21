@@ -43,7 +43,6 @@ const LoginScreen = (props: LoginScreenProps) => {
     onSuccess: (res) => {
       add({
         body: res.data.msg,
-        title: "Success!",
         type: "success",
         time: 5000,
       });

@@ -21,6 +21,7 @@ const ChatScreen = () => {
   const [selectedWord, setSelectedWord] = useState<string>("");
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const { user } = useUser();
+
   const { mutate: sendMessageMutate, isPending: isSendingMessage } =
     useMutation({
       mutationKey: ["chat", "send"],
@@ -63,6 +64,9 @@ const ChatScreen = () => {
   };
 
   const handleWordPress = (word: string) => {
+    if (!word) {
+      return;
+    }
     setSelectedWord(word);
     setModalVisible(true);
   };
@@ -77,8 +81,12 @@ const ChatScreen = () => {
       >
         <View style={styles.centeredView}>
           <WordInfoCard
-            exampleSentences={["This is an example sentence"]}
-            meanings={["This is a meaning"]}
+            exampleSentences={[
+              "This is an example of a really long sentence that should be wrapped to the next line",
+            ]}
+            meanings={[
+              "This is an example of a really long meaning that should be wrapped to the next line",
+            ]}
             selectedWord={selectedWord}
             onDismiss={onSelectedWordDismiss}
           />

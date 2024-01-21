@@ -1,7 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ActionIcon from "../common/ActionIcon";
 import CloseIcon from "../common/CloseIcon";
 import Colors from "../../theme/colors";
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: "80%",
+    width: "90%",
   },
   explanationContainer: {
     alignItems: "center",

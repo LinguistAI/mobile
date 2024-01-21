@@ -11,7 +11,7 @@ import {
   getCurrentDayOfWeek,
   getDistanceBetweenTodayAndDay,
   getLastOneWeek,
-} from "../../utils/data.utils";
+} from "../../utils/date.utils";
 
 const StreakDisplay = ({
   currentStreak,
@@ -42,7 +42,7 @@ const StreakDisplay = ({
           style={styles.lottie}
           autoPlay
           loop
-          source={require("../assets/lottie/streak/streakFireAnim.json")}
+          source={require("../../assets/lottie/streak/streakFireAnim.json")}
         />
         <View style={styles.streakTextContainer}>
           <Text style={styles.streakText}>{streakText}</Text>

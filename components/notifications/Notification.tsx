@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
-import ActionIcon from "../../components/ActionIcon";
+import ActionIcon from "../common/ActionIcon";
 import useNotifications, {
   NotificationObject,
 } from "../../hooks/useNotifications";

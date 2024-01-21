@@ -2,8 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import ActionIcon from "../../components/ActionIcon";
-import CloseIcon from "../../components/CloseIcon";
+import ActionIcon from "../common/ActionIcon";
+import CloseIcon from "../common/CloseIcon";
 import Colors from "../../theme/colors";
 
 interface WordInfoCardProps {

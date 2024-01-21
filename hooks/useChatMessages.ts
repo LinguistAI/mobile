@@ -7,7 +7,7 @@ interface UseChatMessagesProps {
 }
 
 export const useChatMessages = (props: UseChatMessagesProps) => {
-  const { syncWithBackend = true } = props;
+  const { syncWithBackend = false } = props;
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -16,8 +16,10 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
     setIsSyncing(true);
 
     const syncMessages = async () => {
-      // TODO: If sync with backend is true, get messages from backend
-      // and save them to SecureStore and set them to state
+      if (!syncWithBackend) {
+        setIsSyncing(false);
+        return;
+      }
 
       const chatMessages = await SecureStore.getItemAsync("chatMessages");
       if (chatMessages === null || !chatMessages) {

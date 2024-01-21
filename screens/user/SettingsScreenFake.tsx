@@ -1,5 +1,5 @@
 import { SafeAreaView, Text, View } from "react-native";
-import { SettingsList } from "../../components/settings/SettingsList";
+import { SettingsList } from "../../components/common/settings/SettingsList";
 
 const SettingsScreenFake = () => {
   // const { name } = useRoute();

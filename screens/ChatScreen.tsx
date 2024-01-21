@@ -7,9 +7,9 @@ import {
   Text,
   View,
 } from "react-native";
-import ChatMessageComponent from "../components/ChatMessageComponent";
-import ChatTextInputContainer from "../containers/Chat/ChatTextInputContainer";
-import WordInfoCard from "../containers/Chat/WordInfoCard";
+import ChatMessageComponent from "../components/common/ChatMessageComponent";
+import ChatTextInputContainer from "../components/chat/ChatTextInputContainer";
+import WordInfoCard from "../components/chat/WordInfoCard";
 import { useChatMessages } from "../hooks/useChatMessages";
 import { ChatMessageSender, type ChatMessage } from "../types/common";
 import { sendChatMessage } from "../services/chat/Chat.service";

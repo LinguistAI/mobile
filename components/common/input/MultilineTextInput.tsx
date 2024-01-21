@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TextInputProps } from "react-native";
-import Colors from "../../theme/colors";
+import Colors from "../../../theme/colors";
 
 interface MultilineTextInputProps extends TextInputProps {
   onChangeText: (text: string) => void;

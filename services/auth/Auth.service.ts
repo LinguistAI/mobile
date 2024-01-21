@@ -23,7 +23,7 @@ export async function register(registerDto: RegisterDto) {
 }
 
 export async function changePassword(changePasswordDto: ChangePasswordDto) {
-  const res = await axiosSecure.put<APIResponse<string>>( // does not have any data in response so the type is redundant
+  const res = await axiosSecure.put<any>(
     "/auth/change-password",
     changePasswordDto
   );
@@ -33,7 +33,7 @@ export async function changePassword(changePasswordDto: ChangePasswordDto) {
 export async function requestPasswordReset(
   requestPasswordResetDto: RequestPasswordResetDto
 ) {
-  const res = await axiosBase.post<APIResponse<string>>( // does not have any data in response so the type is redundant
+  const res = await axiosBase.post<any>(
     "/auth/request-reset",
     requestPasswordResetDto
   );
@@ -43,7 +43,7 @@ export async function requestPasswordReset(
 export async function requestPasswordCode(
   passwordResetCodeDto: PasswordResetCodeDto
 ) {
-  const res = await axiosBase.post<APIResponse<string>>( // does not have any data in response so the type is redundant
+  const res = await axiosBase.post<any>(
     "/auth/validate-reset",
     passwordResetCodeDto
   );
@@ -53,7 +53,7 @@ export async function requestPasswordCode(
 export async function saveResetPassword(
   passwordResetSaveDto: PasswordResetSaveDto
 ) {
-  const res = await axiosBase.put<APIResponse<string>>( // does not have any data in response so the type is redundant
+  const res = await axiosBase.put<any>(
     "/auth/reset-password",
     passwordResetSaveDto
   );

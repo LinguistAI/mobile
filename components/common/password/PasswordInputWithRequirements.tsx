@@ -2,7 +2,7 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
 import PasswordTextInput, {
   PasswordTextInputProps,
-} from "../../components/input/PasswordTextInput";
+} from "../input/PasswordTextInput";
 import PasswordRequirement, { Requirement } from "./Requirement";
 import StrengthMeter from "./StrengthMeter";
 

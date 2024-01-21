@@ -2,8 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { set } from "react-hook-form";
 import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
-import CloseIcon from "../components/CloseIcon";
-import ChatStreakContainer from "../containers/ChatStreakContainer";
+import CloseIcon from "../components/common/CloseIcon";
+import ChatStreakContainer from "../components/gamification/ChatStreakContainer";
 import Colors from "../theme/colors";
 
 const HomeScreen = () => {

@@ -22,13 +22,13 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import PrimaryButton from "../../../components/PrimaryButton";
-import useNotifications from "../../../hooks/useNotifications";
+import PrimaryButton from "../../../../components/common/PrimaryButton";
+import useNotifications from "../../../../hooks/useNotifications";
 import {
   requestPasswordReset,
   requestPasswordCode as resetPasswordCode,
-} from "../../../services/auth";
-import { generateErrorResponseMessage } from "../../../utils/httpUtils";
+} from "../../../../services/auth";
+import { generateErrorResponseMessage } from "../../../../utils/httpUtils";
 
 const CELL_SIZE = 45;
 const CELL_BORDER_RADIUS = 8;

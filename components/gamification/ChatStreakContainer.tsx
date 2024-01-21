@@ -3,15 +3,15 @@ import { useQuery } from "@tanstack/react-query";
 import LottieView from "lottie-react-native";
 import { useState } from "react";
 import { ActivityIndicator, Modal, StyleSheet, Text, View } from "react-native";
-import Badge from "../components/Badge";
-import { getUserChatStreak } from "../services/UserStreak.service";
-import Colors from "../theme/colors";
+import Badge from "../common/Badge";
+import { getUserChatStreak } from "../../services/UserStreak.service";
+import Colors from "../../theme/colors";
 import {
   DaysOfWeek,
   getCurrentDayOfWeek,
   getDistanceBetweenTodayAndDay,
   getLastOneWeek,
-} from "../utils/data.utils";
+} from "../../utils/data.utils";
 
 const StreakDisplay = ({
   currentStreak,

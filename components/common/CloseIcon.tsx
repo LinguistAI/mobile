@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import Colors from "../theme/colors";
+import Colors from "../../theme/colors";
 
 interface CloseIconProps {
   onPress: () => void;

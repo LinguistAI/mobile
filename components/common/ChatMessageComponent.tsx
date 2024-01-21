@@ -5,9 +5,9 @@ import {
   Text,
   View,
 } from "react-native";
-import WritingAnimation from "../containers/Chat/WritingAnimation";
-import Colors from "../theme/colors";
-import { ChatMessage, ChatMessageSender } from "../types/common";
+import WritingAnimation from "../chat/WritingAnimation";
+import Colors from "../../theme/colors";
+import { ChatMessage, ChatMessageSender } from "../../types/common";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;

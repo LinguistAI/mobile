@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import ActionIcon from "../../components/ActionIcon";
-import MultilineTextInput from "../../components/input/MultilineTextInput";
+import ActionIcon from "../common/ActionIcon";
+import MultilineTextInput from "../common/input/MultilineTextInput";
 import Colors from "../../theme/colors";
 
 interface ChatTextInputContainerProps {

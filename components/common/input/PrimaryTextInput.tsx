@@ -8,7 +8,7 @@ import {
 
 import { ErrorMessage } from "@hookform/error-message";
 import { useController, useFormContext } from "react-hook-form";
-import Colors from "../../theme/colors";
+import Colors from "../../../theme/colors";
 
 export interface PrimaryTextInputProps extends TextInputProps {
   name: string;

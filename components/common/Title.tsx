@@ -1,5 +1,5 @@
 import { StyleSheet, Text } from "react-native";
-import TitleSizes from "../theme/fontSizes";
+import TitleSizes from "../../theme/fontSizes";
 
 type FontSizeKeys = keyof typeof TitleSizes;
 

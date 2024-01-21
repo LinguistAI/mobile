@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import Colors from "../theme/colors";
+import Colors from "../../theme/colors";
 
 interface ActionIconProps {
   icon: React.ReactElement;

@@ -1,28 +1,19 @@
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import Colors from "../theme/colors";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import Colors from "../../theme/colors";
 
-interface PrimaryButtonProps {
+interface SecondaryButtonProps {
   children: React.ReactNode;
-  loading?: boolean;
   onPress?: () => void;
 }
 
-const PrimaryButton = (props: PrimaryButtonProps) => {
-  const { children, onPress, loading } = props;
+const SecondaryButton = (props: SecondaryButtonProps) => {
+  const { children, onPress } = props;
 
   return (
     <View style={styles.outerContainer}>
       <Pressable
         onPress={onPress}
-        disabled={loading}
-        android_ripple={{ color: Colors.primary[600] }}
+        android_ripple={{ color: Colors.gray[100] }}
         style={({ pressed }) => {
           if (Platform.OS === "ios") {
             return [styles.innerContainer, pressed && styles.pressed];
@@ -30,11 +21,7 @@ const PrimaryButton = (props: PrimaryButtonProps) => {
           return styles.innerContainer;
         }}
       >
-        {loading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <Text style={styles.buttonText}>{children}</Text>
-        )}
+        <Text style={styles.buttonText}>{children}</Text>
       </Pressable>
     </View>
   );
@@ -43,8 +30,10 @@ const PrimaryButton = (props: PrimaryButtonProps) => {
 const styles = StyleSheet.create({
   outerContainer: {
     borderRadius: 8,
+    borderWidth: 1.5,
     marginVertical: 8,
     overflow: "hidden",
+    borderColor: Colors.primary[500],
     shadowColor: Colors.gray[900],
     shadowOpacity: 0.5,
     shadowRadius: 8,
@@ -55,27 +44,19 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   innerContainer: {
-    backgroundColor: Colors.primary[500],
+    backgroundColor: "white",
     paddingVertical: 16,
     paddingHorizontal: 32,
-    elevation: 4,
   },
   buttonText: {
-    color: "white",
+    color: Colors.primary[500],
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    shadowColor: "black",
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
   },
   pressed: {
     opacity: 0.75,
   },
 });
 
-export default PrimaryButton;
+export default SecondaryButton;

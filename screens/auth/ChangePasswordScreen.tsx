@@ -72,7 +72,7 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
       oldPassword: values.oldPassword,
       newPassword: values.password,
     };
-    // TODO: Add change password mutate
+
     changePasswordMutate(changePasswordDTO);
   };
 

@@ -77,7 +77,7 @@ const ForgotPasswordNewPasswordScreen = (
       resetCode: props.route.params.resetCode,
       newPassword: values.password,
     };
-    // TODO: Add change password mutate
+
     savePasswordMutate(passwordResetSaveDTO);
   };
 

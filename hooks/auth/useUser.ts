@@ -19,7 +19,7 @@ const useUser = () => {
       await SecureStore.setItemAsync("user", JSON.stringify(details));
       setUser(details);
     } catch (error) {
-      // Handle error
+      // TODO: Handle error
       console.error("Error storing user details: ", error);
     }
   };
@@ -31,7 +31,7 @@ const useUser = () => {
         setUser(JSON.parse(userDetails));
       }
     } catch (error) {
-      // Handle error
+      // TODO: Handle error
       console.error("Error retrieving user details: ", error);
     }
   };
@@ -41,7 +41,7 @@ const useUser = () => {
       await SecureStore.deleteItemAsync("user");
       setUser(emptyUserAtom);
     } catch (error) {
-      // Handle error
+      // TODO: Handle error
       console.error("Error clearing user details: ", error);
     }
   };

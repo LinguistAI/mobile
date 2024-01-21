@@ -50,7 +50,6 @@ const ForgotPasswordNewPasswordScreen = (
     onSuccess: (data) => {
       add({
         body: "You have successfully changed your password!",
-        title: "Success!",
         type: "success",
         time: 5000,
       });
@@ -113,12 +112,12 @@ const ForgotPasswordNewPasswordScreen = (
           <PasswordInputWithRequirements
             requirements={passwordRequirements}
             name="password"
-            label="Password"
-            placeholder="Password"
+            label="New password"
+            placeholder="New password"
           />
           <PasswordTextInput
             placeholder="Repeat password"
-            label="Repeat password"
+            label="Repeat new password"
             name="repeatPassword"
             rules={{
               required: "Repeating password is required!",
@@ -142,13 +141,11 @@ const ForgotPasswordNewPasswordScreen = (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 32,
+    marginVertical: 12,
     padding: 20,
   },
   mainSection: {
     flex: 1,
-    marginVertical: 12,
-    padding: 20,
     gap: 15,
   },
 });

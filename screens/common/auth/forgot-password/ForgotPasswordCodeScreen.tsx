@@ -145,7 +145,7 @@ const ForgotPasswordCodeScreen = ({
         index: 0,
         routes: [
           {
-            name: "Forgot Password New Password",
+            name: "New Password",
             params: {
               email: passwordResetCodeDto.email,
               resetCode: passwordResetCodeDto.resetCode,

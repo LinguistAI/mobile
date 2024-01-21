@@ -104,12 +104,11 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 32,
+    marginVertical: 12,
     padding: 20,
   },
   mainSection: {
     flex: 1,
-    marginVertical: 12,
     gap: 15,
   },
 });

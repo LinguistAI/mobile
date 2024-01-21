@@ -9,12 +9,10 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../../../components/common/PrimaryButton";
 import EmailTextInput from "../../../components/common/input/EmailTextInput";
 import PasswordTextInput from "../../../components/common/input/PasswordTextInput";
-import PrimaryTextInput from "../../../components/common/input/PrimaryTextInput";
 import useUser from "../../../hooks/auth/useUser";
 import useNotifications from "../../../hooks/useNotifications";
 import { login } from "../../../services/auth";
 import Colors from "../../../theme/colors";
-import { APIResponse } from "../../../types/common";
 import { generateErrorResponseMessage } from "../../../utils/httpUtils";
 
 type FormValues = {
@@ -43,7 +41,6 @@ const LoginScreen = (props: LoginScreenProps) => {
     onSuccess: (res) => {
       add({
         body: res.data.msg,
-        title: "Success!",
         type: "success",
         time: 5000,
       });
@@ -59,8 +56,10 @@ const LoginScreen = (props: LoginScreenProps) => {
         return;
       }
 
-      console.log("here");
-      storeUserDetails(res.data.data);
+      storeUserDetails({
+        ...res.data.data,
+        lastLogin: new Date(),
+      });
       props.navigation.reset({
         index: 0,
         routes: [{ name: "Main" }],

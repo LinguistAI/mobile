@@ -8,6 +8,9 @@ import {
 import WritingAnimation from "../chat/WritingAnimation";
 import Colors from "../../theme/colors";
 import { ChatMessage, ChatMessageSender } from "../../types/common";
+import ActionIcon from "./ActionIcon";
+import { Ionicons } from "@expo/vector-icons";
+import * as Speech from "expo-speech";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -18,8 +21,10 @@ interface ChatMessageComponentProps {
 const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const { chatMessage, isWriting, onWordPress } = props;
 
-  const words = chatMessage.content.split(" ");
   const timestamp = new Date(chatMessage.timestamp);
+  const lines = chatMessage.content.split("\n");
+  const isSentByUser = chatMessage.sender === ChatMessageSender.user;
+  console.log(isSentByUser);
 
   const handleWordPress = (
     event: GestureResponderEvent,
@@ -36,40 +41,59 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
 
   return (
     <View
-      style={[
-        styles.container,
-        chatMessage.sender == ChatMessageSender.user
-          ? styles.sent
-          : styles.received,
-      ]}
+      style={[styles.container, isSentByUser ? styles.sent : styles.received]}
     >
       {isWriting ? (
         <WritingAnimation />
       ) : (
         <View>
-          <View style={styles.messageContentContainer}>
-            {words.map((word) => {
+          <View style={styles.messageLineContainer}>
+            {lines.map((line) => {
+              const words = line.split(" ");
+
               return (
-                <Pressable
-                  key={chatMessage?.id}
-                  onPress={(event) => handleWordPress(event, word)}
-                >
-                  <Text key={chatMessage?.id} style={styles.message}>
-                    {word}{" "}
-                  </Text>
-                </Pressable>
+                <View style={styles.messageLine}>
+                  {words.map((word) => {
+                    return (
+                      <Pressable
+                        key={chatMessage?.id}
+                        onPress={(event) => handleWordPress(event, word)}
+                      >
+                        <Text key={chatMessage?.id} style={styles.message}>
+                          {word}{" "}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
               );
             })}
           </View>
-          <Text
-            style={
-              chatMessage.sender == ChatMessageSender.user
-                ? styles.timestampSent
-                : styles.timestampReceived
-            }
-          >
-            {timestamp?.toLocaleTimeString() || ""}
-          </Text>
+          <View style={styles.bottomRow}>
+            <View style={isSentByUser ? styles.micSent : styles.micReceived}>
+              <ActionIcon
+                icon={
+                  <Ionicons
+                    name="mic-circle"
+                    size={36}
+                    color={
+                      isSentByUser ? Colors.gray["100"] : Colors.primary["500"]
+                    }
+                  />
+                }
+                onPress={() => {
+                  Speech.speak(chatMessage.content, { language: "en" });
+                }}
+              />
+            </View>
+            <Text
+              style={
+                isSentByUser ? styles.timestampSent : styles.timestampReceived
+              }
+            >
+              {timestamp?.toLocaleTimeString() || ""}
+            </Text>
+          </View>
         </View>
       )}
     </View>
@@ -79,16 +103,16 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
 const styles = StyleSheet.create({
   container: {
     maxWidth: "80%",
-    minWidth: "10%",
+    minWidth: "20%",
     borderRadius: 12,
     padding: 8,
     marginVertical: 4,
   },
-  messageContainer: {
+  messageLineContainer: {
     flexDirection: "column",
-    justifyContent: "space-between",
+    flexWrap: "wrap",
   },
-  messageContentContainer: {
+  messageLine: {
     flexDirection: "row",
     flexWrap: "wrap",
   },
@@ -112,6 +136,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
   },
+  bottomRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 8,
+  },
   timestampSent: {
     alignSelf: "flex-end",
     fontSize: 11,
@@ -121,6 +151,12 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     fontSize: 11,
     color: Colors.gray[700],
+  },
+  micSent: {
+    alignSelf: "flex-start",
+  },
+  micReceived: {
+    alignSelf: "flex-end",
   },
 });
 

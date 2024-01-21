@@ -1,7 +1,5 @@
 /*
-
 Concept: https://dribbble.com/shots/5476562-Forgot-Password-Verification/attachments
-
 */
 import React, { useState } from "react";
 import {
@@ -30,7 +28,7 @@ import {
 } from "../../../../services/auth";
 import { generateErrorResponseMessage } from "../../../../utils/httpUtils";
 
-const CELL_SIZE = 45;
+const CELL_SIZE = 40;
 const CELL_BORDER_RADIUS = 8;
 const DEFAULT_CELL_BG_COLOR = "#fff";
 const NOT_EMPTY_CELL_BG_COLOR = "#3557b7";
@@ -81,6 +79,7 @@ const ForgotPasswordCodeScreen = ({
     value,
     setValue,
   });
+  const email = route.params.email;
 
   const renderCell = (options: RenderCellOptions) => {
     const hasValue = Boolean(options.symbol);
@@ -129,7 +128,7 @@ const ForgotPasswordCodeScreen = ({
   const methods = useForm<ForgotPasswordCodeFormValues>({
     defaultValues: {
       resetCode: "",
-      email: route.params.email,
+      email: email,
     },
     mode: "onSubmit",
   });
@@ -142,18 +141,11 @@ const ForgotPasswordCodeScreen = ({
         resetCode: passwordResetCodeDto.resetCode,
       }),
     onSuccess: (data, passwordResetCodeDto) => {
-      add({
-        body: "Code is correct!",
-        title: "Success!",
-        type: "success",
-        time: 5000,
-      });
-
       navigation.reset({
         index: 0,
         routes: [
           {
-            name: "Forgot Password New Password",
+            name: "New Password",
             params: {
               email: passwordResetCodeDto.email,
               resetCode: passwordResetCodeDto.resetCode,
@@ -192,9 +184,8 @@ const ForgotPasswordCodeScreen = ({
       <FormProvider {...methods}>
         <Text style={styles.subTitle}>
           Please enter the verification code{"\n"}
-          we have sent to your email address
+          we have sent to <Text style={styles.emailText}>{email}</Text>
         </Text>
-
         <CodeField
           ref={ref}
           {...props}
@@ -220,9 +211,15 @@ const ForgotPasswordCodeScreen = ({
 const styles = StyleSheet.create({
   codeFiledRoot: {
     height: CELL_SIZE,
-    marginTop: 30,
+    marginTop: 20,
     paddingHorizontal: 20,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  emailText: {
+    fontStyle: "italic",
+    fontWeight: "bold",
+    lineHeight: 20,
   },
   cell: {
     marginHorizontal: 8,
@@ -247,43 +244,22 @@ const styles = StyleSheet.create({
     // Android
     elevation: 3,
   },
-
-  // =======================
-
   root: {
     minHeight: 800,
     padding: 20,
-    flex: 1,
     marginVertical: 12,
+    flex: 1,
     gap: 15,
   },
   title: {
-    paddingTop: 50,
     color: "#000",
     fontSize: 25,
     fontWeight: "700",
     textAlign: "center",
-    paddingBottom: 40,
   },
   subTitle: {
-    paddingTop: 30,
     color: "#000",
     textAlign: "center",
-  },
-  nextButton: {
-    marginTop: 30,
-    borderRadius: 60,
-    height: 60,
-    backgroundColor: "#3557b7",
-    justifyContent: "center",
-    minWidth: 300,
-    marginBottom: 100,
-  },
-  nextButtonText: {
-    textAlign: "center",
-    fontSize: 20,
-    color: "#fff",
-    fontWeight: "700",
   },
 });
 

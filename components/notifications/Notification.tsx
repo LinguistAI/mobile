@@ -30,9 +30,11 @@ const Notification = (props: NotificationProps) => {
     <View style={[styles.container, getNotificationBgStyle()]}>
       <View style={styles.notificationCard}>
         <View style={styles.notificationCardContainer}>
-          <Text style={[styles.title, { color: notification?.titleColor }]}>
-            {notification.title}
-          </Text>
+          {notification.title ? (
+            <Text style={[styles.title, { color: notification?.titleColor }]}>
+              {notification.title}
+            </Text>
+          ) : null}
           <Text style={[styles.body, { color: notification?.bodyColor }]}>
             {notification.body}
           </Text>

@@ -6,6 +6,7 @@ import HomeScreen from "../screens/HomeScreen";
 import LeaderboardScreen from "../screens/LeaderboardScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import SettingsScreen from "../screens/user/SettingsScreen";
+import WordListsScreen from "../screens/WordListsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,15 @@ const BottomNavigation = () => {
               size={size}
               color={color}
             />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Word-List"
+        component={WordListsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <IonIcons name="list-outline" size={size} color={color} />
           ),
         }}
       />

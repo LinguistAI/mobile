@@ -38,3 +38,12 @@ export function getDistanceBetweenTodayAndDay(day: Day): number {
   const dayIndex = DaysOfWeek.findIndex((d) => d.id === day.id);
   return (todayIndex - dayIndex + 7) % 7;
 }
+
+export function isDateToday(date: Date): boolean {
+  const today = new Date();
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}

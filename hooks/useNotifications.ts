@@ -2,8 +2,8 @@ import { atom, useAtom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
 
 export type NotificationObject = {
-  title: string;
   body: string;
+  title?: string;
   bodyColor?: string;
   titleColor?: string;
   type?: "success" | "error" | "info";

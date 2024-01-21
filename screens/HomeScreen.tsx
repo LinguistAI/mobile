@@ -43,16 +43,21 @@ const HomeScreen = () => {
             </View>
           </View>
         </Modal>
-        <ActionButton
-          icon={
-            <Ionicons name="calendar" size={24} color={Colors.primary["500"]} />
-          }
-          onPress={() => {
-            setModalVisible(true);
-          }}
-          title="Chat Streak"
-          subText="Keep your streak going!"
-        />
+        <View style={styles.chatStreakButtonContainer}>
+          <ActionButton
+            icon={
+              <Ionicons
+                name="calendar"
+                size={24}
+                color={Colors.primary["500"]}
+              />
+            }
+            onPress={() => {
+              setModalVisible(true);
+            }}
+            title="Chat Streak"
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -62,7 +67,6 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   root: {
     marginTop: 40,
-    marginLeft: 20,
   },
   modalContainer: {
     flex: 1,
@@ -82,5 +86,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
+  },
+  chatStreakButtonContainer: {
+    maxWidth: 150,
+    marginLeft: 20,
   },
 });

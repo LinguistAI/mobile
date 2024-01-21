@@ -8,6 +8,9 @@ import {
 import WritingAnimation from "../chat/WritingAnimation";
 import Colors from "../../theme/colors";
 import { ChatMessage, ChatMessageSender } from "../../types/common";
+import ActionIcon from "./ActionIcon";
+import { Ionicons } from "@expo/vector-icons";
+import * as Speech from "expo-speech";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -19,6 +22,9 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const { chatMessage, isWriting, onWordPress } = props;
 
   const timestamp = new Date(chatMessage.timestamp);
+  const lines = chatMessage.content.split("\n");
+  const isSentByUser = chatMessage.sender === ChatMessageSender.user;
+  console.log(isSentByUser);
 
   const handleWordPress = (
     event: GestureResponderEvent,
@@ -33,16 +39,9 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
     return word.replace(/[^a-zA-Z ]/g, "");
   };
 
-  const lines = chatMessage.content.split("\n");
-
   return (
     <View
-      style={[
-        styles.container,
-        chatMessage.sender == ChatMessageSender.user
-          ? styles.sent
-          : styles.received,
-      ]}
+      style={[styles.container, isSentByUser ? styles.sent : styles.received]}
     >
       {isWriting ? (
         <WritingAnimation />
@@ -70,15 +69,31 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
               );
             })}
           </View>
-          <Text
-            style={
-              chatMessage.sender == ChatMessageSender.user
-                ? styles.timestampSent
-                : styles.timestampReceived
-            }
-          >
-            {timestamp?.toLocaleTimeString() || ""}
-          </Text>
+          <View style={styles.bottomRow}>
+            <View style={isSentByUser ? styles.micSent : styles.micReceived}>
+              <ActionIcon
+                icon={
+                  <Ionicons
+                    name="mic-circle"
+                    size={36}
+                    color={
+                      isSentByUser ? Colors.gray["100"] : Colors.primary["500"]
+                    }
+                  />
+                }
+                onPress={() => {
+                  Speech.speak(chatMessage.content, { language: "en" });
+                }}
+              />
+            </View>
+            <Text
+              style={
+                isSentByUser ? styles.timestampSent : styles.timestampReceived
+              }
+            >
+              {timestamp?.toLocaleTimeString() || ""}
+            </Text>
+          </View>
         </View>
       )}
     </View>
@@ -95,9 +110,11 @@ const styles = StyleSheet.create({
   },
   messageLineContainer: {
     flexDirection: "column",
+    flexWrap: "wrap",
   },
   messageLine: {
     flexDirection: "row",
+    flexWrap: "wrap",
   },
   sent: {
     alignSelf: "flex-end",
@@ -119,6 +136,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
   },
+  bottomRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 8,
+  },
   timestampSent: {
     alignSelf: "flex-end",
     fontSize: 11,
@@ -128,6 +151,12 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     fontSize: 11,
     color: Colors.gray[700],
+  },
+  micSent: {
+    alignSelf: "flex-start",
+  },
+  micReceived: {
+    alignSelf: "flex-end",
   },
 });
 

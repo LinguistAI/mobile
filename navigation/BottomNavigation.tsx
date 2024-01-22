@@ -1,14 +1,9 @@
 import IonIcons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Pressable } from "react-native";
 import ChatScreen from "../screens/chat/ChatScreen";
-import HomeScreen from "../screens/home/HomeScreen";
 import LeaderboardScreen from "../screens/leaderboard/LeaderboardScreen";
-import ProfileScreen from "../screens/user/ProfileScreen";
-import SettingsScreen from "../screens/user/SettingsScreen";
 import WordListsScreen from "../screens/word-list/WordListsScreen";
 import HomeStackNavigator from "./HomeStackNavigator";
-import WordListStackNavigator from "./WordListStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +35,7 @@ const BottomNavigation = () => {
       />
       <Tab.Screen
         name="Word List"
-        component={WordListStackNavigator}
+        component={WordListsScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <IonIcons name="list-outline" size={size} color={color} />

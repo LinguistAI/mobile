@@ -22,9 +22,10 @@ const ModalWrapper = ({
       style={{ alignSelf: "center" }}
     >
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}></View>
-        {title && <Text style={styles.modalTitle}>{title}</Text>}
-        {children}
+        <View style={styles.modalContent}>
+          {title && <Text style={styles.modalTitle}>{title}</Text>}
+          {children}
+        </View>
       </View>
     </Modal>
   );
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    padding: 35,
+    padding: 25,
     alignItems: "center",
     borderRadius: 20,
     width: "90%",

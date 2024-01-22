@@ -5,14 +5,14 @@ interface ModalControlButtonsProps {
   onCancel: () => void;
   onSubmit: () => void;
   cancelText?: string;
-  submitText?: string;
+  okText?: string;
 }
 
 const ModalControlButtons = ({
   onCancel,
   onSubmit,
   cancelText = "Cancel",
-  submitText = "Submit",
+  okText = "Submit",
 }: ModalControlButtonsProps) => {
   return (
     <>
@@ -22,9 +22,7 @@ const ModalControlButtons = ({
         </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={onSubmit}>
-        <Text style={[styles.formControlText, styles.formOk]}>
-          {submitText}
-        </Text>
+        <Text style={[styles.formControlText, styles.formOk]}>{okText}</Text>
       </TouchableOpacity>
     </>
   );

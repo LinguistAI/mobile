@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import ActionIcon from "../common/ActionIcon";
 import MultilineTextInput from "../common/input/MultilineTextInput";
 import Colors from "../../theme/colors";
+import Voice from "@react-native-voice/voice/dist/index";
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -16,29 +17,42 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   return (
     <View style={styles.innerBorder}>
       <View style={styles.innerContainer}>
-        <View style={{ flex: 8 }}>
+        <View style={{ flex: 7 }}>
           <MultilineTextInput
             onChangeText={(text) => setText(text)}
             value={text}
             maxHeight={60}
           />
         </View>
-        <View style={{ flex: 1 }}>
-          <ActionIcon
-            disabled={props.isPending}
-            icon={
-              <Ionicons
-                name="send"
-                size={24}
-                color={props.isPending ? Colors.gray[300] : Colors.primary[600]}
-              />
-            }
-            onPress={() => {
-              props.onSend(text);
-              setText("");
-            }}
-          />
-        </View>
+        {text ? (
+          <View style={{ flex: 1 }}>
+            <ActionIcon
+              disabled={props.isPending}
+              icon={
+                <Ionicons
+                  name="send"
+                  size={32}
+                  color={
+                    props.isPending ? Colors.gray[300] : Colors.primary[600]
+                  }
+                />
+              }
+              onPress={() => {
+                props.onSend(text);
+                setText("");
+              }}
+            />
+          </View>
+        ) : (
+          <View>
+            <ActionIcon
+              icon={
+                <Ionicons name="mic" size={32} color={Colors.primary[600]} />
+              }
+              onPress={() => {}}
+            />
+          </View>
+        )}
       </View>
     </View>
   );

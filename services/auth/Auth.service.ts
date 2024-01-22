@@ -1,5 +1,5 @@
 import { axiosBase, axiosSecure } from "..";
-import { APIResponse } from "../../types/common";
+import { APIResponse } from "../../screens/common";
 
 export async function checkAuth() {
   const res = await axiosSecure.get<APIResponse<string>>("/auth/test");

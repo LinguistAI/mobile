@@ -4,7 +4,6 @@ import { StyleSheet, View } from "react-native";
 import ActionIcon from "../common/ActionIcon";
 import MultilineTextInput from "../common/input/MultilineTextInput";
 import Colors from "../../theme/colors";
-import Voice from "@react-native-voice/voice/dist/index";
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -17,7 +16,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   return (
     <View style={styles.innerBorder}>
       <View style={styles.innerContainer}>
-        <View style={{ flex: 7 }}>
+        <View style={{ flex: 6 }}>
           <MultilineTextInput
             onChangeText={(text) => setText(text)}
             value={text}

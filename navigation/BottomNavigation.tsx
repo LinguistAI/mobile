@@ -1,12 +1,14 @@
 import IonIcons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Pressable } from "react-native";
-import ChatScreen from "../screens/ChatScreen";
-import HomeScreen from "../screens/HomeScreen";
-import LeaderboardScreen from "../screens/LeaderboardScreen";
+import ChatScreen from "../screens/chat/ChatScreen";
+import HomeScreen from "../screens/home/HomeScreen";
+import LeaderboardScreen from "../screens/leaderboard/LeaderboardScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import SettingsScreen from "../screens/user/SettingsScreen";
-import WordListsScreen from "../screens/WordListsScreen";
+import WordListsScreen from "../screens/word-list/WordListsScreen";
+import HomeStackNavigator from "./HomeStackNavigator";
+import WordListStackNavigator from "./WordListStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,7 +17,7 @@ const BottomNavigation = () => {
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <IonIcons name="home-outline" size={size} color={color} />
@@ -37,8 +39,8 @@ const BottomNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Word-List"
-        component={WordListsScreen}
+        name="Word List"
+        component={WordListStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <IonIcons name="list-outline" size={size} color={color} />
@@ -51,24 +53,6 @@ const BottomNavigation = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <IonIcons name="podium-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <IonIcons name="person-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <IonIcons name="settings-outline" size={size} color={color} />
           ),
         }}
       />

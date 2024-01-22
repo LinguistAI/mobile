@@ -4,7 +4,7 @@ import Colors from "../../theme/colors";
 interface ActionButtonProps {
   icon: React.ReactElement;
   onPress: () => void;
-  title: string;
+  title?: string;
   divider?: boolean;
   subText?: string;
 }

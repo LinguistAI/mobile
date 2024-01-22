@@ -11,6 +11,7 @@ import {
 import ActionIcon from "../common/ActionIcon";
 import CloseIcon from "../common/CloseIcon";
 import Colors from "../../theme/colors";
+import * as Speech from "expo-speech";
 
 interface WordInfoCardProps {
   selectedWord: string;
@@ -53,7 +54,19 @@ const WordInfoCard = ({
     <View style={styles.cardContainer}>
       <CloseIcon onPress={onDismiss} />
       <View style={styles.explanationContainer}>
-        <Text style={styles.word}>{selectedWord}</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.word}>{selectedWord}</Text>
+          <ActionIcon
+            icon={
+              <Ionicons
+                name="volume-medium"
+                size={36}
+                color={Colors.primary["600"]}
+              />
+            }
+            onPress={() => Speech.speak(selectedWord)}
+          />
+        </View>
         {meanings.map((meaning, index) => (
           <Text key={index} style={styles.meaning}>
             {meaning}
@@ -117,6 +130,14 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: "90%",
   },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+    textAlign: "center",
+    gap: 10,
+  },
   explanationContainer: {
     alignItems: "center",
     marginBottom: 30,
@@ -125,7 +146,6 @@ const styles = StyleSheet.create({
   word: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
   },
   meaning: {
     fontSize: 18,

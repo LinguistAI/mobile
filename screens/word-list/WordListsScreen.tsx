@@ -221,7 +221,7 @@ const WordListsScreen = () => {
                         <Ionicons
                           size={16}
                           name="ellipsis-vertical"
-                          color={Colors.gray["1000"]}
+                          color={Colors.gray["900"]}
                         />
                       }
                       onPress={() => {}}

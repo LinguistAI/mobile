@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import WritingAnimation from "../chat/WritingAnimation";
 import Colors from "../../theme/colors";
-import { ChatMessage, ChatMessageSender } from "../../types/common";
+import { ChatMessage, ChatMessageSender } from "../../screens/common";
 import ActionIcon from "./ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
@@ -24,7 +24,6 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const timestamp = new Date(chatMessage.timestamp);
   const lines = chatMessage.content.split("\n");
   const isSentByUser = chatMessage.sender === ChatMessageSender.user;
-  console.log(isSentByUser);
 
   const handleWordPress = (
     event: GestureResponderEvent,

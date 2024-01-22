@@ -7,14 +7,14 @@ import {
   Text,
   View,
 } from "react-native";
-import ChatMessageComponent from "../components/common/ChatMessageComponent";
-import ChatTextInputContainer from "../components/chat/ChatTextInputContainer";
-import WordInfoCard from "../components/chat/WordInfoCard";
-import { useChatMessages } from "../hooks/useChatMessages";
-import { ChatMessageSender, type ChatMessage } from "../types/common";
-import { sendChatMessage } from "../services/chat/Chat.service";
+import ChatMessageComponent from "../../components/common/ChatMessageComponent";
+import ChatTextInputContainer from "../../components/chat/ChatTextInputContainer";
+import WordInfoCard from "../../components/chat/WordInfoCard";
+import { useChatMessages } from "../../hooks/useChatMessages";
+import { ChatMessageSender, type ChatMessage } from "../common";
+import { sendChatMessage } from "../../services/chat/Chat.service";
 import { useMutation } from "@tanstack/react-query";
-import useUser from "../hooks/auth/useUser";
+import useUser from "../../hooks/auth/useUser";
 
 const ChatScreen = () => {
   const { addMessage, isSyncing, messages } = useChatMessages({});

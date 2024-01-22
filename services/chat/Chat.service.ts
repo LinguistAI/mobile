@@ -1,5 +1,5 @@
-import { ChatMessage } from "../../types/Chat.types";
-import { APIResponse } from "../../types/common";
+import { ChatMessage } from "../../screens/chat/types";
+import { APIResponse } from "../../screens/common";
 import { ChatbotResponse } from "./Chat.types";
 import { axiosChatbot } from "..";
 

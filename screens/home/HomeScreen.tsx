@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { Modal, SafeAreaView, StyleSheet, View } from "react-native";
-import CloseIcon from "../components/common/CloseIcon";
-import ChatStreakContainer from "../components/gamification/ChatStreakContainer";
-import useUser from "../hooks/auth/useUser";
-import { isDateToday } from "../utils/date.utils";
-import ActionButton from "../components/common/ActionButton";
+import CloseIcon from "../../components/common/CloseIcon";
+import ChatStreakContainer from "../../components/gamification/ChatStreakContainer";
+import useUser from "../../hooks/auth/useUser";
+import { isDateToday } from "../../utils/date.utils";
+import ActionButton from "../../components/common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";
-import Colors from "../theme/colors";
+import Colors from "../../theme/colors";
+import { useNavigation } from "@react-navigation/native";
+import ActionIcon from "../../components/common/ActionIcon";
 
 const HomeScreen = () => {
   const [streakModalVisible, setModalVisible] = useState(false);
   const { user } = useUser();
+  const navigator = useNavigation();
 
   useEffect(() => {
     if (user && isDateToday(user.lastLogin)) {
@@ -43,20 +46,36 @@ const HomeScreen = () => {
             </View>
           </View>
         </Modal>
-        <View style={styles.chatStreakButtonContainer}>
-          <ActionButton
-            icon={
-              <Ionicons
-                name="calendar"
-                size={24}
-                color={Colors.primary["500"]}
-              />
-            }
-            onPress={() => {
-              setModalVisible(true);
-            }}
-            title="Chat Streak"
-          />
+        <View style={styles.topContainer}>
+          <View style={styles.chatStreakButtonContainer}>
+            <ActionButton
+              icon={
+                <Ionicons
+                  name="calendar"
+                  size={24}
+                  color={Colors.primary["500"]}
+                />
+              }
+              onPress={() => {
+                setModalVisible(true);
+              }}
+              title="Chat Streak"
+            />
+          </View>
+          <View style={styles.profileIcon}>
+            <ActionIcon
+              icon={
+                <Ionicons
+                  name="person-circle-outline"
+                  size={36}
+                  color="black"
+                />
+              }
+              onPress={() => {
+                navigator.navigate("Profile");
+              }}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -78,7 +97,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
-
     padding: 20,
     paddingVertical: 10,
   },
@@ -90,5 +108,14 @@ const styles = StyleSheet.create({
   chatStreakButtonContainer: {
     maxWidth: 150,
     marginLeft: 20,
+  },
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  profileIcon: {
+    marginRight: 20,
+    maxWidth: 50,
   },
 });

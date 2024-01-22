@@ -14,6 +14,7 @@ const MultilineTextInput = (props: MultilineTextInputProps) => {
   return (
     <TextInput
       {...props}
+      placeholder="Type a message"
       value={props.value}
       multiline={true}
       onChangeText={props.onChangeText}

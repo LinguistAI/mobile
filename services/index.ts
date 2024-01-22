@@ -55,7 +55,6 @@ axiosSecure.interceptors.response.use(
       if (!user) {
         return;
       }
-      console.log("refreshing token");
       const res = await axios.get<{ accessToken: string }>("/auth/refresh", {
         withCredentials: true,
         headers: {

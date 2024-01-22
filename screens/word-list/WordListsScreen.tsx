@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { WordList } from "./types";
 import WordListFilter from "../../components/word-list/WordListFilter";
 import MultilineTextInput from "../../components/common/input/MultilineTextInput";
+import ActionIcon from "../../components/common/ActionIcon";
 
 const WORD_LISTS: WordList[] = [
   {
@@ -112,8 +113,13 @@ const WordListsScreen = () => {
   });
 
   useEffect(() => {
-    const filteredWordLists = wordLists.filter((list) =>
-      list.title.toLowerCase().includes(filter.title.toLowerCase())
+    const filteredWordLists = wordLists.filter(
+      (list) =>
+        list.title.toLowerCase().includes(filter.title.toLowerCase()) ||
+        list.description.toLowerCase().includes(filter.title.toLowerCase()) ||
+        list.words.some((word) =>
+          word.word.toLowerCase().includes(filter.title.toLowerCase())
+        )
     );
     setFilteredWordLists(filteredWordLists);
   }, [filter]);
@@ -197,16 +203,30 @@ const WordListsScreen = () => {
                     {list.words.length} words in total
                   </Text>
                 </View>
-                <View style={styles.stats}>
-                  <Text style={styles.stat}>
-                    {list?.listStats.mastered} mastered{" "}
-                  </Text>
-                  <Text style={styles.stat}>
-                    {list?.listStats.reviewing} reviewing{" "}
-                  </Text>
-                  <Text style={styles.stat}>
-                    {list?.listStats.learning} learning
-                  </Text>
+                <View style={styles.bottomRow}>
+                  <View style={styles.stats}>
+                    <Text style={styles.stat}>
+                      {list?.listStats.mastered} mastered{" "}
+                    </Text>
+                    <Text style={styles.stat}>
+                      {list?.listStats.reviewing} reviewing{" "}
+                    </Text>
+                    <Text style={styles.stat}>
+                      {list?.listStats.learning} learning
+                    </Text>
+                  </View>
+                  <View style={styles.menuContainer}>
+                    <ActionIcon
+                      icon={
+                        <Ionicons
+                          size={16}
+                          name="ellipsis-vertical"
+                          color={Colors.gray["1000"]}
+                        />
+                      }
+                      onPress={() => {}}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
@@ -243,6 +263,7 @@ const WordListsScreen = () => {
                 <ModalControlButtons
                   onCancel={handleCancelAddList}
                   onSubmit={methods.handleSubmit(onSubmit, onError)}
+                  okText="Add"
                 />
               </View>
             </View>
@@ -259,6 +280,18 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginTop: 40,
     gap: 10,
+  },
+  menuContainer: {
+    alignSelf: "flex-end",
+    paddingHorizontal: 5,
+    paddingBottom: 5,
+  },
+  bottomRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: Colors.primary["500"], // Add this line
+    opacity: 0.8, // Add this line
+    marginTop: 25,
   },
   filterContainer: {
     flexDirection: "row",
@@ -304,10 +337,7 @@ const styles = StyleSheet.create({
   stats: {
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: Colors.primary["500"], // Add this line
-    opacity: 0.8, // Add this line
     flexDirection: "column",
-    marginTop: 25,
   },
   stat: {
     fontSize: 13,
@@ -336,7 +366,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: 20,
-    gap: 25,
+    gap: 35,
   },
 });
 

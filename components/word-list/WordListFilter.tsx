@@ -2,13 +2,19 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import ActionIcon from "../common/ActionIcon";
 import Colors from "../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { set } from "react-hook-form";
+import { useState } from "react";
+import ModalWrapper from "../common/ModalWrapper";
+import ModalControlButtons from "../common/modal/ModalControlButtons";
 
 interface WordListFilterProps {
-  label?: string;
-  rightIcon?: React.ReactNode;
+  filter: any;
+  setFilter: (filter: any) => void;
 }
 
-const WordListFilter = ({ filter, setFilter }) => {
+const WordListFilter = ({ filter, setFilter }: WordListFilterProps) => {
+  const [openFilterModal, setOpenFilterModal] = useState(false);
+
   const handleSetFilter = (key: string, value: any) => {
     setFilter({ ...filter, [key]: value });
   };
@@ -39,9 +45,24 @@ const WordListFilter = ({ filter, setFilter }) => {
               color={Colors.primary[600]}
             />
           }
-          onPress={() => console.log("filter")}
+          onPress={() => setOpenFilterModal(true)}
         />
       </View>
+      <ModalWrapper
+        onRequestClose={() => setOpenFilterModal(false)}
+        visible={openFilterModal}
+        title="Filter"
+      >
+        <View>
+          <View>
+            <ModalControlButtons
+              onCancel={() => setOpenFilterModal(false)}
+              onSubmit={() => setOpenFilterModal(false)}
+              okText="Apply"
+            />
+          </View>
+        </View>
+      </ModalWrapper>
     </View>
   );
 };

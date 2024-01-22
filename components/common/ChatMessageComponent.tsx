@@ -47,11 +47,11 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
       ) : (
         <View>
           <View style={styles.messageLineContainer}>
-            {lines.map((line) => {
+            {lines.map((line, index) => {
               const words = line.split(" ");
 
               return (
-                <View style={styles.messageLine}>
+                <View key={`line-${index}`} style={styles.messageLine}>
                   {words.map((word) => {
                     return (
                       <Pressable
@@ -73,8 +73,8 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
               <ActionIcon
                 icon={
                   <Ionicons
-                    name="mic-circle"
-                    size={36}
+                    name="volume-medium"
+                    size={32}
                     color={
                       isSentByUser ? Colors.gray["100"] : Colors.primary["500"]
                     }

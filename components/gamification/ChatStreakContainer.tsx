@@ -89,15 +89,17 @@ const StreakDisplay = ({
   );
 };
 
-const ChatStreakContainer = () => {
-  const { data: chatStreak, isLoading } = useQuery({
-    queryKey: ["chatStreak"],
-    queryFn: () => {
-      return getUserChatStreak();
-    },
-  });
+interface ChatStreakContainerProps {
+  isLoading: boolean;
+  currentStreak: number | undefined;
+  highestStreak: number | undefined;
+}
 
-  const { currentStreak, highestStreak } = chatStreak?.data.data || {};
+const ChatStreakContainer = ({
+  isLoading,
+  currentStreak,
+  highestStreak,
+}: ChatStreakContainerProps) => {
   return (
     <View style={styles.modalInnerContainer}>
       {isLoading ? (

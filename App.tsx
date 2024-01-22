@@ -27,7 +27,14 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <CustomErrorBoundary>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Landing">
+          <Stack.Navigator
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: "white",
+              },
+            }}
+            initialRouteName="Landing"
+          >
             <Stack.Screen
               name="Landing"
               component={LandingScreen}

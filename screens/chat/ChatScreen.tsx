@@ -11,10 +11,10 @@ import ChatMessageComponent from "../../components/common/ChatMessageComponent";
 import ChatTextInputContainer from "../../components/chat/ChatTextInputContainer";
 import WordInfoCard from "../../components/chat/WordInfoCard";
 import { useChatMessages } from "../../hooks/useChatMessages";
-import { ChatMessageSender, type ChatMessage } from "../common";
 import { sendChatMessage } from "../../services/chat/Chat.service";
 import { useMutation } from "@tanstack/react-query";
 import useUser from "../../hooks/auth/useUser";
+import { ChatMessage, ChatMessageSender } from "./types";
 
 const ChatScreen = () => {
   const { addMessage, isSyncing, messages } = useChatMessages({});
@@ -36,7 +36,7 @@ const ChatScreen = () => {
         addMessage({
           content: response.data.answer,
           sender: ChatMessageSender.assistant,
-          timestamp: response.timestamp,
+          timestamp: new Date(),
         });
       },
     });
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   messagesContainer: {
     flex: 12,
     marginHorizontal: 16,
-    marginTop: 50,
+    marginTop: 40,
   },
   centeredView: {
     flex: 1,

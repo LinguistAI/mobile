@@ -29,11 +29,29 @@ const WordListFilter = ({ filter, setFilter }: WordListFilterProps) => {
             color={Colors.primary[600]}
           />
           <TextInput
-            style={[styles.textInput]}
+            style={[
+              styles.textInput,
+              filter["title"] === "" ? { flexBasis: "90%" } : null,
+            ]}
             onChangeText={(value) => handleSetFilter("title", value)}
             value={filter["title"]}
             placeholder="Search by title, description, or word"
           />
+
+          {filter["title"] !== "" && (
+            <View style={{ alignSelf: "center", marginRight: 20 }}>
+              <ActionIcon
+                icon={
+                  <Ionicons
+                    name="close-outline"
+                    size={24}
+                    color={Colors.primary[600]}
+                  />
+                }
+                onPress={() => handleSetFilter("title", "")}
+              />
+            </View>
+          )}
         </View>
       </View>
       <View style={styles.filterOptionContainer}>
@@ -80,22 +98,22 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   textInput: {
-    flexBasis: "85%",
+    flexBasis: "75%",
   },
   inputContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: "white",
     paddingHorizontal: 8,
     width: "100%",
+    gap: 6,
   },
   inputRoot: {
     flex: 8,
     height: 50,
     borderWidth: 2,
-    borderBottomColor: Colors.gray[400],
+    borderBottomColor: Colors.primary[300],
     borderTopColor: "transparent",
     borderLeftColor: "transparent",
     borderRightColor: "transparent",

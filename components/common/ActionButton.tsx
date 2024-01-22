@@ -4,7 +4,7 @@ import Colors from "../../theme/colors";
 interface ActionButtonProps {
   icon: React.ReactElement;
   onPress: () => void;
-  title?: string;
+  title?: string | React.ReactElement;
   divider?: boolean;
   subText?: string;
 }
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     borderRadius: 6,
-    borderWidth: 1, // Add border
+    borderWidth: 2, // Add border
     borderColor: Colors.primary["600"], // Set border color
     maxWidth: 250,
   },

@@ -7,10 +7,10 @@ import {
 } from "react-native";
 import WritingAnimation from "../chat/WritingAnimation";
 import Colors from "../../theme/colors";
-import { ChatMessage, ChatMessageSender } from "../../screens/common";
 import ActionIcon from "./ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
+import { ChatMessage, ChatMessageSender } from "../../screens/chat/types";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -147,9 +147,9 @@ const styles = StyleSheet.create({
     color: Colors.gray[700],
   },
   timestampReceived: {
-    alignSelf: "flex-start",
+    alignSelf: "flex-end",
     fontSize: 11,
-    color: Colors.gray[700],
+    color: Colors.gray[100],
   },
   micSent: {
     alignSelf: "flex-start",

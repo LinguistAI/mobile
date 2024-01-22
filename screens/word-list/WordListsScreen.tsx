@@ -4,8 +4,6 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Modal,
-  TextInput,
   Pressable,
 } from "react-native";
 import Colors from "../../theme/colors";
@@ -16,12 +14,14 @@ import PrimaryTextInput from "../../components/common/input/PrimaryTextInput";
 import ModalControlButtons from "../../components/common/modal/ModalControlButtons";
 import ModalWrapper from "../../components/common/ModalWrapper";
 import { useNavigation } from "@react-navigation/native";
-import { WordList } from "./types";
+import { TWordList } from "./types";
 import WordListFilter from "../../components/word-list/WordListFilter";
-import MultilineTextInput from "../../components/common/input/MultilineTextInput";
 import ActionIcon from "../../components/common/ActionIcon";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
+import WordList from "../../components/word-list/WordList";
 
-const WORD_LISTS: WordList[] = [
+const WORD_LISTS: TWordList[] = [
   {
     id: "1",
     title: "My first list",
@@ -108,6 +108,7 @@ const WordListsScreen = () => {
   const methods = useForm({
     defaultValues: {
       listName: "",
+      description: "",
     },
     mode: "onSubmit",
   });
@@ -115,14 +116,16 @@ const WordListsScreen = () => {
   useEffect(() => {
     const filteredWordLists = wordLists.filter(
       (list) =>
-        list.title.toLowerCase().includes(filter.title.toLowerCase()) ||
-        list.description.toLowerCase().includes(filter.title.toLowerCase()) ||
-        list.words.some((word) =>
-          word.word.toLowerCase().includes(filter.title.toLowerCase())
+        list?.title?.toLowerCase().includes(filter?.title.toLowerCase()) ||
+        list?.description
+          ?.toLowerCase()
+          .includes(filter?.title.toLowerCase()) ||
+        list?.words?.some((word) =>
+          word.word.toLowerCase().includes(filter?.title.toLowerCase())
         )
     );
     setFilteredWordLists(filteredWordLists);
-  }, [filter]);
+  }, [filter, wordLists]);
 
   const validateSubmit = (data: any) => {
     wordLists.forEach((list) => {
@@ -137,7 +140,6 @@ const WordListsScreen = () => {
 
   const onSubmit = (data: any) => {
     validateSubmit(data);
-
     if (!methods.formState.isValid) {
       return;
     }
@@ -145,7 +147,7 @@ const WordListsScreen = () => {
     setWordLists([
       ...wordLists,
       {
-        id: "4",
+        id: uuidv4(),
         title: data.listName,
         description: data.description,
         words: [],
@@ -190,47 +192,11 @@ const WordListsScreen = () => {
       </View>
       <View style={styles.wordListContainer}>
         {filteredWordLists.map((list) => (
-          <Pressable
-            style={styles.card}
-            onPress={() => handleListSelection(list.id)}
-          >
-            <View key={list.id}>
-              <Image source={{ uri: list.imageUrl }} style={styles.image} />
-              <View style={styles.overlay}>
-                <View>
-                  <Text style={styles.title}>{list.title}</Text>
-                  <Text style={styles.words}>
-                    {list.words.length} words in total
-                  </Text>
-                </View>
-                <View style={styles.bottomRow}>
-                  <View style={styles.stats}>
-                    <Text style={styles.stat}>
-                      {list?.listStats.mastered} mastered{" "}
-                    </Text>
-                    <Text style={styles.stat}>
-                      {list?.listStats.reviewing} reviewing{" "}
-                    </Text>
-                    <Text style={styles.stat}>
-                      {list?.listStats.learning} learning
-                    </Text>
-                  </View>
-                  <View style={styles.menuContainer}>
-                    <ActionIcon
-                      icon={
-                        <Ionicons
-                          size={16}
-                          name="ellipsis-vertical"
-                          color={Colors.gray["900"]}
-                        />
-                      }
-                      onPress={() => {}}
-                    />
-                  </View>
-                </View>
-              </View>
-            </View>
-          </Pressable>
+          <WordList
+            key={list.id}
+            list={list}
+            handleListSelection={handleListSelection}
+          />
         ))}
         <TouchableOpacity
           onPress={handleOpenAddListModal}
@@ -281,18 +247,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     gap: 10,
   },
-  menuContainer: {
-    alignSelf: "flex-end",
-    paddingHorizontal: 5,
-    paddingBottom: 5,
-  },
-  bottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: Colors.primary["500"], // Add this line
-    opacity: 0.8, // Add this line
-    marginTop: 25,
-  },
+
   filterContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -307,43 +262,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 8,
   },
-  card: {
-    marginBottom: 10,
-    width: "48%",
-    position: "relative", // Add this line
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 8,
-    position: "absolute", // Add this line
-  },
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // Add this line
-  },
-  title: {
-    paddingHorizontal: 10,
-    paddingTop: 15,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff", // Add this line
-    textAlign: "center",
-  },
-  words: {
-    fontSize: 14,
-    color: "#fff", // Add this line
-    textAlign: "center",
-  },
-  stats: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    flexDirection: "column",
-  },
-  stat: {
-    fontSize: 13,
-    color: "#fff", // Add this line
-    fontStyle: "italic",
-  },
+
   floatingAddListButton: {
     position: "absolute",
     width: 56,

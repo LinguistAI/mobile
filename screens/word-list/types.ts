@@ -6,7 +6,8 @@ export type WordDefinition = {
 
 export type WordList = {
   id: string;
-  name: string;
+  title: string;
+  description: string;
   words: WordDefinition[];
   listStats: {
     mastered: number;
@@ -14,4 +15,6 @@ export type WordList = {
     learning: number;
   };
   imageUrl: string;
+  pinned: boolean;
+  isActive: boolean;
 };

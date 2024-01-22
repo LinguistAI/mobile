@@ -10,18 +10,21 @@ import {
 } from "react-native";
 import Colors from "../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PrimaryTextInput from "../../components/common/input/PrimaryTextInput";
 import ModalControlButtons from "../../components/common/modal/ModalControlButtons";
 import ModalWrapper from "../../components/common/ModalWrapper";
 import { useNavigation } from "@react-navigation/native";
 import { WordList } from "./types";
+import WordListFilter from "../../components/word-list/WordListFilter";
+import MultilineTextInput from "../../components/common/input/MultilineTextInput";
 
 const WORD_LISTS: WordList[] = [
   {
     id: "1",
-    name: "My first list",
+    title: "My first list",
+    description: "This is my first list",
     words: [
       {
         word: "hello",
@@ -40,10 +43,13 @@ const WORD_LISTS: WordList[] = [
       learning: 1,
     },
     imageUrl: "https://picsum.photos/200",
+    pinned: false,
+    isActive: false,
   },
   {
     id: "2",
-    name: "My second list",
+    title: "My second list",
+    description: "This is my second list",
     words: [
       {
         word: "hello",
@@ -62,10 +68,13 @@ const WORD_LISTS: WordList[] = [
       learning: 1,
     },
     imageUrl: "https://picsum.photos/250",
+    pinned: false,
+    isActive: false,
   },
   {
     id: "3",
-    name: "My third list",
+    title: "My third list",
+    description: "This is my third list",
     words: [
       {
         word: "hello",
@@ -84,12 +93,16 @@ const WORD_LISTS: WordList[] = [
       learning: 1,
     },
     imageUrl: "https://picsum.photos/300",
+    pinned: false,
+    isActive: false,
   },
 ];
 
 const WordListsScreen = () => {
   const [wordLists, setWordLists] = useState(WORD_LISTS);
+  const [filteredWordLists, setFilteredWordLists] = useState(wordLists);
   const [addListModalVisible, setAddListModalVisible] = useState(false);
+  const [filter, setFilter] = useState({ title: "" });
   const navigation = useNavigation();
   const methods = useForm({
     defaultValues: {
@@ -98,9 +111,16 @@ const WordListsScreen = () => {
     mode: "onSubmit",
   });
 
+  useEffect(() => {
+    const filteredWordLists = wordLists.filter((list) =>
+      list.title.toLowerCase().includes(filter.title.toLowerCase())
+    );
+    setFilteredWordLists(filteredWordLists);
+  }, [filter]);
+
   const validateSubmit = (data: any) => {
     wordLists.forEach((list) => {
-      if (list.name === data.listName) {
+      if (list.title === data.listName) {
         methods.setError("listName", {
           type: "manual",
           message: "List name already exists",
@@ -120,13 +140,16 @@ const WordListsScreen = () => {
       ...wordLists,
       {
         id: "4",
-        name: data.listName,
+        title: data.listName,
+        description: data.description,
         words: [],
         listStats: {
           mastered: 0,
           reviewing: 0,
           learning: 0,
         },
+        pinned: false,
+        isActive: false,
         imageUrl: "https://picsum.photos/260",
       },
     ]);
@@ -156,61 +179,76 @@ const WordListsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {wordLists.map((list) => (
-        <Pressable onPress={() => handleListSelection(list.id)}>
-          <View key={list.id} style={styles.card}>
-            <Image source={{ uri: list.imageUrl }} style={styles.image} />
-            <View style={styles.overlay}>
-              <View>
-                <Text style={styles.title}>{list.name}</Text>
-                <Text style={styles.words}>
-                  {list.words.length} words in total
-                </Text>
-              </View>
-              <View style={styles.stats}>
-                <Text style={styles.stat}>
-                  {list?.listStats.mastered} mastered{" "}
-                </Text>
-                <Text style={styles.stat}>
-                  {list?.listStats.reviewing} reviewing{" "}
-                </Text>
-                <Text style={styles.stat}>
-                  {list?.listStats.learning} learning
-                </Text>
+      <View style={styles.filterContainer}>
+        <WordListFilter filter={filter} setFilter={setFilter} />
+      </View>
+      <View style={styles.wordListContainer}>
+        {filteredWordLists.map((list) => (
+          <Pressable
+            style={styles.card}
+            onPress={() => handleListSelection(list.id)}
+          >
+            <View key={list.id}>
+              <Image source={{ uri: list.imageUrl }} style={styles.image} />
+              <View style={styles.overlay}>
+                <View>
+                  <Text style={styles.title}>{list.title}</Text>
+                  <Text style={styles.words}>
+                    {list.words.length} words in total
+                  </Text>
+                </View>
+                <View style={styles.stats}>
+                  <Text style={styles.stat}>
+                    {list?.listStats.mastered} mastered{" "}
+                  </Text>
+                  <Text style={styles.stat}>
+                    {list?.listStats.reviewing} reviewing{" "}
+                  </Text>
+                  <Text style={styles.stat}>
+                    {list?.listStats.learning} learning
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        </Pressable>
-      ))}
-      <TouchableOpacity
-        onPress={handleOpenAddListModal}
-        style={styles.floatingAddListButton}
-      >
-        <Ionicons name="add" size={30} color="#fff" />
-      </TouchableOpacity>
-      <ModalWrapper
-        visible={addListModalVisible}
-        onRequestClose={handleCancelAddList}
-        title="Add a new list"
-      >
-        <View style={styles.formContent}>
+          </Pressable>
+        ))}
+        <TouchableOpacity
+          onPress={handleOpenAddListModal}
+          style={styles.floatingAddListButton}
+        >
+          <Ionicons name="add" size={30} color="#fff" />
+        </TouchableOpacity>
+        <ModalWrapper
+          visible={addListModalVisible}
+          onRequestClose={handleCancelAddList}
+          title="Add a new list"
+        >
           <FormProvider {...methods}>
-            <PrimaryTextInput
-              name="listName"
-              label="List Name"
-              defaultValue=""
-              placeholder="Enter list name"
-              rules={{ required: "List name is required" }}
-            />
-            <View style={styles.formControls}>
-              <ModalControlButtons
-                onCancel={handleCancelAddList}
-                onSubmit={methods.handleSubmit(onSubmit, onError)}
+            <View style={styles.formContent}>
+              <PrimaryTextInput
+                name="listName"
+                label="List Name"
+                defaultValue=""
+                placeholder="Enter list name"
+                rules={{ required: "List name is required", minLength: 3 }}
               />
+              <PrimaryTextInput
+                name="listDescription"
+                label="List Description"
+                defaultValue=""
+                placeholder="Enter list description"
+                rules={{ required: "List description is required" }}
+              />
+              <View style={styles.formControls}>
+                <ModalControlButtons
+                  onCancel={handleCancelAddList}
+                  onSubmit={methods.handleSubmit(onSubmit, onError)}
+                />
+              </View>
             </View>
           </FormProvider>
-        </View>
-      </ModalWrapper>
+        </ModalWrapper>
+      </View>
     </View>
   );
 };
@@ -218,7 +256,19 @@ const WordListsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
+    flexDirection: "column",
+    marginTop: 40,
+    gap: 10,
+  },
+  filterContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    flex: 1,
+  },
+  wordListContainer: {
+    flex: 11,
     padding: 10,
     flexDirection: "row",
     flexWrap: "wrap",
@@ -276,23 +326,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     elevation: 8,
   },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 35,
-    alignItems: "center",
-    borderRadius: 20,
-    width: "90%",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    gap: 20,
-  },
   formContent: {
     width: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
+    gap: 20,
   },
   formControls: {
     flexDirection: "row",

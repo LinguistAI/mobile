@@ -93,12 +93,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   inputRoot: {
-    height: 60,
-    borderWidth: 1,
-    padding: 10,
-    borderColor: Colors.gray[400],
+    height: 50,
+    borderWidth: 2,
+    borderBottomColor: Colors.primary[300],
+    borderTopColor: "transparent",
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
     color: Colors.gray[600],
-    borderRadius: 8,
   },
   errorMessage: {
     color: "red",

@@ -9,7 +9,7 @@ interface WordListProps {
   handleListSelection: (id: string) => void;
 }
 
-const WordList = ({ list, handleListSelection }: WordListProps) => {
+const WordListCard = ({ list, handleListSelection }: WordListProps) => {
   return (
     <Pressable style={styles.card} onPress={() => handleListSelection(list.id)}>
       <View key={list.id}>
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WordList;
+export default WordListCard;

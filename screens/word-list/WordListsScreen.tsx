@@ -19,7 +19,7 @@ import WordListFilter from "../../components/word-list/WordListFilter";
 import ActionIcon from "../../components/common/ActionIcon";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-import WordList from "../../components/word-list/WordList";
+import WordListCard from "../../components/word-list/WordListCard";
 
 const WORD_LISTS: TWordList[] = [
   {
@@ -103,29 +103,14 @@ const WordListsScreen = () => {
   const [wordLists, setWordLists] = useState(WORD_LISTS);
   const [filteredWordLists, setFilteredWordLists] = useState(wordLists);
   const [addListModalVisible, setAddListModalVisible] = useState(false);
-  const [filter, setFilter] = useState({ title: "" });
   const navigation = useNavigation();
   const methods = useForm({
     defaultValues: {
       listName: "",
-      description: "",
+      listDescription: "",
     },
     mode: "onSubmit",
   });
-
-  useEffect(() => {
-    const filteredWordLists = wordLists.filter(
-      (list) =>
-        list?.title?.toLowerCase().includes(filter?.title.toLowerCase()) ||
-        list?.description
-          ?.toLowerCase()
-          .includes(filter?.title.toLowerCase()) ||
-        list?.words?.some((word) =>
-          word.word.toLowerCase().includes(filter?.title.toLowerCase())
-        )
-    );
-    setFilteredWordLists(filteredWordLists);
-  }, [filter, wordLists]);
 
   const validateSubmit = (data: any) => {
     wordLists.forEach((list) => {
@@ -188,11 +173,14 @@ const WordListsScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
-        <WordListFilter filter={filter} setFilter={setFilter} />
+        <WordListFilter
+          wordLists={wordLists}
+          setFilteredWordLists={setFilteredWordLists}
+        />
       </View>
       <View style={styles.wordListContainer}>
         {filteredWordLists.map((list) => (
-          <WordList
+          <WordListCard
             key={list.id}
             list={list}
             handleListSelection={handleListSelection}

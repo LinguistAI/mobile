@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Modal,
   SafeAreaView,
@@ -92,34 +93,41 @@ const ChatScreen = () => {
           />
         </View>
       </Modal>
-      <View style={styles.messagesContainer}>
-        <FlatList
-          data={messages}
-          renderItem={({ item }) => (
-            <ChatMessageComponent
-              onWordPress={handleWordPress}
-              key={item.id || item.timestamp.toString()}
-              chatMessage={item}
-            />
-          )}
-          ListFooterComponent={
-            isSendingMessage ? (
+      {isSyncing ? (
+        <View style={styles.centeredView}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <View style={styles.messagesContainer}>
+          <FlatList
+            data={messages}
+            renderItem={({ item }) => (
               <ChatMessageComponent
                 onWordPress={handleWordPress}
-                isWriting={true}
-                chatMessage={{
-                  sender: ChatMessageSender.assistant,
-                  content: "",
-                  timestamp: new Date(),
-                }}
+                key={item.id || item.timestamp.toString()}
+                chatMessage={item}
               />
-            ) : (
-              <></>
-            )
-          }
-          keyExtractor={(item) => item.id || item.timestamp.toString()}
-        />
-      </View>
+            )}
+            ListFooterComponent={
+              isSendingMessage ? (
+                <ChatMessageComponent
+                  onWordPress={handleWordPress}
+                  isWriting={true}
+                  chatMessage={{
+                    sender: ChatMessageSender.assistant,
+                    content: "",
+                    timestamp: new Date(),
+                  }}
+                />
+              ) : (
+                <></>
+              )
+            }
+            keyExtractor={(item) => item.id || item.timestamp.toString()}
+          />
+        </View>
+      )}
+
       <View style={styles.textInputContainer}>
         <ChatTextInputContainer onSend={onSend} isPending={isPending} />
       </View>

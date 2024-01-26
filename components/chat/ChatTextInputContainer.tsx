@@ -16,7 +16,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   return (
     <View style={styles.innerBorder}>
       <View style={styles.innerContainer}>
-        <View style={{ flex: 6 }}>
+        <View style={{ flex: 8 }}>
           <MultilineTextInput
             onChangeText={(text) => setText(text)}
             value={text}
@@ -30,7 +30,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
               icon={
                 <Ionicons
                   name="send"
-                  size={32}
+                  size={24}
                   color={
                     props.isPending ? Colors.gray[300] : Colors.primary[600]
                   }

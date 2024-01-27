@@ -3,6 +3,9 @@ import { TWordList } from "../../screens/word-list/types";
 import ActionIcon from "../common/ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../theme/colors";
+import { useState } from "react";
+import WordListCardOptionMenu from "./WordListCardOptionMenu";
+import { TMenuOption } from "./types";
 
 interface WordListProps {
   list: TWordList;
@@ -10,11 +13,71 @@ interface WordListProps {
 }
 
 const WordListCard = ({ list, handleListSelection }: WordListProps) => {
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const triggerOption = (option: TMenuOption) => {
+    switch (option) {
+      case TMenuOption.EDIT:
+        console.log("EDIT");
+        break;
+      case TMenuOption.FAVORITE:
+        console.log("FAVORITE");
+        break;
+      case TMenuOption.DELETE:
+        console.log("DELETE");
+        break;
+      case TMenuOption.PIN:
+        console.log("PIN");
+        break;
+      case TMenuOption.CANCEL:
+        console.log("CANCEL");
+        break;
+    }
+  };
+
+  const renderPin = () => {
+    if (list.pinned) {
+      return (
+        <View style={styles.pin}>
+          <ActionIcon
+            icon={<Ionicons size={24} name="pin" color={Colors.gray["900"]} />}
+            onPress={() => triggerOption(TMenuOption.PIN)}
+          />
+        </View>
+      );
+    }
+  };
+
+  const renderFavourite = () => {
+    if (list.favorite) {
+      return (
+        <View style={styles.favourite}>
+          <ActionIcon
+            icon={
+              <Ionicons
+                size={24}
+                name="heart-circle-outline"
+                color={Colors.gray["100"]}
+              />
+            }
+            onPress={() => triggerOption(TMenuOption.FAVORITE)}
+          />
+        </View>
+      );
+    }
+  };
+
   return (
-    <Pressable style={styles.card} onPress={() => handleListSelection(list.id)}>
+    <Pressable
+      style={styles.card}
+      onLongPress={() => setMenuVisible(true)}
+      onPress={() => handleListSelection(list.id)}
+    >
       <View key={list.id}>
         <Image source={{ uri: list.imageUrl }} style={styles.image} />
         <View style={styles.overlay}>
+          {renderPin()}
+          {renderFavourite()}
           <View>
             <Text style={styles.title}>{list.title}</Text>
             <Text style={styles.words}>{list.words.length} words in total</Text>
@@ -32,15 +95,10 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
               </Text>
             </View>
             <View style={styles.menuContainer}>
-              <ActionIcon
-                icon={
-                  <Ionicons
-                    size={16}
-                    name="ellipsis-vertical"
-                    color={Colors.gray["900"]}
-                  />
-                }
-                onPress={() => {}}
+              <WordListCardOptionMenu
+                menuVisible={menuVisible}
+                setMenuVisible={setMenuVisible}
+                triggerOption={triggerOption}
               />
             </View>
           </View>
@@ -55,6 +113,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: "48%",
     position: "relative", // Add this line
+    marginRight: 8,
+  },
+  pin: {
+    position: "absolute", // Add this line
+    top: 0,
+    left: 0,
+    zIndex: 1,
+  },
+  favourite: {
+    position: "absolute", // Add this line
+    top: 0,
+    right: 0,
+    zIndex: 1,
   },
   words: {
     fontSize: 14,
@@ -64,13 +135,12 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 8,
+    borderRadius: 4,
     position: "absolute", // Add this line
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.3)", // Add this line
   },
-
   bottomRow: {
     flexDirection: "row",
     justifyContent: "space-between",

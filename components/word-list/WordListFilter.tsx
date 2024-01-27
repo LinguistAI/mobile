@@ -5,26 +5,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import ModalWrapper from "../common/ModalWrapper";
 import ModalControlButtons from "../common/modal/ModalControlButtons";
-import { FormProvider } from "react-hook-form";
 import { Picker } from "@react-native-picker/picker";
-import Divider from "../common/Divider";
 import { TWordList } from "../../screens/word-list/types";
-import ActionButton from "../common/ActionButton";
+import { IFilterCriteria } from "./types";
+import { search } from "./utils";
+import { defaultFilter } from "./constants";
 
 interface WordListFilterProps {
   wordLists: TWordList[];
   setFilteredWordLists: (wordLists: TWordList[]) => void;
-}
-
-interface FilterCriteria<T> {
-  sort: {
-    accessor: keyof T;
-    order: "asc" | "desc";
-  };
-  search: {
-    searchText: string;
-    searchFn: (searchText: string, list: T[]) => T[];
-  };
 }
 
 const WordListFilter = ({
@@ -32,7 +21,9 @@ const WordListFilter = ({
   setFilteredWordLists,
 }: WordListFilterProps) => {
   const [openFilterModal, setOpenFilterModal] = useState(false);
-  const [filter, setFilter] = useState<FilterCriteria<TWordList>>({
+  const [tempFilter, setTempFilter] =
+    useState<IFilterCriteria<TWordList>>(defaultFilter);
+  const [filter, setFilter] = useState<IFilterCriteria<TWordList>>({
     search: {
       searchText: "",
       searchFn: (searchText: string) => search(searchText, wordLists),
@@ -43,18 +34,7 @@ const WordListFilter = ({
     },
   });
 
-  const search = (searchText: string, wordList: TWordList[]) => {
-    const searchedList = wordList.filter(
-      (list) =>
-        list?.title?.toLowerCase().includes(searchText?.toLowerCase()) ||
-        list?.description?.toLowerCase().includes(searchText?.toLowerCase()) ||
-        list?.words?.some((word) =>
-          word.word.toLowerCase().includes(searchText?.toLowerCase())
-        )
-    );
-    return searchedList;
-  };
-
+  // Filter effect
   useEffect(() => {
     let filteredWordLists = [...wordLists];
 
@@ -63,21 +43,21 @@ const WordListFilter = ({
       wordLists
     );
 
-    if (filter?.sort?.accessor) {
+    if (tempFilter?.sort?.accessor) {
       filteredWordLists = filteredWordLists.sort((a, b) => {
-        if (filter?.sort?.order === "asc") {
-          if (a[filter?.sort?.accessor] < b[filter?.sort?.accessor]) {
+        if (tempFilter?.sort?.order === "asc") {
+          if (a[tempFilter?.sort?.accessor] < b[tempFilter?.sort?.accessor]) {
             return -1;
           }
-          if (a[filter?.sort?.accessor] > b[filter?.sort?.accessor]) {
+          if (a[tempFilter?.sort?.accessor] > b[tempFilter?.sort?.accessor]) {
             return 1;
           }
           return 0;
         } else {
-          if (a[filter?.sort?.accessor] > b[filter?.sort?.accessor]) {
+          if (a[tempFilter?.sort?.accessor] > b[tempFilter?.sort?.accessor]) {
             return -1;
           }
-          if (a[filter?.sort?.accessor] < b[filter?.sort?.accessor]) {
+          if (a[tempFilter?.sort?.accessor] < b[tempFilter?.sort?.accessor]) {
             return 1;
           }
           return 0;
@@ -88,19 +68,38 @@ const WordListFilter = ({
     setFilteredWordLists(filteredWordLists);
   }, [filter, wordLists]);
 
-  const handleSetFilter = <
+  const handleSetTempFilter = <
     TWordList,
-    TTarget extends keyof FilterCriteria<TWordList>,
-    TKey extends keyof FilterCriteria<TWordList>[TTarget],
+    TTarget extends keyof IFilterCriteria<TWordList>,
+    TKey extends keyof IFilterCriteria<TWordList>[TTarget],
   >(
     target: TTarget,
     key: TKey,
     value: Object
   ) => {
-    setFilter({
-      ...filter,
-      [target]: { ...filter[target], [key]: value },
+    setTempFilter({
+      ...tempFilter,
+      [target]: { ...tempFilter[target], [key]: value },
     });
+  };
+
+  const handleClearFilter = () => {
+    setTempFilter({
+      search: {
+        searchText: "",
+        searchFn: (searchText: string) => search(searchText, wordLists),
+      },
+      sort: {
+        accessor: "title",
+        order: "desc",
+      },
+    });
+    setOpenFilterModal(false);
+  };
+
+  const handleApplyFilter = () => {
+    setOpenFilterModal(false);
+    setFilter(tempFilter);
   };
 
   return (
@@ -120,7 +119,10 @@ const WordListFilter = ({
             onChangeText={(value) =>
               setFilter({
                 ...filter,
-                search: { ...filter.search, searchText: value },
+                search: {
+                  ...filter.search,
+                  searchText: value,
+                },
               })
             }
             value={filter?.search?.searchText}
@@ -140,7 +142,10 @@ const WordListFilter = ({
                 onPress={() =>
                   setFilter({
                     ...filter,
-                    search: { ...filter.search, searchText: "" },
+                    search: {
+                      ...filter.search,
+                      searchText: "",
+                    },
                   })
                 }
               />
@@ -174,49 +179,48 @@ const WordListFilter = ({
                 <View style={styles.picker}>
                   <Picker
                     itemStyle={styles.pickerItem}
-                    selectedValue={filter?.sort?.accessor}
+                    selectedValue={tempFilter?.sort?.accessor}
                     onValueChange={(itemValue) =>
-                      handleSetFilter("sort", "accessor", itemValue)
+                      handleSetTempFilter("sort", "accessor", itemValue)
                     }
                   >
                     <Picker.Item label="Title" value="title" />
                     <Picker.Item label="Description" value="description" />
                     <Picker.Item label="Pinned" value="pinned" />
+                    <Picker.Item label="Active" value="isActive" />
                   </Picker>
                 </View>
-                <View style={styles.actionIconContainer}>
-                  <ActionIcon
-                    icon={
-                      filter?.sort?.order === "asc" ? (
-                        <Ionicons
-                          name="arrow-up-outline"
-                          size={24}
-                          color={Colors.primary[600]}
-                        />
-                      ) : (
-                        <Ionicons
-                          name="arrow-down-outline"
-                          size={24}
-                          color={Colors.primary[600]}
-                        />
-                      )
-                    }
-                    onPress={() =>
-                      handleSetFilter(
-                        "sort",
-                        "order",
-                        filter?.sort?.order === "asc" ? "desc" : "asc"
-                      )
-                    }
-                  />
-                </View>
+                <ActionIcon
+                  icon={
+                    tempFilter?.sort?.order === "asc" ? (
+                      <Ionicons
+                        name="arrow-up-outline"
+                        size={24}
+                        color={Colors.gray[700]}
+                      />
+                    ) : (
+                      <Ionicons
+                        name="arrow-down-outline"
+                        size={24}
+                        color={Colors.gray[700]}
+                      />
+                    )
+                  }
+                  onPress={() =>
+                    handleSetTempFilter(
+                      "sort",
+                      "order",
+                      tempFilter?.sort?.order === "asc" ? "desc" : "asc"
+                    )
+                  }
+                />
               </View>
             </View>
           </View>
           <View style={styles.formControls}>
             <ModalControlButtons
-              onCancel={() => setOpenFilterModal(false)}
-              onSubmit={() => setOpenFilterModal(false)}
+              onCancel={handleClearFilter}
+              onSubmit={handleApplyFilter}
               okText="Apply"
             />
           </View>
@@ -237,6 +241,8 @@ const styles = StyleSheet.create({
   filterOptionContainer: {
     flex: 1,
     alignItems: "flex-end",
+    borderColor: Colors.primary[600],
+    borderWidth: 2,
   },
   textInput: {
     flexBasis: "75%",
@@ -299,7 +305,7 @@ const styles = StyleSheet.create({
     width: 200,
     backgroundColor: "white",
     borderWidth: 2,
-    borderColor: Colors.primary[600],
+    borderColor: Colors.gray[600],
     borderRadius: 4,
     marginBottom: 20,
     textAlign: "center",

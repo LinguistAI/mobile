@@ -17,4 +17,5 @@ export type TWordList = {
   imageUrl: string;
   pinned: boolean;
   isActive: boolean;
+  favorite: boolean;
 };

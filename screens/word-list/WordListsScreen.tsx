@@ -24,84 +24,6 @@ import { v4 as uuidv4 } from "uuid";
 import WordListCard from "../../components/word-list/WordListCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const WORD_LISTS: TWordList[] = [
-  {
-    id: "1",
-    title: "My first list",
-    description: "This is my first list",
-    words: [
-      {
-        word: "hello",
-        meanings: ["abc", "cdf"],
-        examples: ["examples", "example2"],
-      },
-      {
-        word: "world",
-        meanings: ["abc", "cdf"],
-        examples: ["examples", "example2"],
-      },
-    ],
-    listStats: {
-      mastered: 2,
-      reviewing: 1,
-      learning: 1,
-    },
-    imageUrl: "https://picsum.photos/200",
-    pinned: false,
-    isActive: false,
-  },
-  {
-    id: "2",
-    title: "My second list",
-    description: "This is my second list",
-    words: [
-      {
-        word: "hello",
-        meanings: ["abc", "cdf"],
-        examples: ["examples", "example2"],
-      },
-      {
-        word: "world",
-        meanings: ["abc", "cdf"],
-        examples: ["examples", "example2"],
-      },
-    ],
-    listStats: {
-      mastered: 2,
-      reviewing: 1,
-      learning: 1,
-    },
-    imageUrl: "https://picsum.photos/250",
-    pinned: false,
-    isActive: false,
-  },
-  {
-    id: "3",
-    title: "My third list",
-    description: "This is my third list",
-    words: [
-      {
-        word: "hello",
-        meanings: ["abc", "cdf"],
-        examples: ["examples", "example2"],
-      },
-      {
-        word: "world",
-        meanings: ["abc", "cdf"],
-        examples: ["examples", "example2"],
-      },
-    ],
-    listStats: {
-      mastered: 2,
-      reviewing: 1,
-      learning: 1,
-    },
-    imageUrl: "https://picsum.photos/300",
-    pinned: false,
-    isActive: false,
-  },
-];
-
 const WordListsScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [wordLists, setWordLists] = useState<TWordList[]>([]);
@@ -171,6 +93,7 @@ const WordListsScreen = () => {
       pinned: false,
       isActive: false,
       imageUrl: "https://picsum.photos/270",
+      favorite: false,
     };
 
     const updatedWordLists = [...wordLists, newWordList];
@@ -220,6 +143,7 @@ const WordListsScreen = () => {
               handleListSelection={handleListSelection}
             />
           )}
+          numColumns={2}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.wordListContainer}
         />
@@ -273,7 +197,6 @@ const styles = StyleSheet.create({
     marginTop: 40,
     gap: 10,
   },
-
   filterContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -282,10 +205,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   wordListContainer: {
-    padding: 10,
-    flexDirection: "column",
+    paddingHorizontal: 10,
+    flex: 1,
   },
-
   floatingAddListButton: {
     position: "absolute",
     width: 56,

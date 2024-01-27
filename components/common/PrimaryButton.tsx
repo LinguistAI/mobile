@@ -42,7 +42,7 @@ const PrimaryButton = (props: PrimaryButtonProps) => {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    borderRadius: 8,
+    borderRadius: 6,
     marginVertical: 8,
     overflow: "hidden",
     shadowColor: Colors.gray[900],

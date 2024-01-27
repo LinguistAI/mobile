@@ -4,12 +4,18 @@ import ChatScreen from "../screens/chat/ChatScreen";
 import LeaderboardScreen from "../screens/leaderboard/LeaderboardScreen";
 import WordListsScreen from "../screens/word-list/WordListsScreen";
 import HomeStackNavigator from "./HomeStackNavigator";
+import Colors from "../theme/colors";
 
 const Tab = createBottomTabNavigator();
 
 const BottomNavigation = () => {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: Colors.primary["600"],
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeStackNavigator}

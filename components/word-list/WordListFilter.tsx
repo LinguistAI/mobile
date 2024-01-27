@@ -9,6 +9,7 @@ import { FormProvider } from "react-hook-form";
 import { Picker } from "@react-native-picker/picker";
 import Divider from "../common/Divider";
 import { TWordList } from "../../screens/word-list/types";
+import ActionButton from "../common/ActionButton";
 
 interface WordListFilterProps {
   wordLists: TWordList[];
@@ -16,13 +17,13 @@ interface WordListFilterProps {
 }
 
 interface FilterCriteria<T> {
-  sort?: {
-    property: keyof T;
+  sort: {
+    accessor: keyof T;
     order: "asc" | "desc";
   };
   search: {
     searchText: string;
-    searchFn: (searchText: string, wordList: T[]) => T[];
+    searchFn: (searchText: string, list: T[]) => T[];
   };
 }
 
@@ -37,7 +38,7 @@ const WordListFilter = ({
       searchFn: (searchText: string) => search(searchText, wordLists),
     },
     sort: {
-      property: "title",
+      accessor: "title",
       order: "desc",
     },
   });
@@ -62,21 +63,21 @@ const WordListFilter = ({
       wordLists
     );
 
-    if (filter?.sort?.property) {
+    if (filter?.sort?.accessor) {
       filteredWordLists = filteredWordLists.sort((a, b) => {
         if (filter?.sort?.order === "asc") {
-          if (a[filter?.sort?.property] < b[filter?.sort?.property]) {
+          if (a[filter?.sort?.accessor] < b[filter?.sort?.accessor]) {
             return -1;
           }
-          if (a[filter?.sort?.property] > b[filter?.sort?.property]) {
+          if (a[filter?.sort?.accessor] > b[filter?.sort?.accessor]) {
             return 1;
           }
           return 0;
         } else {
-          if (a[filter?.sort?.property] > b[filter?.sort?.property]) {
+          if (a[filter?.sort?.accessor] > b[filter?.sort?.accessor]) {
             return -1;
           }
-          if (a[filter?.sort?.property] < b[filter?.sort?.property]) {
+          if (a[filter?.sort?.accessor] < b[filter?.sort?.accessor]) {
             return 1;
           }
           return 0;
@@ -86,6 +87,21 @@ const WordListFilter = ({
 
     setFilteredWordLists(filteredWordLists);
   }, [filter, wordLists]);
+
+  const handleSetFilter = <
+    TWordList,
+    TTarget extends keyof FilterCriteria<TWordList>,
+    TKey extends keyof FilterCriteria<TWordList>[TTarget],
+  >(
+    target: TTarget,
+    key: TKey,
+    value: Object
+  ) => {
+    setFilter({
+      ...filter,
+      [target]: { ...filter[target], [key]: value },
+    });
+  };
 
   return (
     <View style={styles.overallContainer}>
@@ -152,42 +168,50 @@ const WordListFilter = ({
       >
         <View style={styles.formContent}>
           <View style={styles.orderByContainer}>
-            {/* <View style={styles.pickerRow}>
+            <View style={styles.pickerRow}>
               <Text style={styles.label}>Order By:</Text>
-              <View style={styles.picker}>
-                <Picker
-                  itemStyle={styles.pickerItem}
-                  selectedValue={filterCriteria.sort?.property}
-                  onValueChange={(itemValue) =>
-                    handleSetFilterCriteria("sort", {
-                      ...filterCriteria.sort,
-                      property: itemValue,
-                    })
-                  }
-                >
-                  <Picker.Item label="Title" value="title" />
-                  <Picker.Item label="Description" value="description" />
-                  <Picker.Item label="Word" value="word" />
-                </Picker>
+              <View style={styles.actionRow}>
+                <View style={styles.picker}>
+                  <Picker
+                    itemStyle={styles.pickerItem}
+                    selectedValue={filter?.sort?.accessor}
+                    onValueChange={(itemValue) =>
+                      handleSetFilter("sort", "accessor", itemValue)
+                    }
+                  >
+                    <Picker.Item label="Title" value="title" />
+                    <Picker.Item label="Description" value="description" />
+                    <Picker.Item label="Pinned" value="pinned" />
+                  </Picker>
+                </View>
+                <View style={styles.actionIconContainer}>
+                  <ActionIcon
+                    icon={
+                      filter?.sort?.order === "asc" ? (
+                        <Ionicons
+                          name="arrow-up-outline"
+                          size={24}
+                          color={Colors.primary[600]}
+                        />
+                      ) : (
+                        <Ionicons
+                          name="arrow-down-outline"
+                          size={24}
+                          color={Colors.primary[600]}
+                        />
+                      )
+                    }
+                    onPress={() =>
+                      handleSetFilter(
+                        "sort",
+                        "order",
+                        filter?.sort?.order === "asc" ? "desc" : "asc"
+                      )
+                    }
+                  />
+                </View>
               </View>
             </View>
-            <View style={styles.pickerRow}>
-              <Text style={styles.label}>Order:</Text>
-              <View style={styles.picker}>
-                <Picker
-                  selectedValue={filterCriteria.sort?.order}
-                  onValueChange={(itemValue) =>
-                    handleSetFilterCriteria("sort", {
-                      ...filterCriteria.sort,
-                      order: itemValue,
-                    })
-                  }
-                >
-                  <Picker.Item label="Ascending" value="asc" />
-                  <Picker.Item label="Descending" value="desc" />
-                </Picker>
-              </View>
-            </View> */}
           </View>
           <View style={styles.formControls}>
             <ModalControlButtons
@@ -261,6 +285,7 @@ const styles = StyleSheet.create({
   pickerRow: {
     flexDirection: "column",
     alignItems: "flex-start",
+    justifyContent: "center",
     gap: 10,
   },
   pickerItem: {
@@ -272,13 +297,25 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 200,
-    height: 60,
     backgroundColor: "white",
     borderWidth: 2,
-    borderColor: Colors.gray[600],
+    borderColor: Colors.primary[600],
     borderRadius: 4,
     marginBottom: 20,
     textAlign: "center",
+  },
+  actionIconContainer: {
+    backgroundColor: "white",
+    borderWidth: 2,
+    borderColor: Colors.primary[600],
+    borderRadius: 4,
+    padding: 5,
+  },
+  actionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
 });
 

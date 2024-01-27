@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.gray[900],
     fontWeight: "bold",
-    marginBottom: 6,
+    fontStyle: "italic",
+    fontVariant: ["small-caps"],
   },
   textInput: {
     flexBasis: "90%",

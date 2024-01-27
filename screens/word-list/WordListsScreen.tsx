@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Pressable,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
 import Colors from "../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,6 +22,7 @@ import ActionIcon from "../../components/common/ActionIcon";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import WordListCard from "../../components/word-list/WordListCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WORD_LISTS: TWordList[] = [
   {
@@ -100,7 +103,8 @@ const WORD_LISTS: TWordList[] = [
 ];
 
 const WordListsScreen = () => {
-  const [wordLists, setWordLists] = useState(WORD_LISTS);
+  const [isLoading, setIsLoading] = useState(false);
+  const [wordLists, setWordLists] = useState<TWordList[]>([]);
   const [filteredWordLists, setFilteredWordLists] = useState(wordLists);
   const [addListModalVisible, setAddListModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -111,6 +115,32 @@ const WordListsScreen = () => {
     },
     mode: "onSubmit",
   });
+
+  const getAndSetWordLists = async () => {
+    const value = await AsyncStorage.getItem("wordLists");
+    if (value) {
+      setWordLists(JSON.parse(value) as TWordList[]);
+    }
+    setIsLoading(false);
+  };
+
+  const saveWordLists = async (wordLists: TWordList[]) => {
+    try {
+      const jsonValue = JSON.stringify(wordLists);
+      await AsyncStorage.setItem("wordLists", jsonValue);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getAndSetWordLists();
+  }, []);
+
+  useEffect(() => {
+    saveWordLists(wordLists);
+  }, [wordLists]);
 
   const validateSubmit = (data: any) => {
     wordLists.forEach((list) => {
@@ -123,29 +153,28 @@ const WordListsScreen = () => {
     });
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     validateSubmit(data);
     if (!methods.formState.isValid) {
       return;
     }
-
-    setWordLists([
-      ...wordLists,
-      {
-        id: uuidv4(),
-        title: data.listName,
-        description: data.description,
-        words: [],
-        listStats: {
-          mastered: 0,
-          reviewing: 0,
-          learning: 0,
-        },
-        pinned: false,
-        isActive: false,
-        imageUrl: "https://picsum.photos/260",
+    const newWordList: TWordList = {
+      id: uuidv4(),
+      title: data.listName,
+      description: data.listDescription,
+      words: [],
+      listStats: {
+        mastered: 0,
+        reviewing: 0,
+        learning: 0,
       },
-    ]);
+      pinned: false,
+      isActive: false,
+      imageUrl: "https://picsum.photos/270",
+    };
+
+    const updatedWordLists = [...wordLists, newWordList];
+    setWordLists(updatedWordLists);
     setAddListModalVisible(false);
   };
 
@@ -162,13 +191,16 @@ const WordListsScreen = () => {
 
   const handleCancelAddList = () => {
     setAddListModalVisible(false);
-    methods.clearErrors();
   };
 
   const handleListSelection = (listId: string) => {
     const selectedList = wordLists.find((list) => list.id === listId);
     navigation.navigate("WordListDetails", { list: selectedList });
   };
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color={Colors.primary["600"]} />;
+  }
 
   return (
     <View style={styles.container}>
@@ -178,52 +210,58 @@ const WordListsScreen = () => {
           setFilteredWordLists={setFilteredWordLists}
         />
       </View>
-      <View style={styles.wordListContainer}>
-        {filteredWordLists.map((list) => (
-          <WordListCard
-            key={list.id}
-            list={list}
-            handleListSelection={handleListSelection}
-          />
-        ))}
-        <TouchableOpacity
-          onPress={handleOpenAddListModal}
-          style={styles.floatingAddListButton}
-        >
-          <Ionicons name="add" size={30} color="#fff" />
-        </TouchableOpacity>
-        <ModalWrapper
-          visible={addListModalVisible}
-          onRequestClose={handleCancelAddList}
-          title="Add a new list"
-        >
-          <FormProvider {...methods}>
-            <View style={styles.formContent}>
-              <PrimaryTextInput
-                name="listName"
-                label="List Name"
-                defaultValue=""
-                placeholder="Enter list name"
-                rules={{ required: "List name is required", minLength: 3 }}
-              />
-              <PrimaryTextInput
-                name="listDescription"
-                label="List Description"
-                defaultValue=""
-                placeholder="Enter list description"
-                rules={{ required: "List description is required" }}
-              />
-              <View style={styles.formControls}>
-                <ModalControlButtons
-                  onCancel={handleCancelAddList}
-                  onSubmit={methods.handleSubmit(onSubmit, onError)}
-                  okText="Add"
-                />
-              </View>
-            </View>
-          </FormProvider>
-        </ModalWrapper>
+      <View style={{ flex: 8 }}>
+        <FlatList
+          data={filteredWordLists}
+          renderItem={({ item }) => (
+            <WordListCard
+              key={item.id}
+              list={item}
+              handleListSelection={handleListSelection}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.wordListContainer}
+        />
       </View>
+
+      <TouchableOpacity
+        onPress={handleOpenAddListModal}
+        style={styles.floatingAddListButton}
+      >
+        <Ionicons name="add" size={30} color="#fff" />
+      </TouchableOpacity>
+      <ModalWrapper
+        visible={addListModalVisible}
+        onRequestClose={handleCancelAddList}
+        title="Add a new list"
+      >
+        <FormProvider {...methods}>
+          <View style={styles.formContent}>
+            <PrimaryTextInput
+              name="listName"
+              label="List Name"
+              defaultValue=""
+              placeholder="Enter list name"
+              rules={{ required: "List name is required", minLength: 3 }}
+            />
+            <PrimaryTextInput
+              name="listDescription"
+              label="List Description"
+              defaultValue=""
+              placeholder="Enter list description"
+              rules={{ required: "List description is required" }}
+            />
+            <View style={styles.formControls}>
+              <ModalControlButtons
+                onCancel={handleCancelAddList}
+                onSubmit={methods.handleSubmit(onSubmit, onError)}
+                okText="Add"
+              />
+            </View>
+          </View>
+        </FormProvider>
+      </ModalWrapper>
     </View>
   );
 };
@@ -244,11 +282,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   wordListContainer: {
-    flex: 11,
     padding: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
+    flexDirection: "column",
   },
 
   floatingAddListButton: {

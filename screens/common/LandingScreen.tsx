@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../../components/common/PrimaryButton";
-import SecondaryButton from "../../components/common/SecondaryButton";
+import PrimaryButton from "../../components/common/form/PrimaryButton";
+import SecondaryButton from "../../components/common/form/SecondaryButton";
 import Title from "../../components/common/Title";
 import useNotifications from "../../hooks/useNotifications";
 import { checkAuth } from "../../services/auth";

@@ -5,9 +5,9 @@ import {
   Text,
   View,
 } from "react-native";
-import WritingAnimation from "../chat/WritingAnimation";
+import WritingAnimation from "./WritingAnimation";
 import Colors from "../../theme/colors";
-import ActionIcon from "./ActionIcon";
+import ActionIcon from "../common/ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { ChatMessage, ChatMessageSender } from "../../screens/chat/types";

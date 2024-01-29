@@ -1,4 +1,4 @@
-import { TWordList } from "../../screens/word-list/types";
+import { TWordList } from "../../../screens/word-list/types";
 
 export const search = (searchText: string, wordList: TWordList[]) => {
   const searchedList = wordList.filter(

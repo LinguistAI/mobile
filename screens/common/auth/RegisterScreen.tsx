@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { FormProvider, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet, View } from "react-native";
-import PrimaryButton from "../../../components/common/PrimaryButton";
-import EmailTextInput from "../../../components/common/input/EmailTextInput";
-import PasswordTextInput from "../../../components/common/input/PasswordTextInput";
-import PrimaryTextInput from "../../../components/common/input/PrimaryTextInput";
-import PasswordInputWithRequirements from "../../../components/common/password/PasswordInputWithRequirements";
-import { Requirement } from "../../../components/common/password/Requirement";
+import PrimaryButton from "../../../components/common/form/PrimaryButton";
+import EmailTextInput from "../../../components/common/form/EmailTextInput";
+import PasswordTextInput from "../../../components/common/form/PasswordTextInput";
+import PrimaryTextInput from "../../../components/common/form/PrimaryTextInput";
+import PasswordInputWithRequirements from "../../../components/common/form/password/PasswordInputWithRequirements";
+import { Requirement } from "../../../components/common/form/password/Requirement";
 import useNotifications from "../../../hooks/useNotifications";
 import { login, register } from "../../../services/auth";
 import { generateErrorResponseMessage } from "../../../utils/httpUtils";

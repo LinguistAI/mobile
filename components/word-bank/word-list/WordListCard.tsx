@@ -1,8 +1,8 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { TWordList } from "../../screens/word-list/types";
-import ActionIcon from "../common/ActionIcon";
+import { TWordList } from "../../../screens/word-list/types";
+import ActionIcon from "../../common/ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
-import Colors from "../../theme/colors";
+import Colors from "../../../theme/colors";
 import { useState } from "react";
 import WordListCardOptionMenu from "./WordListCardOptionMenu";
 import { TMenuOption } from "./types";
@@ -30,7 +30,9 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
         console.log("PIN");
         break;
       case TMenuOption.CANCEL:
-        console.log("CANCEL");
+        setMenuVisible(false);
+        break;
+      default:
         break;
     }
   };

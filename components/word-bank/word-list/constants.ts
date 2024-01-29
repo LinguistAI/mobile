@@ -1,5 +1,5 @@
 import React from "react";
-import { TWordList } from "../../screens/word-list/types";
+import { TWordList } from "../../../screens/word-list/types";
 import { IFilterCriteria, TMenuOption } from "./types";
 import { search } from "./utils";
 import { Ionicons } from "@expo/vector-icons";

@@ -1,5 +1,5 @@
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
-import Colors from "../../theme/colors";
+import Colors from "../../../theme/colors";
 
 interface SecondaryButtonProps {
   children: React.ReactNode;

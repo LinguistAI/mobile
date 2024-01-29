@@ -5,7 +5,7 @@ import {
   MenuOptions,
   MenuTrigger,
 } from "react-native-popup-menu";
-import Colors from "../../theme/colors";
+import Colors from "../../../theme/colors";
 import { StyleSheet, Text, View } from "react-native";
 import { TMenuOption } from "./types";
 import { TMenuOptionObject } from "./types";

@@ -5,6 +5,7 @@ import LeaderboardScreen from "../screens/leaderboard/LeaderboardScreen";
 import WordListsScreen from "../screens/word-list/WordListsScreen";
 import HomeStackNavigator from "./HomeStackNavigator";
 import Colors from "../theme/colors";
+import WordBankNavigation from "./WordBankNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +42,7 @@ const BottomNavigation = () => {
       />
       <Tab.Screen
         name="Word List"
-        component={WordListsScreen}
+        component={WordBankNavigation}
         options={{
           tabBarIcon: ({ color, size }) => (
             <IonIcons name="list-outline" size={size} color={color} />

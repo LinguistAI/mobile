@@ -1,6 +1,6 @@
 export interface IFilterCriteria<T> {
   sort: {
-    accessor: keyof T;
+    accessor: keyof T | "";
     order: "asc" | "desc";
   };
   search: {

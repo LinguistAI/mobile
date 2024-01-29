@@ -1,28 +1,22 @@
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-  ActivityIndicator,
-  FlatList,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import Colors from "../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import PrimaryTextInput from "../../components/common/input/PrimaryTextInput";
+import PrimaryTextInput from "../../components/common/form/PrimaryTextInput";
 import ModalControlButtons from "../../components/common/modal/ModalControlButtons";
 import ModalWrapper from "../../components/common/ModalWrapper";
 import { useNavigation } from "@react-navigation/native";
 import { TWordList } from "./types";
-import WordListFilter from "../../components/word-list/WordListFilter";
-import ActionIcon from "../../components/common/ActionIcon";
+import WordListFilter from "../../components/word-bank/word-list/WordListFilter";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-import WordListCard from "../../components/word-list/WordListCard";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import WordListCard from "../../components/word-bank/word-list/WordListCard";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
+import { LinearGradient } from "expo-linear-gradient";
+import { isEmptyObj } from "../../components/utils";
+import PrimarySwitch from "../../components/common/form/PrimarySwitch";
+import FloatingButton from "../../components/common/FloatingButton";
 
 const WordListsScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,35 +28,12 @@ const WordListsScreen = () => {
     defaultValues: {
       listName: "",
       listDescription: "",
+      pinned: false,
+      favorite: false,
+      isActive: true,
     },
     mode: "onSubmit",
   });
-
-  const getAndSetWordLists = async () => {
-    const value = await AsyncStorage.getItem("wordLists");
-    if (value) {
-      setWordLists(JSON.parse(value) as TWordList[]);
-    }
-    setIsLoading(false);
-  };
-
-  const saveWordLists = async (wordLists: TWordList[]) => {
-    try {
-      const jsonValue = JSON.stringify(wordLists);
-      await AsyncStorage.setItem("wordLists", jsonValue);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    setIsLoading(true);
-    getAndSetWordLists();
-  }, []);
-
-  useEffect(() => {
-    saveWordLists(wordLists);
-  }, [wordLists]);
 
   const validateSubmit = (data: any) => {
     wordLists.forEach((list) => {
@@ -77,7 +48,7 @@ const WordListsScreen = () => {
 
   const onSubmit = async (data: any) => {
     validateSubmit(data);
-    if (!methods.formState.isValid) {
+    if (!isEmptyObj(methods.formState.errors)) {
       return;
     }
     const newWordList: TWordList = {
@@ -90,15 +61,17 @@ const WordListsScreen = () => {
         reviewing: 0,
         learning: 0,
       },
-      pinned: false,
-      isActive: false,
+      pinned: data.pinned,
+      isActive: data.isActive,
       imageUrl: "https://picsum.photos/270",
-      favorite: false,
+      favorite: data.favorite,
     };
 
     const updatedWordLists = [...wordLists, newWordList];
     setWordLists(updatedWordLists);
+    setFilteredWordLists(updatedWordLists);
     setAddListModalVisible(false);
+    methods.reset();
   };
 
   const onError = (errors: any, e: any) => {
@@ -118,12 +91,32 @@ const WordListsScreen = () => {
 
   const handleListSelection = (listId: string) => {
     const selectedList = wordLists.find((list) => list.id === listId);
-    navigation.navigate("WordListDetails", { list: selectedList });
+    navigation.navigate("Word List Details", { list: selectedList });
   };
 
-  if (isLoading) {
-    return <ActivityIndicator size="large" color={Colors.primary["600"]} />;
-  }
+  const renderSkeleton = () => {
+    return (
+      <View style={styles.skeletonContainer}>
+        {Array.from({ length: 4 }).map(
+          (
+            _,
+            index // Adjust the number of rows as needed
+          ) => (
+            <View key={index} style={styles.skeletonRow}>
+              <ShimmerPlaceholder
+                LinearGradient={LinearGradient}
+                style={styles.skeletonRectangle}
+              />
+              <ShimmerPlaceholder
+                LinearGradient={LinearGradient}
+                style={styles.skeletonRectangle}
+              />
+            </View>
+          )
+        )}
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -133,28 +126,26 @@ const WordListsScreen = () => {
           setFilteredWordLists={setFilteredWordLists}
         />
       </View>
-      <View style={{ flex: 8 }}>
-        <FlatList
-          data={filteredWordLists}
-          renderItem={({ item }) => (
-            <WordListCard
-              key={item.id}
-              list={item}
-              handleListSelection={handleListSelection}
-            />
-          )}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.wordListContainer}
-        />
-      </View>
-
-      <TouchableOpacity
-        onPress={handleOpenAddListModal}
-        style={styles.floatingAddListButton}
-      >
-        <Ionicons name="add" size={30} color="#fff" />
-      </TouchableOpacity>
+      {isLoading ? (
+        renderSkeleton()
+      ) : (
+        <View style={{ flex: 8 }}>
+          <FlatList
+            data={filteredWordLists}
+            renderItem={({ item }) => (
+              <WordListCard
+                key={item.id}
+                list={item}
+                handleListSelection={handleListSelection}
+              />
+            )}
+            numColumns={2}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.wordListContainer}
+          />
+        </View>
+      )}
+      <FloatingButton handlePress={handleOpenAddListModal} />
       <ModalWrapper
         visible={addListModalVisible}
         onRequestClose={handleCancelAddList}
@@ -175,6 +166,21 @@ const WordListsScreen = () => {
               defaultValue=""
               placeholder="Enter list description"
               rules={{ required: "List description is required" }}
+            />
+            <PrimarySwitch
+              name="pinned"
+              label="Pin this list"
+              defaultValue={false}
+            />
+            <PrimarySwitch
+              name="favorite"
+              label="Add to favorites"
+              defaultValue={false}
+            />
+            <PrimarySwitch
+              name="isActive"
+              label="Set as active list"
+              defaultValue={true}
             />
             <View style={styles.formControls}>
               <ModalControlButtons
@@ -208,29 +214,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flex: 1,
   },
-  floatingAddListButton: {
-    position: "absolute",
-    width: 56,
-    height: 56,
-    alignItems: "center",
-    justifyContent: "center",
-    right: 20,
-    bottom: 20,
-    backgroundColor: Colors.primary["600"],
-    borderRadius: 30,
-    elevation: 8,
-  },
   formContent: {
     width: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
-    gap: 20,
+    rowGap: 20,
   },
   formControls: {
     flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: 20,
     gap: 35,
+  },
+  skeletonContainer: {
+    flex: 8,
+    paddingHorizontal: 20,
+    gap: 10,
+  },
+  skeletonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  skeletonRectangle: {
+    width: "48%",
+    borderRadius: 4,
+    height: 140,
   },
 });
 

@@ -40,13 +40,6 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
     defaultValue: props.defaultValue,
   });
 
-  // const getErrorBorder = () => {
-  //   const errorKeyNames = Object.keys(formState.errors);
-  //   if (formState.isSubmitted && !formState.isDirty && !formState.isValid) {
-  //     return styles.errorBorder;
-  //   }
-  // };
-
   return (
     <View>
       {props.label && <Text style={styles.label}>{props.label}</Text>}
@@ -77,11 +70,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.gray[900],
     fontWeight: "bold",
-    fontStyle: "italic",
-    fontVariant: ["small-caps"],
   },
   textInput: {
-    flexBasis: "90%",
+    flexBasis: "100%",
   },
   inputContainer: {
     flex: 1,
@@ -90,12 +81,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 8,
-    paddingHorizontal: 8,
     width: "100%",
   },
   inputRoot: {
     height: 50,
     borderWidth: 2,
+    paddingHorizontal: 8,
     borderBottomColor: Colors.primary[300],
     borderTopColor: "transparent",
     borderLeftColor: "transparent",
@@ -103,12 +94,9 @@ const styles = StyleSheet.create({
     color: Colors.gray[600],
   },
   errorMessage: {
-    color: "red",
-    marginLeft: 10,
+    color: Colors.red[500],
+    marginLeft: 12,
     marginTop: 5,
-  },
-  errorBorder: {
-    borderColor: Colors.red[500],
   },
 });
 

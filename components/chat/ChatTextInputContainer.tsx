@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import ActionIcon from "../common/ActionIcon";
-import MultilineTextInput from "../common/input/MultilineTextInput";
+import MultilineTextInput from "../common/form/MultilineTextInput";
 import Colors from "../../theme/colors";
 
 interface ChatTextInputContainerProps {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   innerBorder: {
     borderWidth: 2,
     borderColor: Colors.gray[600],
-    borderRadius: 48,
+    borderRadius: 16,
     paddingHorizontal: 16,
   },
 });

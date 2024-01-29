@@ -6,10 +6,10 @@ import {
   useForm,
 } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../../../../components/common/PrimaryButton";
-import PasswordTextInput from "../../../../components/common/input/PasswordTextInput";
-import PasswordInputWithRequirements from "../../../../components/common/password/PasswordInputWithRequirements";
-import { Requirement } from "../../../../components/common/password/Requirement";
+import PrimaryButton from "../../../../components/common/form/PrimaryButton";
+import PasswordTextInput from "../../../../components/common/form/PasswordTextInput";
+import PasswordInputWithRequirements from "../../../../components/common/form/password/PasswordInputWithRequirements";
+import { Requirement } from "../../../../components/common/form/password/Requirement";
 import useNotifications from "../../../../hooks/useNotifications";
 import {
   changePassword,

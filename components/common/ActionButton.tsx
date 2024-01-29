@@ -7,6 +7,9 @@ interface ActionButtonProps {
   title?: string | React.ReactElement;
   divider?: boolean;
   subText?: string;
+  selectedBgColor?: string;
+  selected?: boolean;
+  maxWidth?: number;
 }
 
 const ActionButton = ({
@@ -15,13 +18,22 @@ const ActionButton = ({
   title,
   subText,
   divider,
+  selectedBgColor,
+  selected,
+  maxWidth,
 }: ActionButtonProps) => {
   return (
     <View>
       <Pressable
         onPress={onPress}
         style={({ pressed }) => {
-          return [styles.container, pressed && styles.pressed];
+          return [
+            styles.container,
+            pressed && styles.pressed,
+            selectedBgColor != null &&
+              selected && { backgroundColor: selectedBgColor },
+            maxWidth != null && { maxWidth: maxWidth },
+          ];
         }}
       >
         <View style={styles.contentContainer}>

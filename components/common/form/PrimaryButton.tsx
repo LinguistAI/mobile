@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import Colors from "../../theme/colors";
+import Colors from "../../../theme/colors";
 
 interface PrimaryButtonProps {
   children: React.ReactNode;
@@ -42,12 +42,12 @@ const PrimaryButton = (props: PrimaryButtonProps) => {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    borderRadius: 6,
+    borderRadius: 4,
     marginVertical: 8,
     overflow: "hidden",
-    shadowColor: Colors.gray[900],
+    shadowColor: Colors.gray[800],
     shadowOpacity: 0.5,
-    shadowRadius: 8,
+    shadowRadius: 4,
     shadowOffset: {
       width: 0,
       height: 12,

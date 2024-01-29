@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import SecondaryButton from "../../components/common/SecondaryButton";
+import SecondaryButton from "../../components/common/form/SecondaryButton";
 import Colors from "../../theme/colors";
 
 const avatarPlaceholderImg = require("../../assets/profile-default.jpg");

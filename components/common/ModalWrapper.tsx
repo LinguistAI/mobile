@@ -3,8 +3,9 @@ import { Modal, StyleSheet, Text, View } from "react-native";
 interface ModalWrapperProps {
   visible: boolean;
   onRequestClose: () => void;
-  title?: string;
   children: React.ReactElement;
+  title?: string;
+  width?: number;
 }
 
 const ModalWrapper = ({
@@ -12,6 +13,7 @@ const ModalWrapper = ({
   onRequestClose,
   title,
   children,
+  width,
 }: ModalWrapperProps) => {
   return (
     <Modal
@@ -22,7 +24,14 @@ const ModalWrapper = ({
       style={{ alignSelf: "center" }}
     >
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+        <View
+          style={[
+            styles.modalContent,
+            {
+              width: width ? width : "90%",
+            },
+          ]}
+        >
           {title && <Text style={styles.modalTitle}>{title}</Text>}
           {children}
         </View>

@@ -16,15 +16,8 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
     setIsSyncing(true);
 
     const syncMessages = async () => {
-      if (!syncWithBackend) {
-        setIsSyncing(false);
-        return;
-      }
-
       const chatMessages = await SecureStore.getItemAsync("chatMessages");
-      if (chatMessages === null || !chatMessages) {
-        console.error("No chat messages found");
-      } else {
+      if (chatMessages) {
         setMessages(JSON.parse(chatMessages) as ChatMessage[]);
       }
       setIsSyncing(false);
@@ -50,6 +43,10 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
   const clearMessages = () => {
     setMessages([]);
     SecureStore.setItemAsync("chatMessages", JSON.stringify([]));
+  };
+
+  const getMessages = async () => {
+    return;
   };
 
   return { messages, addMessage, removeMessage, clearMessages, isSyncing };

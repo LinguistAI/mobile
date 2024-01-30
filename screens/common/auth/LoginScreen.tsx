@@ -6,9 +6,9 @@ import {
   useForm,
 } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../../../components/common/PrimaryButton";
-import EmailTextInput from "../../../components/common/input/EmailTextInput";
-import PasswordTextInput from "../../../components/common/input/PasswordTextInput";
+import PrimaryButton from "../../../components/common/form/PrimaryButton";
+import EmailTextInput from "../../../components/common/form/EmailTextInput";
+import PasswordTextInput from "../../../components/common/form/PasswordTextInput";
 import useUser from "../../../hooks/auth/useUser";
 import useNotifications from "../../../hooks/useNotifications";
 import { login } from "../../../services/auth";
@@ -39,12 +39,6 @@ const LoginScreen = (props: LoginScreenProps) => {
     mutationFn: (loginDto: LoginDto) =>
       login({ email: loginDto.email, password: loginDto.password }),
     onSuccess: (res) => {
-      add({
-        body: res.data.msg,
-        type: "success",
-        time: 5000,
-      });
-
       if (!res.data.data) {
         add({
           body: "Something went wrong!",
@@ -92,7 +86,7 @@ const LoginScreen = (props: LoginScreenProps) => {
           <EmailTextInput />
           <PasswordTextInput />
           <Text style={styles.forgotPassword} onPress={onForgotPassword}>
-            Forgot Password?
+            Forgot password?
           </Text>
           <PrimaryButton
             loading={isPending}
@@ -111,13 +105,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 12,
     padding: 20,
-    gap: 15,
+    gap: 25,
   },
   forgotPassword: {
     color: Colors.primary[300],
     textAlign: "center",
-    textDecorationLine: "underline",
     fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

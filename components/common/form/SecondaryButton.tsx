@@ -1,16 +1,26 @@
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
-import Colors from "../../theme/colors";
+import Colors from "../../../theme/colors";
 
 interface SecondaryButtonProps {
   children: React.ReactNode;
   onPress?: () => void;
+  borderColor?: string;
+  textColor?: string;
 }
 
+const defaultTextColor = Colors.primary[500];
+const defaultBorderColor = Colors.primary[500];
+
 const SecondaryButton = (props: SecondaryButtonProps) => {
-  const { children, onPress } = props;
+  const { children, onPress, borderColor, textColor } = props;
 
   return (
-    <View style={styles.outerContainer}>
+    <View
+      style={[
+        styles.outerContainer,
+        { borderColor: borderColor ?? defaultBorderColor },
+      ]}
+    >
       <Pressable
         onPress={onPress}
         android_ripple={{ color: Colors.gray[100] }}
@@ -21,7 +31,11 @@ const SecondaryButton = (props: SecondaryButtonProps) => {
           return styles.innerContainer;
         }}
       >
-        <Text style={styles.buttonText}>{children}</Text>
+        <Text
+          style={[styles.buttonText, { color: textColor ?? defaultTextColor }]}
+        >
+          {children}
+        </Text>
       </Pressable>
     </View>
   );
@@ -33,7 +47,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     marginVertical: 8,
     overflow: "hidden",
-    borderColor: Colors.primary[500],
+    borderColor: defaultBorderColor,
     shadowColor: Colors.gray[900],
     shadowOpacity: 0.5,
     shadowRadius: 8,
@@ -49,7 +63,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   buttonText: {
-    color: Colors.primary[500],
+    color: defaultTextColor,
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",

@@ -13,6 +13,8 @@ import ForgotPasswordNewPasswordScreen from "./screens/common/auth/forgot-passwo
 import ForgotPasswordScreen from "./screens/common/auth/forgot-password/ForgotPasswordScreen";
 import LandingScreen from "./screens/common/LandingScreen";
 import { CustomErrorBoundary } from "./screens/errors/ErrorBoundary";
+import { MenuProvider } from "react-native-popup-menu";
+import PostRegistrationConversation from "./components/user/PostRegistrationConversation";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,41 +27,55 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomErrorBoundary>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Landing">
-            <Stack.Screen
-              name="Landing"
-              component={LandingScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen
-              name="Main"
-              component={BottomNavigation}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen
-              name="Forgot Password"
-              component={ForgotPasswordScreen}
-            />
-            <Stack.Screen
-              name="Forgot Password Code"
-              component={ForgotPasswordCodeScreen}
-            />
-            <Stack.Screen
-              name="New Password"
-              component={ForgotPasswordNewPasswordScreen}
-            />
-            <Stack.Screen
-              name="Change Password"
-              component={ChangePasswordScreen}
-            />
-          </Stack.Navigator>
-          <Notifications />
-        </NavigationContainer>
-      </CustomErrorBoundary>
+      <MenuProvider>
+        <CustomErrorBoundary>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                contentStyle: {
+                  backgroundColor: "white",
+                },
+              }}
+              initialRouteName="Welcome Conversation"
+            >
+              <Stack.Screen
+                name="Landing"
+                component={LandingScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Register" component={RegisterScreen} />
+              <Stack.Screen
+                name="Welcome Conversation"
+                component={PostRegistrationConversation}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Main"
+                component={BottomNavigation}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Forgot Password"
+                component={ForgotPasswordScreen}
+              />
+              <Stack.Screen
+                name="Forgot Password Code"
+                component={ForgotPasswordCodeScreen}
+              />
+              <Stack.Screen
+                name="New Password"
+                component={ForgotPasswordNewPasswordScreen}
+              />
+              <Stack.Screen
+                name="Change Password"
+                component={ChangePasswordScreen}
+              />
+            </Stack.Navigator>
+            <Notifications />
+          </NavigationContainer>
+        </CustomErrorBoundary>
+      </MenuProvider>
     </QueryClientProvider>
   );
 }

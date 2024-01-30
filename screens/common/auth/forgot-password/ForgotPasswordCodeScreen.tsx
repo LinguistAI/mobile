@@ -20,7 +20,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import PrimaryButton from "../../../../components/common/PrimaryButton";
+import PrimaryButton from "../../../../components/common/form/PrimaryButton";
 import useNotifications from "../../../../hooks/useNotifications";
 import {
   requestPasswordReset,

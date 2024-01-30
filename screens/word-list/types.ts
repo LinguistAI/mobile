@@ -4,7 +4,7 @@ export type WordDefinition = {
   examples: string[];
 };
 
-export type WordList = {
+export type TWordList = {
   id: string;
   title: string;
   description: string;
@@ -17,4 +17,5 @@ export type WordList = {
   imageUrl: string;
   pinned: boolean;
   isActive: boolean;
+  favorite: boolean;
 };

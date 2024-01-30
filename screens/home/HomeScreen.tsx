@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, SafeAreaView, StyleSheet, View } from "react-native";
+import { Modal, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import CloseIcon from "../../components/common/CloseIcon";
 import ChatStreakContainer from "../../components/gamification/ChatStreakContainer";
 import useUser from "../../hooks/auth/useUser";
@@ -9,11 +9,23 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import ActionIcon from "../../components/common/ActionIcon";
+import { useQuery } from "@tanstack/react-query";
+import { getUserChatStreak } from "../../services/UserStreak.service";
+import LottieView from "lottie-react-native";
 
 const HomeScreen = () => {
   const [streakModalVisible, setModalVisible] = useState(false);
   const { user } = useUser();
   const navigator = useNavigation();
+
+  const { data: chatStreak, isLoading } = useQuery({
+    queryKey: ["chatStreak"],
+    queryFn: () => {
+      return getUserChatStreak();
+    },
+  });
+
+  const { currentStreak, highestStreak } = chatStreak?.data.data || {};
 
   useEffect(() => {
     if (user && isDateToday(user.lastLogin)) {
@@ -42,7 +54,11 @@ const HomeScreen = () => {
                   setModalVisible(false);
                 }}
               />
-              <ChatStreakContainer />
+              <ChatStreakContainer
+                currentStreak={currentStreak}
+                highestStreak={highestStreak}
+                isLoading={isLoading}
+              />
             </View>
           </View>
         </Modal>
@@ -50,16 +66,21 @@ const HomeScreen = () => {
           <View style={styles.chatStreakButtonContainer}>
             <ActionButton
               icon={
-                <Ionicons
-                  name="calendar"
-                  size={24}
-                  color={Colors.primary["500"]}
+                <LottieView
+                  style={styles.lottie}
+                  autoPlay
+                  loop
+                  source={require("../../assets/lottie/streak/streakFireAnim.json")}
                 />
               }
               onPress={() => {
                 setModalVisible(true);
               }}
-              title="Chat Streak"
+              title={
+                <View style={styles.lottieContainer}>
+                  <Text style={{ fontWeight: "bold" }}>{currentStreak}</Text>
+                </View>
+              }
             />
           </View>
           <View style={styles.profileIcon}>
@@ -117,5 +138,16 @@ const styles = StyleSheet.create({
   profileIcon: {
     marginRight: 20,
     maxWidth: 50,
+  },
+  lottieContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+  },
+  lottie: {
+    width: 20,
+    height: 20,
   },
 });

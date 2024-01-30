@@ -40,13 +40,6 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
     defaultValue: props.defaultValue,
   });
 
-  // const getErrorBorder = () => {
-  //   const errorKeyNames = Object.keys(formState.errors);
-  //   if (formState.isSubmitted && !formState.isDirty && !formState.isValid) {
-  //     return styles.errorBorder;
-  //   }
-  // };
-
   return (
     <View>
       {props.label && <Text style={styles.label}>{props.label}</Text>}
@@ -59,7 +52,7 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
             value={field.value}
             {...props}
           />
-          {props.rightIcon}
+          <View style={styles.rightIcon}>{props.rightIcon}</View>
         </View>
       </View>
       <ErrorMessage
@@ -77,10 +70,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.gray[900],
     fontWeight: "bold",
-    marginBottom: 6,
   },
   textInput: {
-    flexBasis: "90%",
+    flexBasis: "100%",
   },
   inputContainer: {
     flex: 1,
@@ -89,24 +81,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 8,
-    paddingHorizontal: 8,
     width: "100%",
   },
   inputRoot: {
-    height: 60,
-    borderWidth: 1,
-    padding: 10,
-    borderColor: Colors.gray[400],
+    height: 50,
+    borderWidth: 2,
+    paddingHorizontal: 8,
+    borderBottomColor: Colors.primary[300],
+    borderTopColor: "transparent",
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
     color: Colors.gray[600],
-    borderRadius: 8,
   },
   errorMessage: {
-    color: "red",
-    marginLeft: 10,
+    color: Colors.red[500],
+    marginLeft: 12,
     marginTop: 5,
   },
-  errorBorder: {
-    borderColor: Colors.red[500],
+  rightIcon: {
+    right: 20,
   },
 });
 

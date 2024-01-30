@@ -5,12 +5,12 @@ import {
   Text,
   View,
 } from "react-native";
-import WritingAnimation from "../chat/WritingAnimation";
+import WritingAnimation from "./WritingAnimation";
 import Colors from "../../theme/colors";
-import { ChatMessage, ChatMessageSender } from "../../screens/common";
-import ActionIcon from "./ActionIcon";
+import ActionIcon from "../common/ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
+import { ChatMessage, ChatMessageSender } from "../../screens/chat/types";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -47,11 +47,11 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
       ) : (
         <View>
           <View style={styles.messageLineContainer}>
-            {lines.map((line) => {
+            {lines.map((line, index) => {
               const words = line.split(" ");
 
               return (
-                <View style={styles.messageLine}>
+                <View key={`line-${index}`} style={styles.messageLine}>
                   {words.map((word) => {
                     return (
                       <Pressable
@@ -73,15 +73,18 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
               <ActionIcon
                 icon={
                   <Ionicons
-                    name="mic-circle"
-                    size={36}
+                    name="volume-medium"
+                    size={32}
                     color={
                       isSentByUser ? Colors.gray["100"] : Colors.primary["500"]
                     }
                   />
                 }
                 onPress={() => {
-                  Speech.speak(chatMessage.content, { language: "en" });
+                  Speech.speak(chatMessage.content, {
+                    language: "en",
+                    voice: "",
+                  });
                 }}
               />
             </View>
@@ -147,9 +150,9 @@ const styles = StyleSheet.create({
     color: Colors.gray[700],
   },
   timestampReceived: {
-    alignSelf: "flex-start",
+    alignSelf: "flex-end",
     fontSize: 11,
-    color: Colors.gray[700],
+    color: Colors.gray[100],
   },
   micSent: {
     alignSelf: "flex-start",

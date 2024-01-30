@@ -50,10 +50,7 @@ const RegisterScreen = (props: RegisterScreenProps) => {
         time: 5000,
       });
 
-      props.navigation.reset({
-        index: 0,
-        routes: [{ name: "Login" }],
-      });
+      props.navigation.navigate("Welcome Conversation");
     },
     onError: (error: any) => {
       add({

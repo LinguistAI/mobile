@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import SecondaryButton from "../../components/common/form/SecondaryButton";
 import Colors from "../../theme/colors";
+import ActionButton from "../../components/common/ActionButton";
+import { Ionicons } from "@expo/vector-icons";
+import useUser from "../../hooks/auth/useUser";
 
 const avatarPlaceholderImg = require("../../assets/profile-default.jpg");
 
@@ -21,6 +24,7 @@ const ProfileScreen = (props: ProfileScreenProps) => {
   const [profileImage, setProfileImage] = useState(
     "https://thispersondoesnotexist.com"
   );
+  const { clearUserDetails } = useUser();
 
   const onChangePassword = () => {
     props.navigation.navigate("Change Password");
@@ -40,6 +44,14 @@ const ProfileScreen = (props: ProfileScreenProps) => {
     }
   };
 
+  const handleSignout = async () => {
+    clearUserDetails();
+    props.navigation.reset({
+      index: 0,
+      routes: [{ name: "Landing" }],
+    });
+  };
+
   return (
     <View>
       <View style={styles.topSection} />
@@ -55,6 +67,15 @@ const ProfileScreen = (props: ProfileScreenProps) => {
       <View style={styles.userInformation}>
         <Text style={styles.userName}>Tolga Özgün</Text>
         <Text style={styles.userDescription}>A mantra goes here</Text>
+      </View>
+      <View style={styles.changePasswordView}>
+        <SecondaryButton
+          onPress={handleSignout}
+          borderColor={Colors.red[700]}
+          textColor={Colors.red[500]}
+        >
+          Sign Out
+        </SecondaryButton>
       </View>
       <View style={styles.changePasswordView}>
         <SecondaryButton onPress={onChangePassword}>

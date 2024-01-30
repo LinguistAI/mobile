@@ -52,7 +52,7 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
             value={field.value}
             {...props}
           />
-          {props.rightIcon}
+          <View style={styles.rightIcon}>{props.rightIcon}</View>
         </View>
       </View>
       <ErrorMessage
@@ -97,6 +97,9 @@ const styles = StyleSheet.create({
     color: Colors.red[500],
     marginLeft: 12,
     marginTop: 5,
+  },
+  rightIcon: {
+    right: 20,
   },
 });
 

@@ -81,7 +81,10 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
                   />
                 }
                 onPress={() => {
-                  Speech.speak(chatMessage.content, { language: "en" });
+                  Speech.speak(chatMessage.content, {
+                    language: "en",
+                    voice: "",
+                  });
                 }}
               />
             </View>

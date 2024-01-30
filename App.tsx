@@ -14,6 +14,7 @@ import ForgotPasswordScreen from "./screens/common/auth/forgot-password/ForgotPa
 import LandingScreen from "./screens/common/LandingScreen";
 import { CustomErrorBoundary } from "./screens/errors/ErrorBoundary";
 import { MenuProvider } from "react-native-popup-menu";
+import PostRegistrationConversation from "./components/user/PostRegistrationConversation";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,7 +36,7 @@ export default function App() {
                   backgroundColor: "white",
                 },
               }}
-              initialRouteName="Landing"
+              initialRouteName="Welcome Conversation"
             >
               <Stack.Screen
                 name="Landing"
@@ -43,12 +44,17 @@ export default function App() {
                 options={{ headerShown: false }}
               />
               <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Register" component={RegisterScreen} />
+              <Stack.Screen
+                name="Welcome Conversation"
+                component={PostRegistrationConversation}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen
                 name="Main"
                 component={BottomNavigation}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen name="Register" component={RegisterScreen} />
               <Stack.Screen
                 name="Forgot Password"
                 component={ForgotPasswordScreen}

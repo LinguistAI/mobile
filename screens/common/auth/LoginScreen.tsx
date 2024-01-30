@@ -86,7 +86,7 @@ const LoginScreen = (props: LoginScreenProps) => {
           <EmailTextInput />
           <PasswordTextInput />
           <Text style={styles.forgotPassword} onPress={onForgotPassword}>
-            Forgot Password?
+            Forgot password?
           </Text>
           <PrimaryButton
             loading={isPending}
@@ -105,13 +105,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 12,
     padding: 20,
-    gap: 15,
+    gap: 25,
   },
   forgotPassword: {
     color: Colors.primary[300],
     textAlign: "center",
-    textDecorationLine: "underline",
     fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

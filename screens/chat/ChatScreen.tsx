@@ -147,7 +147,6 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 12,
-    marginHorizontal: 16,
     marginTop: 40,
   },
   centeredView: {

@@ -11,6 +11,7 @@ import ActionIcon from "../common/ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { ChatMessage, ChatMessageSender } from "../../screens/chat/types";
+import Avatar from "../common/Avatar";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -29,7 +30,6 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
     event: GestureResponderEvent,
     pressedWord: string
   ) => {
-    const { locationX, locationY } = event.nativeEvent;
     const word = sanitizeWord(pressedWord);
     onWordPress(word);
   };
@@ -39,71 +39,85 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   };
 
   return (
-    <View
-      style={[styles.container, isSentByUser ? styles.sent : styles.received]}
-    >
-      {isWriting ? (
-        <WritingAnimation />
-      ) : (
+    <View style={styles.messageRoot}>
+      {!isSentByUser && (
         <View>
-          <View style={styles.messageLineContainer}>
-            {lines.map((line, index) => {
-              const words = line.split(" ");
-
-              return (
-                <View key={`line-${index}`} style={styles.messageLine}>
-                  {words.map((word) => {
-                    return (
-                      <Pressable
-                        key={chatMessage?.id}
-                        onPress={(event) => handleWordPress(event, word)}
-                      >
-                        <Text key={chatMessage?.id} style={styles.message}>
-                          {word}{" "}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              );
-            })}
-          </View>
-          <View style={styles.bottomRow}>
-            <View style={isSentByUser ? styles.micSent : styles.micReceived}>
-              <ActionIcon
-                icon={
-                  <Ionicons
-                    name="volume-medium"
-                    size={32}
-                    color={
-                      isSentByUser ? Colors.gray["100"] : Colors.primary["500"]
-                    }
-                  />
-                }
-                onPress={() => {
-                  Speech.speak(chatMessage.content, {
-                    language: "en",
-                    voice: "",
-                  });
-                }}
-              />
-            </View>
-            <Text
-              style={
-                isSentByUser ? styles.timestampSent : styles.timestampReceived
-              }
-            >
-              {timestamp?.toLocaleTimeString() || ""}
-            </Text>
-          </View>
+          <Avatar
+            src={require("../../assets/bot-avatars/female-v2.png")}
+            height={40}
+            width={40}
+          />
         </View>
       )}
+      <View
+        style={[
+          styles.messageContainer,
+          isSentByUser ? styles.sent : styles.received,
+        ]}
+      >
+        {isWriting ? (
+          <WritingAnimation />
+        ) : (
+          <View>
+            <View style={styles.messageLineContainer}>
+              {lines.map((line, index) => {
+                const words = line.split(" ");
+
+                return (
+                  <View key={`line-${index}`} style={styles.messageLine}>
+                    {words.map((word, index) => {
+                      return (
+                        <Pressable
+                          key={`${chatMessage?.id}-${word}-${index}`}
+                          onPress={(event) => handleWordPress(event, word)}
+                        >
+                          <Text style={styles.message}>{word} </Text>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+                );
+              })}
+            </View>
+            <View style={styles.bottomRow}>
+              <View style={isSentByUser ? styles.micSent : styles.micReceived}>
+                <ActionIcon
+                  icon={
+                    <Ionicons
+                      name="volume-medium"
+                      size={32}
+                      color={
+                        isSentByUser
+                          ? Colors.gray["100"]
+                          : Colors.primary["500"]
+                      }
+                    />
+                  }
+                  onPress={() => {
+                    Speech.speak(chatMessage.content, {
+                      language: "en",
+                      voice: "",
+                    });
+                  }}
+                />
+              </View>
+              <Text
+                style={
+                  isSentByUser ? styles.timestampSent : styles.timestampReceived
+                }
+              >
+                {timestamp?.toLocaleTimeString() || ""}
+              </Text>
+            </View>
+          </View>
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  messageContainer: {
     maxWidth: "80%",
     minWidth: "20%",
     borderRadius: 12,
@@ -159,6 +173,11 @@ const styles = StyleSheet.create({
   },
   micReceived: {
     alignSelf: "flex-end",
+  },
+  messageRoot: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 8,
   },
 });
 

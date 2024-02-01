@@ -5,13 +5,14 @@ import useNotifications, {
   NotificationObject,
 } from "../../hooks/useNotifications";
 import Colors from "../../theme/colors";
+import { useSwipe } from "../../hooks/useSwipe";
 interface NotificationProps {
   notification: NotificationObject;
+  handleRemove: (id: string) => void;
 }
 
 const Notification = (props: NotificationProps) => {
-  const { remove } = useNotifications();
-  const { notification } = props;
+  const { notification, handleRemove } = props;
 
   const getNotificationBgStyle = () => {
     switch (notification.type) {
@@ -39,10 +40,10 @@ const Notification = (props: NotificationProps) => {
             {notification.body}
           </Text>
         </View>
-        <View>
+        <View style={styles.closeIcon}>
           <ActionIcon
             icon={<Ionicons name="close" size={24} color="black" />}
-            onPress={() => remove(notification.id!)}
+            onPress={() => handleRemove(notification?.id ?? "")}
           />
         </View>
       </View>
@@ -54,16 +55,18 @@ export default Notification;
 
 const styles = StyleSheet.create({
   container: {
+    position: "absolute",
     flex: 1,
     zIndex: 9999,
     borderRadius: 10,
+    bottom: 10,
+    width: "100%",
   },
   notificationCard: {
     padding: 20,
     marginBottom: 10,
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
   },
   notificationCardContainer: {},
   messageSection: {},
@@ -84,5 +87,10 @@ const styles = StyleSheet.create({
   },
   errorBgColor: {
     backgroundColor: Colors.red[600],
+  },
+  closeIcon: {
+    position: "absolute",
+    right: 10,
+    top: 10,
   },
 });

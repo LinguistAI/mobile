@@ -1,30 +1,21 @@
 import { ChatMessageSender } from "../../screens/chat/types";
 import { useRef, useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { v4 as uuidv4 } from "uuid";
 import ChatMessageComponent from "../chat/ChatMessageComponent";
 import ChatTextInputContainer from "../chat/ChatTextInputContainer";
-import { ExtendedChatMessage } from "./types";
+import { ConversationStep, ExtendedChatMessage } from "./types";
 import ActionButton from "../common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../theme/colors";
 import PrimaryButton from "../common/form/PrimaryButton";
-
-type ConversationStep = {
-  id: number;
-  trigger: number;
-  skippable: boolean;
-  name: string;
-  message: string;
-  options?: { value: string; label: string }[];
-};
 
 const botMessages: ConversationStep[] = [
   {
     id: 0,
     message:
       "Hi, I'm Luna. Your personal language learning assistant. I'm here to help you learn English. What's your name?",
-    skippable: true,
+    skippable: false,
     name: "name",
     trigger: 1,
   },
@@ -75,7 +66,6 @@ const PostRegistrationConversation = ({
 }: PostRegistrationConversationProps) => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [user, setUser] = useState({});
-  console.log(currentStep);
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([
     {
       sender: ChatMessageSender.assistant,
@@ -148,6 +138,22 @@ const PostRegistrationConversation = ({
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.skipButton}>
+        <ActionButton
+          bgColor={Colors.gray[100]}
+          icon={
+            <Ionicons
+              name="arrow-forward"
+              size={24}
+              color={Colors.primary["500"]}
+            />
+          }
+          onPress={() => navigation.navigate("Main")}
+          maxWidth={150}
+          title={"Skip"}
+          subText="Skip onboarding"
+        />
+      </View>
       <View style={styles.messagesContainer}>
         <FlatList
           data={messages}
@@ -164,6 +170,7 @@ const PostRegistrationConversation = ({
                   sender: ChatMessageSender.assistant,
                   content: "",
                   timestamp: new Date(),
+                  id: uuidv4(),
                 }}
               />
             ) : (
@@ -200,8 +207,15 @@ const PostRegistrationConversation = ({
                 routes: [{ name: "Login" }],
               });
             }}
+            rightIcon={
+              <Ionicons
+                name="arrow-forward"
+                size={24}
+                color={Colors.primary["500"]}
+              />
+            }
           >
-            Finish
+            Continue
           </PrimaryButton>
         ) : (
           <ChatTextInputContainer
@@ -217,6 +231,8 @@ const PostRegistrationConversation = ({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: "white",
+    marginTop: 50,
   },
   textInputContainer: {
     justifyContent: "flex-end",
@@ -233,6 +249,15 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginHorizontal: 16,
     marginVertical: 16,
+  },
+  continueButtonChildren: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  skipButton: {
+    alignSelf: "flex-end",
+    marginHorizontal: 16,
   },
 });
 

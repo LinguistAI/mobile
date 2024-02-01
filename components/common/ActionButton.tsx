@@ -7,6 +7,7 @@ interface ActionButtonProps {
   title?: string | React.ReactElement;
   divider?: boolean;
   subText?: string;
+  bgColor?: string;
   selectedBgColor?: string;
   selected?: boolean;
   maxWidth?: number;
@@ -18,6 +19,7 @@ const ActionButton = ({
   title,
   subText,
   divider,
+  bgColor,
   selectedBgColor,
   selected,
   maxWidth,
@@ -29,6 +31,7 @@ const ActionButton = ({
         style={({ pressed }) => {
           return [
             styles.container,
+            bgColor != null && { backgroundColor: bgColor },
             pressed && styles.pressed,
             selectedBgColor != null &&
               selected && { backgroundColor: selectedBgColor },

@@ -25,7 +25,6 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const timestamp = new Date(chatMessage.timestamp);
   const lines = chatMessage.content.split("\n");
   const isSentByUser = chatMessage.sender === ChatMessageSender.user;
-  console.log(isSentByUser);
 
   const handleWordPress = (
     event: GestureResponderEvent,

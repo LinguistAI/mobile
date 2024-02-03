@@ -17,18 +17,16 @@ interface ActionIconProps {
 
 const ActionIcon = ({ icon, onPress, disabled, loading }: ActionIconProps) => {
   return (
-    <View>
-      <Pressable
-        disabled={disabled}
-        onPress={onPress}
-        style={({ pressed }) => {
-          return [styles.innerContainer, pressed && styles.pressed];
-        }}
-      >
-        {loading && <ActivityIndicator />}
-        {!loading && icon}
-      </Pressable>
-    </View>
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      style={({ pressed }) => {
+        return [styles.innerContainer, pressed && styles.pressed];
+      }}
+    >
+      {loading && <ActivityIndicator />}
+      {!loading && icon}
+    </Pressable>
   );
 };
 

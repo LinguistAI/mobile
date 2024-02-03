@@ -10,5 +10,6 @@ export type ConversationStep = {
   skippable: boolean;
   name: string;
   message: string;
+  skippedMsg: string;
   options?: { value: string; label: string }[];
 };

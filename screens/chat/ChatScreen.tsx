@@ -140,6 +140,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textInputContainer: {
+    flex: 1,
+    width: "100%",
     justifyContent: "flex-end",
     marginHorizontal: 16,
     marginBottom: 16,

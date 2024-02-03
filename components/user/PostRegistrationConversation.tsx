@@ -138,23 +138,23 @@ const PostRegistrationConversation = ({
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.skipButton}>
-        <ActionButton
-          bgColor={Colors.gray[100]}
-          icon={
-            <Ionicons
-              name="arrow-forward"
-              size={24}
-              color={Colors.primary["500"]}
-            />
-          }
-          onPress={() => navigation.navigate("Main")}
-          maxWidth={150}
-          title={"Skip"}
-          subText="Skip onboarding"
-        />
-      </View>
       <View style={styles.messagesContainer}>
+        <View style={styles.skipButton}>
+          <ActionButton
+            bgColor={Colors.gray[100]}
+            icon={
+              <Ionicons
+                name="arrow-forward"
+                size={24}
+                color={Colors.primary["500"]}
+              />
+            }
+            onPress={() => navigation.navigate("Main")}
+            maxWidth={150}
+            title={"Skip"}
+            subText="Skip onboarding"
+          />
+        </View>
         <FlatList
           data={messages}
           renderItem={({ item }) => (
@@ -177,8 +177,7 @@ const PostRegistrationConversation = ({
               <View style={styles.actionButtons}>
                 {messages[messages.length - 1]?.skippable ? (
                   <ActionButton
-                    title="Skip"
-                    subText="Continue with next question."
+                    title="Next question"
                     icon={
                       <Ionicons
                         name="arrow-forward"
@@ -188,7 +187,6 @@ const PostRegistrationConversation = ({
                     }
                     onPress={handleSkip}
                     maxWidth={200}
-                    divider
                   />
                 ) : (
                   <></>
@@ -243,7 +241,7 @@ const styles = StyleSheet.create({
   messagesContainer: {
     flex: 12,
     marginHorizontal: 16,
-    marginTop: 40,
+    marginTop: 10,
   },
   actionButtons: {
     alignSelf: "flex-end",

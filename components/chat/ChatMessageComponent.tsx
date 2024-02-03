@@ -25,6 +25,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const timestamp = new Date(chatMessage.timestamp);
   const lines = chatMessage.content.split("\n");
   const isSentByUser = chatMessage.sender === ChatMessageSender.user;
+  console.log(isSentByUser);
 
   const handleWordPress = (
     event: GestureResponderEvent,
@@ -39,7 +40,12 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   };
 
   return (
-    <View style={styles.messageRoot}>
+    <View
+      style={[
+        styles.messageRoot,
+        isSentByUser ? styles.sentMessageRoot : styles.receivedMessageRoot,
+      ]}
+    >
       {!isSentByUser && (
         <View>
           <Avatar
@@ -52,7 +58,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
       <View
         style={[
           styles.messageContainer,
-          isSentByUser ? styles.sent : styles.received,
+          isSentByUser ? styles.sentMsgCard : styles.receivedMsgCard,
         ]}
       >
         {isWriting ? (
@@ -132,16 +138,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  sent: {
-    alignSelf: "flex-end",
+  sentMsgCard: {
     backgroundColor: Colors.primary[600],
     borderTopLeftRadius: 16,
     borderBottomLeftRadius: 16,
     borderTopRightRadius: 16,
     borderBottomRightRadius: 0,
   },
-  received: {
-    alignSelf: "flex-start",
+  receivedMsgCard: {
     backgroundColor: Colors.gray[700],
     borderTopLeftRadius: 16,
     borderBottomLeftRadius: 0,
@@ -178,6 +182,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     gap: 8,
+  },
+  sentMessageRoot: {
+    flexDirection: "row-reverse",
+  },
+  receivedMessageRoot: {
+    flexDirection: "row",
   },
 });
 

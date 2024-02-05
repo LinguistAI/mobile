@@ -174,23 +174,25 @@ const PostRegistrationConversation = ({
 
     const isLastStep = currentStep === -1;
     if (isLastStep) {
-      <PrimaryButton
-        onPress={() => {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Login" }],
-          });
-        }}
-        rightIcon={
-          <Ionicons
-            name="arrow-forward"
-            size={24}
-            color={Colors.primary["500"]}
-          />
-        }
-      >
-        Continue
-      </PrimaryButton>;
+      return (
+        <PrimaryButton
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Login" }],
+            });
+          }}
+          rightIcon={
+            <Ionicons
+              name="arrow-forward"
+              size={24}
+              color={Colors.primary["500"]}
+            />
+          }
+        >
+          Continue
+        </PrimaryButton>
+      );
     }
 
     // Answer by text

@@ -36,7 +36,7 @@ export default function App() {
                     backgroundColor: "white",
                   },
                 }}
-                initialRouteName="Welcome Conversation"
+                initialRouteName="Main"
               >
                 <Stack.Screen
                   name="Landing"

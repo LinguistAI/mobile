@@ -138,13 +138,12 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    marginBottom: 16,
+    marginHorizontal: 16,
   },
   textInputContainer: {
     flex: 1,
-    width: "100%",
     justifyContent: "flex-end",
-    marginHorizontal: 16,
-    marginBottom: 16,
     borderRadius: 48,
   },
   messagesContainer: {

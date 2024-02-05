@@ -91,7 +91,7 @@ const WordListsScreen = () => {
 
   const handleListSelection = (listId: string) => {
     const selectedList = wordLists.find((list) => list.id === listId);
-    navigation.navigate("Word List Details", { list: selectedList });
+    navigation.navigate("WordListDetails", { list: selectedList });
   };
 
   const renderSkeleton = () => {

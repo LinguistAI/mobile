@@ -14,7 +14,11 @@ export enum TMenuOption {
   DELETE = "Delete",
   CANCEL = "Cancel",
   PIN = "Pin",
+  UNPIN = "Unpin",
   FAVORITE = "Favorite",
+  UNFAVORITE = "Unfavorite",
+  ACTIVATE = "Activate",
+  DEACTIVATE = "Deactivate"
 }
 
 export type TMenuOptionObject = {

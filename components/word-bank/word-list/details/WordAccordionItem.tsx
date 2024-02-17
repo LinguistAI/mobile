@@ -4,7 +4,6 @@ import { WordDefinition } from "../../../../screens/word-list/types";
 import { useState } from "react";
 import Colors from "../../../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
-import Divider from "../../../common/Divider";
 
 const WordAccordionItem = ({ item }: { item: WordDefinition }) => {
   const [expanded, setExpanded] = useState(false);

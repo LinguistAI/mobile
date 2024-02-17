@@ -1,24 +1,23 @@
 import axios from "axios";
 import * as SecureStorage from "expo-secure-store";
-import { StoredUserInfoWithTokens } from "../types/auth";
+import { StoredUserInfoWithTokens } from "../screens/common/Auth.types";
 
 const decideBackendURL = (): string => {
   if (process.env.NODE_ENV === "production") {
     return process.env.EXPO_PUBLIC_API_URL as string;
-  } else if (process.env.NODE_ENV === "development") {
+  }
+  else if (process.env.NODE_ENV === "development") {
     return process.env.EXPO_PUBLIC_LOCAL_API_URL as string;
   }
 
-  return "";
+
+   throw new Error("Environment not set");
 };
+
+console.log("decideBackendURL", decideBackendURL());  
 
 export const axiosBase = axios.create({
   baseURL: decideBackendURL(),
-  headers: { "Content-Type": "application/json" },
-});
-
-export const axiosChatbot = axios.create({
-  baseURL: "https://linguistai.app/model/api",
   headers: { "Content-Type": "application/json" },
 });
 

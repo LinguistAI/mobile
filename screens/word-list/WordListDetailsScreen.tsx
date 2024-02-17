@@ -9,12 +9,12 @@ interface WordListDetailsScreenProps {
 
 const wordList: TWordList = {
   description: "abc",
-  favorite: false,
-  id: "8bcdca10-0da4-4843-9d8a-d10a0151499c",
+  isFavorite: false,
+  listId: "8bcdca10-0da4-4843-9d8a-d10a0151499c",
   imageUrl: "https://picsum.photos/270",
   isActive: true,
   listStats: { learning: 0, mastered: 0, reviewing: 0 },
-  pinned: false,
+  isPinned: false,
   title: "Lisye",
   words: [
     {

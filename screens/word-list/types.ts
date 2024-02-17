@@ -5,17 +5,29 @@ export type WordDefinition = {
 };
 
 export type TWordList = {
-  id: string;
+  listId: string;
   title: string;
   description: string;
-  words: WordDefinition[];
-  listStats: {
-    mastered: number;
-    reviewing: number;
-    learning: number;
-  };
-  imageUrl: string;
-  pinned: boolean;
+  isPinned: boolean;
   isActive: boolean;
-  favorite: boolean;
+  isFavorite: boolean;
+};
+
+// API types 
+export interface ICreateWordList {
+  title: string;
+  description: string;
+  isActive: boolean;
+  isFavorite: boolean;
+  isPinned: boolean;
+};
+
+export interface IEditWordList {
+  listId: string;
+  editedList: Partial<ICreateWordList>
+};
+
+export interface IAddWord {
+  listId: string;
+  word: string;
 };

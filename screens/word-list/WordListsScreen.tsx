@@ -1,29 +1,55 @@
-import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
-import Colors from "../../theme/colors";
-import { Ionicons } from "@expo/vector-icons";
+import { View, StyleSheet, FlatList } from "react-native";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PrimaryTextInput from "../../components/common/form/PrimaryTextInput";
 import ModalControlButtons from "../../components/common/modal/ModalControlButtons";
 import ModalWrapper from "../../components/common/ModalWrapper";
 import { useNavigation } from "@react-navigation/native";
-import { TWordList } from "./types";
+import { ICreateWordList, TWordList } from "./types";
 import WordListFilter from "../../components/word-bank/word-list/WordListFilter";
-import "react-native-get-random-values";
-import { v4 as uuidv4 } from "uuid";
 import WordListCard from "../../components/word-bank/word-list/WordListCard";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { isEmptyObj } from "../../components/utils";
 import PrimarySwitch from "../../components/common/form/PrimarySwitch";
 import FloatingButton from "../../components/common/FloatingButton";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createList, getLists } from "./WordList.service";
+import { APIResponse } from "../common";
+import { generateErrorResponseMessage } from "../../utils/httpUtils";
+import useNotifications from "../../hooks/useNotifications";
 
 const WordListsScreen = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [wordLists, setWordLists] = useState<TWordList[]>([]);
+  const queryClient = useQueryClient();
+  const { data: wordListsServer } = useQuery({
+    queryFn: async () => {
+      const response = await getLists();
+      return response.data;
+    },
+    queryKey: ["getWordLists"],
+  });
+  const { mutate: createListMutate, isPending} = useMutation({
+    mutationFn: (data: ICreateWordList) => createList(data),
+    mutationKey: ["createWordList"],
+    onSuccess: (data: APIResponse<TWordList>) => {
+      if (!data || !data.data) {
+        addNotification({body: "Something went wrong while creating the wordlist.", type: "error"})
+        return;
+      }
+      
+      queryClient.invalidateQueries({queryKey: ["getWordLists"]})
+      methods.reset();
+    },
+    onError: (error: any) => {
+      const msg = generateErrorResponseMessage(error)
+      addNotification({body: msg, type: "error"})
+    }
+  })
+  const [wordLists, setWordLists] = useState(wordListsServer)
   const [filteredWordLists, setFilteredWordLists] = useState(wordLists);
   const [addListModalVisible, setAddListModalVisible] = useState(false);
   const navigation = useNavigation();
+  const {add: addNotification} = useNotifications()
   const methods = useForm({
     defaultValues: {
       listName: "",
@@ -34,66 +60,7 @@ const WordListsScreen = () => {
     },
     mode: "onSubmit",
   });
-
-  const validateSubmit = (data: any) => {
-    wordLists.forEach((list) => {
-      if (list.title === data.listName) {
-        methods.setError("listName", {
-          type: "manual",
-          message: "List name already exists",
-        });
-      }
-    });
-  };
-
-  const onSubmit = async (data: any) => {
-    validateSubmit(data);
-    if (!isEmptyObj(methods.formState.errors)) {
-      return;
-    }
-    const newWordList: TWordList = {
-      id: uuidv4(),
-      title: data.listName,
-      description: data.listDescription,
-      words: [],
-      listStats: {
-        mastered: 0,
-        reviewing: 0,
-        learning: 0,
-      },
-      pinned: data.pinned,
-      isActive: data.isActive,
-      imageUrl: "https://picsum.photos/270",
-      favorite: data.favorite,
-    };
-
-    const updatedWordLists = [...wordLists, newWordList];
-    setWordLists(updatedWordLists);
-    setFilteredWordLists(updatedWordLists);
-    setAddListModalVisible(false);
-    methods.reset();
-  };
-
-  const onError = (errors: any, e: any) => {
-    if (methods.formState.isValid) {
-      console.log("No errors. This should not be called.");
-      console.log(errors);
-    }
-  };
-
-  const handleOpenAddListModal = () => {
-    setAddListModalVisible(true);
-  };
-
-  const handleCancelAddList = () => {
-    setAddListModalVisible(false);
-  };
-
-  const handleListSelection = (listId: string) => {
-    const selectedList = wordLists.find((list) => list.id === listId);
-    navigation.navigate("WordListDetails", { list: selectedList });
-  };
-
+  
   const renderSkeleton = () => {
     return (
       <View style={styles.skeletonContainer}>
@@ -118,6 +85,73 @@ const WordListsScreen = () => {
     );
   };
 
+  if (!wordListsServer || !wordLists) {
+    return renderSkeleton()
+  }
+
+  const validateSubmit = (data: any) => {
+    wordLists.forEach((list) => {
+      if (list.title === data.listName) {
+        methods.setError("listName", {
+          type: "manual",
+          message: "List name already exists",
+        });
+      }
+    });
+  };
+  
+  const onSubmit = async (data: any) => {
+    validateSubmit(data);
+    setAddListModalVisible(false);
+    if (!isEmptyObj(methods.formState.errors)) {
+      return;
+    }
+
+    const createWordList: ICreateWordList = {
+      title: data.listName,
+      description: data.listDescription,
+      isActive: data.isActive,
+      isFavorite: data.favorite,
+      isPinned: data.pinned,
+    };
+    createListMutate(createWordList);
+
+  };
+
+  const onError = (errors: any, e: any) => {
+    if (methods.formState.isValid) {
+      console.log("No errors. This should not be called.");
+      console.log(errors);
+    }
+  };
+
+  const handleOpenAddListModal = () => {
+    setAddListModalVisible(true);
+  };
+
+  const handleCancelAddList = () => {
+    setAddListModalVisible(false);
+  };
+
+  const handleListSelection = (listId: string) => {
+    const selectedList = wordLists.find((list) => list.listId === listId);
+    navigation.navigate("WordListDetails", { list: selectedList });
+  };
+
+  const updateList = (updatedList: TWordList) => {
+    const listIndex = wordLists.findIndex(list => list.listId === updatedList.listId)
+    setWordLists([
+      ...wordLists.slice(0, listIndex),
+      updatedList,
+      ...wordLists.slice(listIndex +  1)
+    ])
+  }
+
+  const deleteList = (listId: string) => {
+    setWordLists(wordLists.filter(list => list.listId !== listId))
+  }
+
+
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
@@ -126,7 +160,7 @@ const WordListsScreen = () => {
           setFilteredWordLists={setFilteredWordLists}
         />
       </View>
-      {isLoading ? (
+      {isPending ? (
         renderSkeleton()
       ) : (
         <View style={{ flex: 8 }}>
@@ -134,13 +168,15 @@ const WordListsScreen = () => {
             data={filteredWordLists}
             renderItem={({ item }) => (
               <WordListCard
-                key={item.id}
+                key={item.listId}
                 list={item}
                 handleListSelection={handleListSelection}
+                updateList={updateList}
+                deleteList={deleteList}
               />
             )}
             numColumns={2}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.listId}
             contentContainerStyle={styles.wordListContainer}
           />
         </View>

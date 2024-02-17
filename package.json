@@ -8,6 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "dev": "cross-env NODE_ENV=development npx expo start",
+    "test-clean": "cross-env NODE_ENV=test npx expo start --clear",
+    "test-tunnel": "cross-env NODE_ENV=test npx expo start --tunnel",
     "dev-clean": "cross-env NODE_ENV=development npx expo start --clear",
     "dev-tunnel": "cross-env NODE_ENV=development npx expo start --tunnel",
     "lint": "eslint .",

@@ -4,9 +4,16 @@ import { WordDefinition } from "../../../../screens/word-list/types";
 import { useState } from "react";
 import Colors from "../../../../theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import { getWordMeanings } from "../../../../screens/word-list/WordList.service";
 
 const WordAccordionItem = ({ item }: { item: WordDefinition }) => {
   const [expanded, setExpanded] = useState(false);
+
+  const {} = useQuery({
+    queryKey: ["wordMeaning"],
+    queryFn: () => getWordMeanings([item.word])
+  })
 
   const onItemPress = () => {
     setExpanded(!expanded);
@@ -55,7 +62,7 @@ const WordAccordionItem = ({ item }: { item: WordDefinition }) => {
 
 const styles = StyleSheet.create({
   wrap: {
-    backgroundColor: Colors.primary["400"],
+    backgroundColor: Colors.primary["300"],
     padding: 12,
     borderColor: Colors.primary["700"],
     borderWidth: 2,

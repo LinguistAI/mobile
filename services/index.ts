@@ -10,11 +10,8 @@ const decideBackendURL = (): string => {
     return process.env.EXPO_PUBLIC_LOCAL_API_URL as string;
   }
 
-
    throw new Error("Environment not set");
 };
-
-console.log("decideBackendURL", decideBackendURL());  
 
 export const axiosBase = axios.create({
   baseURL: decideBackendURL(),
@@ -44,7 +41,7 @@ axiosSecure.interceptors.response.use(
   (response) => response,
   async (error) => {
     const prevRequest = error?.config;
-    if (error?.response?.status === 403 && !prevRequest?.sent) {
+    if (error?.response?.status === 401 && !prevRequest?.sent) {
       prevRequest.sent = true;
       const userJson = await SecureStorage.getItemAsync("user");
       if (!userJson) {
@@ -64,6 +61,8 @@ axiosSecure.interceptors.response.use(
       SecureStorage.setItemAsync("user", JSON.stringify(user));
       prevRequest.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
       return axiosSecure(prevRequest);
+    } else {
+      // TODO: Redirect to homepage
     }
     return Promise.reject(error);
   }

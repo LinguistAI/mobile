@@ -1,4 +1,6 @@
 import { Modal, StyleSheet, Text, View } from "react-native";
+import CloseIcon from "./CloseIcon";
+import Colors from "../../theme/colors";
 
 interface ModalWrapperProps {
   visible: boolean;
@@ -32,6 +34,11 @@ const ModalWrapper = ({
             },
           ]}
         >
+            <CloseIcon
+              onPress={() => {
+                onRequestClose();
+              }}
+            />
           {title && <Text style={styles.modalTitle}>{title}</Text>}
           {children}
         </View>
@@ -52,6 +59,8 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalContent: {
+    borderWidth: 1,
+    borderColor: Colors.gray[400],
     backgroundColor: "white",
     padding: 25,
     alignItems: "center",

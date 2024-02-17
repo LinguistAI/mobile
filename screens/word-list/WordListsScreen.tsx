@@ -1,5 +1,5 @@
 import { View, StyleSheet, FlatList } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import PrimaryTextInput from "../../components/common/form/PrimaryTextInput";
 import ModalControlButtons from "../../components/common/modal/ModalControlButtons";
@@ -13,7 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { isEmptyObj } from "../../components/utils";
 import PrimarySwitch from "../../components/common/form/PrimarySwitch";
 import FloatingButton from "../../components/common/FloatingButton";
-import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createList, getLists } from "./WordList.service";
 import { APIResponse } from "../common";
 import { generateErrorResponseMessage } from "../../utils/httpUtils";
@@ -22,11 +22,9 @@ import useNotifications from "../../hooks/useNotifications";
 const WordListsScreen = () => {
   const queryClient = useQueryClient();
   const { data: wordListsServer } = useQuery({
-    queryFn: async () => {
-      const response = await getLists();
-      return response.data;
-    },
+    queryFn: () => getLists(),
     queryKey: ["getWordLists"],
+    refetchOnWindowFocus: true,
   });
   const { mutate: createListMutate, isPending} = useMutation({
     mutationFn: (data: ICreateWordList) => createList(data),
@@ -45,8 +43,8 @@ const WordListsScreen = () => {
       addNotification({body: msg, type: "error"})
     }
   })
-  const [wordLists, setWordLists] = useState(wordListsServer)
-  const [filteredWordLists, setFilteredWordLists] = useState(wordLists);
+  const wordLists = wordListsServer?.data?.lists || []
+  const [filteredWordLists, setFilteredWordLists] = useState<TWordList[]>([]);
   const [addListModalVisible, setAddListModalVisible] = useState(false);
   const navigation = useNavigation();
   const {add: addNotification} = useNotifications()
@@ -58,8 +56,14 @@ const WordListsScreen = () => {
       favorite: false,
       isActive: true,
     },
-    mode: "onSubmit",
+    mode: "onChange",
   });
+
+  useEffect(() => {
+    if (wordListsServer?.data) {
+      setFilteredWordLists(wordListsServer?.data?.lists)
+    }
+  }, [wordListsServer])
   
   const renderSkeleton = () => {
     return (
@@ -85,12 +89,12 @@ const WordListsScreen = () => {
     );
   };
 
-  if (!wordListsServer || !wordLists) {
+  if (!wordListsServer) {
     return renderSkeleton()
   }
 
   const validateSubmit = (data: any) => {
-    wordLists.forEach((list) => {
+    wordListsServer?.data?.lists?.forEach((list) => {
       if (list.title === data.listName) {
         methods.setError("listName", {
           type: "manual",
@@ -140,7 +144,7 @@ const WordListsScreen = () => {
 
   const updateList = (updatedList: TWordList) => {
     const listIndex = wordLists.findIndex(list => list.listId === updatedList.listId)
-    setWordLists([
+    setFilteredWordLists([
       ...wordLists.slice(0, listIndex),
       updatedList,
       ...wordLists.slice(listIndex +  1)
@@ -148,15 +152,14 @@ const WordListsScreen = () => {
   }
 
   const deleteList = (listId: string) => {
-    setWordLists(wordLists.filter(list => list.listId !== listId))
+    setFilteredWordLists(wordLists.filter(list => list.listId !== listId))
   }
-
 
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
         <WordListFilter
-          wordLists={wordLists}
+          wordLists={wordListsServer?.data?.lists || []}
           setFilteredWordLists={setFilteredWordLists}
         />
       </View>

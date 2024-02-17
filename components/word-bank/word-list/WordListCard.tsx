@@ -18,6 +18,7 @@ interface WordListProps {
 
 const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) => {
   const [menuVisible, setMenuVisible] = useState(false);
+  console.log(list)
 
   const {mutate: deleteListMutate} = useMutation({
     mutationFn: () => deleteList(list.listId),
@@ -30,6 +31,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
 
   const {mutate: addFavoriteMutate} = useMutation({
     mutationFn: () => addWordListToFavorite(list.listId),
+    mutationKey: ["addListFavorite"],
     onSuccess: () => {
       updateList({
         ...list,
@@ -40,6 +42,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
 
   const {mutate: removeFavoriteMutate} = useMutation({
     mutationFn: () => removeWordListFromFavorites(list.listId),
+    mutationKey: ["removeListFavorite"],
     onSuccess: () => {
       updateList({
         ...list,
@@ -51,6 +54,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
 
   const {mutate: activateMutate} = useMutation({
     mutationFn: () => activateWordList(list.listId),
+    mutationKey: ["activateList"],
     onSuccess: () => {
       updateList({
         ...list,
@@ -62,6 +66,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
 
   const {mutate: deactivateMutate} = useMutation({
     mutationFn: () => deactivateWordList(list.listId),
+    mutationKey: ["deactivateList"],
     onSuccess: () => {
       updateList({
         ...list,
@@ -72,6 +77,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
 
   const {mutate: pinMutate} = useMutation({
     mutationFn: () => pinWordList(list.listId),
+    mutationKey: ["pinList"],
     onSuccess: () => {
       updateList({
         ...list,
@@ -82,6 +88,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
 
   const {mutate: unpinMutate} = useMutation({
     mutationFn: () => unpinWordList(list.listId),
+    mutationKey: ["unpinList"],
     onSuccess: () => {
       updateList({
         ...list,
@@ -98,9 +105,11 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
         deleteListMutate()
         break;
       case TMenuOption.FAVORITE:
+        console.log("favorite")
         addFavoriteMutate()
         break;
       case TMenuOption.UNFAVORITE:
+        console.log("unfavorite")
         removeFavoriteMutate()
         break
         case TMenuOption.ACTIVATE:
@@ -183,8 +192,8 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
       {
         label: list.isActive ? "Deactivate" : "Activate",
         value: list.isActive ? TMenuOption.DEACTIVATE : TMenuOption.ACTIVATE,
-        icon: list.isActive ? <Ionicons name="bookmark-outline" size={20} color="black"/> : (
-          <Ionicons name="bookmark-sharp" size={20} color="black"/>
+        icon: list.isActive ? <Ionicons name="bookmark-sharp" size={20} color="black"/> : (
+          <Ionicons name="bookmark-outline" size={20} color="black"/>
         )
       },
       {
@@ -213,7 +222,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
       onPress={() => handleListSelection(list.listId)}
     >
       <View key={list.listId}>
-        {/* TODO: <Image source={{ uri: list.imageUrl }} style={styles.image} /> */}
+       <Image source={{ uri: "https://picsum.photos/150"  }} style={styles.image} />
         <View style={styles.overlay}>
           {renderPin()}
           {renderFavourite()}

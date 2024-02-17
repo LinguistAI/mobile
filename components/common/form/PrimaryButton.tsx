@@ -60,8 +60,12 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     backgroundColor: Colors.primary[500],
+    borderBottomColor: Colors.primary[700],
+    borderBottomWidth: 6,
+    borderRightColor: Colors.primary[700],
+    borderRightWidth: 6,
     paddingVertical: 16,
-    paddingHorizontal: 32,
+    paddingHorizontal: 24,
     elevation: 4,
   },
   buttonText: {
@@ -69,13 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    shadowColor: "black",
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
   },
   buttonContent: {
     flexDirection: "row",

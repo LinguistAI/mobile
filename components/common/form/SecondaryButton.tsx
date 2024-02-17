@@ -43,11 +43,10 @@ const SecondaryButton = (props: SecondaryButtonProps) => {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    borderRadius: 8,
+    borderRadius: 4,
     borderWidth: 1.5,
     marginVertical: 8,
     overflow: "hidden",
-    borderColor: defaultBorderColor,
     shadowColor: Colors.gray[900],
     shadowOpacity: 0.5,
     shadowRadius: 8,
@@ -56,6 +55,11 @@ const styles = StyleSheet.create({
       height: 12,
     },
     elevation: 12,
+    borderColor: defaultBorderColor,
+    borderBottomColor: Colors.primary[700],
+    borderBottomWidth: 6,
+    borderRightColor: Colors.primary[700],
+    borderRightWidth: 6,
   },
   innerContainer: {
     backgroundColor: "white",

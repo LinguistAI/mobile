@@ -9,7 +9,7 @@ interface CloseIconProps {
 const CloseIcon = ({ onPress }: CloseIconProps) => {
   return (
     <TouchableOpacity style={styles.closeIcon} onPress={onPress}>
-      <Ionicons name="close" size={30} color={Colors.gray["700"]} />
+      <Ionicons name="close" size={30} color={Colors.primary["600"]} />
     </TouchableOpacity>
   );
 };

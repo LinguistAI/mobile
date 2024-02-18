@@ -168,8 +168,6 @@ const PostRegistrationConversation = ({
       return null;
     }
 
-    console.log(currentMessage)
-
     if (currentMessage?.type === "date") {
       return (
         <View style={styles.answerBox}>

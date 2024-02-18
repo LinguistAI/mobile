@@ -2,6 +2,7 @@ import { ChatMessageSender } from "../../screens/chat/types";
 import { useEffect, useRef, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { v4 as uuidv4 } from "uuid";
+import 'react-native-get-random-values';
 import ChatMessageComponent from "../chat/ChatMessageComponent";
 import ChatTextInputContainer from "../chat/ChatTextInputContainer";
 import { ConversationStep, ExtendedChatMessage } from "./types";

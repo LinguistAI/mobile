@@ -10,7 +10,7 @@ import { getWordMeanings } from "../../../../screens/word-list/WordList.service"
 const WordAccordionItem = ({ item }: { item: WordDefinition }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const {} = useQuery({
+  const { data } = useQuery({
     queryKey: ["wordMeaning"],
     queryFn: () => getWordMeanings([item.word])
   })

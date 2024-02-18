@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { FormProvider, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet, View } from "react-native";
-import PrimaryButton from "../../../components/common/form/PrimaryButton";
+import Button from "../../../components/common/form/Button";
 import EmailTextInput from "../../../components/common/form/EmailTextInput";
 import PasswordTextInput from "../../../components/common/form/PasswordTextInput";
 import PrimaryTextInput from "../../../components/common/form/PrimaryTextInput";
@@ -132,12 +132,13 @@ const RegisterScreen = (props: RegisterScreenProps) => {
               "Passwords must match!",
           }}
         />
-        <PrimaryButton
+        <Button
+        type="primary"
           loading={isPending}
           onPress={methods.handleSubmit(onSubmit, onError)}
         >
           REGISTER
-        </PrimaryButton>
+        </Button>
       </FormProvider>
     </View>
   );

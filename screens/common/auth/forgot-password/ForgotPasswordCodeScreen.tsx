@@ -20,7 +20,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import PrimaryButton from "../../../../components/common/form/PrimaryButton";
+import Button from "../../../../components/common/form/Button";
 import useNotifications from "../../../../hooks/useNotifications";
 import {
   requestPasswordReset,
@@ -197,12 +197,13 @@ const ForgotPasswordCodeScreen = ({
           textContentType="oneTimeCode"
           renderCell={renderCell}
         />
-        <PrimaryButton
+        <Button
+        type="primary"
           loading={isPending}
           onPress={methods.handleSubmit(onSubmit, onError)}
         >
           VERIFY
-        </PrimaryButton>
+        </Button>
       </FormProvider>
     </SafeAreaView>
   );

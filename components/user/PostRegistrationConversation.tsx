@@ -1,6 +1,6 @@
 import { ChatMessageSender } from "../../screens/chat/types";
 import { useEffect, useRef, useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { v4 as uuidv4 } from "uuid";
 import 'react-native-get-random-values';
 import ChatMessageComponent from "../chat/ChatMessageComponent";
@@ -9,8 +9,12 @@ import { ConversationStep, ExtendedChatMessage } from "./types";
 import ActionButton from "../common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../theme/colors";
-import PrimaryButton from "../common/form/PrimaryButton";
+import Button from "../common/form/Button";
 import OptionGroup from "../common/form/OptionGroup";
+import { formatAsStr } from "../../utils";
+import { HOBBIES_LIST } from "./constants";
+import CloseIcon from "../common/CloseIcon";
+import Divider from "../common/Divider";
 
 const botMessages: ConversationStep[] = [
   {
@@ -21,6 +25,7 @@ const botMessages: ConversationStep[] = [
     skippable: false,
     name: "name",
     trigger: 1,
+    type: "text"
   },
   {
     id: 1,
@@ -37,19 +42,23 @@ const botMessages: ConversationStep[] = [
     skippable: true,
     name: "age",
     trigger: 2,
+    type: "date"
   },
   {
     id: 2,
-    message: "Cool! What do you like to do in your free time?",
+    message: "That's amazing! I was just developed this year, I am new to this world. Why don't you tell me what you would like to do in your free time?",
     skippedMsg:
       "Fine, we can skip that. What do you like to do in your free time?",
     skippable: true,
     name: "hobbies",
     trigger: 3,
+    options: HOBBIES_LIST,
+    multiple: true,
+    type: "multiple-choice"
   },
   {
     id: 3,
-    message: "What is your current English level?",
+    message: "Cool! I am still figuring out what I like, but I LOVE talking to people. By the way, how well do you think your English is?",
     skippedMsg: "Alright, let's skip that. What is your current English level?",
     options: [
       { value: "Beginner", label: "Beginner" },
@@ -61,6 +70,7 @@ const botMessages: ConversationStep[] = [
     name: "englishLevel",
     skippable: true,
     trigger: -1,
+    type: "multiple-choice"
   },
   {
     id: -1,
@@ -70,6 +80,7 @@ const botMessages: ConversationStep[] = [
     skippable: false,
     name: "end",
     trigger: -1,
+    type: ""
   },
 ];
 
@@ -80,8 +91,9 @@ interface PostRegistrationConversationProps {
 const PostRegistrationConversation = ({
   navigation,
 }: PostRegistrationConversationProps) => {
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
+  console.log(userAnswers)
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([
     {
       sender: ChatMessageSender.assistant,
@@ -91,7 +103,8 @@ const PostRegistrationConversation = ({
       skippable: botMessages[0].skippable,
     },
   ]);
-  const [isBotWriting, setIsBotWriting] = useState<boolean>(false);
+  const [isBotWriting, setIsBotWriting] = useState(false);
+  const [skipButtonVisible, setSkipButtonVisible] = useState(true)
   const messagesListRef = useRef<FlatList>(null);
 
   const currentMessage = botMessages.find((step) => step.id === currentStep);
@@ -119,7 +132,7 @@ const PostRegistrationConversation = ({
     ]);
   };
 
-  const handleNext = (userAnswer: string) => {
+  const handleNext = (userAnswer: string | string[]) => {
     setIsBotWriting(true);
 
     if (!currentMessage) return;
@@ -127,9 +140,10 @@ const PostRegistrationConversation = ({
       handleSkip();
       return;
     }
+
     const nextStep = currentMessage.trigger;
     const userResponse: ExtendedChatMessage = {
-      content: userAnswer,
+      content: formatAsStr(userAnswer),
       sender: ChatMessageSender.user,
       timestamp: new Date(),
       id: uuidv4(),
@@ -160,39 +174,47 @@ const PostRegistrationConversation = ({
       return null;
     }
 
+    if (currentMessage?.type === "date") {
+      
+    }
+
     // Answer by options
-    if (currentMessage?.options) {
+    if (currentMessage?.type === "multiple-choice" && currentMessage?.options) {
       return (
-        <OptionGroup
-          items={currentMessage.options.map((option) => ({
-            value: option.value,
-            name: option.label,
-          }))}
-          onSelectionChange={(value) => handleNext(value)}
-        />
+          <OptionGroup
+            items={currentMessage?.options.map((option) => ({
+              value: option.value,
+              name: option.label,
+            }))}
+            onSelectionDone={(value) => handleNext(value)}
+            multiple={currentMessage?.multiple ?? false}
+          />
       );
     }
 
     const isLastStep = currentStep === -1;
     if (isLastStep) {
       return (
-        <PrimaryButton
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Login" }],
-            });
-          }}
-          rightIcon={
-            <Ionicons
-              name="arrow-forward"
-              size={24}
-              color={Colors.primary["500"]}
-            />
-          }
-        >
-          Continue
-        </PrimaryButton>
+        <View style={{marginHorizontal: 20}}>
+          <Button
+           type="primary"
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Login" }],
+              });
+            }}
+            rightIcon={
+              <Ionicons
+                name="arrow-forward"
+                size={24}
+                color={"white"}
+              />
+            }
+          >
+            CONTINUE
+          </Button>
+        </View>
       );
     }
 
@@ -207,22 +229,30 @@ const PostRegistrationConversation = ({
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.messagesContainer}>
-        <View style={styles.skipButton}>
-          <ActionButton
-            bgColor={Colors.gray["0"]}
-            icon={
-              <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={Colors.primary["600"]}
-              />
-            }
-            onPress={() => navigation.navigate("Main")}
-            maxWidth={250}
-            title={"Skip"}
-            divider
-            subText="We will ask some questions to personalize your experience. You can skip this step if you want."
-          />
+        <View>
+          {skipButtonVisible ? (
+            <View>
+              <View style={styles.skipButton}>
+                <ActionButton
+                  bgColor={Colors.gray["0"]}
+                  icon={
+                    <Ionicons
+                      name="arrow-forward"
+                      size={24}
+                      color={Colors.primary["600"]}
+                    />
+                  }
+                  onPress={() => navigation.navigate("Main")}
+                  maxWidth={250}
+                  title={"Skip"}
+                  divider
+                  subText="We will ask some questions to personalize your experience. You can skip this step if you want."
+                />
+              <CloseIcon onPress={() => {setSkipButtonVisible(false)}}/>
+              </View>
+              <Divider />
+              </View>
+          ) : null}
         </View>
         <FlatList
           ref={messagesListRef}
@@ -247,7 +277,7 @@ const PostRegistrationConversation = ({
               <View style={styles.actionButtons}>
                 {messages[messages.length - 1]?.skippable ? (
                   <ActionButton
-                    title="Next question"
+                    title="Skip this question"
                     icon={
                       <Ionicons
                         name="arrow-forward"
@@ -303,6 +333,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
   },
+  optionsGroupContainer: {
+    flex: 3,
+    maxHeight: 400
+  }
 });
 
 export default PostRegistrationConversation;

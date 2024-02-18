@@ -8,6 +8,7 @@ const Divider = () => {
         borderBottomWidth: 1,
         borderBottomColor: "black",
         width: "auto",
+        marginVertical: 10
       }}
     />
   );

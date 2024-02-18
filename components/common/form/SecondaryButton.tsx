@@ -1,5 +1,6 @@
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../../theme/colors";
+import { Animated } from "react-native";
 
 interface SecondaryButtonProps {
   children: React.ReactNode;
@@ -15,7 +16,7 @@ const SecondaryButton = (props: SecondaryButtonProps) => {
   const { children, onPress, borderColor, textColor } = props;
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.outerContainer,
         { borderColor: borderColor ?? defaultBorderColor },
@@ -26,9 +27,8 @@ const SecondaryButton = (props: SecondaryButtonProps) => {
         android_ripple={{ color: Colors.gray[100] }}
         style={({ pressed }) => {
           if (Platform.OS === "ios") {
-            return [styles.innerContainer, pressed && styles.pressed];
+            return [pressed && styles.pressed];
           }
-          return styles.innerContainer;
         }}
       >
         <Text
@@ -37,7 +37,7 @@ const SecondaryButton = (props: SecondaryButtonProps) => {
           {children}
         </Text>
       </Pressable>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -60,11 +60,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 6,
     borderRightColor: Colors.primary[700],
     borderRightWidth: 6,
-  },
-  innerContainer: {
     backgroundColor: "white",
     paddingVertical: 16,
     paddingHorizontal: 32,
+  },
+  innerContainer: {
+
   },
   buttonText: {
     color: defaultTextColor,

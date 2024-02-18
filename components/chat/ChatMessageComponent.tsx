@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   message: {
     color: "white",
-    fontSize: 18,
+    fontSize: 16,
   },
   bottomRow: {
     flexDirection: "row",

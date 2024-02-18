@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: Colors.red[500],
     marginLeft: 12,
+    fontSize: 12,
     marginTop: 5,
   },
   rightIcon: {

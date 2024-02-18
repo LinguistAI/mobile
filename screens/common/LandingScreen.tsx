@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../../components/common/form/PrimaryButton";
+import Button from "../../components/common/form/Button";
 import SecondaryButton from "../../components/common/form/SecondaryButton";
 import Title from "../../components/common/Title";
 import useNotifications from "../../hooks/useNotifications";
@@ -54,7 +54,7 @@ const LandingScreen = (props: LandingScreenProps) => {
           <Text style={styles.sectionDescription}>Get back on your path!</Text>
         </View>
         <View style={styles.sectionButton}>
-          <PrimaryButton onPress={navigateLogin}>LOG IN</PrimaryButton>
+          <Button type="primary" onPress={navigateLogin}>LOG IN</Button>
         </View>
       </View>
       <View>
@@ -74,9 +74,9 @@ const LandingScreen = (props: LandingScreenProps) => {
           <Text style={styles.sectionDescription}>Start your journey now.</Text>
         </View>
         <View style={styles.sectionButton}>
-          <SecondaryButton onPress={navigateRegister}>
+          <Button type="outlined" onPress={navigateRegister}>
             CREATE AN ACCOUNT
-          </SecondaryButton>
+          </Button>
         </View>
       </View>
     </View>

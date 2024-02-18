@@ -1,4 +1,5 @@
 import { atom, useAtom } from "jotai";
+import 'react-native-get-random-values'
 import { v4 as uuidv4 } from "uuid";
 
 export type NotificationObject = {
@@ -20,7 +21,7 @@ const useNotifications = () => {
   const [notifications, setNotifications] = useAtom(notificationsAtom);
 
   function add(notification: NotificationObject) {
-    const randomId = Math.random().toString(36);
+    const randomId = uuidv4();
 
     const id = notification.id || randomId;
     const time = notification.time || defaultTime;

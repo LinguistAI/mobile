@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   inputRoot: {
     height: 50,
-    borderWidth: 2,
+    borderWidth: 3,
     paddingHorizontal: 8,
     borderBottomColor: Colors.primary[300],
     borderTopColor: "transparent",

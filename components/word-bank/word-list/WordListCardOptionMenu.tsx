@@ -10,51 +10,18 @@ import { StyleSheet, Text, View } from "react-native";
 import { TMenuOption } from "./types";
 import { TMenuOptionObject } from "./types";
 
-export const MENU_OPTIONS: TMenuOptionObject[] = [
-  {
-    label: "Edit",
-    value: TMenuOption.EDIT,
-    icon: <Ionicons name="create-outline" size={20} color={Colors.blue[600]} />,
-  },
-  {
-    label: "Favorite",
-    value: TMenuOption.FAVORITE,
-    icon: (
-      <Ionicons name="heart-outline" size={20} color={Colors.primary[600]} />
-    ),
-  },
-  {
-    label: "Delete",
-    value: TMenuOption.DELETE,
-    icon: <Ionicons name="trash-outline" size={20} color={Colors.red[600]} />,
-  },
-  {
-    label: "Pin",
-    value: TMenuOption.PIN,
-    icon: <Ionicons name="pin-outline" size={20} color="black" />,
-  },
-  {
-    label: "Cancel",
-    value: TMenuOption.CANCEL,
-    icon: (
-      <Ionicons
-        name="close-circle-outline"
-        size={20}
-        color={Colors.gray[600]}
-      />
-    ),
-  },
-];
-
 interface WordListCardOptionMenuProps {
   menuVisible: boolean;
   setMenuVisible: (visible: boolean) => void;
   triggerOption: (option: TMenuOption) => void;
+  menuOptions: TMenuOptionObject[]
 }
+
 const WordListCardOptionMenu = ({
   menuVisible,
   setMenuVisible,
   triggerOption,
+  menuOptions
 }: WordListCardOptionMenuProps) => {
   return (
     <Menu opened={menuVisible} onBackdropPress={() => setMenuVisible(false)}>
@@ -66,13 +33,13 @@ const WordListCardOptionMenu = ({
         />
       </MenuTrigger>
       <MenuOptions>
-        {MENU_OPTIONS.map((option, index) => (
+        {menuOptions.map((option, index) => (
           <MenuOption
             key={option.value}
             onSelect={() => triggerOption(option.value)}
             style={[
               styles.optionContainer,
-              index === MENU_OPTIONS.length - 1 && styles.lastOptionContainer,
+              index === menuOptions.length - 1 && styles.lastOptionContainer,
             ]}
           >
             <View style={styles.optionContent}>

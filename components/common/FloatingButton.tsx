@@ -1,18 +1,26 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Colors from "../../theme/colors";
+import React from "react";
 
 interface FloatingButtonProps {
   handlePress: () => void;
+  icon?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-const FloatingButton = ({ handlePress }: FloatingButtonProps) => {
+const FloatingButton = ({
+  handlePress,
+  children,
+  icon,
+}: FloatingButtonProps) => {
   return (
     <TouchableOpacity
       onPress={handlePress}
       style={styles.floatingAddListButton}
     >
-      <Ionicons name="add" size={30} color="#fff" />
+      {icon ?? <Ionicons name="add" size={30} color="#fff" />}
+      {children}
     </TouchableOpacity>
   );
 };

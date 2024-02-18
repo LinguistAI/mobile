@@ -2,7 +2,6 @@ import IonIcons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChatScreen from "../screens/chat/ChatScreen";
 import LeaderboardScreen from "../screens/leaderboard/LeaderboardScreen";
-import WordListsScreen from "../screens/word-list/WordListsScreen";
 import HomeStackNavigator from "./HomeStackNavigator";
 import Colors from "../theme/colors";
 import WordBankNavigation from "./WordBankNavigation";
@@ -31,19 +30,15 @@ const BottomNavigation = () => {
         component={ChatScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <IonIcons
-              // onPress={{navigator.navigate('Chat')}}
-              name="chatbox-outline"
-              size={size}
-              color={color}
-            />
+            <IonIcons name="chatbox-outline" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Word List"
+        name="WordList"
         component={WordBankNavigation}
         options={{
+          tabBarLabel: "Word Bank",
           tabBarIcon: ({ color, size }) => (
             <IonIcons name="list-outline" size={size} color={color} />
           ),

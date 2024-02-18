@@ -7,9 +7,11 @@ interface ActionButtonProps {
   title?: string | React.ReactElement;
   divider?: boolean;
   subText?: string;
+  bgColor?: string;
   selectedBgColor?: string;
   selected?: boolean;
   maxWidth?: number;
+  fontSize?: number;
 }
 
 const ActionButton = ({
@@ -18,9 +20,11 @@ const ActionButton = ({
   title,
   subText,
   divider,
+  bgColor,
   selectedBgColor,
   selected,
   maxWidth,
+  fontSize,
 }: ActionButtonProps) => {
   return (
     <View>
@@ -29,6 +33,7 @@ const ActionButton = ({
         style={({ pressed }) => {
           return [
             styles.container,
+            bgColor != null && { backgroundColor: bgColor },
             pressed && styles.pressed,
             selectedBgColor != null &&
               selected && { backgroundColor: selectedBgColor },
@@ -57,7 +62,7 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderRadius: 6,
+    borderRadius: 4,
     borderWidth: 2, // Add border
     borderColor: Colors.primary["600"], // Set border color
     maxWidth: 250,
@@ -76,7 +81,7 @@ const styles = StyleSheet.create({
     height: 1,
     width: "100%",
     backgroundColor: Colors.gray["600"],
-    marginVertical: 10,
+    marginVertical: 5,
   },
   title: {
     fontSize: 16,

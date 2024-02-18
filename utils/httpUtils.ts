@@ -25,7 +25,7 @@ export function isCustomError(error: any): error is CustomError {
   );
 }
 
-export function generateErrorResponseMessage(error: any) {
+export function generateErrorResponseMessage(error: any, defaultMsg: string="") {
   if (error instanceof AxiosError) {
     switch (error.code) {
       case "ERR_NETWORK":
@@ -37,5 +37,5 @@ export function generateErrorResponseMessage(error: any) {
     return error.response.data.msg;
   }
 
-  return "An unknown error has occurred. Please try again.";
+  return defaultMsg !== "" ? defaultMsg : "An unknown error has occurred. Please try again.";
 }

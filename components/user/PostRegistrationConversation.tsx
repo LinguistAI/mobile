@@ -1,36 +1,38 @@
 import { ChatMessageSender } from "../../screens/chat/types";
-import { useRef, useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { v4 as uuidv4 } from "uuid";
 import ChatMessageComponent from "../chat/ChatMessageComponent";
 import ChatTextInputContainer from "../chat/ChatTextInputContainer";
-import { ExtendedChatMessage } from "./types";
+import { ConversationStep, ExtendedChatMessage } from "./types";
 import ActionButton from "../common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../theme/colors";
 import PrimaryButton from "../common/form/PrimaryButton";
-
-type ConversationStep = {
-  id: number;
-  trigger: number;
-  skippable: boolean;
-  name: string;
-  message: string;
-  options?: { value: string; label: string }[];
-};
+import OptionGroup from "../common/form/OptionGroup";
 
 const botMessages: ConversationStep[] = [
   {
     id: 0,
     message:
       "Hi, I'm Luna. Your personal language learning assistant. I'm here to help you learn English. What's your name?",
-    skippable: true,
+    skippedMsg: "Okay, let's skip that for now. What's your name?",
+    skippable: false,
     name: "name",
     trigger: 1,
   },
   {
     id: 1,
     message: "Nice to meet you! How old are you?",
+    skippedMsg: "Okay, let's skip that for now. How old are you?",
+    options: [
+      { value: "18-24", label: "18-24" },
+      { value: "25-34", label: "25-34" },
+      { value: "35-44", label: "35-44" },
+      { value: "45-54", label: "45-54" },
+      { value: "55-64", label: "55-64" },
+      { value: "65+", label: "65+" },
+    ],
     skippable: true,
     name: "age",
     trigger: 2,
@@ -38,6 +40,8 @@ const botMessages: ConversationStep[] = [
   {
     id: 2,
     message: "Cool! What do you like to do in your free time?",
+    skippedMsg:
+      "Fine, we can skip that. What do you like to do in your free time?",
     skippable: true,
     name: "hobbies",
     trigger: 3,
@@ -45,6 +49,7 @@ const botMessages: ConversationStep[] = [
   {
     id: 3,
     message: "What is your current English level?",
+    skippedMsg: "Alright, let's skip that. What is your current English level?",
     options: [
       { value: "Beginner", label: "Beginner" },
       { value: "Intermediate", label: "Intermediate" },
@@ -60,6 +65,7 @@ const botMessages: ConversationStep[] = [
     id: -1,
     message:
       "Great, Nice to meet you again! I'll be in touch soon to help you learn English!",
+    skippedMsg: "It's okay, we can continue later. Nice to meet you!",
     skippable: false,
     name: "end",
     trigger: -1,
@@ -74,8 +80,7 @@ const PostRegistrationConversation = ({
   navigation,
 }: PostRegistrationConversationProps) => {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [user, setUser] = useState({});
-  console.log(currentStep);
+  const [userAnswers, setUserAnswers] = useState({});
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([
     {
       sender: ChatMessageSender.assistant,
@@ -88,19 +93,24 @@ const PostRegistrationConversation = ({
   const [isBotWriting, setIsBotWriting] = useState<boolean>(false);
   const messagesListRef = useRef<FlatList>(null);
 
+  const currentMessage = botMessages.find((step) => step.id === currentStep);
+
+  useEffect(() => {
+    messagesListRef.current?.scrollToEnd({ animated: true });
+  }, [messages]);
+
   const handleSkip = () => {
-    const currentMessage = botMessages.find((step) => step.id === currentStep);
     if (!currentMessage) return;
     const nextStep = currentMessage.trigger;
     setCurrentStep(nextStep);
-    setUser({ ...user, [currentMessage.name]: "" });
+    setUserAnswers({ ...userAnswers, [currentMessage.name]: "" });
 
     const botResponse = botMessages.find((step) => step.id === nextStep);
     setMessages((messages) => [
       ...messages,
       {
         sender: ChatMessageSender.assistant,
-        content: botResponse?.message || "",
+        content: botResponse?.skippedMsg || "",
         timestamp: new Date(),
         id: uuidv4(),
         skippable: botResponse?.skippable || false,
@@ -109,10 +119,8 @@ const PostRegistrationConversation = ({
   };
 
   const handleNext = (userAnswer: string) => {
-    messagesListRef.current?.scrollToEnd({ animated: true });
     setIsBotWriting(true);
 
-    const currentMessage = botMessages.find((step) => step.id === currentStep);
     if (!currentMessage) return;
     if (!userAnswer && currentMessage.skippable) {
       handleSkip();
@@ -129,7 +137,7 @@ const PostRegistrationConversation = ({
     setMessages((messages) => [...messages, userResponse]);
     setTimeout(() => {
       setCurrentStep(nextStep);
-      setUser({ ...user, [currentMessage.name]: userAnswer });
+      setUserAnswers({ ...userAnswers, [currentMessage.name]: userAnswer });
 
       const botResponse = botMessages.find((step) => step.id === nextStep);
       setMessages((messages) => [
@@ -146,10 +154,77 @@ const PostRegistrationConversation = ({
     }, 3000);
   };
 
+  const renderAnswerBox = () => {
+    if (isBotWriting) {
+      return null;
+    }
+
+    // Answer by options
+    if (currentMessage?.options) {
+      return (
+        <OptionGroup
+          items={currentMessage.options.map((option) => ({
+            value: option.value,
+            name: option.label,
+          }))}
+          onSelectionChange={(value) => handleNext(value)}
+        />
+      );
+    }
+
+    const isLastStep = currentStep === -1;
+    if (isLastStep) {
+      return (
+        <PrimaryButton
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Login" }],
+            });
+          }}
+          rightIcon={
+            <Ionicons
+              name="arrow-forward"
+              size={24}
+              color={Colors.primary["500"]}
+            />
+          }
+        >
+          Continue
+        </PrimaryButton>
+      );
+    }
+
+    // Answer by text
+    return (
+      <View style={styles.textInputContainer}>
+        <ChatTextInputContainer onSend={handleNext} isPending={isBotWriting} />
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.messagesContainer}>
+        <View style={styles.skipButton}>
+          <ActionButton
+            bgColor={Colors.gray["0"]}
+            icon={
+              <Ionicons
+                name="arrow-forward"
+                size={24}
+                color={Colors.primary["600"]}
+              />
+            }
+            onPress={() => navigation.navigate("Main")}
+            maxWidth={250}
+            title={"Skip"}
+            divider
+            subText="We will ask some questions to personalize your experience. You can skip this step if you want."
+          />
+        </View>
         <FlatList
+          ref={messagesListRef}
           data={messages}
           renderItem={({ item }) => (
             <ChatMessageComponent onWordPress={() => {}} chatMessage={item} />
@@ -164,14 +239,14 @@ const PostRegistrationConversation = ({
                   sender: ChatMessageSender.assistant,
                   content: "",
                   timestamp: new Date(),
+                  id: uuidv4(),
                 }}
               />
             ) : (
               <View style={styles.actionButtons}>
                 {messages[messages.length - 1]?.skippable ? (
                   <ActionButton
-                    title="Skip"
-                    subText="Continue with next question."
+                    title="Next question"
                     icon={
                       <Ionicons
                         name="arrow-forward"
@@ -181,7 +256,6 @@ const PostRegistrationConversation = ({
                     }
                     onPress={handleSkip}
                     maxWidth={200}
-                    divider
                   />
                 ) : (
                   <></>
@@ -191,25 +265,7 @@ const PostRegistrationConversation = ({
           }
         />
       </View>
-      <View style={styles.textInputContainer}>
-        {currentStep === -1 ? (
-          <PrimaryButton
-            onPress={() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Login" }],
-              });
-            }}
-          >
-            Finish
-          </PrimaryButton>
-        ) : (
-          <ChatTextInputContainer
-            onSend={handleNext}
-            isPending={isBotWriting}
-          />
-        )}
-      </View>
+      {renderAnswerBox()}
     </SafeAreaView>
   );
 };
@@ -217,6 +273,8 @@ const PostRegistrationConversation = ({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: "white",
+    marginTop: 50,
   },
   textInputContainer: {
     justifyContent: "flex-end",
@@ -227,12 +285,22 @@ const styles = StyleSheet.create({
   messagesContainer: {
     flex: 12,
     marginHorizontal: 16,
-    marginTop: 40,
+    marginTop: 10,
   },
   actionButtons: {
     alignSelf: "flex-end",
     marginHorizontal: 16,
     marginVertical: 16,
+  },
+  continueButtonChildren: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  skipButton: {
+    alignSelf: "center",
+    marginHorizontal: 16,
+    marginBottom: 16,
   },
 });
 

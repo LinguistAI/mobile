@@ -1,8 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { atom } from "jotai";
-import { SafeAreaView } from "react-native";
 import Notifications from "./components/notifications/Notifications";
 import BottomNavigation from "./navigation/BottomNavigation";
 import ChangePasswordScreen from "./screens/common/auth/ChangePasswordScreen";
@@ -15,6 +13,7 @@ import LandingScreen from "./screens/common/LandingScreen";
 import { CustomErrorBoundary } from "./screens/errors/ErrorBoundary";
 import { MenuProvider } from "react-native-popup-menu";
 import PostRegistrationConversation from "./components/user/PostRegistrationConversation";
+import { SafeAreaView } from "react-native";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,51 +29,53 @@ export default function App() {
       <MenuProvider>
         <CustomErrorBoundary>
           <NavigationContainer>
-            <Stack.Navigator
-              screenOptions={{
-                contentStyle: {
-                  backgroundColor: "white",
-                },
-              }}
-              initialRouteName="Login"
-            >
-              <Stack.Screen
-                name="Landing"
-                component={LandingScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen
-                name="Welcome Conversation"
-                component={PostRegistrationConversation}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Main"
-                component={BottomNavigation}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Forgot Password"
-                component={ForgotPasswordScreen}
-              />
-              <Stack.Screen
-                name="Forgot Password Code"
-                component={ForgotPasswordCodeScreen}
-              />
-              <Stack.Screen
-                name="New Password"
-                component={ForgotPasswordNewPasswordScreen}
-              />
-              <Stack.Screen
-                name="Change Password"
-                component={ChangePasswordScreen}
-              />
-            </Stack.Navigator>
-            <Notifications />
+            <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+              <Stack.Navigator
+                screenOptions={{
+                  contentStyle: {
+                    backgroundColor: "white",
+                  },
+                }}
+                initialRouteName="Main"
+              >
+                <Stack.Screen
+                  name="Landing"
+                  component={LandingScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Register" component={RegisterScreen} />
+                <Stack.Screen
+                  name="Welcome Conversation"
+                  component={PostRegistrationConversation}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Main"
+                  component={BottomNavigation}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Forgot Password"
+                  component={ForgotPasswordScreen}
+                />
+                <Stack.Screen
+                  name="Forgot Password Code"
+                  component={ForgotPasswordCodeScreen}
+                />
+                <Stack.Screen
+                  name="New Password"
+                  component={ForgotPasswordNewPasswordScreen}
+                />
+                <Stack.Screen
+                  name="Change Password"
+                  component={ChangePasswordScreen}
+                />
+              </Stack.Navigator>
+            </SafeAreaView>
           </NavigationContainer>
         </CustomErrorBoundary>
+        <Notifications />
       </MenuProvider>
     </QueryClientProvider>
   );

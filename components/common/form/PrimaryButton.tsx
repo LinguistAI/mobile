@@ -12,10 +12,11 @@ interface PrimaryButtonProps {
   children: React.ReactNode;
   loading?: boolean;
   onPress?: () => void;
+  rightIcon?: React.ReactNode;
 }
 
 const PrimaryButton = (props: PrimaryButtonProps) => {
-  const { children, onPress, loading } = props;
+  const { children, onPress, loading, rightIcon } = props;
 
   return (
     <View style={styles.outerContainer}>
@@ -33,7 +34,10 @@ const PrimaryButton = (props: PrimaryButtonProps) => {
         {loading ? (
           <ActivityIndicator color="white" />
         ) : (
-          <Text style={styles.buttonText}>{children}</Text>
+          <View style={styles.buttonContent}>
+            <Text style={styles.buttonText}>{children}</Text>
+            {rightIcon}
+          </View>
         )}
       </Pressable>
     </View>
@@ -56,8 +60,12 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     backgroundColor: Colors.primary[500],
+    borderBottomColor: Colors.primary[700],
+    borderBottomWidth: 6,
+    borderRightColor: Colors.primary[700],
+    borderRightWidth: 6,
     paddingVertical: 16,
-    paddingHorizontal: 32,
+    paddingHorizontal: 24,
     elevation: 4,
   },
   buttonText: {
@@ -65,13 +73,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    shadowColor: "black",
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
   },
   pressed: {
     opacity: 0.75,

@@ -1,21 +1,60 @@
 export type WordDefinition = {
   word: string;
-  meanings: string[];
-  examples: string[];
 };
 
+
 export type TWordList = {
-  id: string;
+  listId: string;
   title: string;
   description: string;
-  words: WordDefinition[];
-  listStats: {
-    mastered: number;
-    reviewing: number;
-    learning: number;
-  };
-  imageUrl: string;
-  pinned: boolean;
+  isPinned: boolean;
   isActive: boolean;
-  favorite: boolean;
+  isFavorite: boolean;
+  words: string[]
 };
+
+// User service 
+export interface IWordListsWithUserInfo {
+  ownerUsername: string;
+  lists: TWordList[];
+}
+
+export interface IWordListWithUserInfo extends TWordList{
+ ownerUsername: string;
+}
+
+export interface ICreateWordList {
+  title: string;
+  description: string;
+  isActive: boolean;
+  isFavorite: boolean;
+  isPinned: boolean;
+};
+
+export interface IEditWordList {
+  listId: string;
+  editedList: Partial<ICreateWordList>
+};
+
+export interface IAddWord {
+  listId: string;
+  word: string;
+};
+
+// Dictionary service
+export interface DictionaryResponse {
+  [id: string]: { wordGroup: DictionaryWordGroup[] } | {}; // api response -> meta -> id
+}
+
+interface DictionaryWordGroup {
+  id: string; // api response -> meta -> id
+  word: string;
+  audio: string; // 2.6 PRONUNCIATIONS: PRS in documentation
+  func_label: string; // verb, noun, adjective, etc.
+  meaning: WordDef[];
+}
+
+interface WordDef {
+  definition: string;
+  examples?: string[];
+}

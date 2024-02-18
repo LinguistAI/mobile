@@ -78,10 +78,10 @@ const OptionGroup: React.FC<OptionGroupProps> = ({
 
 const styles = StyleSheet.create({
   btnContainer: {
-    marginHorizontal: 20,
+    margin: 10,
   },
   container: {
-    marginHorizontal: 10,
+    margin: 10,
     maxHeight: 250,
     borderColor: Colors.gray[600],
     borderWidth: 2,

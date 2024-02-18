@@ -15,6 +15,7 @@ import { formatAsStr } from "../../utils";
 import { HOBBIES_LIST } from "./constants";
 import CloseIcon from "../common/CloseIcon";
 import Divider from "../common/Divider";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const botMessages: ConversationStep[] = [
   {
@@ -31,14 +32,6 @@ const botMessages: ConversationStep[] = [
     id: 1,
     message: "Nice to meet you! How old are you?",
     skippedMsg: "Okay, let's skip that for now. How old are you?",
-    options: [
-      { value: "18-24", label: "18-24" },
-      { value: "25-34", label: "25-34" },
-      { value: "35-44", label: "35-44" },
-      { value: "45-54", label: "45-54" },
-      { value: "55-64", label: "55-64" },
-      { value: "65+", label: "65+" },
-    ],
     skippable: true,
     name: "age",
     trigger: 2,
@@ -93,7 +86,6 @@ const PostRegistrationConversation = ({
 }: PostRegistrationConversationProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
-  console.log(userAnswers)
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([
     {
       sender: ChatMessageSender.assistant,
@@ -104,7 +96,9 @@ const PostRegistrationConversation = ({
     },
   ]);
   const [isBotWriting, setIsBotWriting] = useState(false);
-  const [skipButtonVisible, setSkipButtonVisible] = useState(true)
+  const [isSkipButtonVisible, setIsSkipButtonVisible] = useState(true)
+  const [isDateSelectionVisible, setIsDateSelectionVisible] = useState(false)
+  const [birthdate, setBirthDate] = useState(new Date())
   const messagesListRef = useRef<FlatList>(null);
 
   const currentMessage = botMessages.find((step) => step.id === currentStep);
@@ -174,8 +168,35 @@ const PostRegistrationConversation = ({
       return null;
     }
 
+    console.log(currentMessage)
+
     if (currentMessage?.type === "date") {
-      
+      return (
+        <View style={styles.answerBox}>
+          <ActionButton
+            title={birthdate ? `Selected date: ${birthdate?.toLocaleDateString()}` : "Pick your birthdate"}
+            icon={<Ionicons name="calendar" size={20} color={Colors.primary[500]}/>}
+            onPress={() => setIsDateSelectionVisible(true)}
+          />
+          {isDateSelectionVisible ? (
+            <DateTimePicker
+              value={birthdate}
+              mode="date"
+              onChange={(event, selectedDate) => {
+                setBirthDate(selectedDate || new Date())
+                setIsDateSelectionVisible(false)
+              }}
+            >
+            </DateTimePicker>
+          ) : null}
+          <Button
+            type="primary"
+            onPress={() => handleNext(birthdate.toISOString())}
+          >
+            CONFIRM
+          </Button>
+        </View>
+      )
     }
 
     // Answer by options
@@ -195,7 +216,7 @@ const PostRegistrationConversation = ({
     const isLastStep = currentStep === -1;
     if (isLastStep) {
       return (
-        <View style={{marginHorizontal: 20}}>
+        <View>
           <Button
            type="primary"
             onPress={() => {
@@ -226,75 +247,93 @@ const PostRegistrationConversation = ({
     );
   };
 
+  const renderSkipButton = () => {
+    return (
+      isSkipButtonVisible ? (
+        <View>
+          <View style={styles.skipButton}>
+            <ActionButton
+              bgColor={Colors.gray["0"]}
+              icon={
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={Colors.primary["600"]}
+                />
+              }
+              onPress={() => navigation.navigate("Main")}
+              maxWidth={250}
+              title={"Skip"}
+              divider
+              subText="We will ask some questions to personalize your experience. You can skip this step if you want."
+            />
+          <CloseIcon onPress={() => {setIsSkipButtonVisible(false)}}/>
+          </View>
+          <Divider />
+          </View>
+      ) : null
+    )
+  }
+
+  const renderMessages = () => {
+    const getFooter = () => {
+      if (isBotWriting) {
+        return (
+          <ChatMessageComponent
+            onWordPress={() => {}}
+            isWriting={true}
+            chatMessage={{
+              sender: ChatMessageSender.assistant,
+              content: "",
+              timestamp: new Date(),
+              id: uuidv4(),
+            }}
+          />
+        )
+      }
+
+      return (
+        <View style={styles.actionButtons}>
+          {messages[messages.length - 1]?.skippable ? (
+            <ActionButton
+              title="Skip this question"
+              icon={
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={Colors.primary["500"]}
+                />
+              }
+              onPress={handleSkip}
+              maxWidth={200}
+            />
+          ) : (
+            <></>
+          )}
+        </View>
+      )
+    }
+
+    return (
+      <FlatList
+        ref={messagesListRef}
+        data={messages}
+        renderItem={({ item }) => (
+          <ChatMessageComponent onWordPress={() => {}} chatMessage={item} />
+        )}
+        keyExtractor={(item) => item.id || item.timestamp.toString()}
+        ListFooterComponent={getFooter()}
+      />
+    )
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.messagesContainer}>
         <View>
-          {skipButtonVisible ? (
-            <View>
-              <View style={styles.skipButton}>
-                <ActionButton
-                  bgColor={Colors.gray["0"]}
-                  icon={
-                    <Ionicons
-                      name="arrow-forward"
-                      size={24}
-                      color={Colors.primary["600"]}
-                    />
-                  }
-                  onPress={() => navigation.navigate("Main")}
-                  maxWidth={250}
-                  title={"Skip"}
-                  divider
-                  subText="We will ask some questions to personalize your experience. You can skip this step if you want."
-                />
-              <CloseIcon onPress={() => {setSkipButtonVisible(false)}}/>
-              </View>
-              <Divider />
-              </View>
-          ) : null}
+          {renderSkipButton()}
         </View>
-        <FlatList
-          ref={messagesListRef}
-          data={messages}
-          renderItem={({ item }) => (
-            <ChatMessageComponent onWordPress={() => {}} chatMessage={item} />
-          )}
-          keyExtractor={(item) => item.id || item.timestamp.toString()}
-          ListFooterComponent={
-            isBotWriting ? (
-              <ChatMessageComponent
-                onWordPress={() => {}}
-                isWriting={true}
-                chatMessage={{
-                  sender: ChatMessageSender.assistant,
-                  content: "",
-                  timestamp: new Date(),
-                  id: uuidv4(),
-                }}
-              />
-            ) : (
-              <View style={styles.actionButtons}>
-                {messages[messages.length - 1]?.skippable ? (
-                  <ActionButton
-                    title="Skip this question"
-                    icon={
-                      <Ionicons
-                        name="arrow-forward"
-                        size={24}
-                        color={Colors.primary["500"]}
-                      />
-                    }
-                    onPress={handleSkip}
-                    maxWidth={200}
-                  />
-                ) : (
-                  <></>
-                )}
-              </View>
-            )
-          }
-        />
+        {renderMessages()}
       </View>
       {renderAnswerBox()}
     </SafeAreaView>
@@ -336,6 +375,13 @@ const styles = StyleSheet.create({
   optionsGroupContainer: {
     flex: 3,
     maxHeight: 400
+  },
+  answerBox: {
+    marginHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 15,
+    marginBottom: 10
   }
 });
 

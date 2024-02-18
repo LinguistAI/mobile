@@ -13,6 +13,7 @@ import Colors from "../../theme/colors";
 import ActionButton from "../../components/common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";
 import useUser from "../../hooks/auth/useUser";
+import Button from "../../components/common/form/Button";
 
 const avatarPlaceholderImg = require("../../assets/profile-default.jpg");
 
@@ -69,18 +70,19 @@ const ProfileScreen = (props: ProfileScreenProps) => {
         <Text style={styles.userDescription}>A mantra goes here</Text>
       </View>
       <View style={styles.changePasswordView}>
-        <SecondaryButton
+        <Button
+          type="outlined"
           onPress={handleSignout}
-          borderColor={Colors.red[700]}
-          textColor={Colors.red[500]}
         >
           Sign Out
-        </SecondaryButton>
+        </Button>
       </View>
       <View style={styles.changePasswordView}>
-        <SecondaryButton onPress={onChangePassword}>
+        <Button 
+          type="outlined"
+          onPress={onChangePassword}>
           Change Password
-        </SecondaryButton>
+        </Button>
       </View>
 
       <View style={styles.activityContainer}>

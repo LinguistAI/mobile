@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     color: "red",
   },
   requirementText: {
-    fontSize: 16,
+    fontSize: 14,
   },
 });
 

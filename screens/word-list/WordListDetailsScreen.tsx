@@ -5,7 +5,7 @@ import WordCardAccordion from "../../components/word-bank/word-list/details/Word
 import { useState } from "react";
 import ModalWrapper from "../../components/common/ModalWrapper";
 import ModalControlButtons from "../../components/common/modal/ModalControlButtons";
-import PrimaryButton from "../../components/common/form/PrimaryButton";
+import Button from "../../components/common/form/Button";
 import PrimaryTextInput from "../../components/common/form/PrimaryTextInput";
 import { FormProvider, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -96,12 +96,13 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
               rules={{ required: true}}
               placeholder="Apple"
               />   
-              <PrimaryButton 
+              <Button 
+                type="primary"
                 loading={isAddingWord} 
                 onPress={methods.handleSubmit(onSubmit, onError)}
               >
                 ADD
-              </PrimaryButton>
+              </Button>
           </FormProvider>
         </View>
       </ModalWrapper>

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet, ScrollView } from "react-native";
 import Colors from "../../../theme/colors";
+import ActionButton from "../ActionButton";
+import { Ionicons } from "@expo/vector-icons";
+import Button from "./Button";
 
 type OptionItem = {
   name: string;
@@ -9,39 +12,80 @@ type OptionItem = {
 
 type OptionGroupProps = {
   items: OptionItem[];
-  onSelectionChange?: (value: string) => void;
+  onSelectionDone: (value: string[]) => void;
+  multiple?: boolean;
 };
 
 const OptionGroup: React.FC<OptionGroupProps> = ({
   items,
-  onSelectionChange,
+  onSelectionDone,
+  multiple=false
 }) => {
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [selectedValue, setSelectedValue] = useState<string[]>([]);
 
   const handleSelect = (value: string) => {
-    setSelectedValue(value);
-    onSelectionChange?.(value);
+    if (multiple) {
+      const isSelected = selectedValue.findIndex((v) => v === value)
+      if (isSelected === -1) {
+        setSelectedValue(prev => [
+          ...prev,
+          value
+        ])
+      } else {
+        setSelectedValue((prev) => [
+          ...prev.slice(0, isSelected),
+          ...prev.slice(isSelected+1)
+        ])
+      }
+    } else {
+      setSelectedValue([value]);
+    }
   };
 
+  const handleSelectionDone = () => {
+    onSelectionDone(selectedValue)
+  }
+
   return (
-    <View style={styles.optionGroup}>
-      {items.map((item) => (
-        <TouchableOpacity
-          key={item.value}
-          onPress={() => handleSelect(item.value)}
-          style={[
-            styles.option,
-            item.value === selectedValue && styles.selectedOption,
-          ]}
+    <View>
+      <ScrollView style={styles.container}>
+        <View style={styles.optionGroup}>
+          {items.map((item) => (
+            <TouchableOpacity
+              key={item.value}
+              onPress={() => handleSelect(item.value)}
+              style={[
+                styles.option,
+                selectedValue.includes(item.value) && styles.selectedOption,
+              ]}
+            >
+              <Text style={styles.optionText}>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+      <View style={styles.btnContainer}>
+        <Button
+          type="primary"
+          onPress={handleSelectionDone}
         >
-          <Text style={styles.optionText}>{item.name}</Text>
-        </TouchableOpacity>
-      ))}
+          SELECT
+        </Button>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  btnContainer: {
+    marginHorizontal: 20,
+  },
+  container: {
+    marginHorizontal: 10,
+    maxHeight: 250,
+    borderColor: Colors.gray[600],
+    borderWidth: 2,
+  },
   optionGroup: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -49,16 +93,16 @@ const styles = StyleSheet.create({
   },
   option: {
     margin: 4,
-    backgroundColor: Colors.primary["500"],
+    backgroundColor: Colors.primary["400"],
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   selectedOption: {
-    backgroundColor: Colors.primary["600"], // Darker blue for the selected option
+    backgroundColor: Colors.primary["700"],
   },
   optionText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "bold",
     textAlign: "center",
     textTransform: "uppercase",

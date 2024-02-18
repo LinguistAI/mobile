@@ -36,7 +36,7 @@ export default function App() {
                     backgroundColor: "white",
                   },
                 }}
-                initialRouteName="Main"
+                initialRouteName="Landing"
               >
                 <Stack.Screen
                   name="Landing"

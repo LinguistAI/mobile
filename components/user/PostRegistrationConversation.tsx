@@ -5,77 +5,17 @@ import { v4 as uuidv4 } from "uuid";
 import 'react-native-get-random-values';
 import ChatMessageComponent from "../chat/ChatMessageComponent";
 import ChatTextInputContainer from "../chat/ChatTextInputContainer";
-import { ConversationStep, ExtendedChatMessage } from "./types";
+import { ExtendedChatMessage } from "./types";
 import ActionButton from "../common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../theme/colors";
 import Button from "../common/form/Button";
 import OptionGroup from "../common/form/OptionGroup";
 import { formatAsStr } from "../../utils";
-import { HOBBIES_LIST } from "./constants";
 import CloseIcon from "../common/CloseIcon";
 import Divider from "../common/Divider";
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-const botMessages: ConversationStep[] = [
-  {
-    id: 0,
-    message:
-      "Hi, I'm Luna. Your personal language learning assistant. I'm here to help you learn English. What's your name?",
-    skippedMsg: "Okay, let's skip that for now. What's your name?",
-    skippable: false,
-    name: "name",
-    trigger: 1,
-    type: "text"
-  },
-  {
-    id: 1,
-    message: "Nice to meet you! How old are you?",
-    skippedMsg: "Okay, let's skip that for now. How old are you?",
-    skippable: true,
-    name: "age",
-    trigger: 2,
-    type: "date"
-  },
-  {
-    id: 2,
-    message: "That's amazing! I was just developed this year, I am new to this world. Why don't you tell me what you would like to do in your free time?",
-    skippedMsg:
-      "Fine, we can skip that. What do you like to do in your free time?",
-    skippable: true,
-    name: "hobbies",
-    trigger: 3,
-    options: HOBBIES_LIST,
-    multiple: true,
-    type: "multiple-choice"
-  },
-  {
-    id: 3,
-    message: "Cool! I am still figuring out what I like, but I LOVE talking to people. By the way, how well do you think your English is?",
-    skippedMsg: "Alright, let's skip that. What is your current English level?",
-    options: [
-      { value: "Beginner", label: "Beginner" },
-      { value: "Intermediate", label: "Intermediate" },
-      { value: "Advanced", label: "Advanced" },
-      { value: "Native", label: "Native" },
-      { value: "I don't know", label: "I don't know" },
-    ],
-    name: "englishLevel",
-    skippable: true,
-    trigger: -1,
-    type: "multiple-choice"
-  },
-  {
-    id: -1,
-    message:
-      "Great, Nice to meet you again! I'll be in touch soon to help you learn English!",
-    skippedMsg: "It's okay, we can continue later. Nice to meet you!",
-    skippable: false,
-    name: "end",
-    trigger: -1,
-    type: ""
-  },
-];
+import { BOT_MESSAGES } from "./constants";
 
 interface PostRegistrationConversationProps {
   navigation: any;
@@ -89,10 +29,10 @@ const PostRegistrationConversation = ({
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([
     {
       sender: ChatMessageSender.assistant,
-      content: botMessages[0].message,
+      content: BOT_MESSAGES[0].message,
       timestamp: new Date(),
       id: uuidv4(),
-      skippable: botMessages[0].skippable,
+      skippable: BOT_MESSAGES[0].skippable,
     },
   ]);
   const [isBotWriting, setIsBotWriting] = useState(false);
@@ -101,7 +41,7 @@ const PostRegistrationConversation = ({
   const [birthdate, setBirthDate] = useState(new Date())
   const messagesListRef = useRef<FlatList>(null);
 
-  const currentMessage = botMessages.find((step) => step.id === currentStep);
+  const currentMessage = BOT_MESSAGES.find((step) => step.id === currentStep);
 
   useEffect(() => {
     messagesListRef.current?.scrollToEnd({ animated: true });
@@ -113,7 +53,7 @@ const PostRegistrationConversation = ({
     setCurrentStep(nextStep);
     setUserAnswers({ ...userAnswers, [currentMessage.name]: "" });
 
-    const botResponse = botMessages.find((step) => step.id === nextStep);
+    const botResponse = BOT_MESSAGES.find((step) => step.id === nextStep);
     setMessages((messages) => [
       ...messages,
       {
@@ -148,7 +88,7 @@ const PostRegistrationConversation = ({
       setCurrentStep(nextStep);
       setUserAnswers({ ...userAnswers, [currentMessage.name]: userAnswer });
 
-      const botResponse = botMessages.find((step) => step.id === nextStep);
+      const botResponse = BOT_MESSAGES.find((step) => step.id === nextStep);
       setMessages((messages) => [
         ...messages,
         {

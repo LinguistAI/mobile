@@ -1,3 +1,5 @@
+import { ConversationStep } from "./types";
+
 export const HOBBIES_LIST = [
   { label: "Sports", value: "Sports" },
   { label: "Reading", value: "Reading" },
@@ -32,4 +34,60 @@ export const HOBBIES_LIST = [
   { label: "Traveling", value: "Traveling" },
   { label: "Learning New Languages", value: "Learning New Languages" },
   { label: "Volunteering", value: "Volunteering" },
+];
+export const BOT_MESSAGES: ConversationStep[] = [
+  {
+    id: 0,
+    message: "Hi, I'm Luna. Your personal language learning assistant. I'm here to help you learn English. What's your name?",
+    skippedMsg: "Okay, let's skip that for now. What's your name?",
+    skippable: false,
+    name: "name",
+    trigger: 1,
+    type: "text"
+  },
+  {
+    id: 1,
+    message: "Nice to meet you! How old are you?",
+    skippedMsg: "Okay, let's skip that for now. How old are you?",
+    skippable: true,
+    name: "age",
+    trigger: 2,
+    type: "date"
+  },
+  {
+    id: 2,
+    message: "That's amazing! I was just developed this year, I am new to this world. Why don't you tell me what you would like to do in your free time?",
+    skippedMsg: "Fine, we can skip that. What do you like to do in your free time?",
+    skippable: true,
+    name: "hobbies",
+    trigger: 3,
+    options: HOBBIES_LIST,
+    multiple: true,
+    type: "multiple-choice"
+  },
+  {
+    id: 3,
+    message: "Cool! I am still figuring out what I like, but I LOVE talking to people. By the way, how well do you think your English is?",
+    skippedMsg: "Alright, let's skip that. What is your current English level?",
+    options: [
+      { value: "Beginner", label: "Beginner" },
+      { value: "Intermediate", label: "Intermediate" },
+      { value: "Advanced", label: "Advanced" },
+      { value: "Native", label: "Native" },
+      { value: "I don't know", label: "I don't know" },
+    ],
+    name: "englishLevel",
+    skippable: true,
+    trigger: -1,
+    type: "multiple-choice"
+  },
+  {
+    id: -1,
+    message: "Great, Nice to meet you again! I'll be in touch soon to help you learn English!",
+    skippedMsg: "It's okay, we can continue later. Nice to meet you!",
+    skippable: false,
+    name: "end",
+    trigger: -1,
+    type: ""
+  },
 ];

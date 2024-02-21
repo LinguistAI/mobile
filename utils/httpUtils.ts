@@ -27,11 +27,15 @@ export function isCustomError(error: any): error is CustomError {
 
 export function generateErrorResponseMessage(error: any, defaultMsg: string="") {
   if (error instanceof AxiosError) {
+    console.log(error.code)
     switch (error.code) {
       case "ERR_NETWORK":
         return "A network error has occurred. Please check your internet connection and try again.";
+      case "ERR_BAD_RESPONSE":
+        return "We are experiencing an unexpected error, we are working on it at the moment. Thanks for your patience."
     }
   }
+
 
   if (isCustomError(error)) {
     return error.response.data.msg;

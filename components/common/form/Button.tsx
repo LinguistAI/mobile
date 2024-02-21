@@ -68,14 +68,16 @@ const Button = (props: PrimaryButtonProps) => {
         onPress={onPress}
         disabled={loading}
       >
-        {loading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <View style={styles.btnContent}>
-            <Text style={getTextStyle()}>{children}</Text>
-            {rightIcon}
+            <View style={styles.btnContent}>
+            {loading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <View>
+                <Text style={getTextStyle()}>{children}</Text>
+                  {rightIcon}
+                </View>
+            )}
           </View>
-        )}
       </Pressable>
     </Animated.View>
   );
@@ -84,15 +86,14 @@ const Button = (props: PrimaryButtonProps) => {
 const styles = StyleSheet.create({
   primaryButton: {
     backgroundColor: Colors.primary[500],
+    borderRadius: 4,
     borderBottomColor: Colors.primary[700],
     borderBottomWidth: 6,
     borderRightColor: Colors.primary[700],
     borderRightWidth: 6,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    elevation: 4,
     borderTopRightRadius: 2,
-    borderRadius: 4,
+    borderBottomRightRadius: 2,
+    elevation: 4,
   },
   primaryButtonText: {
     color: "white",
@@ -105,28 +106,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    minHeight: 50
   },
   outlinedButton: {
     borderRadius: 4,
     borderWidth: 1.5,
-    marginVertical: 8,
     overflow: "hidden",
-    shadowColor: Colors.gray[900],
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
     elevation: 12,
     borderColor: OUTLINED_BUTTON_BORDER_COLOR,
     borderBottomColor: Colors.primary[700],
     borderBottomWidth: 6,
     borderRightColor: Colors.primary[700],
     borderRightWidth: 6,
+    borderTopRightRadius: 2,
+    borderBottomRightRadius: 2,
     backgroundColor: "white",
-    paddingVertical: 16,
-    paddingHorizontal: 32,
   },
   outlinedButtonText: {
     color: OUTLINED_BUTTON_TEXT_COLOR,

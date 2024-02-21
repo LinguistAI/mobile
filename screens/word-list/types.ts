@@ -2,7 +2,6 @@ export type WordDefinition = {
   word: string;
 };
 
-
 export type TWordList = {
   listId: string;
   title: string;
@@ -10,17 +9,17 @@ export type TWordList = {
   isPinned: boolean;
   isActive: boolean;
   isFavorite: boolean;
-  words: string[]
+  words: string[];
 };
 
-// User service 
+// User service
 export interface IWordListsWithUserInfo {
   ownerUsername: string;
   lists: TWordList[];
 }
 
-export interface IWordListWithUserInfo extends TWordList{
- ownerUsername: string;
+export interface IWordListWithUserInfo extends TWordList {
+  ownerUsername: string;
 }
 
 export interface ICreateWordList {
@@ -29,21 +28,23 @@ export interface ICreateWordList {
   isActive: boolean;
   isFavorite: boolean;
   isPinned: boolean;
-};
+}
 
 export interface IEditWordList {
   listId: string;
-  editedList: Partial<ICreateWordList>
-};
+  editedList: Partial<ICreateWordList>;
+}
 
 export interface IAddWord {
   listId: string;
   word: string;
-};
+}
 
 // Dictionary service
 export interface DictionaryResponse {
-  [id: string]: { wordGroup: DictionaryWordGroup[] } | {}; // api response -> meta -> id
+  dict: {
+    [id: string]: { wordGroup: DictionaryWordGroup[] } | {}; // api response -> meta -> id
+  };
 }
 
 interface DictionaryWordGroup {

@@ -1,128 +1,132 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { TWordList } from "../../../screens/word-list/types";
-import ActionIcon from "../../common/ActionIcon";
-import { Ionicons } from "@expo/vector-icons";
-import Colors from "../../../theme/colors";
-import { useState } from "react";
-import WordListCardOptionMenu from "./WordListCardOptionMenu";
-import { TMenuOption } from "./types";
-import { useMutation } from "@tanstack/react-query";
-import { activateWordList, addWordListToFavorite, deactivateWordList, deleteList, pinWordList, removeWordListFromFavorites, unpinWordList } from "../../../screens/word-list/WordList.service";
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { TWordList } from './types';
+import ActionIcon from '../../common/ActionIcon';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '../../../theme/colors';
+import { useState } from 'react';
+import WordListCardOptionMenu from './WordListCardOptionMenu';
+import { TMenuOption } from './types';
+import { useMutation } from '@tanstack/react-query';
+import {
+  activateWordList,
+  addWordListToFavorite,
+  deactivateWordList,
+  deleteList,
+  pinWordList,
+  removeWordListFromFavorites,
+  unpinWordList,
+} from '../../../screens/word-list/WordList.service';
 
 interface WordListProps {
   list: TWordList;
   handleListSelection: (id: string) => void;
   updateList: (newList: TWordList) => void;
-  deleteList: (listId: string) => void
+  deleteList: (listId: string) => void;
 }
 
 const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  console.log(list)
+  console.log(list);
 
-  const {mutate: deleteListMutate} = useMutation({
+  const { mutate: deleteListMutate } = useMutation({
     mutationFn: () => deleteList(list.listId),
-    mutationKey: ["deleteWordList"],
+    mutationKey: ['deleteWordList'],
     onSuccess: () => {
-      deleteList(list.listId)
+      deleteList(list.listId);
     },
     onError: () => {},
-  })
+  });
 
-  const {mutate: addFavoriteMutate} = useMutation({
+  const { mutate: addFavoriteMutate } = useMutation({
     mutationFn: () => addWordListToFavorite(list.listId),
-    mutationKey: ["addListFavorite"],
+    mutationKey: ['addListFavorite'],
     onSuccess: () => {
       updateList({
         ...list,
         isFavorite: true,
-      })
-    }
-  })
+      });
+    },
+  });
 
-  const {mutate: removeFavoriteMutate} = useMutation({
+  const { mutate: removeFavoriteMutate } = useMutation({
     mutationFn: () => removeWordListFromFavorites(list.listId),
-    mutationKey: ["removeListFavorite"],
+    mutationKey: ['removeListFavorite'],
     onSuccess: () => {
       updateList({
         ...list,
-        isFavorite: false
+        isFavorite: false,
+      });
+    },
+  });
 
-      })
-    }
-  })
-
-  const {mutate: activateMutate} = useMutation({
+  const { mutate: activateMutate } = useMutation({
     mutationFn: () => activateWordList(list.listId),
-    mutationKey: ["activateList"],
+    mutationKey: ['activateList'],
     onSuccess: () => {
       updateList({
         ...list,
-        isActive: true
+        isActive: true,
+      });
+    },
+  });
 
-      })
-    }
-  })
-
-  const {mutate: deactivateMutate} = useMutation({
+  const { mutate: deactivateMutate } = useMutation({
     mutationFn: () => deactivateWordList(list.listId),
-    mutationKey: ["deactivateList"],
+    mutationKey: ['deactivateList'],
     onSuccess: () => {
       updateList({
         ...list,
-        isActive: false
-      })
-    }
-  })
+        isActive: false,
+      });
+    },
+  });
 
-  const {mutate: pinMutate} = useMutation({
+  const { mutate: pinMutate } = useMutation({
     mutationFn: () => pinWordList(list.listId),
-    mutationKey: ["pinList"],
+    mutationKey: ['pinList'],
     onSuccess: () => {
       updateList({
         ...list,
-        isPinned: true
-      })
-    }
-  })
+        isPinned: true,
+      });
+    },
+  });
 
-  const {mutate: unpinMutate} = useMutation({
+  const { mutate: unpinMutate } = useMutation({
     mutationFn: () => unpinWordList(list.listId),
-    mutationKey: ["unpinList"],
+    mutationKey: ['unpinList'],
     onSuccess: () => {
       updateList({
         ...list,
-        isPinned: false
-      })
-    }
-  })
-
-
+        isPinned: false,
+      });
+    },
+  });
 
   const triggerOption = (option: TMenuOption) => {
     switch (option) {
       case TMenuOption.DELETE:
-        deleteListMutate()
+        deleteListMutate();
         break;
       case TMenuOption.FAVORITE:
-        console.log("favorite")
-        addFavoriteMutate()
+        console.log('favorite');
+        addFavoriteMutate();
         break;
       case TMenuOption.UNFAVORITE:
-        console.log("unfavorite")
-        removeFavoriteMutate()
-        break
-        case TMenuOption.ACTIVATE:
-          activateMutate()
-          break;
-        case TMenuOption.DEACTIVATE:
-          deactivateMutate()
-          break;
+        console.log('unfavorite');
+        removeFavoriteMutate();
+        break;
+      case TMenuOption.ACTIVATE:
+        activateMutate();
+        break;
+      case TMenuOption.DEACTIVATE:
+        deactivateMutate();
+        break;
       case TMenuOption.PIN:
-        pinMutate()
+        pinMutate();
         break;
       case TMenuOption.UNPIN:
-        unpinMutate()
+        unpinMutate();
         break;
       case TMenuOption.EDIT:
         break;
@@ -139,7 +143,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
       return (
         <View style={styles.pin}>
           <ActionIcon
-            icon={<Ionicons size={24} name="pin" color={Colors.gray["900"]} />}
+            icon={<Ionicons size={24} name="pin" color={Colors.gray['900']} />}
             onPress={() => triggerOption(TMenuOption.PIN)}
           />
         </View>
@@ -152,13 +156,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
       return (
         <View style={styles.favourite}>
           <ActionIcon
-            icon={
-              <Ionicons
-                size={24}
-                name="heart-circle-outline"
-                color={Colors.gray["100"]}
-              />
-            }
+            icon={<Ionicons size={24} name="heart-circle-outline" color={Colors.gray['100']} />}
             onPress={() => triggerOption(TMenuOption.FAVORITE)}
           />
         </View>
@@ -169,51 +167,49 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
   const getMenuOptions = () => {
     return [
       {
-        label: "Edit",
+        label: 'Edit',
         value: TMenuOption.EDIT,
         icon: <Ionicons name="create-outline" size={20} color={Colors.blue[600]} />,
       },
       {
-        label: list.isFavorite ? "Unfavorite" : "Favorite" ,
+        label: list.isFavorite ? 'Unfavorite' : 'Favorite',
         value: list.isFavorite ? TMenuOption.UNFAVORITE : TMenuOption.FAVORITE,
         icon: list.isFavorite ? (
           <Ionicons name="heart" size={20} color={Colors.primary[600]} />
-
         ) : (
           <Ionicons name="heart-outline" size={20} color={Colors.primary[600]} />
         ),
       },
       {
-        label: list.isPinned ? "Unpin" : "Pin",
+        label: list.isPinned ? 'Unpin' : 'Pin',
         value: list.isPinned ? TMenuOption.UNPIN : TMenuOption.PIN,
-        icon: list.isPinned ? <Ionicons name="pin" size={20} color="black" /> : 
-          <Ionicons name="pin-outline" size={20} color="black" />,
+        icon: list.isPinned ? (
+          <Ionicons name="pin" size={20} color="black" />
+        ) : (
+          <Ionicons name="pin-outline" size={20} color="black" />
+        ),
       },
       {
-        label: list.isActive ? "Deactivate" : "Activate",
+        label: list.isActive ? 'Deactivate' : 'Activate',
         value: list.isActive ? TMenuOption.DEACTIVATE : TMenuOption.ACTIVATE,
-        icon: list.isActive ? <Ionicons name="bookmark-sharp" size={20} color="black"/> : (
-          <Ionicons name="bookmark-outline" size={20} color="black"/>
-        )
+        icon: list.isActive ? (
+          <Ionicons name="bookmark-sharp" size={20} color="black" />
+        ) : (
+          <Ionicons name="bookmark-outline" size={20} color="black" />
+        ),
       },
       {
-        label: "Delete",
+        label: 'Delete',
         value: TMenuOption.DELETE,
         icon: <Ionicons name="trash-outline" size={20} color={Colors.red[600]} />,
       },
       {
-        label: "Cancel",
+        label: 'Cancel',
         value: TMenuOption.CANCEL,
-        icon: (
-          <Ionicons
-            name="close-circle-outline"
-            size={20}
-            color={Colors.gray[600]}
-          />
-        ),
+        icon: <Ionicons name="close-circle-outline" size={20} color={Colors.gray[600]} />,
       },
-    ]
-  }
+    ];
+  };
 
   return (
     <Pressable
@@ -222,7 +218,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
       onPress={() => handleListSelection(list.listId)}
     >
       <View key={list.listId}>
-       <Image source={{ uri: "https://picsum.photos/150"  }} style={styles.image} />
+        <Image source={{ uri: 'https://picsum.photos/150' }} style={styles.image} />
         <View style={styles.overlay}>
           {renderPin()}
           {renderFavourite()}
@@ -231,9 +227,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
             {/* TODO: <Text style={styles.words}>{list.words.length} words in total</Text> */}
           </View>
           <View style={styles.bottomRow}>
-            <View style={styles.stats}>
-              {/* TODO: ADD LSIT STATS */}
-            </View>
+            <View style={styles.stats}>{/* TODO: ADD LSIT STATS */}</View>
             <View style={styles.menuContainer}>
               <WordListCardOptionMenu
                 menuVisible={menuVisible}
@@ -252,40 +246,40 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
 const styles = StyleSheet.create({
   card: {
     marginBottom: 10,
-    width: "48%",
-    position: "relative",
+    width: '48%',
+    position: 'relative',
     marginRight: 8,
   },
   pin: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     zIndex: 1,
   },
   favourite: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     right: 0,
     zIndex: 1,
   },
   words: {
     fontSize: 14,
-    color: "#fff",
-    textAlign: "center",
+    color: '#fff',
+    textAlign: 'center',
   },
   image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     borderRadius: 4,
-    position: "absolute",
+    position: 'absolute',
   },
   overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   bottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: Colors.primary["500"],
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.primary['500'],
     opacity: 0.8,
     marginTop: 25,
   },
@@ -293,22 +287,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 15,
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
-    textAlign: "center",
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
   },
   stats: {
     paddingHorizontal: 10,
     paddingVertical: 10,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   stat: {
     fontSize: 13,
-    color: "#fff",
-    fontStyle: "italic",
+    color: '#fff',
+    fontStyle: 'italic',
   },
   menuContainer: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     paddingHorizontal: 5,
     paddingBottom: 5,
   },

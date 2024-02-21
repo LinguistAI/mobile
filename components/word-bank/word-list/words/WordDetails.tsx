@@ -1,19 +1,21 @@
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
-import { CollapsableContainer } from "../../../common/CollapsableContainer";
-import { WordDefinition } from "../../../../screens/word-list/types";
-import { useState } from "react";
-import Colors from "../../../../theme/colors";
-import { Ionicons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
-import { getWordMeanings } from "../../../../screens/word-list/WordList.service";
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { CollapsableContainer } from '../../../common/CollapsableContainer';
+import { WordDefinition } from '../types';
+import { useState } from 'react';
+import Colors from '../../../../theme/colors';
+import { Ionicons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
+import { getWordMeanings } from '../../../../screens/word-list/WordList.service';
 
-const WordAccordionItem = ({ item }: { item: WordDefinition }) => {
+const WordDetails = ({ item }: { item: WordDefinition }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const { data } = useQuery({
-    queryKey: ["wordMeaning"],
-    queryFn: () => getWordMeanings([item.word])
-  })
+  // const { data } = useQuery({
+  //   queryKey: ["wordMeaning"],
+  //   queryFn: () => getWordMeanings(["think"])
+  // })
+
+  // console.log(data)
 
   const onItemPress = () => {
     setExpanded(!expanded);
@@ -38,18 +40,18 @@ const WordAccordionItem = ({ item }: { item: WordDefinition }) => {
         {item.meanings.map((meaning, index) => (
           <Text key={`${index}-${meaning}`} style={styles.meaning}>
             {index + 1}
-            {". "}
+            {'. '}
             {meaning}
           </Text>
         ))}
         <Text style={styles.collapsibleHeader}>
-          {item.examples.length > 1 ? "Examples" : "Example"}
+          {item.examples.length > 1 ? 'Examples' : 'Example'}
         </Text>
         {item.examples.length > 0 && (
           <View>
             {item.examples.map((example, index) => (
               <Text key={`${index}-${example}`} style={styles.example}>
-                {index + 1} {". "}
+                {index + 1} {'. '}
                 {example}
               </Text>
             ))}
@@ -62,44 +64,44 @@ const WordAccordionItem = ({ item }: { item: WordDefinition }) => {
 
 const styles = StyleSheet.create({
   wrap: {
-    backgroundColor: Colors.primary["300"],
+    backgroundColor: Colors.primary['300'],
     padding: 12,
-    borderColor: Colors.primary["700"],
+    borderColor: Colors.primary['700'],
     borderWidth: 2,
   },
   container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   headerContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
   word: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   details: {
     marginTop: 10,
   },
   collapsibleHeader: {
-    fontStyle: "italic",
-    fontWeight: "bold",
-    color: "white",
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    color: 'white',
     padding: 10,
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "white",
+    borderBottomColor: 'white',
     fontSize: 16,
   },
   meaning: {
-    fontStyle: "italic",
+    fontStyle: 'italic',
   },
   example: {
-    fontStyle: "italic",
+    fontStyle: 'italic',
   },
 });
 
-export default WordAccordionItem;
+export default WordDetails;

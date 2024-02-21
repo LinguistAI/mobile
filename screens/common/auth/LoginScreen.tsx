@@ -60,6 +60,7 @@ const LoginScreen = (props: LoginScreenProps) => {
       });
     },
     onError: (error: any) => {
+      console.log(error)
       add({
         body: generateErrorResponseMessage(error),
         title: "Error!",

@@ -1,21 +1,21 @@
-import { atom, useAtom } from "jotai";
-import 'react-native-get-random-values'
-import { v4 as uuidv4 } from "uuid";
+import { atom, useAtom } from 'jotai';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 export type NotificationObject = {
   body: string;
   title?: string;
   bodyColor?: string;
   titleColor?: string;
-  type?: "success" | "error" | "info";
+  type?: 'success' | 'error' | 'info';
   time?: number; // ms
   id?: string;
 };
 
 const notificationsAtom = atom<NotificationObject[]>([]);
 
-const defaultTime = 5000;
-const defaultType = "info";
+const defaultTime = 10000;
+const defaultType = 'info';
 
 const useNotifications = () => {
   const [notifications, setNotifications] = useAtom(notificationsAtom);

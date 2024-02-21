@@ -1,6 +1,4 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { FlatList, StyleSheet, View } from 'react-native';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import WordListCard from './WordListCard';
 import FloatingButton from '../../common/FloatingButton';
 import ModalWrapper from '../../common/ModalWrapper';
@@ -8,23 +6,26 @@ import { FormProvider, useForm } from 'react-hook-form';
 import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import PrimarySwitch from '../../common/form/PrimarySwitch';
 import ModalControlButtons from '../../common/modal/ModalControlButtons';
-import WordListFilter from './WordListFilter';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createList, getLists } from '../../../screens/word-list/WordList.service';
-import { ICreateWordList, TWordList } from '../../../screens/word-list/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createList } from '../../../screens/word-list/WordList.service';
+import { ICreateWordList, TWordList } from './types';
 import { APIResponse } from '../../../screens/common';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import useNotifications from '../../../hooks/useNotifications';
 import { isEmptyObj } from '../../utils';
+import WordListsSkeleton from './WordListsSkeleton';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectAreWordListsFetched,
+  selectFilteredWordLists,
+  selectWordLists,
+} from '../../../slices/chatSelectors';
+import { wordListDeleted, wordListUpdated } from '../../../slices/chatSlice';
 
-const WordList = () => {
+const WordLists = () => {
   const queryClient = useQueryClient();
-  const { data: wordListsServer } = useQuery({
-    queryFn: () => getLists(),
-    queryKey: ['getWordLists'],
-  });
   const { mutate: addListMutate, isPending } = useMutation({
     mutationFn: (data: ICreateWordList) => createList(data),
     mutationKey: ['createWordList'],
@@ -45,8 +46,9 @@ const WordList = () => {
       addNotification({ body: msg, type: 'error' });
     },
   });
-  const wordLists = wordListsServer?.data?.lists || [];
-  const [filteredWordLists, setFilteredWordLists] = useState<TWordList[]>([]);
+  const wordLists = useSelector(selectWordLists);
+  const filteredWordLists = useSelector(selectFilteredWordLists);
+  const dispatch = useDispatch();
   const [addListModalVisible, setAddListModalVisible] = useState(false);
   const navigation = useNavigation();
   const { add: addNotification } = useNotifications();
@@ -56,23 +58,13 @@ const WordList = () => {
       listDescription: '',
       pinned: false,
       favorite: false,
-      isActive: true,
+      isActive: false,
     },
     mode: 'onChange',
   });
 
-  useEffect(() => {
-    if (wordListsServer?.data) {
-      setFilteredWordLists(wordListsServer?.data?.lists);
-    }
-  }, [wordListsServer]);
-
-  if (!wordListsServer) {
-    return renderSkeleton();
-  }
-
   const validateSubmit = (data: any) => {
-    wordListsServer?.data?.lists?.forEach((list) => {
+    wordLists.forEach((list) => {
       if (list.title === data.listName) {
         methods.setError('listName', {
           type: 'manual',
@@ -119,19 +111,6 @@ const WordList = () => {
     navigation.navigate('WordListDetails', { list: selectedList });
   };
 
-  const updateList = (updatedList: TWordList) => {
-    const listIndex = wordLists.findIndex((list) => list.listId === updatedList.listId);
-    setFilteredWordLists([
-      ...wordLists.slice(0, listIndex),
-      updatedList,
-      ...wordLists.slice(listIndex + 1),
-    ]);
-  };
-
-  const deleteList = (listId: string) => {
-    setFilteredWordLists(wordLists.filter((list) => list.listId !== listId));
-  };
-
   const renderAddListModal = () => {
     return (
       <ModalWrapper
@@ -171,17 +150,16 @@ const WordList = () => {
     );
   };
 
+  const updateList = (updatedList: TWordList) => {
+    dispatch(wordListUpdated({ targetList: updatedList }));
+  };
+
+  const deleteList = (listId: string) => {
+    dispatch(wordListDeleted({ targetListId: listId }));
+  };
+
   const renderSkeleton = () => {
-    return (
-      <View style={styles.skeletonContainer}>
-        {Array.from({ length: 4 }).map((_, index) => (
-          <View key={index} style={styles.skeletonRow}>
-            <ShimmerPlaceholder LinearGradient={LinearGradient} style={styles.skeletonRectangle} />
-            <ShimmerPlaceholder LinearGradient={LinearGradient} style={styles.skeletonRectangle} />
-          </View>
-        ))}
-      </View>
-    );
+    return <WordListsSkeleton />;
   };
 
   const renderLists = () => {
@@ -209,28 +187,17 @@ const WordList = () => {
   };
 
   return (
-    <View>
-      <View style={styles.filterContainer}>
-        <WordListFilter
-          wordLists={wordListsServer?.data?.lists || []}
-          setFilteredWordLists={setFilteredWordLists}
-        />
+    <>
+      {renderLists()}
+      <View>
+        <FloatingButton handlePress={handleOpenAddListModal} />
       </View>
-      <View style={styles.wordListContainer}>{renderLists()}</View>
-      <FloatingButton handlePress={handleOpenAddListModal} />
       {renderAddListModal()}
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    flex: 1,
-  },
   wordListContainer: {
     flex: 8,
   },
@@ -250,20 +217,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     gap: 35,
   },
-  skeletonContainer: {
-    flex: 8,
-    paddingHorizontal: 20,
-    gap: 10,
-  },
-  skeletonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  skeletonRectangle: {
-    width: '48%',
-    borderRadius: 4,
-    height: 140,
-  },
 });
 
-export default WordList;
+export default WordLists;

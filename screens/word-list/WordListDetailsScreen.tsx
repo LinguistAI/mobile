@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import { TWordList } from './types';
+import { TWordList } from '../../components/word-bank/word-list/types';
 import FloatingButton from '../../components/common/FloatingButton';
 import WordDetails from '../../components/word-bank/word-list/words/WordDetails';
 import { useState } from 'react';

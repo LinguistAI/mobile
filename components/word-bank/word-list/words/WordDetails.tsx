@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { CollapsableContainer } from '../../../common/CollapsableContainer';
-import { WordDefinition } from '../../../../screens/word-list/types';
+import { WordDefinition } from '../types';
 import { useState } from 'react';
 import Colors from '../../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';

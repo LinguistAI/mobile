@@ -87,6 +87,7 @@ const WordLists = () => {
       isActive: data.isActive,
       isFavorite: data.favorite,
       isPinned: data.pinned,
+      imageUrl: "https://picsum.photos/536/354"
     };
     addListMutate(createWordList);
   };
@@ -108,7 +109,7 @@ const WordLists = () => {
 
   const handleListSelection = (listId: string) => {
     const selectedList = wordLists.find((list) => list.listId === listId);
-    navigation.navigate('WordListDetails', { list: selectedList });
+    navigation.navigate('WordListDetails', { listId: selectedList?.listId });
   };
 
   const renderAddListModal = () => {

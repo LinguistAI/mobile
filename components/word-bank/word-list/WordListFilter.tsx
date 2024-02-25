@@ -144,7 +144,6 @@ const WordListFilter = () => {
             value={tempFilter?.search?.searchText}
             placeholder="Search by title, description, or word"
           />
-
           {tempFilter?.search?.searchText !== '' && (
             <View style={{ alignSelf: 'center', marginRight: 20 }}>
               <ActionIcon

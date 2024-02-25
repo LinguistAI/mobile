@@ -24,15 +24,19 @@ interface WordListProps {
   deleteList: (listId: string) => void;
 }
 
-const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) => {
+const WordListCard = ({
+  list,
+  handleListSelection,
+  updateList,
+  deleteList: deleteListFn,
+}: WordListProps) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  console.log(list);
 
   const { mutate: deleteListMutate } = useMutation({
     mutationFn: () => deleteList(list.listId),
     mutationKey: ['deleteWordList'],
     onSuccess: () => {
-      deleteList(list.listId);
+      deleteListFn(list.listId);
     },
     onError: () => {},
   });
@@ -109,11 +113,9 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
         deleteListMutate();
         break;
       case TMenuOption.FAVORITE:
-        console.log('favorite');
         addFavoriteMutate();
         break;
       case TMenuOption.UNFAVORITE:
-        console.log('unfavorite');
         removeFavoriteMutate();
         break;
       case TMenuOption.ACTIVATE:
@@ -136,6 +138,7 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
       default:
         break;
     }
+    setMenuVisible(false);
   };
 
   const renderPin = () => {
@@ -169,44 +172,44 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
       {
         label: 'Edit',
         value: TMenuOption.EDIT,
-        icon: <Ionicons name="create-outline" size={20} color={Colors.blue[600]} />,
+        icon: <Ionicons name="create-outline" size={18} color={Colors.blue[600]} />,
       },
       {
         label: list.isFavorite ? 'Unfavorite' : 'Favorite',
         value: list.isFavorite ? TMenuOption.UNFAVORITE : TMenuOption.FAVORITE,
         icon: list.isFavorite ? (
-          <Ionicons name="heart" size={20} color={Colors.primary[600]} />
+          <Ionicons name="heart" size={18} color={Colors.primary[600]} />
         ) : (
-          <Ionicons name="heart-outline" size={20} color={Colors.primary[600]} />
+          <Ionicons name="heart-outline" size={18} color={Colors.primary[600]} />
         ),
       },
       {
         label: list.isPinned ? 'Unpin' : 'Pin',
         value: list.isPinned ? TMenuOption.UNPIN : TMenuOption.PIN,
         icon: list.isPinned ? (
-          <Ionicons name="pin" size={20} color="black" />
+          <Ionicons name="pin" size={18} color="black" />
         ) : (
-          <Ionicons name="pin-outline" size={20} color="black" />
+          <Ionicons name="pin-outline" size={18} color="black" />
         ),
       },
       {
         label: list.isActive ? 'Deactivate' : 'Activate',
         value: list.isActive ? TMenuOption.DEACTIVATE : TMenuOption.ACTIVATE,
         icon: list.isActive ? (
-          <Ionicons name="bookmark-sharp" size={20} color="black" />
+          <Ionicons name="bookmark-sharp" size={18} color="black" />
         ) : (
-          <Ionicons name="bookmark-outline" size={20} color="black" />
+          <Ionicons name="bookmark-outline" size={18} color="black" />
         ),
       },
       {
         label: 'Delete',
         value: TMenuOption.DELETE,
-        icon: <Ionicons name="trash-outline" size={20} color={Colors.red[600]} />,
+        icon: <Ionicons name="trash-outline" size={18} color={Colors.red[600]} />,
       },
       {
         label: 'Cancel',
         value: TMenuOption.CANCEL,
-        icon: <Ionicons name="close-circle-outline" size={20} color={Colors.gray[600]} />,
+        icon: <Ionicons name="close-circle-outline" size={18} color={Colors.gray[600]} />,
       },
     ];
   };
@@ -227,7 +230,11 @@ const WordListCard = ({ list, handleListSelection, updateList }: WordListProps) 
             {/* TODO: <Text style={styles.words}>{list.words.length} words in total</Text> */}
           </View>
           <View style={styles.bottomRow}>
-            <View style={styles.stats}>{/* TODO: ADD LSIT STATS */}</View>
+            <View style={styles.stats}>
+              <Text style={styles.stat}>Learning: {list.listStats.learning}</Text>
+              <Text style={styles.stat}>Reviewing: {list.listStats.reviewing}</Text>
+              <Text style={styles.stat}>Mastered: {list.listStats.mastered}</Text>
+            </View>
             <View style={styles.menuContainer}>
               <WordListCardOptionMenu
                 menuVisible={menuVisible}

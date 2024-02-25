@@ -17,7 +17,6 @@ interface WordDetailsInterface {
 const WordDetails = ({ word }: WordDetailsInterface) => {
   const [expanded, setExpanded] = useState(false);
 
-  console.log(word)
   const { data, isLoading, isError } = useQuery({
     queryKey: ['wordMeaning', word],
     queryFn: () => getWordMeanings([word.word]),

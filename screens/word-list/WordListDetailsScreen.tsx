@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { TWordList } from '../../components/word-bank/word-list/types';
 import FloatingButton from '../../components/common/FloatingButton';
 import WordDetails from '../../components/word-bank/word-list/words/WordDetailsCollapse';
@@ -79,6 +79,12 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 
   return (
     <View style={styles.container}>
+      {selectedList.data.words.length === 0 && (
+        <Text>
+          It looks like there are no words in this list. Use the add
+          button on the bottom right part of the page to add your first word.
+        </Text>
+      )}
       <FlatList
         data={selectedList.data.words}
         renderItem={({ item }) => <WordDetails word={item} />}

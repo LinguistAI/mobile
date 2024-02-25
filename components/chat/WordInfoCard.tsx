@@ -36,7 +36,6 @@ const WordInfoCard = ({
   const [selectedWordList, setSelectedWordList] = useState(wordLists.length !== 0 ? wordLists[0].listId : "")
   const queryClient = useQueryClient()
   const { add: addNotification} = useNotifications()
-  console.log(wordLists)
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['wordMeaning', selectedWord],

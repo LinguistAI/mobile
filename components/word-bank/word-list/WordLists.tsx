@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import WordListCard from './WordListCard';
 import FloatingButton from '../../common/FloatingButton';
 import ModalWrapper from '../../common/ModalWrapper';
@@ -87,7 +87,7 @@ const WordLists = () => {
       isActive: data.isActive,
       isFavorite: data.favorite,
       isPinned: data.pinned,
-      imageUrl: "https://picsum.photos/536/354"
+      imageUrl: "https://picsum.photos/200"
     };
     addListMutate(createWordList);
   };
@@ -166,6 +166,12 @@ const WordLists = () => {
   const renderLists = () => {
     if (isPending) {
       return renderSkeleton();
+    }
+
+    if (filteredWordLists.length === 0) {
+      <Text>
+        It looks like you haven't created any lists.
+      </Text>
     }
 
     return (

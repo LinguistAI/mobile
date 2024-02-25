@@ -11,7 +11,6 @@ import {
 } from '../../components/word-bank/word-list/types';
 
 export const createList = async (list: ICreateWordList) => {
-  console.log(list)
   const response = await axiosSecure.post<APIResponse<IWordListWithUserInfo>>(
     'wordbank/lists',
     list
@@ -28,7 +27,6 @@ export const getList = async (listId: string) => {
   const response = await axiosSecure.get<APIResponse<IWordListWithWordInfo>>(
     `wordbank/list/${listId}`
   );
-  console.log(response.data);
   return response.data;
 };
 
@@ -59,7 +57,6 @@ export const deactivateWordList = async (listId: string) => {
 
 export const addWordListToFavorite = async (listId: string) => {
   const response = await axiosSecure.post(`wordbank/lists/add-favorite`, { listId });
-  console.log(response);
   return response.data;
 };
 

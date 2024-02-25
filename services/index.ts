@@ -41,16 +41,19 @@ axiosSecure.interceptors.response.use(
   (response) => response,
   async (error) => {
     const prevRequest = error?.config;
-    if (error?.response?.status === 401 && !prevRequest?.sent) {
+    if (error.code === 401 && !prevRequest?.sent) {
       prevRequest.sent = true;
       const userJson = await SecureStorage.getItemAsync("user");
       if (!userJson) {
+      // TODO: Redirect to homepage
         return;
       }
       const user = JSON.parse(userJson);
       if (!user) {
+      // TODO: Redirect to homepage
         return;
       }
+      console.log(user)
       const res = await axios.get<{ accessToken: string }>("/auth/refresh", {
         withCredentials: true,
         headers: {

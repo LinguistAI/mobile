@@ -1,62 +1,63 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../screens/HomeScreen";
-import ChatScreen from "../screens/ChatScreen";
-import LeaderboardScreen from "../screens/LeaderboardScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import SettingsScreen from "../screens/SettingsScreen";
-import IonIcons from "@expo/vector-icons/Ionicons";
+import IonIcons from '@expo/vector-icons/Ionicons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ChatScreen from '../screens/chat/ChatScreen';
+import LeaderboardScreen from '../screens/leaderboard/LeaderboardScreen';
+import HomeStackNavigator from './HomeStackNavigator';
+import Colors from '../theme/colors';
+import WordBankNavigation from './WordBankNavigation';
+import { Provider } from 'react-redux';
+import { store } from '../slices/store';
 
 const Tab = createBottomTabNavigator();
 
 const BottomNavigation = () => {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <IonIcons name="home-outline" size={size} color={color} />
-          ),
+    <Provider store={store}>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: Colors.primary['600'],
         }}
-      />
-      <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <IonIcons name="chatbox-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Leaderboard"
-        component={LeaderboardScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <IonIcons name="podium-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <IonIcons name="person-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <IonIcons name="settings-outline" size={size} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeStackNavigator}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <IonIcons name="home-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <IonIcons name="chatbox-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="WordList"
+          component={WordBankNavigation}
+          options={{
+            tabBarLabel: 'Word Bank',
+            tabBarIcon: ({ color, size }) => (
+              <IonIcons name="list-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Leaderboard"
+          component={LeaderboardScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <IonIcons name="podium-outline" size={size} color={color} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </Provider>
   );
 };
 

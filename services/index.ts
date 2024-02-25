@@ -1,15 +1,16 @@
 import axios from "axios";
 import * as SecureStorage from "expo-secure-store";
-import { StoredUserInfoWithTokens } from "../types/auth";
+import { StoredUserInfoWithTokens } from "../screens/common/Auth.types";
 
 const decideBackendURL = (): string => {
   if (process.env.NODE_ENV === "production") {
     return process.env.EXPO_PUBLIC_API_URL as string;
-  } else if (process.env.NODE_ENV === "development") {
+  }
+  else if (process.env.NODE_ENV === "development") {
     return process.env.EXPO_PUBLIC_LOCAL_API_URL as string;
   }
 
-  return "";
+   throw new Error("Environment not set");
 };
 
 export const axiosBase = axios.create({
@@ -25,11 +26,10 @@ export const axiosSecure = axios.create({
 
 axiosSecure.interceptors.request.use(
   async (config) => {
-    const user = (await SecureStorage.getItemAsync(
-      "user"
-    )) as unknown as StoredUserInfoWithTokens;
+    const ssUser = await SecureStorage.getItemAsync("user");
+    const user = JSON.parse(ssUser as string) as StoredUserInfoWithTokens;
     if (!config?.headers!["Authorization"]) {
-      config.headers!["Authorization"] = `Bearer ${user.accessToken}`;
+      config.headers!["Authorization"] = `Bearer ${user["accessToken"]}`;
     }
 
     return config;
@@ -41,11 +41,19 @@ axiosSecure.interceptors.response.use(
   (response) => response,
   async (error) => {
     const prevRequest = error?.config;
-    if (error?.response?.status === 403 && !prevRequest?.sent) {
+    if (error.code === 401 && !prevRequest?.sent) {
       prevRequest.sent = true;
-      const user = (await SecureStorage.getItemAsync(
-        "user"
-      )) as unknown as StoredUserInfoWithTokens;
+      const userJson = await SecureStorage.getItemAsync("user");
+      if (!userJson) {
+      // TODO: Redirect to homepage
+        return;
+      }
+      const user = JSON.parse(userJson);
+      if (!user) {
+      // TODO: Redirect to homepage
+        return;
+      }
+      console.log(user)
       const res = await axios.get<{ accessToken: string }>("/auth/refresh", {
         withCredentials: true,
         headers: {
@@ -56,6 +64,8 @@ axiosSecure.interceptors.response.use(
       SecureStorage.setItemAsync("user", JSON.stringify(user));
       prevRequest.headers["Authorization"] = `Bearer ${res.data.accessToken}`;
       return axiosSecure(prevRequest);
+    } else {
+      // TODO: Redirect to homepage
     }
     return Promise.reject(error);
   }

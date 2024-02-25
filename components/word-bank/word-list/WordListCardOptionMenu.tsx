@@ -1,36 +1,27 @@
-import { Ionicons } from "@expo/vector-icons";
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from "react-native-popup-menu";
-import Colors from "../../../theme/colors";
-import { StyleSheet, Text, View } from "react-native";
-import { TMenuOption } from "./types";
-import { TMenuOptionObject } from "./types";
+import { Ionicons } from '@expo/vector-icons';
+import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import Colors from '../../../theme/colors';
+import { StyleSheet, Text, View } from 'react-native';
+import { TMenuOption } from './types';
+import { TMenuOptionObject } from './types';
 
 interface WordListCardOptionMenuProps {
   menuVisible: boolean;
   setMenuVisible: (visible: boolean) => void;
   triggerOption: (option: TMenuOption) => void;
-  menuOptions: TMenuOptionObject[]
+  menuOptions: TMenuOptionObject[];
 }
 
 const WordListCardOptionMenu = ({
   menuVisible,
   setMenuVisible,
   triggerOption,
-  menuOptions
+  menuOptions,
 }: WordListCardOptionMenuProps) => {
   return (
     <Menu opened={menuVisible} onBackdropPress={() => setMenuVisible(false)}>
       <MenuTrigger onPress={() => setMenuVisible(true)}>
-        <Ionicons
-          size={20}
-          name="ellipsis-vertical"
-          color={Colors.gray["900"]}
-        />
+        <Ionicons size={20} name="ellipsis-vertical" color={Colors.gray['900']} />
       </MenuTrigger>
       <MenuOptions>
         {menuOptions.map((option, index) => (
@@ -62,17 +53,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   optionContent: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingVertical: 8,
     paddingHorizontal: 8,
     gap: 12,
-    alignItems: "center",
+    alignItems: 'center',
   },
   option: {
-    fontSize: 16,
-    fontWeight: "bold",
-    height: 25,
-    textAlignVertical: "center",
+    fontSize: 14,
+    fontWeight: 'bold',
+    height: 20,
+    textAlignVertical: 'center',
   },
 });
 

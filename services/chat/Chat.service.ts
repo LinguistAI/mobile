@@ -4,7 +4,6 @@ import { APIResponse } from "../../screens/common";
 import { ChatbotResponse } from "./Chat.types";
 
 export async function sendChatMessage(message: ChatMessage, email: string) {
-  console.log(message);
   const res = await axiosSecure.post<APIResponse<ChatbotResponse>>(
     "/chat",
     {

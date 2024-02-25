@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,104 +12,142 @@ import {
 import ActionIcon from "../common/ActionIcon";
 import CloseIcon from "../common/CloseIcon";
 import Colors from "../../theme/colors";
-import * as Speech from "expo-speech";
+import WordDetail from "../word-bank/word-list/words/WordDetail";
+import { useSelector } from "react-redux";
+import { selectWordLists } from "../../slices/chatSelectors";
+import { addWord, getWordMeanings } from "../../screens/word-list/WordList.service";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { isDictionaryWordGroup } from "../word-bank/word-list/utils";
+import useNotifications from "../../hooks/useNotifications";
+import { generateErrorResponseMessage } from "../../utils/httpUtils";
+import Title from "../common/Title";
+import Divider from "../common/Divider";
 
 interface WordInfoCardProps {
   selectedWord: string;
-  meanings: string[];
-  exampleSentences: string[];
   onDismiss: () => void;
 }
 
 const WordInfoCard = ({
   selectedWord,
-  meanings,
-  exampleSentences,
   onDismiss,
 }: WordInfoCardProps) => {
-  // TODO: Make the wordlists global using Jotai, also save the latest
-  // selected wordlist, and use it as the default value
-  const [selectedWordList, setSelectedWordList] = useState<number>(1);
+  const wordLists = useSelector(selectWordLists)
+  const [selectedWordList, setSelectedWordList] = useState(wordLists.length !== 0 ? wordLists[0].listId : "")
+  const queryClient = useQueryClient()
+  const { add: addNotification} = useNotifications()
 
-  // TODO: Fetch the wordlists from the server
-  const wordLists = [
-    {
-      name: "Nouns",
-      id: 1,
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['wordMeaning', selectedWord],
+    queryFn: () => getWordMeanings([selectedWord]),
+    staleTime: 1000000
+  });
+
+  const { mutate: addNewWord, isPending: isAddingWord } = useMutation({
+    mutationKey: ['addNewWord'],
+    mutationFn: () =>
+      addWord({
+        listId: selectedWordList,
+        word: selectedWord,
+      }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({queryKey: ["getListDetails"]})
+      addNotification({
+        body: `${selectedWord} is added to the list.`
+      })
     },
-    {
-      name: "Verbs",
-      id: 2,
+    onError: (error) => {
+      addNotification({
+        body: generateErrorResponseMessage(
+          error,
+          'Something went wrong while adding the word to the word list.'
+        ),
+        type: 'error',
+      });
     },
-    {
-      name: "Adjectives",
-      id: 3,
-    },
-    {
-      name: "Adverbs",
-      id: 4,
-    },
-  ];
+  });
+
+  const renderWordDetails = () => {
+    let result = null;
+    if (isLoading) {
+      result = <ActivityIndicator />
+    }
+    else if (isError) {
+      result = (
+        <Text>
+          We couldn't fetch the details for this word.
+        </Text>
+      )
+    }
+    else {
+      const dict = data?.data?.dict!
+      const wordGroupOrNot = dict[selectedWord]
+      if (isDictionaryWordGroup(wordGroupOrNot)) {
+        const wordGroupObj = wordGroupOrNot
+        result = wordGroupObj.wordGroup.map(group => (
+          <WordDetail 
+            key={group.id}
+            definition={group}
+          />
+        ))
+      } else {
+        result = (
+          <Text>
+            Unfortunately this word does not exist in our dictionary. Sorry...
+          </Text>
+        )
+      }
+
+      return result
+    }
+  }
 
   return (
-    <View style={styles.cardContainer}>
-      <CloseIcon onPress={onDismiss} />
-      <View style={styles.explanationContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.word}>{selectedWord}</Text>
-          <ActionIcon
-            icon={
-              <Ionicons
-                name="volume-medium"
-                size={36}
-                color={Colors.primary["600"]}
-              />
-            }
-            onPress={() => Speech.speak(selectedWord)}
-          />
-        </View>
-        {meanings.map((meaning, index) => (
-          <Text key={index} style={styles.meaning}>
-            {meaning}
+    <View>
+      <ScrollView contentContainerStyle={styles.cardContainer}>
+        <CloseIcon onPress={onDismiss} />
+        <View>
+          <Text style={styles.word}>
+            {selectedWord}
           </Text>
-        ))}
-        {exampleSentences.map((sentence, index) => (
-          <Text key={index} style={styles.example}>
-            {sentence}
-          </Text>
-        ))}
-      </View>
-      <View style={styles.actionsContainer}>
-        <View style={styles.picker}>
-          <Picker
-            itemStyle={styles.pickerItem}
-            selectedValue={selectedWordList}
-            onValueChange={(itemValue) => setSelectedWordList(itemValue)}
-            mode="dropdown"
-          >
-            {wordLists.map((wordList) => (
-              <Picker.Item
-                key={wordList.id}
-                label={wordList.name}
-                value={wordList.id}
-              />
-            ))}
-          </Picker>
+          {renderWordDetails()}
         </View>
-        <View style={styles.addIconContainer}>
-          <ActionIcon
-            icon={
-              <Ionicons
-                name="add-circle"
-                size={36}
-                color={Colors.primary[600]}
-              />
-            }
-            // TODO: Add the word to the selected wordlist
-            onPress={() => {}}
-          />
+        <Divider />
+        <Title fontSize="h4">
+          Add to your list
+        </Title>
+        <View style={styles.actionsContainer}>
+          <View style={styles.picker}>
+            <Picker
+              itemStyle={styles.pickerItem}
+              selectedValue={selectedWordList}
+              onValueChange={(itemValue) => setSelectedWordList(itemValue)}
+              mode="dropdown"
+            >
+              {wordLists.map((wordList) => (
+                <Picker.Item
+                  key={wordList.listId}
+                  value={wordList.listId}
+                  label={wordList.title}
+                />
+              ))}
+            </Picker>
+          </View>
+          <View style={styles.addIconContainer}>
+            <ActionIcon
+              icon={
+                <Ionicons
+                  name="add-circle"
+                  size={36}
+                  color={Colors.gray[0]}
+                />
+              }
+              onPress={() => addNewWord()}
+              disabled={isAddingWord || selectedWordList === ""}
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -116,8 +155,8 @@ const WordInfoCard = ({
 const styles = StyleSheet.create({
   cardContainer: {
     margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
+    backgroundColor: Colors.primary[500],
+    borderRadius: 10,
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
@@ -130,44 +169,10 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: "90%",
   },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    textAlign: "center",
-    gap: 10,
-  },
-  explanationContainer: {
-    alignItems: "center",
-    marginBottom: 30,
-    width: "100%",
-  },
   word: {
     fontSize: 24,
     fontWeight: "bold",
-  },
-  meaning: {
-    fontSize: 18,
-    marginBottom: 10,
-    alignSelf: "flex-start",
-  },
-  example: {
-    fontSize: 16,
-    fontStyle: "italic",
-    marginBottom: 10,
-    alignSelf: "flex-start",
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    backgroundColor: "#2196F3",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "center"
   },
   actionsContainer: {
     flexDirection: "row",

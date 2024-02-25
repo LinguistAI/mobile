@@ -19,21 +19,6 @@ export const SORT_BY_OPTIONS = [
     value: 'title',
     icon: <Ionicons name="md-text" size={18} color="black" />,
   },
-  {
-    label: 'Description',
-    value: 'description',
-    icon: <Ionicons name="document-text" size={18} color="black" />,
-  },
-  {
-    label: 'Pinned',
-    value: 'pinned',
-    icon: <Ionicons name="pin" size={18} color="black" />,
-  },
-  {
-    label: 'Active',
-    value: 'isActive',
-    icon: <Ionicons name="checkmark-circle-outline" size={18} color="black" />,
-  },
 ];
 
 const WordListFilter = () => {
@@ -112,7 +97,6 @@ const WordListFilter = () => {
 
   const handleApplyFilter = () => {
     setOpenFilterModal(false);
-    console.log('tempFilter', tempFilter);
     applyFilter();
   };
 
@@ -144,7 +128,6 @@ const WordListFilter = () => {
             value={tempFilter?.search?.searchText}
             placeholder="Search by title, description, or word"
           />
-
           {tempFilter?.search?.searchText !== '' && (
             <View style={{ alignSelf: 'center', marginRight: 20 }}>
               <ActionIcon

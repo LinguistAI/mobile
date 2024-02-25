@@ -6,6 +6,7 @@ import {
   ICreateWordList,
   IEditWordList,
   IWordListWithUserInfo,
+  IWordListWithWordInfo,
   IWordListsWithUserInfo,
 } from '../../components/word-bank/word-list/types';
 
@@ -22,13 +23,20 @@ export const getLists = async () => {
   return response.data;
 };
 
+export const getList = async (listId: string) => {
+  const response = await axiosSecure.get<APIResponse<IWordListWithWordInfo>>(
+    `wordbank/list/${listId}`
+  );
+  return response.data;
+};
+
 export const editList = async (editedList: IEditWordList) => {
   const response = await axiosSecure.put('wordbank/lists', editedList);
   return response.data;
 };
 
 export const deleteList = async (listId: string) => {
-  const response = await axiosSecure.delete(`wordbank/lists/${listId}`);
+  const response = await axiosSecure.delete(`wordbank/list/${listId}`);
   return response.data;
 };
 
@@ -49,7 +57,6 @@ export const deactivateWordList = async (listId: string) => {
 
 export const addWordListToFavorite = async (listId: string) => {
   const response = await axiosSecure.post(`wordbank/lists/add-favorite`, { listId });
-  console.log(response);
   return response.data;
 };
 

@@ -30,6 +30,12 @@ export type WordDefinition = {
   word: string;
 };
 
+type ListStat = {
+  learning: number;
+  mastered: number;
+  reviewing: number;
+};
+
 export type TWordList = {
   listId: string;
   title: string;
@@ -37,7 +43,7 @@ export type TWordList = {
   isPinned: boolean;
   isActive: boolean;
   isFavorite: boolean;
-  words: string[];
+  listStats: ListStat;
 };
 // User service
 
@@ -50,12 +56,23 @@ export interface IWordListWithUserInfo extends TWordList {
   ownerUsername: string;
 }
 
+export type WordWithConfidence = {
+  word: string;
+  confidence: number;
+};
+
+export interface IWordListWithWordInfo {
+  unknownWordList: TWordList;
+  words: WordWithConfidence[];
+}
+
 export interface ICreateWordList {
   title: string;
   description: string;
   isActive: boolean;
   isFavorite: boolean;
   isPinned: boolean;
+  imageUrl: string;
 }
 
 export interface IEditWordList {
@@ -74,14 +91,17 @@ export interface DictionaryResponse {
     [id: string]: { wordGroup: DictionaryWordGroup[] } | {}; // api response -> meta -> id
   };
 }
-interface DictionaryWordGroup {
+
+export interface DictionaryWordGroup {
   id: string; // api response -> meta -> id
   word: string;
   audio: string; // 2.6 PRONUNCIATIONS: PRS in documentation
   func_label: string; // verb, noun, adjective, etc.
+  phonetic: string;
   meaning: WordDef[];
 }
+
 interface WordDef {
-  definition: string;
+  definition: string[];
   examples?: string[];
 }

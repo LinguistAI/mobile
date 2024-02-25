@@ -82,12 +82,6 @@ const ChatScreen = () => {
       >
         <View style={styles.centeredView}>
           <WordInfoCard
-            exampleSentences={[
-              "This is an example of a really long sentence that should be wrapped to the next line",
-            ]}
-            meanings={[
-              "This is an example of a really long meaning that should be wrapped to the next line",
-            ]}
             selectedWord={selectedWord}
             onDismiss={onSelectedWordDismiss}
           />

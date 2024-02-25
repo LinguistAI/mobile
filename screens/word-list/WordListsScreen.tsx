@@ -10,19 +10,7 @@ import { wordListsInitialized } from '../../slices/chatSlice';
 import { selectAreWordListsFetched } from '../../slices/chatSelectors';
 
 const WordListsScreen = () => {
-  const { data: wordListsServer } = useQuery({
-    queryFn: () => getLists(),
-    queryKey: ['getWordLists'],
-  });
-  const dispatch = useDispatch();
   const areWordListsFetched = useSelector(selectAreWordListsFetched);
-  console.log(areWordListsFetched);
-
-  useEffect(() => {
-    if (wordListsServer?.data) {
-      dispatch(wordListsInitialized(wordListsServer.data.lists));
-    }
-  }, [wordListsServer]);
 
   if (!areWordListsFetched) {
     return <WordListsSkeleton />;

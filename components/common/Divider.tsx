@@ -7,8 +7,8 @@ const Divider = () => {
       style={{
         borderBottomWidth: 1,
         borderBottomColor: "black",
-        width: "auto",
-        marginVertical: 10
+        width: "100%",
+        marginVertical: 15
       }}
     />
   );

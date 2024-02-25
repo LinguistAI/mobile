@@ -38,7 +38,7 @@ const WordDetail = ({ definition } : WordDetailProps) => {
     return (
         <View style={styles.container}>
             <Text style={styles.wordType}>
-                {func_label} - {phonetic}
+                {func_label} {phonetic ? `- ${phonetic}` : ""}
             </Text>
             {meaning.map((m, index) => {
                 return (
@@ -70,7 +70,8 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     definitionContainer: {
-        marginTop: 15,
+        marginTop: 10,
+        marginBottom: 10,
     },
     meaning: {
         fontSize: 16,

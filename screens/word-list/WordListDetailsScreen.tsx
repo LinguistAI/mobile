@@ -33,7 +33,6 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
     queryKey: ['getListDetails'],
     queryFn: () => getList(listId),
   });
-  console.log(selectedList)
   const { mutate: addNewWord, isPending: isAddingWord } = useMutation({
     mutationKey: ['addNewWord'],
     mutationFn: (word: string) =>

@@ -80,7 +80,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
   return (
     <View style={styles.container}>
       {selectedList.data.words.length === 0 && (
-        <Text>
+        <Text style={{textAlign: "center", marginTop: 10}}>
           It looks like there are no words in this list. Use the add
           button on the bottom right part of the page to add your first word.
         </Text>

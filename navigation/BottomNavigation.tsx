@@ -7,6 +7,8 @@ import Colors from '../theme/colors';
 import WordBankNavigation from './WordBankNavigation';
 import { Provider } from 'react-redux';
 import { store } from '../slices/store';
+import ConversationsScreen from '../screens/chat/ConversationsScreen';
+import ChatStackNavigator from './ChatStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +32,7 @@ const BottomNavigation = () => {
         />
         <Tab.Screen
           name="Chat"
-          component={ChatScreen}
+          component={ChatStackNavigator}
           options={{
             tabBarIcon: ({ color, size }) => (
               <IonIcons name="chatbox-outline" size={size} color={color} />

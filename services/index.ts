@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as SecureStorage from "expo-secure-store";
-import { StoredUserInfoWithTokens } from "../screens/common/Auth.types";
+import { StoredUserInfoWithTokens } from "../types";
 
 const decideBackendURL = (): string => {
   if (process.env.NODE_ENV === "production") {

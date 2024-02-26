@@ -35,6 +35,7 @@ export const HOBBIES_LIST = [
   { label: "Learning New Languages", value: "Learning New Languages" },
   { label: "Volunteering", value: "Volunteering" },
 ];
+
 export const BOT_MESSAGES: ConversationStep[] = [
   {
     id: 0,

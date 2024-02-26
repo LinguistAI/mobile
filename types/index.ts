@@ -1,3 +1,4 @@
+
 export interface StoredUserInfo {
   email: string;
   username: string;
@@ -12,3 +13,11 @@ export interface StoredUserInfoWithTokens extends StoredUserInfo {
 export interface AccessToken {
   accessToken: string;
 }
+
+export interface APIResponse<T> {
+  data?: T;
+  msg: string;
+  status: number;
+  timestamp: Date;
+}
+

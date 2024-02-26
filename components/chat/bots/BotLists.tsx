@@ -1,4 +1,4 @@
-import { FlatList, Pressable, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { TChatBot } from "../types";
 import BotProfile from "./BotProfile";
 
@@ -12,7 +12,7 @@ const BotLists = ({ bots }: BotListsProps) => {
             <FlatList 
                 data={bots}
                 renderItem={({ item }) => (
-                    <Pressable>
+                    <Pressable style={styles.profile}>
                         <BotProfile bot={item}/>
                     </Pressable>
                 )}
@@ -27,5 +27,11 @@ const BotLists = ({ bots }: BotListsProps) => {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    profile: {
+        marginHorizontal: 16
+    }
+})
  
 export default BotLists;

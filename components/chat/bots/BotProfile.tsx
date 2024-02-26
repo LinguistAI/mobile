@@ -16,8 +16,8 @@ const BotProfile = ({ bot }: BotProfileProps) => {
             <View style={styles.botContainer}>
                 <Image source={{ uri: profileImage }} style={styles.image} />
                 <View>
-                    <Text>{name}</Text>
-                    <Text>{description}</Text>
+                    <Text style={styles.name}>{name}</Text>
+                    <Text style={styles.description}>{description}</Text>
                     <Text>{difficultyLevel}</Text>
                     <Text>{voiceCharacteristics}</Text>
 
@@ -36,12 +36,9 @@ const styles = StyleSheet.create({
         shadowColor: '#333',
         shadowOpacity: 0.3,
         shadowRadius: 2,
-        marginVertical: 6,
-        overflow: 'hidden',
-        flexDirection: 'row',
-        alignItems: 'center',
         borderColor: Colors.primary["500"],
-        borderWidth: 2
+        borderWidth: 1,
+        padding: 10
     },
     botContainer: {
         display: 'flex',
@@ -53,8 +50,17 @@ const styles = StyleSheet.create({
         width: 75,
         height: 75,
         borderRadius: 50,
-        margin: 16,
+        margin: 12,
     },
+    name: {
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    description: {
+        fontStyle: "italic",
+        fontSize: 14,
+        color: Colors.gray[600]
+    }
 });
 
 export default BotProfile;

@@ -14,13 +14,13 @@ const ChatBotsListsWrapper = () => {
         return <ActivityIndicator />;
     }
 
-    if (botFetchFailed) {
+    if (botFetchFailed || !bots?.data) {
         return <FetchFailErrorScreen />
     }
 
     return (
         <View>
-            <BotLists bots={bots.data!}/>
+            <BotLists bots={bots.data}/>
         </View>
     );
 }

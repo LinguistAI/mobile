@@ -1,11 +1,10 @@
+import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { TWordList } from './types';
+import { type TWordList , TMenuOption } from './types';
 import ActionIcon from '../../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
-import { useState } from 'react';
 import WordListCardOptionMenu from './WordListCardOptionMenu';
-import { TMenuOption } from './types';
 import { useMutation } from '@tanstack/react-query';
 import {
   activateWordList,
@@ -33,7 +32,7 @@ const WordListCard = ({
   const [menuVisible, setMenuVisible] = useState(false);
 
   const { mutate: deleteListMutate } = useMutation({
-    mutationFn: () => deleteList(list.listId),
+    mutationFn: async () => await deleteList(list.listId),
     mutationKey: ['deleteWordList'],
     onSuccess: () => {
       deleteListFn(list.listId);
@@ -42,7 +41,7 @@ const WordListCard = ({
   });
 
   const { mutate: addFavoriteMutate } = useMutation({
-    mutationFn: () => addWordListToFavorite(list.listId),
+    mutationFn: async () => await addWordListToFavorite(list.listId),
     mutationKey: ['addListFavorite'],
     onSuccess: () => {
       updateList({
@@ -53,7 +52,7 @@ const WordListCard = ({
   });
 
   const { mutate: removeFavoriteMutate } = useMutation({
-    mutationFn: () => removeWordListFromFavorites(list.listId),
+    mutationFn: async () => await removeWordListFromFavorites(list.listId),
     mutationKey: ['removeListFavorite'],
     onSuccess: () => {
       updateList({
@@ -64,7 +63,7 @@ const WordListCard = ({
   });
 
   const { mutate: activateMutate } = useMutation({
-    mutationFn: () => activateWordList(list.listId),
+    mutationFn: async () => await activateWordList(list.listId),
     mutationKey: ['activateList'],
     onSuccess: () => {
       updateList({
@@ -75,7 +74,7 @@ const WordListCard = ({
   });
 
   const { mutate: deactivateMutate } = useMutation({
-    mutationFn: () => deactivateWordList(list.listId),
+    mutationFn: async () => await deactivateWordList(list.listId),
     mutationKey: ['deactivateList'],
     onSuccess: () => {
       updateList({
@@ -86,7 +85,7 @@ const WordListCard = ({
   });
 
   const { mutate: pinMutate } = useMutation({
-    mutationFn: () => pinWordList(list.listId),
+    mutationFn: async () => await pinWordList(list.listId),
     mutationKey: ['pinList'],
     onSuccess: () => {
       updateList({
@@ -97,7 +96,7 @@ const WordListCard = ({
   });
 
   const { mutate: unpinMutate } = useMutation({
-    mutationFn: () => unpinWordList(list.listId),
+    mutationFn: async () => await unpinWordList(list.listId),
     mutationKey: ['unpinList'],
     onSuccess: () => {
       updateList({
@@ -147,7 +146,7 @@ const WordListCard = ({
         <View style={styles.pin}>
           <ActionIcon
             icon={<Ionicons size={24} name="pin" color={Colors.gray['900']} />}
-            onPress={() => triggerOption(TMenuOption.PIN)}
+            onPress={() => { triggerOption(TMenuOption.PIN); }}
           />
         </View>
       );
@@ -160,7 +159,7 @@ const WordListCard = ({
         <View style={styles.favourite}>
           <ActionIcon
             icon={<Ionicons size={24} name="heart-circle-outline" color={Colors.gray['100']} />}
-            onPress={() => triggerOption(TMenuOption.FAVORITE)}
+            onPress={() => { triggerOption(TMenuOption.FAVORITE); }}
           />
         </View>
       );
@@ -214,11 +213,15 @@ const WordListCard = ({
     ];
   };
 
+  const getTotalNumOfWords = (listStats: {learning: number, reviewing: number, mastered: number}): number => {
+    return listStats.learning + listStats.reviewing + listStats.mastered
+  }
+
   return (
     <Pressable
       style={styles.card}
-      onLongPress={() => setMenuVisible(true)}
-      onPress={() => handleListSelection(list.listId)}
+      onLongPress={() => { setMenuVisible(true); }}
+      onPress={() => { handleListSelection(list.listId); }}
     >
       <View key={list.listId}>
         <Image source={{ uri: 'https://picsum.photos/150' }} style={styles.image} />
@@ -227,7 +230,7 @@ const WordListCard = ({
           {renderFavourite()}
           <View>
             <Text style={styles.title}>{list.title}</Text>
-            {/* TODO: <Text style={styles.words}>{list.words.length} words in total</Text> */}
+            <Text style={styles.words}>{getTotalNumOfWords(list.listStats)} words in total</Text>
           </View>
           <View style={styles.bottomRow}>
             <View style={styles.stats}>

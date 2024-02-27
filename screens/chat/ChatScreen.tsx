@@ -21,8 +21,8 @@ interface ChatScreenProps {
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
   const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({conversationId});
-  const [selectedWord, setSelectedWord] = useState<string>("");
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedWord, setSelectedWord] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const isPending = isLoadingMessages || isSendingMessage;
 
@@ -52,11 +52,10 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     setSelectedWord(word);
     setModalVisible(true);
   };
-
-
   
   const renderLastChatMessage = () => {
     if (responseNotReceived) {
+      // TODO: Modify this
       return <Text>Something went wrong! We couldn't receive the answer from the chatbot.</Text>
     }
 
@@ -103,7 +102,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       </View>
     )
   }
-
 
   return (
     <SafeAreaView style={styles.safeArea}>

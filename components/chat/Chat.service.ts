@@ -18,7 +18,7 @@ export const getAllChatMessages = async (conversationId: string) => {
 }
 
 export const createNewConversation = async (botId: string) => {
-    const response = await axiosSecure.post(`/ml/conversation/create`, {
+    const response = await axiosSecure.post<APIResponse<TConversation>>(`/ml/conversation/create`, {
         botId
     })
     return response.data

@@ -17,7 +17,14 @@ import { useMutation } from "@tanstack/react-query";
 import useUser from "../../hooks/auth/useUser";
 import { ChatMessage, ChatMessageSender } from "./types";
 
-const ChatScreen = () => {
+interface ChatScreenProps {
+  route: any
+}
+
+const ChatScreen = ({ route }: ChatScreenProps) => {
+  const conversationId = route.params.conversationId as string;
+  console.log(conversationId);
+
   const { addMessage, isSyncing, messages } = useChatMessages({});
   const [selectedWord, setSelectedWord] = useState<string>("");
   const [modalVisible, setModalVisible] = useState<boolean>(false);

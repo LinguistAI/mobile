@@ -9,19 +9,19 @@ const ChatStackNavigator = () => {
     return (
      <ChatStack.Navigator initialRouteName="Conversations">
             <ChatStack.Screen
-            name="Conversations"
-            component={ConversationsScreen}
-            options={{ headerShown: false }} // keep the header hidden for HomeTab
+              name="Conversations"
+              component={ConversationsScreen}
+              options={{ headerShown: false }}
             />
             <ChatStack.Screen
-            name="ChatBotsListScreen"
-            component={ChatBotsScreen}
-            options={{ headerShown: true, headerTitle: "Chat Bots" }} // enable header (with back option) for Profile
+              name="ChatBotsListScreen"
+              component={ChatBotsScreen}
+              options={{ headerShown: true, headerTitle: "Chat Bots" }}
             />
             <ChatStack.Screen
-            name="ChatScreen"
-            component={ChatScreen}
-            options={{ headerShown: true }} // enable header (with back option) for Settings
+              name="ChatScreen"
+              component={ChatScreen}
+              options={{ headerShown: true }} 
             />
       </ChatStack.Navigator>
     );

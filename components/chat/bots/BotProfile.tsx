@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { TChatBot } from '../types';
 import Colors from '../../../theme/colors';
+import { NUM_OF_DIFFICULTY_LEVELS } from './constants';
+import { getDifficultyLevel } from './utils';
+import { AirbnbRating, Rating } from 'react-native-ratings';
 
 // Assuming TChatBot is defined with the properties used below
 interface BotProfileProps {
@@ -15,12 +18,22 @@ const BotProfile = ({ bot }: BotProfileProps) => {
         <View style={styles.card}>
             <View style={styles.botContainer}>
                 <Image source={{ uri: profileImage }} style={styles.image} />
-                <View>
+                <View style={{flex: 1}}>
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.description}>{description}</Text>
-                    <Text>{difficultyLevel}</Text>
-                    <Text>{voiceCharacteristics}</Text>
-
+                    <View>
+                        <Text>{voiceCharacteristics}</Text>
+                    </View>
+                    <View>
+                        <AirbnbRating
+                            isDisabled
+                            count={5}
+                            reviewSize={16}
+                            reviews={["Beginner", "Elementary", "Intermediate", "Advanced", "Expert"]}
+                            size={20}
+                            defaultRating={getDifficultyLevel(difficultyLevel)}
+                        />
+                    </View>
                 </View>
             </View>
         </View>
@@ -44,11 +57,12 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: "row",
         alignItems: "center",
-        gap: 20
+        gap: 20,
+        flex: 1,
     },
     image: {
-        width: 75,
-        height: 75,
+        width: 100,
+        height: 100,
         borderRadius: 50,
         margin: 12,
     },
@@ -59,7 +73,7 @@ const styles = StyleSheet.create({
     description: {
         fontStyle: "italic",
         fontSize: 14,
-        color: Colors.gray[600]
+        color: Colors.gray[600],
     }
 });
 

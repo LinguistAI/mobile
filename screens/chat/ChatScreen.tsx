@@ -12,9 +12,6 @@ import ChatMessageComponent from "../../components/chat/ChatMessageComponent";
 import ChatTextInputContainer from "../../components/chat/ChatTextInputContainer";
 import WordInfoCard from "../../components/chat/WordInfoCard";
 import { useChatMessages } from "../../hooks/useChatMessages";
-import { sendChatMessage } from "../../services/chat/Chat.service";
-import { useMutation } from "@tanstack/react-query";
-import useUser from "../../hooks/auth/useUser";
 import { ChatMessage, ChatMessageSender } from "./types";
 
 interface ChatScreenProps {
@@ -23,33 +20,11 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
-  console.log(conversationId);
-
-  const { addMessage, isSyncing, messages } = useChatMessages({});
+  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({conversationId});
   const [selectedWord, setSelectedWord] = useState<string>("");
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const { user } = useUser();
 
-  const { mutate: sendMessageMutate, isPending: isSendingMessage } =
-    useMutation({
-      mutationKey: ["chat", "send"],
-      mutationFn: (chatMessage: ChatMessage) =>
-        sendChatMessage(chatMessage, user.email),
-      onError: (error) => console.log(error),
-      onSuccess: (data) => {
-        const response = data.data;
-        if (!response || !response.data) {
-          return;
-        }
-        addMessage({
-          content: response.data.answer,
-          sender: ChatMessageSender.assistant,
-          timestamp: new Date(),
-        });
-      },
-    });
-
-  const isPending = isSyncing || isSendingMessage;
+  const isPending = isLoadingMessages || isSendingMessage;
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -62,8 +37,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       timestamp: new Date(),
     };
 
-    addMessage(chatMessage); // Local update
-    sendMessageMutate(chatMessage); // Server update
+    addMessage(chatMessage);
   };
 
   const onSelectedWordDismiss = () => {
@@ -78,6 +52,58 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     setSelectedWord(word);
     setModalVisible(true);
   };
+
+
+  
+  const renderLastChatMessage = () => {
+    if (responseNotReceived) {
+      return <Text>Something went wrong! We couldn't receive the answer from the chatbot.</Text>
+    }
+
+    if (isSendingMessage) {
+      return (
+        <ChatMessageComponent
+          onWordPress={handleWordPress}
+          isWriting={true}
+          chatMessage={{
+            sender: ChatMessageSender.assistant,
+            content: "",
+            timestamp: new Date(),
+          }}
+        />
+      )
+    }
+
+    return <></>
+  }
+
+  const renderMessages = () => {
+    if (isLoadingMessages) {
+      return (
+        <View style={styles.centeredView}>
+          <ActivityIndicator size="large" />
+        </View>
+      )
+    }
+
+    return (
+      <View style={styles.messagesContainer}>
+        <FlatList
+          data={messages}
+          renderItem={({ item }) => (
+            <ChatMessageComponent
+              onWordPress={handleWordPress}
+              key={item.id || item.timestamp.toString()}
+              chatMessage={item}
+            />
+          )}
+          ListFooterComponent={renderLastChatMessage()}
+          keyExtractor={(item) => item.id || item.timestamp.toString()}
+        />
+      </View>
+    )
+  }
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -94,41 +120,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           />
         </View>
       </Modal>
-      {isSyncing ? (
-        <View style={styles.centeredView}>
-          <ActivityIndicator size="large" />
-        </View>
-      ) : (
-        <View style={styles.messagesContainer}>
-          <FlatList
-            data={messages}
-            renderItem={({ item }) => (
-              <ChatMessageComponent
-                onWordPress={handleWordPress}
-                key={item.id || item.timestamp.toString()}
-                chatMessage={item}
-              />
-            )}
-            ListFooterComponent={
-              isSendingMessage ? (
-                <ChatMessageComponent
-                  onWordPress={handleWordPress}
-                  isWriting={true}
-                  chatMessage={{
-                    sender: ChatMessageSender.assistant,
-                    content: "",
-                    timestamp: new Date(),
-                  }}
-                />
-              ) : (
-                <></>
-              )
-            }
-            keyExtractor={(item) => item.id || item.timestamp.toString()}
-          />
-        </View>
-      )}
-
+      {renderMessages()}
       <View style={styles.textInputContainer}>
         <ChatTextInputContainer onSend={onSend} isPending={isPending} />
       </View>

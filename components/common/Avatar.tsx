@@ -3,12 +3,14 @@ import React from "react";
 import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
 
 interface AvatarProps {
-  src: ImageSourcePropType;
+  src: ImageSourcePropType | null | undefined;
   width?: number;
   height?: number;
 }
 
 const Avatar = ({ src, width, height }: AvatarProps) => {
+  if (!src) return null;
+  
   return (
     <View>
       <Image

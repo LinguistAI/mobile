@@ -2,13 +2,14 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { TWordList } from '../components/word-bank/word-list/types';
 import { updateArrayAtIndex } from '../utils';
-import { TConversation } from '../components/chat/types';
+import { TChatBot, TConversation } from '../components/chat/types';
 
 export interface ChatState {
   fetchedWordLists: boolean;
   wordLists: TWordList[];
   filteredWordLists: TWordList[];
   conversations: TConversation[];
+  selectedBot: TChatBot | null;
 }
 
 const chatSlice = createSlice({
@@ -17,7 +18,8 @@ const chatSlice = createSlice({
     wordLists: [],
     filteredWordLists: [],
     fetchedWordLists: false,
-    conversations: []
+    conversations: [],
+    selectedBot: null
   } as ChatState,
   reducers: {
     wordListsFiltered: (state, action) => {
@@ -53,10 +55,13 @@ const chatSlice = createSlice({
     },
     conversationsInitialized: (state, action) => {
       state.conversations = action.payload
+    },
+    startConversation: (state, action) => {
+      state.selectedBot = action.payload.bot
     }
   },
 });
 
-export const { wordListsFiltered, wordListsInitialized, wordListUpdated, wordListDeleted, conversationsInitialized } =
+export const { wordListsFiltered, wordListsInitialized, wordListUpdated, wordListDeleted, conversationsInitialized, startConversation } =
   chatSlice.actions;
 export default chatSlice.reducer;

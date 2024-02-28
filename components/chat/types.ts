@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export interface ICreateConversation {
     bot_id: number;
 }
@@ -8,7 +10,7 @@ export type TChatBot = {
     updatedDate: Date;
     name: string;
     description: string
-    profileImage: string;
+    profileImage: ImageSourcePropType;
     voiceCharacteristics: string;
     difficultyLevel: number;
 }

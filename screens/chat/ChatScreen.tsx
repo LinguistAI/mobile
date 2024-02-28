@@ -13,6 +13,9 @@ import ChatTextInputContainer from "../../components/chat/ChatTextInputContainer
 import WordInfoCard from "../../components/chat/WordInfoCard";
 import { useChatMessages } from "../../hooks/useChatMessages";
 import { ChatMessage, ChatMessageSender } from "./types";
+import { selectCurrentBot } from "../../slices/chatSelectors";
+import { useSelector } from "react-redux";
+import ChatHeader from "../../components/chat/ChatHeader";
 
 interface ChatScreenProps {
   route: any
@@ -20,7 +23,13 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
-  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({conversationId});
+  const { 
+    addMessage,
+    isLoadingMessages,
+    messages,
+    isSendingMessage,
+    responseNotReceived
+  } = useChatMessages({conversationId});
   const [selectedWord, setSelectedWord] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -55,8 +64,17 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   
   const renderLastChatMessage = () => {
     if (responseNotReceived) {
-      // TODO: Modify this
-      return <Text>Something went wrong! We couldn't receive the answer from the chatbot.</Text>
+      return (
+        <ChatMessageComponent
+          onWordPress={() => {}}
+          isWriting={false}
+          chatMessage={{
+            sender: ChatMessageSender.assistant,
+            content: "Something went wrong...",
+            timestamp: new Date(),
+          }}
+        />
+      )
     }
 
     if (isSendingMessage) {
@@ -118,6 +136,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           />
         </View>
       </Modal>
+      <ChatHeader />
       {renderMessages()}
       <View style={styles.textInputContainer}>
         <ChatTextInputContainer onSend={onSend} isPending={isPending} />

@@ -40,27 +40,24 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
 
   useEffect(() => {
     if (chatMessages?.data) {
-      setMessages(chatMessages?.data)
+    
+      const messages: ChatMessage[] = chatMessages.data.map((m) => {
+        return {
+          id: m.id,
+          content: m.messageText,
+          sender: m.senderType,
+          timestamp: m.createdDate
+        }
+      })
+      setMessages(messages)
     }
   }, [chatMessages])
-
-  useEffect(() => {
-    if (messages.length) {
-      SecureStore.setItemAsync(`chatMessages::${conversationId.replace("-", "")}`, JSON.stringify(messages));
-    }
-  }, [messages]);
-
 
   const addMessage = (message: ChatMessage) => {
     sendMessage(message)
     setMessages((prev) => [...prev, message]); // optimistic update
   };
 
-  const clearMessages = () => {
-    // TODO: Send request to BE
-    setMessages([]);
-    SecureStore.setItemAsync(`chatMessages::${conversationId.replace("-", "")}s`, JSON.stringify([]));
-  };
 
-  return { messages, addMessage, clearMessages, isLoadingMessages, isSendingMessage, responseNotReceived };
+  return { messages, addMessage, isLoadingMessages, isSendingMessage, responseNotReceived };
 };

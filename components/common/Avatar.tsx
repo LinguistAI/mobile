@@ -3,18 +3,26 @@ import React from "react";
 import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
 
 interface AvatarProps {
-  src: ImageSourcePropType | null | undefined;
+  src: ImageSourcePropType | string | undefined;
   width?: number;
   height?: number;
 }
 
 const Avatar = ({ src, width, height }: AvatarProps) => {
   if (!src) return null;
+
+  const getSource = () => {
+    if (typeof src === "string") {
+      return {uri: src}
+    }
+
+    return src
+  }
   
   return (
     <View>
       <Image
-        source={src}
+        source={getSource()}
         style={[
           styles.image,
           { width: width ? width : 100, height: height ? height : 100 },

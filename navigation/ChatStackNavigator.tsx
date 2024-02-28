@@ -21,7 +21,7 @@ const ChatStackNavigator = () => {
             <ChatStack.Screen
               name="ChatScreen"
               component={ChatScreen}
-              options={{ headerShown: true }} 
+              options={{ headerShown: false }} 
             />
       </ChatStack.Navigator>
     );

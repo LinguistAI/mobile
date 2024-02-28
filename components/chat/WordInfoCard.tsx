@@ -52,8 +52,10 @@ const WordInfoCard = ({
       }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({queryKey: ["getListDetails"]})
+      onDismiss()
       addNotification({
-        body: `${selectedWord} is added to the list.`
+        body: `${selectedWord} is added to the list.`,
+        type: "success"
       })
     },
     onError: (error) => {

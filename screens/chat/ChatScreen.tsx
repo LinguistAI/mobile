@@ -33,6 +33,8 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const [selectedWord, setSelectedWord] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
+  console.log(messages)
+
   const isPending = isLoadingMessages || isSendingMessage;
 
   const onSend = async (text: string) => {
@@ -136,7 +138,9 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           />
         </View>
       </Modal>
-      <ChatHeader />
+      <View style={styles.header}>
+        <ChatHeader />
+      </View>
       {renderMessages()}
       <View style={styles.textInputContainer}>
         <ChatTextInputContainer onSend={onSend} isPending={isPending} />
@@ -148,17 +152,22 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    marginBottom: 16,
-    marginHorizontal: 16,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  header: {
+    flex: 1,
   },
   textInputContainer: {
     flex: 1,
     justifyContent: "flex-end",
     borderRadius: 48,
+    marginHorizontal: 12,
   },
   messagesContainer: {
     flex: 12,
-    marginTop: 40,
+    marginTop: 20,
+    marginHorizontal: 10,
   },
   centeredView: {
     flex: 1,

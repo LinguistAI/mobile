@@ -26,7 +26,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const currentBot = useSelector(selectCurrentBot)
 
   const timestamp = new Date(chatMessage.timestamp);
-  const lines = chatMessage.content.split("\n");
+  const lines = chatMessage?.content?.split("\n");
   const isSentByUser = chatMessage.sender === ChatMessageSender.user;
 
   const handleWordPress = (
@@ -69,7 +69,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
           <View>
             <View style={styles.messageLineContainer}>
               {lines.map((line, index) => {
-                const words = line.split(" ");
+                const words = line?.split(" ");
 
                 return (
                   <View key={`line-${index}`} style={styles.messageLine}>

@@ -1,6 +1,6 @@
 import { axiosSecure } from "../../services"
 import { APIResponse } from "../../types"
-import { TChatBot, TConversation } from "./types"
+import { Message, TChatBot, TConversation } from "./types"
 
 export const getAvailableBots = async () => {
     const response = await axiosSecure.get<APIResponse<TChatBot[]>>("/ml/conversation/bots")
@@ -13,7 +13,7 @@ export const getAllConversations = async () => {
 }
 
 export const getAllChatMessages = async (conversationId: string) => {
-    const response = await axiosSecure.get(`/ml/conversation/chat/all/${conversationId}`)
+    const response = await axiosSecure.get<APIResponse<Message[]>>(`/ml/conversation/chat/all/${conversationId}`)
     return response.data
 }
 

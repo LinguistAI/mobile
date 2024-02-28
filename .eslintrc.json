@@ -27,6 +27,7 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "typescript-eslint/strict-boolean-expressions": "off"
   }
 }

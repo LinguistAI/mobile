@@ -22,7 +22,7 @@ const BotProfile = ({ bot }: BotProfileProps) => {
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.description}>{description}</Text>
                     <View>
-                        <Text>{voiceCharacteristics}</Text>
+                        {/* TODO: Replace with Polly voice test <Text>{voiceCharacteristics}</Text> */}
                     </View>
                     <View>
                         <AirbnbRating

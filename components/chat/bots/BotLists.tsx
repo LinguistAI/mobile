@@ -22,15 +22,13 @@ const BotLists = ({ bots }: BotListsProps) => {
     
     const handleBotPress = async (botId: string) => {
         if (!pendingBotCreateResponse) {
-            console.log(conversations)
-            const foundExistingConvo = conversations.find((c) => c.bot.id === botId)
+            const foundExistingConvo = conversations?.find((c) => c.bot.id === botId)
     
             if (foundExistingConvo) {
                 navigation.navigate("ChatScreen", { conversationId: foundExistingConvo.id })
             }
             else {
                 const response = await createConvo(botId)
-                console.log(response)
                 const convoId = response.data?.id
                 if (!convoId) {return}
                 navigation.navigate("ChatScreen", { conversationId: convoId })
@@ -47,6 +45,7 @@ const BotLists = ({ bots }: BotListsProps) => {
                         <BotProfile bot={item}/>
                     </Pressable>
                 )}
+                contentContainerStyle={styles.botListContainer}
                 keyExtractor={item => item.id}
             />
         )
@@ -64,7 +63,10 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     profile: {
-        marginHorizontal: 12
+        marginHorizontal: 12,
+    },
+    botListContainer: {
+        gap: 15
     }
 })
  

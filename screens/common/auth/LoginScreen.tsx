@@ -63,7 +63,6 @@ const LoginScreen = (props: LoginScreenProps) => {
       console.log(error)
       add({
         body: generateErrorResponseMessage(error),
-        title: "Error!",
         type: "error",
         time: 5000,
       });

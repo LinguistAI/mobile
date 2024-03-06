@@ -10,6 +10,13 @@ interface UseChatMessagesProps {
   conversationId: string;
 }
 
+export type LastMessageObject = {
+  [key: string]: {
+    timestamp: Date
+    msg: string
+  }
+}
+
 export const useChatMessages = (props: UseChatMessagesProps) => {
   const { conversationId } = props;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -52,6 +59,28 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
       setMessages(messages)
     }
   }, [chatMessages])
+
+  useEffect(() => {
+    const updateLastMessages = async () => {
+      const lastMessagesStr = await SecureStore.getItemAsync("lastMessages")
+      if (!lastMessagesStr) return
+      const lastMessages = JSON.parse(lastMessagesStr) as LastMessageObject
+      const lastMessage = messages[messages.length - 1]
+      const lastMessageObject = {
+        ...lastMessages,
+        [conversationId]: {
+          msg: lastMessage.content,
+          timestamp: lastMessage.timestamp
+        }
+      }
+      SecureStore.setItemAsync("lastMessages", JSON.stringify(lastMessageObject))
+      console.log(lastMessageObject)
+    }
+
+    if (messages.length) {
+      updateLastMessages()
+    }
+  }, [messages])
 
   const addMessage = (message: ChatMessage) => {
     sendMessage(message)

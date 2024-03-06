@@ -1,17 +1,18 @@
-import  { StyleSheet, View } from "react-native";
+import  { SafeAreaView, StyleSheet, View } from "react-native";
 import ConversationsWrapper from "../../components/chat/conversations/ConversationsWrapper";
 
 const ConversationsScreen = () => {
     return (
-        <View style={styles.root}>
+        <SafeAreaView style={styles.root}>
             <ConversationsWrapper />
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     root: {
-        flex: 1
+        flex: 1,
+        marginTop: 30
     }
 })
  

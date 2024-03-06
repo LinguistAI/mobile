@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { TConversation } from "../types";
 import { useSelector } from "react-redux";
 import { selectConversations } from "../../../slices/chatSelectors";
@@ -7,11 +7,14 @@ import Avatar from "../../common/Avatar";
 import { useEffect, useState } from "react";
 import { getLastMessages } from "../../../utils";
 import { LastMessageObject } from "../../../hooks/useChatMessages";
+import { useNavigation } from "@react-navigation/native";
 
 
 const ConversationList = () => {
     const [lastMessages, setLastMessages] = useState<LastMessageObject>({})
+    console.log(lastMessages)
     const conversations = useSelector(selectConversations)
+    const navigation = useNavigation()
 
     useEffect(() => {
         const initLastMessages = async () => {
@@ -22,8 +25,13 @@ const ConversationList = () => {
         initLastMessages()
     }, [])
 
+    const handleConversationClick = (id: string) => {
+        navigation.navigate("ChatScreen", { conversationId: id })
+    }
+
     const getLastMessage = (conversationId: string) => {
         if (lastMessages[conversationId]) {
+            console.log(conversationId)
             const lastMessageInfo = lastMessages[conversationId]
             return lastMessageInfo.msg
         }
@@ -33,22 +41,24 @@ const ConversationList = () => {
 
     const renderConversation = (item: TConversation) => {
         return (
-            <View style={styles.cardContainer}>
-                <View style={styles.conversationRowContainer}>
-                    <Avatar 
-                        src={item.bot.profileImage}
-                        width={40}
-                        height={40}
-                    />
-                    <View style={styles.conversationInfoContainer}>
-                        <Text style={styles.conversationTitle}>{item.title}</Text>
-                        <Text style={styles.conversationLastMessage}>{getLastMessage(item.id)}</Text>
-                    </View>
-                    <View>
-                        
+            <Pressable onPress={() => handleConversationClick(item.id)}>
+                <View style={styles.cardContainer}>
+                    <View style={styles.conversationRowContainer}>
+                        <Avatar 
+                            src={item.bot.profileImage}
+                            width={40}
+                            height={40}
+                        />
+                        <View style={styles.conversationInfoContainer}>
+                            <Text style={styles.conversationTitle}>{item.title}</Text>
+                            <Text style={styles.conversationLastMessage}>{getLastMessage(item.id)}</Text>
+                        </View>
+                        <View>
+                            
+                        </View>
                     </View>
                 </View>
-            </View>
+            </Pressable>
         )
     }
 

@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
   },
   messagesContainer: {
-    flex: 12,
+    flex: 10,
     marginTop: 20,
     marginHorizontal: 10,
   },

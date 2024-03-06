@@ -60,31 +60,10 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
     }
   }, [chatMessages])
 
-  useEffect(() => {
-    const updateLastMessages = async () => {
-      const lastMessagesStr = await SecureStore.getItemAsync("lastMessages")
-      if (!lastMessagesStr) return
-      const lastMessages = JSON.parse(lastMessagesStr) as LastMessageObject
-      const lastMessage = messages[messages.length - 1]
-      const lastMessageObject = {
-        ...lastMessages,
-        [conversationId]: {
-          msg: lastMessage.content,
-          timestamp: lastMessage.timestamp
-        }
-      }
-      SecureStore.setItemAsync("lastMessages", JSON.stringify(lastMessageObject))
-      console.log(lastMessageObject)
-    }
-
-    if (messages.length) {
-      updateLastMessages()
-    }
-  }, [messages])
 
   const addMessage = (message: ChatMessage) => {
     sendMessage(message)
-    setMessages((prev) => [...prev, message]); // optimistic update
+    setMessages((prev) => [...prev, message]);
   };
 
 

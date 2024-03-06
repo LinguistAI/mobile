@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -12,37 +12,30 @@ import ChatMessageComponent from "../../components/chat/ChatMessageComponent";
 import ChatTextInputContainer from "../../components/chat/ChatTextInputContainer";
 import WordInfoCard from "../../components/chat/WordInfoCard";
 import { useChatMessages } from "../../hooks/useChatMessages";
-import { sendChatMessage } from "../../services/chat/Chat.service";
-import { useMutation } from "@tanstack/react-query";
-import useUser from "../../hooks/auth/useUser";
 import { ChatMessage, ChatMessageSender } from "./types";
+import { selectCurrentBot } from "../../slices/chatSelectors";
+import { useSelector } from "react-redux";
+import ChatHeader from "../../components/chat/ChatHeader";
 
-const ChatScreen = () => {
-  const { addMessage, isSyncing, messages } = useChatMessages({});
-  const [selectedWord, setSelectedWord] = useState<string>("");
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const { user } = useUser();
+interface ChatScreenProps {
+  route: any
+}
 
-  const { mutate: sendMessageMutate, isPending: isSendingMessage } =
-    useMutation({
-      mutationKey: ["chat", "send"],
-      mutationFn: (chatMessage: ChatMessage) =>
-        sendChatMessage(chatMessage, user.email),
-      onError: (error) => console.log(error),
-      onSuccess: (data) => {
-        const response = data.data;
-        if (!response || !response.data) {
-          return;
-        }
-        addMessage({
-          content: response.data.answer,
-          sender: ChatMessageSender.assistant,
-          timestamp: new Date(),
-        });
-      },
-    });
+const ChatScreen = ({ route }: ChatScreenProps) => {
+  const conversationId = route.params.conversationId as string;
+  const { 
+    addMessage,
+    isLoadingMessages,
+    messages,
+    isSendingMessage,
+    responseNotReceived
+  } = useChatMessages({conversationId});
+  const [selectedWord, setSelectedWord] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const isPending = isSyncing || isSendingMessage;
+  console.log(messages)
+
+  const isPending = isLoadingMessages || isSendingMessage;
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -55,8 +48,7 @@ const ChatScreen = () => {
       timestamp: new Date(),
     };
 
-    addMessage(chatMessage); // Local update
-    sendMessageMutate(chatMessage); // Server update
+    addMessage(chatMessage);
   };
 
   const onSelectedWordDismiss = () => {
@@ -71,6 +63,65 @@ const ChatScreen = () => {
     setSelectedWord(word);
     setModalVisible(true);
   };
+  
+  const renderLastChatMessage = () => {
+    if (responseNotReceived) {
+      return (
+        <ChatMessageComponent
+          onWordPress={() => {}}
+          isWriting={false}
+          chatMessage={{
+            sender: ChatMessageSender.assistant,
+            content: "Something went wrong...",
+            timestamp: new Date(),
+          }}
+        />
+      )
+    }
+
+    if (isSendingMessage) {
+      return (
+        <ChatMessageComponent
+          onWordPress={handleWordPress}
+          isWriting={true}
+          chatMessage={{
+            sender: ChatMessageSender.assistant,
+            content: "",
+            timestamp: new Date(),
+          }}
+        />
+      )
+    }
+
+    return <></>
+  }
+
+  const renderMessages = () => {
+    if (isLoadingMessages) {
+      return (
+        <View style={styles.centeredView}>
+          <ActivityIndicator size="large" />
+        </View>
+      )
+    }
+
+    return (
+      <View style={styles.messagesContainer}>
+        <FlatList
+          data={messages}
+          renderItem={({ item }) => (
+            <ChatMessageComponent
+              onWordPress={handleWordPress}
+              key={item.id || item.timestamp.toString()}
+              chatMessage={item}
+            />
+          )}
+          ListFooterComponent={renderLastChatMessage()}
+          keyExtractor={(item) => item.id || item.timestamp.toString()}
+        />
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -87,41 +138,10 @@ const ChatScreen = () => {
           />
         </View>
       </Modal>
-      {isSyncing ? (
-        <View style={styles.centeredView}>
-          <ActivityIndicator size="large" />
-        </View>
-      ) : (
-        <View style={styles.messagesContainer}>
-          <FlatList
-            data={messages}
-            renderItem={({ item }) => (
-              <ChatMessageComponent
-                onWordPress={handleWordPress}
-                key={item.id || item.timestamp.toString()}
-                chatMessage={item}
-              />
-            )}
-            ListFooterComponent={
-              isSendingMessage ? (
-                <ChatMessageComponent
-                  onWordPress={handleWordPress}
-                  isWriting={true}
-                  chatMessage={{
-                    sender: ChatMessageSender.assistant,
-                    content: "",
-                    timestamp: new Date(),
-                  }}
-                />
-              ) : (
-                <></>
-              )
-            }
-            keyExtractor={(item) => item.id || item.timestamp.toString()}
-          />
-        </View>
-      )}
-
+      <View style={styles.header}>
+        <ChatHeader />
+      </View>
+      {renderMessages()}
       <View style={styles.textInputContainer}>
         <ChatTextInputContainer onSend={onSend} isPending={isPending} />
       </View>
@@ -132,17 +152,22 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    marginBottom: 16,
-    marginHorizontal: 16,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  header: {
+    flex: 1,
   },
   textInputContainer: {
     flex: 1,
     justifyContent: "flex-end",
     borderRadius: 48,
+    marginHorizontal: 12,
   },
   messagesContainer: {
     flex: 12,
-    marginTop: 40,
+    marginTop: 20,
+    marginHorizontal: 10,
   },
   centeredView: {
     flex: 1,

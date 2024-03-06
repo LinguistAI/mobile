@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { ChatMessage, ChatMessageSender } from "../../screens/chat/types";
 import Avatar from "../common/Avatar";
+import { useSelector } from "react-redux";
+import { selectCurrentBot } from "../../slices/chatSelectors";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -21,9 +23,10 @@ interface ChatMessageComponentProps {
 
 const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const { chatMessage, isWriting, onWordPress } = props;
+  const currentBot = useSelector(selectCurrentBot)
 
   const timestamp = new Date(chatMessage.timestamp);
-  const lines = chatMessage.content.split("\n");
+  const lines = chatMessage?.content?.split("\n");
   const isSentByUser = chatMessage.sender === ChatMessageSender.user;
 
   const handleWordPress = (
@@ -48,7 +51,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
       {!isSentByUser && (
         <View>
           <Avatar
-            src={require("../../assets/bot-avatars/female-v2.png")}
+            src={currentBot?.profileImage}
             height={40}
             width={40}
           />
@@ -66,7 +69,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
           <View>
             <View style={styles.messageLineContainer}>
               {lines.map((line, index) => {
-                const words = line.split(" ");
+                const words = line?.split(" ");
 
                 return (
                   <View key={`line-${index}`} style={styles.messageLine}>
@@ -101,7 +104,6 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
                   onPress={() => {
                     Speech.speak(chatMessage.content, {
                       language: "en",
-                      voice: "",
                     });
                   }}
                 />

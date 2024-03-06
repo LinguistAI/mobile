@@ -90,6 +90,8 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
         renderItem={({ item }) => <WordDetails word={item} />}
         contentContainerStyle={{
           justifyContent: 'center',
+          gap: 15,
+          marginHorizontal: 10
         }}
       />
       <FloatingButton
@@ -128,6 +130,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 10
   },
   modalContents: {
     rowGap: 20,

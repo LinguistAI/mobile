@@ -1,0 +1,2 @@
+export const NUM_OF_DIFFICULTY_LEVELS = 5
+export const MAX_DIFFICULTY_SCORE = 100

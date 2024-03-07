@@ -12,7 +12,7 @@ import {
 
 export const wordBankApi = createApi({
   reducerPath: 'wordBankApi',
-  baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/wordbank` }),
+  baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/wordbank/` }),
   tagTypes: ['WordList'],
   endpoints: (builder) => ({
     createWordList: builder.mutation<IWordListWithUserInfo, ICreateWordList>({

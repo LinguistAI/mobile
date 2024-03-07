@@ -28,19 +28,25 @@ const WordLists = () => {
     },
     mode: 'onChange',
   });
-  const [addListMutate, {}] = useCreateWordListMutation()
-  const {data: wordLists, isFetching: isFetchingWordLists, isError: wordListFetchError} = useGetWordListsQuery()
+  const [addListMutate, {}] = useCreateWordListMutation();
+  const {
+    data: wordLists,
+    isFetching: isFetchingWordLists,
+    isError: wordListFetchError,
+    error,
+  } = useGetWordListsQuery();
 
   if (isFetchingWordLists) {
-    return <WordListsSkeleton />
+    return <WordListsSkeleton />;
   }
 
   if (wordListFetchError) {
-    return <Text>Something went wrong</Text>
+    console.log(error);
+    return <Text>Something went wrong</Text>;
   }
 
   if (!wordLists?.lists) {
-    return <Text>No word lists found</Text>
+    return <Text>No word lists found</Text>;
   }
 
   const validateSubmit = (data: any) => {
@@ -67,7 +73,7 @@ const WordLists = () => {
       isActive: data.isActive,
       isFavorite: data.favorite,
       isPinned: data.pinned,
-      imageUrl: "https://picsum.photos/200"
+      imageUrl: 'https://picsum.photos/200',
     };
     addListMutate(createWordList);
   };
@@ -94,11 +100,7 @@ const WordLists = () => {
 
   const renderAddListModal = () => {
     return (
-      <ModalWrapper
-        visible={addListModalVisible}
-        onRequestClose={handleCancelAddList}
-        title="Add a new list"
-      >
+      <ModalWrapper visible={addListModalVisible} onRequestClose={handleCancelAddList} title="Add a new list">
         <FormProvider {...methods}>
           <View style={styles.formContent}>
             <PrimaryTextInput
@@ -131,7 +133,6 @@ const WordLists = () => {
     );
   };
 
-
   const renderSkeleton = () => {
     return <WordListsSkeleton />;
   };
@@ -142,20 +143,14 @@ const WordLists = () => {
     }
 
     if (filteredWordLists?.length === 0) {
-      <Text>
-        It looks like you haven't created any lists.
-      </Text>
+      <Text>It looks like you haven't created any lists.</Text>;
     }
 
     return (
       <FlatList
         data={filteredWordLists.length === 0 ? wordLists?.lists : filteredWordLists}
         renderItem={({ item }) => (
-          <WordListCard
-            key={item.listId}
-            list={item}
-            handleListSelection={handleListSelection}
-          />
+          <WordListCard key={item.listId} list={item} handleListSelection={handleListSelection} />
         )}
         numColumns={2}
         keyExtractor={(item) => item.listId}
@@ -167,10 +162,7 @@ const WordLists = () => {
   return (
     <>
       <View style={styles.filterContainer}>
-        <WordListFilter
-          wordLists={wordLists?.lists}
-          setFilteredWordLists={setFilteredWordLists}
-        />
+        <WordListFilter wordLists={wordLists?.lists} setFilteredWordLists={setFilteredWordLists} />
       </View>
       {renderLists()}
       <View>

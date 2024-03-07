@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import ChatStreakButton from './ChatStreakButton';
 import ChatStreakModal from './ChatStreakModal';
 import { useState } from 'react';
-import { useGetUserStreakQuery } from './gamificationApi';
+import { useGetUserStreakQuery } from './api';
 
 const ChatStreakContainer = () => {
   const [streakModalVisible, setModalVisible] = useState(false);

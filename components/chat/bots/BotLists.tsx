@@ -2,11 +2,9 @@ import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-n
 import { TChatBot } from '../types';
 import BotProfile from './BotProfile';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCreateNewConversationMutation, useGetAllConversationsQuery, useGetAvailableBotsQuery } from '../chatApi';
+import { useDispatch } from 'react-redux';
+import { useCreateNewConversationMutation, useGetAllConversationsQuery, useGetAvailableBotsQuery } from '../api';
 import { startConversation } from '../../../redux/chatSlice';
-import { isDataResponse } from '../../../services';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import FetchFailErrorScreen from '../../../screens/common/FetchFailErrorScreen';
 

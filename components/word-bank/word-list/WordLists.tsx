@@ -9,9 +9,9 @@ import ModalControlButtons from '../../common/modal/ModalControlButtons';
 import { ICreateWordList, TWordList } from './types';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { isEmptyObj } from '../../utils';
+import { objectIsNotEmpty } from '../../utils';
 import WordListsSkeleton from './WordListsSkeleton';
-import { useCreateWordListMutation, useGetWordListsQuery } from '../wordBankApi';
+import { useCreateWordListMutation, useGetWordListsQuery } from '../api';
 import WordListFilter from './WordListFilter';
 
 const WordLists = () => {
@@ -35,6 +35,7 @@ const WordLists = () => {
     isError: wordListFetchError,
     error,
   } = useGetWordListsQuery();
+  console.log(wordLists);
 
   if (isFetchingWordLists) {
     return <WordListsSkeleton />;
@@ -63,7 +64,7 @@ const WordLists = () => {
   const onSubmit = async (data: any) => {
     validateSubmit(data);
     setAddListModalVisible(false);
-    if (!isEmptyObj(methods.formState.errors)) {
+    if (!objectIsNotEmpty(methods.formState.errors)) {
       return;
     }
 
@@ -80,7 +81,6 @@ const WordLists = () => {
 
   const onError = (errors: any, e: any) => {
     if (methods.formState.isValid) {
-      console.log('No errors. This should not be called.');
       console.log(errors);
     }
   };
@@ -147,20 +147,22 @@ const WordLists = () => {
     }
 
     return (
-      <FlatList
-        data={filteredWordLists.length === 0 ? wordLists?.lists : filteredWordLists}
-        renderItem={({ item }) => (
-          <WordListCard key={item.listId} list={item} handleListSelection={handleListSelection} />
-        )}
-        numColumns={2}
-        keyExtractor={(item) => item.listId}
-        contentContainerStyle={styles.wordListContentContainer}
-      />
+      <View style={styles.wordListContainer}>
+        <FlatList
+          data={filteredWordLists.length === 0 ? wordLists?.lists : filteredWordLists}
+          renderItem={({ item }) => (
+            <WordListCard key={item.listId} list={item} handleListSelection={handleListSelection} />
+          )}
+          numColumns={2}
+          keyExtractor={(item) => item.listId}
+          contentContainerStyle={styles.wordListContentContainer}
+        />
+      </View>
     );
   };
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <View style={styles.filterContainer}>
         <WordListFilter wordLists={wordLists?.lists} setFilteredWordLists={setFilteredWordLists} />
       </View>
@@ -169,7 +171,7 @@ const WordLists = () => {
         <FloatingButton handlePress={handleOpenAddListModal} />
       </View>
       {renderAddListModal()}
-    </>
+    </View>
   );
 };
 

@@ -6,7 +6,7 @@ import Colors from '../../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
-import { useGetWordMeaningsQuery } from '../../wordBankApi';
+import { useGetWordMeaningsQuery } from '../../api';
 
 interface WordDetailsInterface {
   word: WordWithConfidence;

@@ -9,7 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useNotifications from '../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
-import { isEmptyObj } from '../../components/utils';
+import { objectIsNotEmpty } from '../../components/utils';
 
 interface WordListDetailsScreenProps {
   route: any;
@@ -55,7 +55,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
   }
 
   const onSubmit = (data: any) => {
-    if (!isEmptyObj(methods.formState.errors)) {
+    if (!objectIsNotEmpty(methods.formState.errors)) {
       return;
     }
 

@@ -79,13 +79,15 @@ export const createAxiosBaseQuery =
       method: 'GET' | 'POST' | 'PUT' | 'DELETE';
       data?: any;
       headers?: Record<string, string>;
+      secure?: boolean;
     },
     unknown,
     unknown
   > =>
-  async ({ url, method, data, headers = {} }) => {
+  async ({ url, method, data, headers = {}, secure = true }) => {
     try {
-      const response = await axiosSecure({
+      const axiosInstance = secure ? axiosSecure : axiosBase;
+      const response = await axiosInstance({
         url: baseUrl + url,
         method,
         data,

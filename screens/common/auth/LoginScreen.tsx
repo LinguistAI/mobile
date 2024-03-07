@@ -1,19 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
-import {
-  FormProvider,
-  SubmitErrorHandler,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import Button from "../../../components/common/form/Button";
-import EmailTextInput from "../../../components/common/form/EmailTextInput";
-import PasswordTextInput from "../../../components/common/form/PasswordTextInput";
-import useUser from "../../../hooks/useUser";
-import useNotifications from "../../../hooks/useNotifications";
-import { login } from "../../../services/auth";
-import Colors from "../../../theme/colors";
-import { generateErrorResponseMessage } from "../../../utils/httpUtils";
+import { useMutation } from '@tanstack/react-query';
+import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import Button from '../../../components/common/form/Button';
+import EmailTextInput from '../../../components/common/form/EmailTextInput';
+import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
+import useUser from '../../../hooks/useUser';
+import useNotifications from '../../../hooks/useNotifications';
+import { login } from '../../../services/auth';
+import Colors from '../../../theme/colors';
+import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 
 type FormValues = {
   email: string;
@@ -29,22 +24,21 @@ const LoginScreen = (props: LoginScreenProps) => {
   const { storeUserDetails } = useUser();
   const methods = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
   const { mutate: loginMutate, isPending } = useMutation({
-    mutationKey: ["login"],
-    mutationFn: (loginDto: LoginDto) =>
-      login({ email: loginDto.email, password: loginDto.password }),
+    mutationKey: ['login'],
+    mutationFn: (loginDto: LoginDto) => login({ email: loginDto.email, password: loginDto.password }),
     onSuccess: (res) => {
       if (!res.data.data) {
         add({
-          body: "Something went wrong!",
+          body: 'Something went wrong!',
           title:
-            "We are unable to log you in at the moment because we are unable to retrieve your user details. Please try again later",
-          type: "error",
+            'We are unable to log you in at the moment because we are unable to retrieve your user details. Please try again later',
+          type: 'error',
           time: 10000,
         });
         return;
@@ -56,21 +50,20 @@ const LoginScreen = (props: LoginScreenProps) => {
       });
       props.navigation.reset({
         index: 0,
-        routes: [{ name: "Main" }],
+        routes: [{ name: 'Main' }],
       });
     },
     onError: (error: any) => {
-      console.log(error)
       add({
         body: generateErrorResponseMessage(error),
-        type: "error",
+        type: 'error',
         time: 5000,
       });
     },
   });
 
   const onForgotPassword = () => {
-    props.navigation.navigate("Forgot Password");
+    props.navigation.navigate('Forgot Password');
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -88,11 +81,7 @@ const LoginScreen = (props: LoginScreenProps) => {
           <Text style={styles.forgotPassword} onPress={onForgotPassword}>
             Forgot password?
           </Text>
-          <Button
-          type="primary"
-            loading={isPending}
-            onPress={methods.handleSubmit(onSubmit, onError)}
-          >
+          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
             LOG IN
           </Button>
         </FormProvider>
@@ -110,9 +99,9 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     color: Colors.primary[300],
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 

@@ -1,15 +1,14 @@
-import { useSelector } from 'react-redux';
-import { StyleSheet, Text, View } from 'react-native';
-import Colors from '../../theme/colors';
-import Avatar from '../common/Avatar';
 import { useNavigation } from '@react-navigation/native';
-import ActionIcon from '../common/ActionIcon';
+import { StyleSheet, Text, View } from 'react-native';
+import Colors from '../../../theme/colors';
+import ActionIcon from '../../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
-import { selectCurrentBot } from '../../redux/chatSelectors';
+import useUser from '../../../hooks/useUser';
+import Avatar from '../../common/Avatar';
 
-const ChatHeader = () => {
-  const currentBot = useSelector(selectCurrentBot);
+const ConversationsHeader = () => {
   const navigation = useNavigation();
+  const { user } = useUser();
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -19,10 +18,9 @@ const ChatHeader = () => {
     <View style={styles.root}>
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
-          <ActionIcon icon={<Ionicons size={28} name="arrow-back" />} onPress={handleGoBack} />
-          <Avatar src={currentBot?.profileImage} height={40} width={40} />
+          <Avatar src={''} height={40} width={40} />
         </View>
-        <Text style={styles.botName}>{currentBot?.name}</Text>
+        <Text style={styles.name}>{user.username}</Text>
       </View>
     </View>
   );
@@ -51,10 +49,10 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 10,
   },
-  botName: {
+  name: {
     fontSize: 16,
     fontWeight: 'bold',
   },
 });
 
-export default ChatHeader;
+export default ConversationsHeader;

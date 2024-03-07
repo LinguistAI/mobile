@@ -1,31 +1,32 @@
-import { ChatMessageSender } from "../../screens/chat/types";
-import { useEffect, useRef, useState } from "react";
-import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { v4 as uuidv4 } from "uuid";
+import { ChatMessageSender } from '../../screens/chat/types';
+import { useEffect, useRef, useState } from 'react';
+import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
-import ChatMessageComponent from "../chat/ChatMessageComponent";
-import ChatTextInputContainer from "../chat/ChatTextInputContainer";
-import { ExtendedChatMessage } from "./types";
-import ActionButton from "../common/ActionButton";
-import { Ionicons } from "@expo/vector-icons";
-import Colors from "../../theme/colors";
-import Button from "../common/form/Button";
-import OptionGroup from "../common/form/OptionGroup";
-import { formatAsStr } from "../../utils";
-import CloseIcon from "../common/CloseIcon";
-import Divider from "../common/Divider";
+import ChatMessageComponent from '../chat/ChatMessageComponent';
+import ChatTextInputContainer from '../chat/ChatTextInputContainer';
+import { ExtendedChatMessage, IUserAnswers } from './types';
+import ActionButton from '../common/ActionButton';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '../../theme/colors';
+import Button from '../common/form/Button';
+import OptionGroup from '../common/form/OptionGroup';
+import { formatAsStr } from '../../utils';
+import CloseIcon from '../common/CloseIcon';
+import Divider from '../common/Divider';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { BOT_MESSAGES } from "./constants";
+import { BOT_MESSAGES } from './constants';
+import { useSetUserDetailsMutation } from './api';
+import useNotifications from '../../hooks/useNotifications';
+import { objectIsNotEmpty } from '../utils';
 
 interface PostRegistrationConversationProps {
   navigation: any;
 }
 
-const PostRegistrationConversation = ({
-  navigation,
-}: PostRegistrationConversationProps) => {
+const PostRegistrationConversation = ({ navigation }: PostRegistrationConversationProps) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [userAnswers, setUserAnswers] = useState({});
+  const [userAnswers, setUserAnswers] = useState<IUserAnswers | {}>({});
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([
     {
       sender: ChatMessageSender.assistant,
@@ -36,10 +37,12 @@ const PostRegistrationConversation = ({
     },
   ]);
   const [isBotWriting, setIsBotWriting] = useState(false);
-  const [isSkipButtonVisible, setIsSkipButtonVisible] = useState(true)
-  const [isDateSelectionVisible, setIsDateSelectionVisible] = useState(false)
-  const [birthdate, setBirthDate] = useState(new Date())
+  const [isSkipButtonVisible, setIsSkipButtonVisible] = useState(true);
+  const [isDateSelectionVisible, setIsDateSelectionVisible] = useState(false);
+  const [birthdate, setBirthDate] = useState(new Date());
   const messagesListRef = useRef<FlatList>(null);
+  const { add: addNotification } = useNotifications();
+  const [setUserDetails, { isLoading, error, isError }] = useSetUserDetailsMutation();
 
   const currentMessage = BOT_MESSAGES.find((step) => step.id === currentStep);
 
@@ -51,19 +54,35 @@ const PostRegistrationConversation = ({
     if (!currentMessage) return;
     const nextStep = currentMessage.trigger;
     setCurrentStep(nextStep);
-    setUserAnswers({ ...userAnswers, [currentMessage.name]: "" });
+    setUserAnswers({ ...userAnswers, [currentMessage.name]: '' });
 
     const botResponse = BOT_MESSAGES.find((step) => step.id === nextStep);
     setMessages((messages) => [
       ...messages,
       {
         sender: ChatMessageSender.assistant,
-        content: botResponse?.skippedMsg || "",
+        content: botResponse?.skippedMsg || '',
         timestamp: new Date(),
         id: uuidv4(),
         skippable: botResponse?.skippable || false,
       },
     ]);
+  };
+
+  const handleFinish = async () => {
+    if (objectIsNotEmpty(userAnswers)) {
+      await setUserDetails(userAnswers);
+      if (isError) {
+        addNotification({
+          body: 'There was an error saving your details. You can try again later from your profile.',
+          type: 'warning',
+        });
+      }
+    }
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
   };
 
   const handleNext = (userAnswer: string | string[]) => {
@@ -93,7 +112,7 @@ const PostRegistrationConversation = ({
         ...messages,
         {
           sender: ChatMessageSender.assistant,
-          content: botResponse?.message || "",
+          content: botResponse?.message || '',
           timestamp: new Date(),
           id: uuidv4(),
           skippable: botResponse?.skippable || false,
@@ -108,12 +127,12 @@ const PostRegistrationConversation = ({
       return null;
     }
 
-    if (currentMessage?.type === "date") {
+    if (currentMessage?.type === 'date') {
       return (
         <View style={styles.answerBox}>
           <ActionButton
-            title={birthdate ? `Selected date: ${birthdate?.toLocaleDateString()}` : "Pick your birthdate"}
-            icon={<Ionicons name="calendar" size={20} color={Colors.primary[500]}/>}
+            title={birthdate ? `Selected date: ${birthdate?.toLocaleDateString()}` : 'Pick your birthdate'}
+            icon={<Ionicons name="calendar" size={20} color={Colors.primary[500]} />}
             onPress={() => setIsDateSelectionVisible(true)}
           />
           {isDateSelectionVisible ? (
@@ -121,33 +140,29 @@ const PostRegistrationConversation = ({
               value={birthdate}
               mode="date"
               onChange={(event, selectedDate) => {
-                setBirthDate(selectedDate || new Date())
-                setIsDateSelectionVisible(false)
+                setBirthDate(selectedDate || new Date());
+                setIsDateSelectionVisible(false);
               }}
-            >
-            </DateTimePicker>
+            ></DateTimePicker>
           ) : null}
-          <Button
-            type="primary"
-            onPress={() => handleNext(birthdate.toISOString())}
-          >
+          <Button type="primary" onPress={() => handleNext(birthdate.toISOString())}>
             CONFIRM
           </Button>
         </View>
-      )
+      );
     }
 
     // Answer by options
-    if (currentMessage?.type === "multiple-choice" && currentMessage?.options) {
+    if (currentMessage?.type === 'multiple-choice' && currentMessage?.options) {
       return (
-          <OptionGroup
-            items={currentMessage?.options.map((option) => ({
-              value: option.value,
-              name: option.label,
-            }))}
-            onSelectionDone={(value) => handleNext(value)}
-            multiple={currentMessage?.multiple ?? false}
-          />
+        <OptionGroup
+          items={currentMessage?.options.map((option) => ({
+            value: option.value,
+            name: option.label,
+          }))}
+          onSelectionDone={(value) => handleNext(value)}
+          multiple={currentMessage?.multiple ?? false}
+        />
       );
     }
 
@@ -156,20 +171,10 @@ const PostRegistrationConversation = ({
       return (
         <View>
           <Button
-           type="primary"
-            onPress={() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Login" }],
-              });
-            }}
-            rightIcon={
-              <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={"white"}
-              />
-            }
+            type="primary"
+            onPress={handleFinish}
+            rightIcon={<Ionicons name="arrow-forward" size={24} color={'white'} />}
+            loading={isLoading}
           >
             CONTINUE
           </Button>
@@ -186,32 +191,28 @@ const PostRegistrationConversation = ({
   };
 
   const renderSkipButton = () => {
-    return (
-      isSkipButtonVisible ? (
-        <View>
-          <View style={styles.skipButton}>
-            <ActionButton
-              bgColor={Colors.gray["0"]}
-              icon={
-                <Ionicons
-                  name="arrow-forward"
-                  size={24}
-                  color={Colors.primary["600"]}
-                />
-              }
-              onPress={() => navigation.navigate("Main")}
-              maxWidth={250}
-              title={"Skip"}
-              divider
-              subText="We will ask some questions to personalize your experience. You can skip this step if you want."
-            />
-          <CloseIcon onPress={() => {setIsSkipButtonVisible(false)}}/>
-          </View>
-          <Divider />
-          </View>
-      ) : null
-    )
-  }
+    return isSkipButtonVisible ? (
+      <View>
+        <View style={styles.skipButton}>
+          <ActionButton
+            bgColor={Colors.gray['0']}
+            icon={<Ionicons name="arrow-forward" size={24} color={Colors.primary['600']} />}
+            onPress={() => navigation.navigate('Main')}
+            maxWidth={250}
+            title={'Skip'}
+            divider
+            subText="We will ask some questions to personalize your experience. You can skip this step if you want."
+          />
+          <CloseIcon
+            onPress={() => {
+              setIsSkipButtonVisible(false);
+            }}
+          />
+        </View>
+        <Divider />
+      </View>
+    ) : null;
+  };
 
   const renderMessages = () => {
     const getFooter = () => {
@@ -222,12 +223,12 @@ const PostRegistrationConversation = ({
             isWriting={true}
             chatMessage={{
               sender: ChatMessageSender.assistant,
-              content: "",
+              content: '',
               timestamp: new Date(),
               id: uuidv4(),
             }}
           />
-        )
+        );
       }
 
       return (
@@ -235,13 +236,7 @@ const PostRegistrationConversation = ({
           {messages[messages.length - 1]?.skippable ? (
             <ActionButton
               title="Skip this question"
-              icon={
-                <Ionicons
-                  name="arrow-forward"
-                  size={24}
-                  color={Colors.primary["500"]}
-                />
-              }
+              icon={<Ionicons name="arrow-forward" size={24} color={Colors.primary['500']} />}
               onPress={handleSkip}
               maxWidth={200}
             />
@@ -249,28 +244,24 @@ const PostRegistrationConversation = ({
             <></>
           )}
         </View>
-      )
-    }
+      );
+    };
 
     return (
       <FlatList
         ref={messagesListRef}
         data={messages}
-        renderItem={({ item }) => (
-          <ChatMessageComponent onWordPress={() => {}} chatMessage={item} />
-        )}
+        renderItem={({ item }) => <ChatMessageComponent onWordPress={() => {}} chatMessage={item} />}
         keyExtractor={(item) => item.id || item.timestamp.toString()}
         ListFooterComponent={getFooter()}
       />
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.messagesContainer}>
-        <View>
-          {renderSkipButton()}
-        </View>
+        <View>{renderSkipButton()}</View>
         {renderMessages()}
       </View>
       {renderAnswerBox()}
@@ -281,11 +272,11 @@ const PostRegistrationConversation = ({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     marginTop: 50,
   },
   textInputContainer: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     marginHorizontal: 16,
     marginBottom: 16,
     borderRadius: 48,
@@ -296,31 +287,31 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   actionButtons: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginHorizontal: 16,
     marginVertical: 16,
   },
   continueButtonChildren: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   skipButton: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginHorizontal: 16,
     marginBottom: 16,
   },
   optionsGroupContainer: {
     flex: 3,
-    maxHeight: 400
+    maxHeight: 400,
   },
   answerBox: {
     marginHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 15,
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 });
 
 export default PostRegistrationConversation;

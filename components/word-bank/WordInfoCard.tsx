@@ -11,7 +11,7 @@ import useNotifications from '../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import Title from '../common/Title';
 import Divider from '../common/Divider';
-import { useAddWordMutation, useGetWordMeaningsQuery } from './wordBankApi';
+import { useAddWordMutation, useGetWordMeaningsQuery } from './api';
 import WordAddContainer from './WordAddContainer';
 
 interface WordInfoCardProps {

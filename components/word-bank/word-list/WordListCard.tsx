@@ -14,7 +14,7 @@ import {
   usePinWordListMutation,
   useRemoveWordListFromFavoritesMutation,
   useUnpinWordListMutation,
-} from '../wordBankApi';
+} from '../api';
 
 interface WordListProps {
   list: TWordList;
@@ -178,11 +178,7 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
     ];
   };
 
-  const getTotalNumOfWords = (listStats: {
-    learning: number;
-    reviewing: number;
-    mastered: number;
-  }): number => {
+  const getTotalNumOfWords = (listStats: { learning: number; reviewing: number; mastered: number }): number => {
     return listStats.learning + listStats.reviewing + listStats.mastered;
   };
 

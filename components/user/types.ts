@@ -1,10 +1,10 @@
-import { ChatMessage } from "../../screens/chat/types";
+import { ChatMessage } from '../../screens/chat/types';
 
 export interface ExtendedChatMessage extends ChatMessage {
   skippable?: boolean;
 }
 
-type AnswerType = "date" | "multiple-choice" | "text" | ""
+type AnswerType = 'date' | 'multiple-choice' | 'text' | '';
 
 export type ConversationStep = {
   id: number;
@@ -15,6 +15,13 @@ export type ConversationStep = {
   skippedMsg: string;
   type: AnswerType;
   options?: { value: string; label: string }[];
-  multiple?: boolean,
+  multiple?: boolean;
   answerFormatter?: (input: any) => string;
 };
+
+export interface IUserAnswers {
+  name: string;
+  birthDate: string;
+  englishLevel: string;
+  hobbies: string[];
+}

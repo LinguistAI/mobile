@@ -1,5 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
-import { axiosSecure, createAxiosBaseQuery } from '../../services'
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
 import { Message, TChatBot, TConversation } from './types';
 
@@ -18,8 +18,8 @@ export const chatApi = createApi({
       query: () => ({
         method: 'GET',
         url: '/user',
-        
-      })
+      }),
+      providesTags: ['Conversation'],
     }),
     getAllChatMessages: builder.query<Message[], string>({
       query: (conversationId: string) => ({
@@ -33,21 +33,22 @@ export const chatApi = createApi({
         method: 'POST',
         data: { botId },
       }),
+      invalidatesTags: ['Conversation'],
     }),
-    sendChatMessage: builder.mutation<{data: string, timestamp: Date}, {conversationId: string, message: string}>({
+    sendChatMessage: builder.mutation<{ data: string; timestamp: Date }, { conversationId: string; message: string }>({
       query: ({ conversationId, message }) => ({
         url: `/chat/send/${conversationId}`,
         method: 'POST',
         data: { message },
       }),
-    }), 
-  })
-})
+    }),
+  }),
+});
 
-export const { 
+export const {
   useCreateNewConversationMutation,
   useGetAllChatMessagesQuery,
   useGetAllConversationsQuery,
   useGetAvailableBotsQuery,
-  useSendChatMessageMutation
- } = chatApi
+  useSendChatMessageMutation,
+} = chatApi;

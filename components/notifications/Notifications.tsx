@@ -1,13 +1,9 @@
-import { StyleSheet, View } from "react-native";
-import Animated, {
-  FadeInLeft,
-  FadeOutLeft,
-  FadeOutRight,
-} from "react-native-reanimated";
-import useNotifications from "../../hooks/useNotifications";
-import Notification from "./Notification";
-import { useSwipe } from "../../hooks/useSwipe";
-import { useState } from "react";
+import { StyleSheet, View } from 'react-native';
+import Animated, { FadeInLeft, FadeOutLeft, FadeOutRight } from 'react-native-reanimated';
+import useNotifications from '../../hooks/useNotifications';
+import Notification from './Notification';
+import { useSwipe } from '../../hooks/useSwipe';
+import { useState } from 'react';
 
 const Notifications = () => {
   const { notifications, remove } = useNotifications();
@@ -36,10 +32,7 @@ const Notifications = () => {
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
-          <Notification
-            notification={notification}
-            handleRemove={handleRemove}
-          />
+          <Notification notification={notification} handleRemove={handleRemove} />
         </Animated.View>
       ))}
     </View>
@@ -48,7 +41,7 @@ const Notifications = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
     padding: 20,
     bottom: 10,
     left: 0,

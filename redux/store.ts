@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import chatReducer from './chatSlice';
-import { chatApi } from '../components/chat/chatApi';
-import { gamificationApi } from '../components/gamification/gamificationApi';
-import { wordBankApi } from '../components/word-bank/wordBankApi';
+import { chatApi } from '../components/chat/api';
+import { gamificationApi } from '../components/gamification/api';
+import { wordBankApi } from '../components/word-bank/api';
 
 export const store = configureStore({
   reducer: {

@@ -86,13 +86,13 @@ export interface IAddWord {
 }
 // Dictionary service
 
-export interface DictionaryResponse {
+export interface IDictionaryResponse {
   dict: {
-    [id: string]: { wordGroup: DictionaryWordGroup[] } | {}; // api response -> meta -> id
+    [id: string]: { wordGroup: IDictionaryWordGroup[] } | {}; // api response -> meta -> id
   };
 }
 
-export interface DictionaryWordGroup {
+export interface IDictionaryWordGroup {
   id: string; // api response -> meta -> id
   word: string;
   audio: string; // 2.6 PRONUNCIATIONS: PRS in documentation

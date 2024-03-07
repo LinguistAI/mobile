@@ -9,9 +9,7 @@ import { TWordList } from './types';
 import { IFilterCriteria } from './types';
 import { search } from './utils';
 import ActionButton from '../../common/ActionButton';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectWordLists } from '../../../redux/chatSelectors';
-import { wordListsFiltered } from '../../../redux/chatSlice';
+import { useDispatch } from 'react-redux';
 
 export const SORT_BY_OPTIONS = [
   {
@@ -21,7 +19,12 @@ export const SORT_BY_OPTIONS = [
   },
 ];
 
-const WordListFilter = () => {
+interface WordListFilterProps {
+  wordLists: TWordList[];
+  setFilteredWordLists: (wordLists: TWordList[]) => void;
+}
+
+const WordListFilter = ({ wordLists, setFilteredWordLists }: WordListFilterProps) => {
   const [openFilterModal, setOpenFilterModal] = useState(false);
   const [tempFilter, setTempFilter] = useState<IFilterCriteria<TWordList>>({
     search: {
@@ -33,7 +36,6 @@ const WordListFilter = () => {
       order: 'asc',
     },
   });
-  const wordLists = useSelector(selectWordLists);
   const dispatch = useDispatch();
 
   const applyFilter = () => {
@@ -63,7 +65,7 @@ const WordListFilter = () => {
       });
     }
 
-    dispatch(wordListsFiltered(filteredWordLists));
+    setFilteredWordLists(filteredWordLists);
   };
 
   const handleSetTempFilter = <
@@ -103,7 +105,7 @@ const WordListFilter = () => {
   useEffect(() => {
     let filteredWordLists = [...wordLists];
     filteredWordLists = tempFilter.search.searchFn(tempFilter?.search?.searchText, wordLists);
-    dispatch(wordListsFiltered(filteredWordLists));
+    setFilteredWordLists(filteredWordLists);
   }, [tempFilter.search.searchText]);
 
   return (

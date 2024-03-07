@@ -7,7 +7,7 @@ import { useGetUserStreakQuery } from "./gamificationApi";
 const ChatStreakContainer = () => {
     const [streakModalVisible, setModalVisible] = useState(false);
 
-    const {data: streak, isFetching, isError } =  useGetUserStreakQuery()
+    const { data: streak, isFetching, isError } =  useGetUserStreakQuery()
 
     if (isFetching) {
         return <View />

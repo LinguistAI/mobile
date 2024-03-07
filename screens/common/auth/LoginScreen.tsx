@@ -9,7 +9,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import Button from "../../../components/common/form/Button";
 import EmailTextInput from "../../../components/common/form/EmailTextInput";
 import PasswordTextInput from "../../../components/common/form/PasswordTextInput";
-import useUser from "../../../hooks/auth/useUser";
+import useUser from "../../../hooks/useUser";
 import useNotifications from "../../../hooks/useNotifications";
 import { login } from "../../../services/auth";
 import Colors from "../../../theme/colors";

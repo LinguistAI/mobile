@@ -1,14 +1,12 @@
 import { ActivityIndicator, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { CollapsableContainer } from '../../../common/CollapsableContainer';
-import { WordDefinition, WordWithConfidence } from '../types';
+import { WordWithConfidence } from '../types';
 import { useState } from 'react';
 import Colors from '../../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
-import { getWordMeanings } from '../../WordList.service';
-import { useQuery } from '@tanstack/react-query';
-import { isEmptyObj } from 'openai/core';
 import { isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
+import { useGetWordMeaningsQuery } from '../../wordBankApi';
 
 interface WordDetailsInterface {
   word: WordWithConfidence;
@@ -17,11 +15,7 @@ interface WordDetailsInterface {
 const WordDetails = ({ word }: WordDetailsInterface) => {
   const [expanded, setExpanded] = useState(false);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['wordMeaning', word],
-    queryFn: () => getWordMeanings([word.word]),
-    staleTime: 1000000
-  });
+  const { data: wordMeanings, isFetching, isError } = useGetWordMeaningsQuery([word.word]);
 
   const onItemPress = () => {
     setExpanded(!expanded);
@@ -29,41 +23,25 @@ const WordDetails = ({ word }: WordDetailsInterface) => {
 
   const renderWordDetails = () => {
     let result = null;
-    if (isLoading) {
-      result = <ActivityIndicator />
-    }
-    else if (isError) {
-      result = (
-        <Text>
-          We couldn't fetch the details for this word.
-        </Text>
-      )
-    }
-    else {
-      const dict = data?.data?.dict!
-      const wordGroupOrNot = dict[word.word]
+    if (isFetching) {
+      result = <ActivityIndicator />;
+    } else if (isError) {
+      result = <Text>We couldn't fetch the details for this word.</Text>;
+    } else if (!wordMeanings) {
+      result = <Text>We couldn't fetch the details for this word.</Text>;
+    } else {
+      const dict = wordMeanings.dict!;
+      const wordGroupOrNot = dict[word.word];
       if (isDictionaryWordGroup(wordGroupOrNot)) {
-        const wordGroupObj = wordGroupOrNot
-        result = wordGroupObj.wordGroup.map(group => (
-          <WordDetail 
-            definition={group}
-          />
-        ))
+        const wordGroupObj = wordGroupOrNot;
+        result = wordGroupObj.wordGroup.map((group) => <WordDetail definition={group} />);
       } else {
-        result = (
-          <Text>
-            Unfortunately this word does not exist in our dictionary. Sorry...
-          </Text>
-        )
+        result = <Text>Unfortunately this word does not exist in our dictionary. Sorry...</Text>;
       }
     }
 
-    return (
-      <CollapsableContainer expanded={expanded}>
-        {result}
-      </CollapsableContainer>
-    )
-  }
+    return <CollapsableContainer expanded={expanded}>{result}</CollapsableContainer>;
+  };
 
   return (
     <View style={styles.wrap}>

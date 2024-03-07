@@ -1,6 +1,6 @@
 import { Modal, StyleSheet, View } from "react-native";
 import CloseIcon from "../common/CloseIcon";
-import useUser from "../../hooks/auth/useUser";
+import useUser from "../../hooks/useUser";
 import { useEffect } from "react";
 import { isDateToday } from "../../utils/date.utils";
 import ChatStreakDisplay from "./ChatStreakDisplay";

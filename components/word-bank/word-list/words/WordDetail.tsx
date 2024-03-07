@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
-import { DictionaryWordGroup } from "../types";
+import { IDictionaryWordGroup } from "../types";
 import Colors from "../../../../theme/colors";
 
 interface WordDetailProps {
-    definition: DictionaryWordGroup
+    definition: IDictionaryWordGroup
 }
 
 const WordDetail = ({ definition } : WordDetailProps) => {

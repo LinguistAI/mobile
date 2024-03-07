@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { atom, useAtom } from "jotai";
-import { StoredUserInfoWithTokens } from "../../types/auth";
+import { StoredUserInfoWithTokens } from "../types";
 
 const emptyUserAtom = {
   username: "",

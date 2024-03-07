@@ -40,7 +40,7 @@ const BotLists = () => {
                 navigation.navigate("ChatScreen", { conversationId: foundExistingConvo.id })
             }
             else {
-                const response = await createConvo(bot.id)
+                await createConvo(bot.id)
                 if (data) {
                     const convoId = data.id
                     if (!convoId) {return}

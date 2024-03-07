@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import CloseIcon from "../../components/common/CloseIcon";
 import ChatStreakContainer from "../../components/gamification/ChatStreakDisplay";
-import useUser from "../../hooks/auth/useUser";
+import useUser from "../../hooks/useUser";
 import { isDateToday } from "../../utils/date.utils";
 import ActionButton from "../../components/common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";

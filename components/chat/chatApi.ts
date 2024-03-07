@@ -34,7 +34,7 @@ export const chatApi = createApi({
         data: { botId },
       }),
     }),
-    sendChatMessage: builder.mutation<void, {conversationId: string, message: string}>({
+    sendChatMessage: builder.mutation<{data: string, timestamp: Date}, {conversationId: string, message: string}>({
       query: ({ conversationId, message }) => ({
         url: `/chat/send/${conversationId}`,
         method: 'POST',

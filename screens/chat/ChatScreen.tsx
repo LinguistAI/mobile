@@ -1,36 +1,24 @@
-import { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Modal,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import ChatMessageComponent from "../../components/chat/ChatMessageComponent";
-import ChatTextInputContainer from "../../components/chat/ChatTextInputContainer";
-import WordInfoCard from "../../components/word-bank/WordInfoCard";
-import { useChatMessages } from "../../hooks/useChatMessages";
-import { ChatMessage, ChatMessageSender } from "./types";
-import { selectCurrentBot } from "../../redux/chatSelectors";
-import { useSelector } from "react-redux";
-import ChatHeader from "../../components/chat/ChatHeader";
+import { useState } from 'react';
+import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
+import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
+import WordInfoCard from '../../components/word-bank/WordInfoCard';
+import { useChatMessages } from '../../hooks/useChatMessages';
+import { ChatMessage, ChatMessageSender } from './types';
+import { selectCurrentBot } from '../../redux/chatSelectors';
+import { useSelector } from 'react-redux';
+import ChatHeader from '../../components/chat/ChatHeader';
 
 interface ChatScreenProps {
-  route: any
+  route: any;
 }
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
-  const { 
-    addMessage,
-    isLoadingMessages,
-    messages,
-    isSendingMessage,
-    responseNotReceived
-  } = useChatMessages({conversationId});
-  const [selectedWord, setSelectedWord] = useState("");
+  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
+    conversationId,
+  });
+  const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
   const isPending = isLoadingMessages || isSendingMessage;
@@ -50,7 +38,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   };
 
   const onSelectedWordDismiss = () => {
-    setSelectedWord("");
+    setSelectedWord('');
     setModalVisible(false);
   };
 
@@ -61,7 +49,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     setSelectedWord(word);
     setModalVisible(true);
   };
-  
+
   const renderLastChatMessage = () => {
     if (responseNotReceived) {
       return (
@@ -70,11 +58,11 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           isWriting={false}
           chatMessage={{
             sender: ChatMessageSender.assistant,
-            content: "Something went wrong...",
+            content: 'Something went wrong...',
             timestamp: new Date(),
           }}
         />
-      )
+      );
     }
 
     if (isSendingMessage) {
@@ -84,15 +72,15 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           isWriting={true}
           chatMessage={{
             sender: ChatMessageSender.assistant,
-            content: "",
+            content: '',
             timestamp: new Date(),
           }}
         />
-      )
+      );
     }
 
-    return <></>
-  }
+    return <></>;
+  };
 
   const renderMessages = () => {
     if (isLoadingMessages) {
@@ -100,7 +88,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         <View style={styles.centeredView}>
           <ActivityIndicator size="large" />
         </View>
-      )
+      );
     }
 
     return (
@@ -118,22 +106,14 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           keyExtractor={(item) => item.id || item.timestamp.toString()}
         />
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={onSelectedWordDismiss}
-      >
+      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={onSelectedWordDismiss}>
         <View style={styles.centeredView}>
-          <WordInfoCard
-            selectedWord={selectedWord}
-            onDismiss={onSelectedWordDismiss}
-          />
+          <WordInfoCard selectedWord={selectedWord} onDismiss={onSelectedWordDismiss} />
         </View>
       </Modal>
       <View style={styles.header}>
@@ -158,7 +138,7 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     borderRadius: 48,
     marginHorizontal: 12,
   },
@@ -169,9 +149,9 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 12,
   },
 });

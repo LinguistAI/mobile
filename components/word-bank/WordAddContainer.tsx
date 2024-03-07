@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import useNotifications from '../../hooks/useNotifications';
 import { useEffect, useState } from 'react';
-import { useAddWordMutation, useGetWordListsQuery } from './wordBankApi';
+import { useAddWordMutation, useGetWordListsQuery } from './api';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import { TWordList } from './word-list/types';
 import ActionIcon from '../common/ActionIcon';

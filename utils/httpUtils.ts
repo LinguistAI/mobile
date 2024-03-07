@@ -1,13 +1,9 @@
-import { AxiosError } from "axios";
+import { AxiosError } from 'axios';
 
 interface CustomError {
-  response: {
-    data: {
-      msg: string;
-      status: number;
-      timestamp: string;
-    };
-  };
+  msg: string;
+  status: number;
+  timestamp: string;
 }
 
 export function isStatusOk(statusCode: number | null | undefined): boolean {
@@ -18,25 +14,25 @@ export function isStatusOk(statusCode: number | null | undefined): boolean {
 }
 
 export function isCustomError(error: any): error is CustomError {
-  return (
-    error.msg 
-  );
+  return error.msg;
 }
 
-export function generateErrorResponseMessage(error: any, defaultMsg: string="") {
+export function generateErrorResponseMessage(error: any, defaultMsg: string = '') {
   if (error instanceof AxiosError) {
     switch (error.code) {
-      case "ERR_NETWORK":
-        return "A network error has occurred. Please check your internet connection and try again.";
-      case "ERR_BAD_RESPONSE":
-        return "We are experiencing an unexpected error, we are working on it at the moment. Thanks for your patience."
+      case 'ERR_NETWORK':
+        return 'A network error has occurred. Please check your internet connection and try again.';
+      case 'ERR_BAD_RESPONSE':
+        return 'We are experiencing an unexpected error, we are working on it at the moment. Thanks for your patience.';
     }
   }
-
+  if (error?.response) {
+    return error.response.data.msg;
+  }
 
   if (isCustomError(error)) {
     return error.msg;
   }
 
-  return defaultMsg !== "" ? defaultMsg : "An unknown error has occurred. Please try again.";
+  return defaultMsg !== '' ? defaultMsg : 'An unknown error has occurred. Please try again.';
 }

@@ -1,4 +1,3 @@
-import { ImageSourcePropType } from "react-native";
 import { ChatMessageSender } from "../../screens/chat/types";
 
 export interface ICreateConversation {

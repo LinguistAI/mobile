@@ -50,7 +50,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-shimmer-placeholder": "^2.0.9",
     "react-redux": "^9.1.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "expo-screen-orientation": "~6.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

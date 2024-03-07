@@ -30,6 +30,12 @@
         {
           "photosPermission": "The app needs access to your photos to update your profile picture."
         }
+      ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "PORTRAIT"
+        }
       ]
     ]
   }

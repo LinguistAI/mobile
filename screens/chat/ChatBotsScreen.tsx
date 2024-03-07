@@ -1,10 +1,10 @@
 import { SafeAreaView, StyleSheet } from "react-native";
-import ChatBotsListsWrapper from "../../components/chat/bots/ChatBotsListWrapper";
+import BotLists from "../../components/chat/bots/BotLists";
 
 const ChatBotsScreen = () => {
     return (
         <SafeAreaView style={styles.root}>
-            <ChatBotsListsWrapper />
+            <BotLists />
         </SafeAreaView>
     );
 }

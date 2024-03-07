@@ -1,42 +1,27 @@
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { TConversation } from "../types";
-import { useSelector } from "react-redux";
-import { selectConversations } from "../../../slices/chatSelectors";
+import { useDispatch } from "react-redux";
 import Colors from "../../../theme/colors";
 import Avatar from "../../common/Avatar";
-import { useEffect, useState } from "react";
-import { getLastMessages } from "../../../utils";
-import { LastMessageObject } from "../../../hooks/useChatMessages";
 import { useNavigation } from "@react-navigation/native";
+import { useGetAllConversationsQuery } from "../chatApi";
+import { startConversation } from "../../../redux/chatSlice";
 
 
 const ConversationList = () => {
-    const [lastMessages, setLastMessages] = useState<LastMessageObject>({})
-    console.log(lastMessages)
-    const conversations = useSelector(selectConversations)
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+    const {data: conversations, isFetching, isError} = useGetAllConversationsQuery()
 
-    useEffect(() => {
-        const initLastMessages = async () => {
-            const lastMsgs = await getLastMessages()
-            setLastMessages(lastMsgs)
-        }
+    if (isFetching) return <Text>Loading...</Text>
+    if (isError) return <Text>Error...</Text>
+    if (!conversations || conversations.length === 0) return <Text>No conversations found</Text>
 
-        initLastMessages()
-    }, [])
+    
 
     const handleConversationClick = (id: string) => {
         navigation.navigate("ChatScreen", { conversationId: id })
-    }
-
-    const getLastMessage = (conversationId: string) => {
-        if (lastMessages[conversationId]) {
-            console.log(conversationId)
-            const lastMessageInfo = lastMessages[conversationId]
-            return lastMessageInfo.msg
-        }
-        
-        return ""
+        dispatch(startConversation({bot: conversations.find((c) => c.id === id)?.bot}))
     }
 
     const renderConversation = (item: TConversation) => {
@@ -51,7 +36,7 @@ const ConversationList = () => {
                         />
                         <View style={styles.conversationInfoContainer}>
                             <Text style={styles.conversationTitle}>{item.title}</Text>
-                            <Text style={styles.conversationLastMessage}>{getLastMessage(item.id)}</Text>
+                            <Text style={styles.conversationLastMessage}></Text>
                         </View>
                         <View>
                             
@@ -64,6 +49,7 @@ const ConversationList = () => {
 
     return (
         <FlatList
+            style={{flex: 1, marginTop: 10}}
             data={conversations}
             renderItem={({item}) => renderConversation(item)}
         />
@@ -76,7 +62,8 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 20,
         borderBottomWidth: 1,
-        borderColor: Colors.gray[300]
+        borderColor: Colors.gray[400],
+        backgroundColor: Colors.gray[0]
     },
     conversationRowContainer: {
         display: "flex",

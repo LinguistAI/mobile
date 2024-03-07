@@ -13,7 +13,7 @@ import * as Speech from "expo-speech";
 import { ChatMessage, ChatMessageSender } from "../../screens/chat/types";
 import Avatar from "../common/Avatar";
 import { useSelector } from "react-redux";
-import { selectCurrentBot } from "../../slices/chatSelectors";
+import { selectCurrentBot } from "../../redux/chatSelectors";
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;

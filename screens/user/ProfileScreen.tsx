@@ -12,7 +12,7 @@ import SecondaryButton from "../../components/common/form/SecondaryButton";
 import Colors from "../../theme/colors";
 import ActionButton from "../../components/common/ActionButton";
 import { Ionicons } from "@expo/vector-icons";
-import useUser from "../../hooks/auth/useUser";
+import useUser from "../../hooks/useUser";
 import Button from "../../components/common/form/Button";
 
 const avatarPlaceholderImg = require("../../assets/profile-default.jpg");

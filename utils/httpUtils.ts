@@ -19,9 +19,7 @@ export function isStatusOk(statusCode: number | null | undefined): boolean {
 
 export function isCustomError(error: any): error is CustomError {
   return (
-    error.response.data.msg &&
-    error.response.data.status &&
-    error.response.data.timestamp
+    error.msg 
   );
 }
 
@@ -37,7 +35,7 @@ export function generateErrorResponseMessage(error: any, defaultMsg: string="") 
 
 
   if (isCustomError(error)) {
-    return error.response.data.msg;
+    return error.msg;
   }
 
   return defaultMsg !== "" ? defaultMsg : "An unknown error has occurred. Please try again.";

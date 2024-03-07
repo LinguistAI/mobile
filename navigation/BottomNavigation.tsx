@@ -6,7 +6,7 @@ import HomeStackNavigator from './HomeStackNavigator';
 import Colors from '../theme/colors';
 import WordBankNavigation from './WordBankNavigation';
 import { Provider } from 'react-redux';
-import { store } from '../slices/store';
+import { store } from '../redux/store';
 import ConversationsScreen from '../screens/chat/ConversationsScreen';
 import ChatStackNavigator from './ChatStackNavigator';
 

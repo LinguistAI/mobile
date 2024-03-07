@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import ChatMessageComponent from "../../components/chat/ChatMessageComponent";
 import ChatTextInputContainer from "../../components/chat/ChatTextInputContainer";
-import WordInfoCard from "../../components/chat/WordInfoCard";
+import WordInfoCard from "../../components/word-bank/WordInfoCard";
 import { useChatMessages } from "../../hooks/useChatMessages";
 import { ChatMessage, ChatMessageSender } from "./types";
-import { selectCurrentBot } from "../../slices/chatSelectors";
+import { selectCurrentBot } from "../../redux/chatSelectors";
 import { useSelector } from "react-redux";
 import ChatHeader from "../../components/chat/ChatHeader";
 
@@ -32,8 +32,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   } = useChatMessages({conversationId});
   const [selectedWord, setSelectedWord] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-
-  console.log(messages)
 
   const isPending = isLoadingMessages || isSendingMessage;
 
@@ -152,7 +150,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 30,
     marginBottom: 10,
   },
   header: {

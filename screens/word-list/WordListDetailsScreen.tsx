@@ -8,7 +8,7 @@ import Button from '../../components/common/form/Button';
 import PrimaryTextInput from '../../components/common/form/PrimaryTextInput';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addWord, getList } from './WordList.service';
+import { addWord, getList } from '../../components/word-bank/WordList.service';
 import useNotifications from '../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import { isEmptyObj } from '../../components/utils';

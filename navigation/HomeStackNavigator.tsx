@@ -3,10 +3,10 @@ import ProfileScreen from "../screens/user/ProfileScreen";
 import SettingsScreen from "../screens/user/SettingsScreen";
 import HomeScreen from "../screens/home/HomeScreen";
 import { useDispatch } from "react-redux";
-import { getLists } from "../screens/word-list/WordList.service";
+import { getLists } from "../components/word-bank/WordList.service";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { wordListsInitialized } from "../slices/chatSlice";
+import { wordListsInitialized } from "../redux/chatSlice";
 
 const HomeStack = createNativeStackNavigator();
 

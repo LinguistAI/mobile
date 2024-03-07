@@ -19,20 +19,20 @@ const StrengthMeter = (props: StrengthMeterProps) => {
       };
     } else if (numOfMetRequirements === numOfRequirements) {
       return {
-        text: "Strong",
+        text: "Very Strong",
         color: Colors.green[600],
       };
-    } else if (numOfMetRequirements > numOfRequirements / 2) {
+    } else if (numOfMetRequirements <= numOfRequirements / 2) {
       return {
-        text: "Average",
-        color: Colors.orange[600],
+        text: "Fair",
+        color: Colors.yellow[600],
       };
     } else {
       return {
-        text: "Weak",
-        color: Colors.red[600],
+        text: "Strong",
+        color: Colors.orange[600],
       };
-    }
+    } 
   }
 
   const { text, color } = getStrengthLabel();

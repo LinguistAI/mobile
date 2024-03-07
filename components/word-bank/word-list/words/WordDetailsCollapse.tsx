@@ -4,7 +4,7 @@ import { WordDefinition, WordWithConfidence } from '../types';
 import { useState } from 'react';
 import Colors from '../../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
-import { getWordMeanings } from '../../../../screens/word-list/WordList.service';
+import { getWordMeanings } from '../../WordList.service';
 import { useQuery } from '@tanstack/react-query';
 import { isEmptyObj } from 'openai/core';
 import { isDictionaryWordGroup } from '../utils';

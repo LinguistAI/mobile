@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import { selectCurrentBot } from "../../slices/chatSelectors";
 import { StyleSheet, Text, View } from "react-native";
 import Colors from "../../theme/colors";
 import Avatar from "../common/Avatar";
 import { useNavigation } from "@react-navigation/native";
 import ActionIcon from "../common/ActionIcon";
 import { Ionicons } from "@expo/vector-icons";
+import { selectCurrentBot } from "../../redux/chatSelectors";
 
 const ChatHeader = () => {
   const currentBot = useSelector(selectCurrentBot)

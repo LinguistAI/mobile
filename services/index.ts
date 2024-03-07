@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError, isAxiosError } from "axios";
 import * as SecureStorage from "expo-secure-store";
 import { StoredUserInfoWithTokens } from "../types";
+import { BaseQueryFn } from "@reduxjs/toolkit/query";
 
 const decideBackendURL = (): string => {
   if (process.env.NODE_ENV === "production") {
@@ -53,7 +54,6 @@ axiosSecure.interceptors.response.use(
       // TODO: Redirect to homepage
         return;
       }
-      console.log(user)
       const res = await axios.get<{ accessToken: string }>("/auth/refresh", {
         withCredentials: true,
         headers: {
@@ -70,3 +70,37 @@ axiosSecure.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const createAxiosBaseQuery = ({ baseUrl } = { baseUrl: '' }): BaseQueryFn<{
+  url: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  data?: any;
+  headers?: Record<string, string>;
+}, unknown, unknown> => async ({ url, method, data, headers = {} }) => {
+  try {
+    const response = await axiosSecure({
+      url: baseUrl + url,
+      method,
+      data,
+      headers,
+    });
+
+    // Successful response
+    return { data: response.data };
+  } catch (axiosError: any) {
+    let err = axiosError;
+    // Check if the error is an Axios error
+    if (isAxiosError(axiosError)) {
+      err = axiosError?.response?.data;
+    }
+
+    // Error handling
+    return {
+      error: { status: err.status || 'FETCH_ERROR', msg: err.data || err },
+    };
+  }
+};
+
+export const isDataResponse = <T>(response: any): response is { data: T } => {
+  return response && response.data;
+}

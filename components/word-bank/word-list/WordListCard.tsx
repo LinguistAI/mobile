@@ -14,7 +14,7 @@ import {
   pinWordList,
   removeWordListFromFavorites,
   unpinWordList,
-} from '../../../screens/word-list/WordList.service';
+} from '../WordList.service';
 
 interface WordListProps {
   list: TWordList;

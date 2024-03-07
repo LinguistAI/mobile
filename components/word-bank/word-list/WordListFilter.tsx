@@ -10,8 +10,8 @@ import { IFilterCriteria } from './types';
 import { search } from './utils';
 import ActionButton from '../../common/ActionButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectWordLists } from '../../../slices/chatSelectors';
-import { wordListsFiltered } from '../../../slices/chatSlice';
+import { selectWordLists } from '../../../redux/chatSelectors';
+import { wordListsFiltered } from '../../../redux/chatSlice';
 
 export const SORT_BY_OPTIONS = [
   {

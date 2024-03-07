@@ -8,7 +8,7 @@ import {
   IWordListWithUserInfo,
   IWordListWithWordInfo,
   IWordListsWithUserInfo,
-} from '../../components/word-bank/word-list/types';
+} from './word-list/types';
 
 export const createList = async (list: ICreateWordList) => {
   const response = await axiosSecure.post<APIResponse<IWordListWithUserInfo>>(

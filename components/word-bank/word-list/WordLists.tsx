@@ -7,9 +7,8 @@ import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import PrimarySwitch from '../../common/form/PrimarySwitch';
 import ModalControlButtons from '../../common/modal/ModalControlButtons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createList } from '../../../screens/word-list/WordList.service';
+import { createList } from '../WordList.service';
 import { ICreateWordList, TWordList } from './types';
-import { APIResponse } from '../../../screens/common';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -21,8 +20,9 @@ import {
   selectAreWordListsFetched,
   selectFilteredWordLists,
   selectWordLists,
-} from '../../../slices/chatSelectors';
-import { wordListDeleted, wordListUpdated } from '../../../slices/chatSlice';
+} from '../../../redux/chatSelectors';
+import { wordListDeleted, wordListUpdated } from '../../../redux/chatSlice';
+import { APIResponse } from '../../../types';
 
 const WordLists = () => {
   const queryClient = useQueryClient();

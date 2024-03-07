@@ -14,8 +14,7 @@ import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import { MenuProvider } from 'react-native-popup-menu';
 import PostRegistrationConversation from './components/user/PostRegistrationConversation';
 import { SafeAreaView } from 'react-native';
-import { Provider } from 'react-redux';
-import { store } from './slices/store';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +24,10 @@ const queryClient = new QueryClient({
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  ScreenOrientation.lockPlatformAsync({
+    screenOrientationArrayIOS: [ScreenOrientation.Orientation.PORTRAIT_UP],
+    screenOrientationConstantAndroid: ScreenOrientation.Orientation.PORTRAIT_UP,
+  })
 
   return (
     <QueryClientProvider client={queryClient}>

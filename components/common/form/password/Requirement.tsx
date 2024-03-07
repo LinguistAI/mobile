@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
+import Colors from "../../../../theme/colors";
 
 export type Requirement = {
   re: RegExp;
@@ -19,9 +20,9 @@ const PasswordRequirement = (props: RequirementProps) => {
         style={[styles.requirementText, meets ? styles.meets : styles.fails]}
       >
         {meets ? (
-          <Ionicons name="checkmark-circle" size={14} color="green" />
+          <Ionicons name="checkmark-circle" size={14} color={Colors.green[600]} />
         ) : (
-          <Ionicons name="close-circle" size={14} color="red" />
+          <Ionicons name="close-circle" size={14} color={Colors.red[600]} />
         )}
         {text}
       </Text>
@@ -31,10 +32,10 @@ const PasswordRequirement = (props: RequirementProps) => {
 
 const styles = StyleSheet.create({
   meets: {
-    color: "green",
+    color: Colors.green[600],
   },
   fails: {
-    color: "red",
+    color: Colors.red[600],
   },
   requirementText: {
     fontSize: 14,

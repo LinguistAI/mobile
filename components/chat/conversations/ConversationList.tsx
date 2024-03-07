@@ -51,7 +51,7 @@ const ConversationList = () => {
                         />
                         <View style={styles.conversationInfoContainer}>
                             <Text style={styles.conversationTitle}>{item.title}</Text>
-                            <Text style={styles.conversationLastMessage}>{getLastMessage(item.id)}</Text>
+                            <Text style={styles.conversationLastMessage}></Text>
                         </View>
                         <View>
                             

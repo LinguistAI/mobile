@@ -34,7 +34,7 @@ const ChatStreakModal = ({ handleModalClose, handleModalOpen, streakModalVisible
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <CloseIcon onPress={handleModalOpen} />
+          <CloseIcon onPress={handleModalClose} />
           <ChatStreakDisplay currentStreak={streak.currentStreak} highestStreak={streak.highestStreak} />
         </View>
       </View>

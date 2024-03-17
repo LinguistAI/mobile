@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import ChatMessageComponent from '../chat/ChatMessageComponent';
 import ChatTextInputContainer from '../chat/ChatTextInputContainer';
-import { ExtendedChatMessage, IUserAnswers } from './types';
+import { ExtendedChatMessage, IUserDetailedInfo } from './types';
 import ActionButton from '../common/ActionButton';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
@@ -19,6 +19,7 @@ import { BOT_MESSAGES } from './constants';
 import { useSetUserDetailsMutation } from './api';
 import useNotifications from '../../hooks/useNotifications';
 import { objectIsNotEmpty } from '../utils';
+import useUser from '../../hooks/useUser';
 
 interface PostRegistrationConversationProps {
   navigation: any;
@@ -26,7 +27,7 @@ interface PostRegistrationConversationProps {
 
 const PostRegistrationConversation = ({ navigation }: PostRegistrationConversationProps) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<IUserAnswers | {}>({});
+  const [userAnswers, setUserAnswers] = useState<IUserDetailedInfo | {}>({});
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([
     {
       sender: ChatMessageSender.assistant,
@@ -42,7 +43,8 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
   const [birthdate, setBirthDate] = useState(new Date());
   const messagesListRef = useRef<FlatList>(null);
   const { add: addNotification } = useNotifications();
-  const [setUserDetails, { isLoading, error, isError }] = useSetUserDetailsMutation();
+  const { user } = useUser();
+  const [setUserDetails, { isLoading, isError }] = useSetUserDetailsMutation();
 
   const currentMessage = BOT_MESSAGES.find((step) => step.id === currentStep);
 
@@ -78,11 +80,13 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
           type: 'warning',
         });
       }
+
+      addNotification({
+        body: 'Your details have been saved successfully.',
+        type: 'success',
+      });
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
+    navigation.navigate('Main');
   };
 
   const handleNext = (userAnswer: string | string[]) => {

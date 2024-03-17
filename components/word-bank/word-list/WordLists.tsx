@@ -35,7 +35,6 @@ const WordLists = () => {
     isError: wordListFetchError,
     error,
   } = useGetWordListsQuery();
-  console.log(wordLists);
 
   if (isFetchingWordLists) {
     return <WordListsSkeleton />;

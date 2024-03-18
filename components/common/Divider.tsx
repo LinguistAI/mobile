@@ -6,7 +6,7 @@ const Divider = () => {
   return (
     <View
       style={{
-        borderBottomWidth: 1,
+        borderBottomWidth: 2,
         borderBottomColor: Colors.gray[500],
         width: '95%',
         alignSelf: 'center',

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, FlatList, Keyboard, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
@@ -20,6 +20,19 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   });
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const messagesList = useRef<FlatList>(null);
+
+  useEffect(() => {
+    if (messagesList.current) {
+      messagesList.current.scrollToEnd({ animated: true });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (messagesList.current) {
+      messagesList.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   const isPending = isLoadingMessages || isSendingMessage;
 
@@ -94,6 +107,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     return (
       <View style={styles.messagesContainer}>
         <FlatList
+          ref={messagesList}
           data={messages}
           renderItem={({ item }) => (
             <ChatMessageComponent
@@ -144,7 +158,7 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 10,
-    marginTop: 20,
+    marginBottom: 20,
     marginHorizontal: 10,
   },
   centeredView: {

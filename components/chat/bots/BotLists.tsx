@@ -7,6 +7,7 @@ import { useCreateNewConversationMutation, useGetAllConversationsQuery, useGetAv
 import { startConversation } from '../../../redux/chatSlice';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import FetchFailErrorScreen from '../../../screens/common/FetchFailErrorScreen';
+import LoadingIndicator from '../../common/LoadingIndicator';
 
 const BotLists = () => {
   const navigation = useNavigation();
@@ -25,11 +26,7 @@ const BotLists = () => {
   }
 
   if (isFetchingConversations || isFetchingBots) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <LoadingIndicator subtext="Get ready to meet your language companion!" />;
   }
 
   const handleBotPress = async (bot: TChatBot) => {

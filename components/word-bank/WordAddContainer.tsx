@@ -8,10 +8,11 @@ import { TWordList } from './word-list/types';
 import ActionIcon from '../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
+import FetchError from '../common/FetchError';
+import CenteredFeedback from '../common/CenteredFeedback';
 
 interface WordAddContainerProps {
   selectedWord: string;
-  wordLists: { listId: string; title: string }[];
   onDismiss: () => void;
 }
 
@@ -31,8 +32,10 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
     }
   }, [wordLists]);
 
-  if (!wordLists) return null;
-
+  if (!wordLists) return <FetchError />;
+  if (wordLists.lists.length === 0) {
+    return <CenteredFeedback message="You don't have any word lists yet. Create one to add this word." />;
+  }
   const handleAddNewWord = async () => {
     onDismiss();
     if (!selectedWordList) return;

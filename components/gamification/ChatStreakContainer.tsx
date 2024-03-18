@@ -1,8 +1,9 @@
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import ChatStreakButton from './ChatStreakButton';
 import ChatStreakModal from './ChatStreakModal';
 import { useState } from 'react';
 import { useGetUserStreakQuery } from './api';
+import FetchError from '../common/FetchError';
 
 const ChatStreakContainer = () => {
   const [streakModalVisible, setModalVisible] = useState(false);
@@ -10,11 +11,11 @@ const ChatStreakContainer = () => {
   const { data: streak, isFetching, isError } = useGetUserStreakQuery();
 
   if (isFetching) {
-    return <View />;
+    return <ActivityIndicator />;
   }
 
   if (isError) {
-    return <View />;
+    return <FetchError />;
   }
 
   if (!streak) {

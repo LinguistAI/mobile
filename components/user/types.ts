@@ -21,7 +21,7 @@ export type ConversationStep = {
 
 export interface IUserDetailedInfo {
   name: string;
-  birthDate: Date;
+  birthDate: string;
   englishLevel: string;
   hobbies: string[];
 }

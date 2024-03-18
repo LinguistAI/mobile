@@ -43,6 +43,7 @@ const ControlledDatePicker = (props: DatePickerProps) => {
           props.close();
         }}
         value={field.value}
+        mode="date"
         {...props}
       />
       {props?.subtitle && <Text style={styles.subtitle}>{props?.subtitle}</Text>}

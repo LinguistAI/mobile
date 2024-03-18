@@ -13,6 +13,9 @@ import { objectIsNotEmpty } from '../../utils';
 import WordListsSkeleton from './WordListsSkeleton';
 import { useCreateWordListMutation, useGetWordListsQuery } from '../api';
 import WordListFilter from './WordListFilter';
+import FetchError from '../../common/FetchError';
+import CenteredFeedback from '../../common/CenteredFeedback';
+import useNotifications from '../../../hooks/useNotifications';
 
 const WordLists = () => {
   const [addListModalVisible, setAddListModalVisible] = useState(false);
@@ -28,25 +31,25 @@ const WordLists = () => {
     },
     mode: 'onChange',
   });
-  const [addListMutate, {}] = useCreateWordListMutation();
+  const [addListMutate, { error: createWordlistError, isSuccess }] = useCreateWordListMutation();
   const {
     data: wordLists,
     isFetching: isFetchingWordLists,
     isError: wordListFetchError,
     error,
   } = useGetWordListsQuery();
+  const { add: addNotification } = useNotifications();
 
   if (isFetchingWordLists) {
     return <WordListsSkeleton />;
   }
 
   if (wordListFetchError) {
-    console.log(error);
-    return <Text>Something went wrong</Text>;
+    return <FetchError />;
   }
 
-  if (!wordLists?.lists) {
-    return <Text>No word lists found</Text>;
+  if (!wordLists?.lists || wordLists?.lists?.length === 0) {
+    return <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />;
   }
 
   const validateSubmit = (data: any) => {
@@ -63,10 +66,9 @@ const WordLists = () => {
   const onSubmit = async (data: any) => {
     validateSubmit(data);
     setAddListModalVisible(false);
-    if (!objectIsNotEmpty(methods.formState.errors)) {
+    if (objectIsNotEmpty(methods.formState.errors)) {
       return;
     }
-
     const createWordList: ICreateWordList = {
       title: data.listName,
       description: data.listDescription,
@@ -75,7 +77,14 @@ const WordLists = () => {
       isPinned: data.pinned,
       imageUrl: 'https://picsum.photos/200',
     };
-    addListMutate(createWordList);
+    await addListMutate(createWordList);
+    if (createWordlistError) {
+      console.log(createWordlistError);
+      addNotification({
+        body: 'Failed to create word list',
+        type: 'error',
+      });
+    }
   };
 
   const onError = (errors: any, e: any) => {

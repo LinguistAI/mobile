@@ -31,7 +31,7 @@ export const chatApi = createApi({
       query: (botId: string) => ({
         url: '/create',
         method: 'POST',
-        data: { botId },
+        body: { botId },
       }),
       invalidatesTags: ['Conversation'],
     }),
@@ -39,7 +39,7 @@ export const chatApi = createApi({
       query: ({ conversationId, message }) => ({
         url: `/chat/send/${conversationId}`,
         method: 'POST',
-        data: { message },
+        body: { message },
       }),
     }),
   }),

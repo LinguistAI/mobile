@@ -4,8 +4,6 @@ import LeaderboardScreen from '../screens/leaderboard/LeaderboardScreen';
 import HomeStackNavigator from './HomeStackNavigator';
 import Colors from '../theme/colors';
 import WordBankNavigation from './WordBankNavigation';
-import { Provider } from 'react-redux';
-import { store } from '../redux/store';
 import ChatStackNavigator from './ChatStackNavigator';
 
 const Tab = createBottomTabNavigator();

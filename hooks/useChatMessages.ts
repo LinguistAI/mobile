@@ -44,19 +44,18 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
       message: message.content,
     });
     if (responseNotReceived) {
+      setMessages((prev) => [...prev.slice(0, prev.length - 1)]);
       return;
     }
-
-    if (data) {
-      const message: ChatMessage = {
-        content: data.data,
+    console.log(response);
+    if (response?.data) {
+      const responseMessage: ChatMessage = {
+        content: response?.data,
         sender: ChatMessageSender.assistant,
-        timestamp: data.timestamp,
+        timestamp: new Date(),
         id: uuidv4(),
       };
       setMessages((prev) => [...prev, message]);
-    } else {
-      setMessages((prev) => [...prev.slice(0, prev.length - 1)]);
     }
   };
 

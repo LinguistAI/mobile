@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSetUserDetailsMutation } from './api';
 import useNotifications from '../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
+import { dateObjToISODate } from './utils';
 
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;
@@ -27,10 +28,9 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
   const [isDateSelectionVisible, setIsDateSelectionVisible] = useState(false);
   const { user } = useUser();
   const { add } = useNotifications();
-  console.log(userDetails);
   const defaultValues = {
     name: userDetails.name ?? '',
-    birthDate: userDetails.birthDate ?? new Date(),
+    birthDate: new Date(userDetails.birthDate) ?? new Date(),
     englishLevel: null,
     hobbies: userDetails.hobbies ?? [],
   };
@@ -38,20 +38,28 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
     defaultValues,
   });
 
-  const [mutate, { error, isLoading }] = useSetUserDetailsMutation();
+  console.log(userDetails);
+
+  const [mutate, { isError, error, isLoading }] = useSetUserDetailsMutation();
 
   useEffect(() => {
     const subscription = methods.watch(() => {
-      console.log(methods.getValues());
       setUnsavedChanges(true);
     });
     return () => subscription.unsubscribe();
   }, [methods.watch]);
 
   const onSubmit = async (data: any) => {
-    await mutate(data);
+    const birthDate = dateObjToISODate(new Date(data.birthDate));
+    const newProfile = {
+      name: data.name,
+      englishLevel: data.englishLevel,
+      hobbies: data.hobbies,
+      birthDate,
+    };
+    await mutate(newProfile);
 
-    if (error) {
+    if (isError) {
       add({ type: 'error', body: generateErrorResponseMessage(error) });
       return;
     }
@@ -73,7 +81,7 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
             placeholder="Username"
             rules={{}}
             defaultValue={user.username}
-            name="username"
+            name="_username"
             label="Username"
             disabled
             subtitle="Your username is unique and cannot be changed."
@@ -82,7 +90,7 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
             placeholder="Email"
             rules={{}}
             defaultValue={user.email}
-            name="email"
+            name="_email"
             label="Email"
             disabled
             subtitle="Your email is unique and cannot be changed."
@@ -97,7 +105,7 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
           <ActionButton
             title={
               methods.getValues('birthDate')
-                ? `Your birth date: ${methods.getValues('birthDate').toLocaleDateString()}`
+                ? `Your birth date: ${new Date(methods.getValues('birthDate')).toLocaleDateString()}`
                 : 'Pick your birthdate'
             }
             icon={<Ionicons name="calendar" size={20} color={Colors.primary[500]} />}

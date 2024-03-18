@@ -14,7 +14,7 @@ export const search = (searchText: string, wordList: TWordList[]) => {
 export const isDictionaryWordGroup = (
   group: {} | { wordGroup: IDictionaryWordGroup[] }
 ): group is { wordGroup: IDictionaryWordGroup[] } => {
-  if (objectIsNotEmpty(group) || !group) {
+  if (!objectIsNotEmpty(group) || !group) {
     return false;
   }
 

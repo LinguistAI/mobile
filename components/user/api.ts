@@ -11,8 +11,7 @@ export const userApi = createApi({
       query: (userAnswers) => ({
         url: 'profile',
         method: 'PUT',
-        data: userAnswers,
-        secure: false,
+        body: userAnswers,
       }),
       invalidatesTags: ['User'],
     }),

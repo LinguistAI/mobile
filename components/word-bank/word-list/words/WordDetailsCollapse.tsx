@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
 import { useGetWordMeaningsQuery } from '../../api';
+import LoadingIndicator from '../../../common/LoadingIndicator';
 
 interface WordDetailsInterface {
   word: WordWithConfidence;
@@ -15,6 +16,7 @@ interface WordDetailsInterface {
 const WordDetails = ({ word }: WordDetailsInterface) => {
   const [expanded, setExpanded] = useState(false);
 
+  console.log('word', word);
   const { data: wordMeanings, isFetching, isError } = useGetWordMeaningsQuery([word.word]);
 
   const onItemPress = () => {
@@ -24,7 +26,7 @@ const WordDetails = ({ word }: WordDetailsInterface) => {
   const renderWordDetails = () => {
     let result = null;
     if (isFetching) {
-      result = <ActivityIndicator />;
+      result = <LoadingIndicator subtext="Get ready to learn!" />;
     } else if (isError) {
       result = <Text>We couldn't fetch the details for this word.</Text>;
     } else if (!wordMeanings) {

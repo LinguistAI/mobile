@@ -25,7 +25,7 @@ export const HOBBIES_LIST = [
   { label: 'Dancing', value: 'Dancing' },
   { label: 'Yoga', value: 'Yoga' },
   { label: 'Meditation', value: 'Meditation' },
-  { label: 'Collecting (e.g., stamps, coins, art)', value: 'Collecting' },
+  { label: 'Collecting', value: 'Collecting' },
   { label: 'Model Building', value: 'Model Building' },
   { label: 'DIY Projects', value: 'DIY Projects' },
   { label: 'Video Gaming', value: 'Video Gaming' },
@@ -37,11 +37,11 @@ export const HOBBIES_LIST = [
 ];
 
 export const ENGLISH_LEVELS = [
-  { value: "I don't know", label: "I don't know" },
-  { value: 'Beginner', label: 'Beginner' },
-  { value: 'Intermediate', label: 'Intermediate' },
-  { value: 'Advanced', label: 'Advanced' },
-  { value: 'Native', label: 'Native' },
+  { value: "DON'T KNOW", label: "I don't know" },
+  { value: 'BEGINNER', label: 'Beginner' },
+  { value: 'INTERMEDIEAET', label: 'Intermediate' },
+  { value: 'ADVANCED', label: 'Advanced' },
+  { value: 'NATIVE', label: 'Native' },
 ];
 
 export const BOT_MESSAGES: ConversationStep[] = [

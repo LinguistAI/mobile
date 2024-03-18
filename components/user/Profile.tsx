@@ -73,6 +73,7 @@ const Profile = () => {
       <View style={styles.userInformation}>
         <Text style={styles.userName}>{user.username}</Text>
       </View>
+      <Divider />
       {renderUserInfoForm()}
       <Divider />
       <View style={styles.changePasswordView}>

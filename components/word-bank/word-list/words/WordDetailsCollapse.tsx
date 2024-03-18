@@ -16,7 +16,6 @@ interface WordDetailsInterface {
 const WordDetails = ({ word }: WordDetailsInterface) => {
   const [expanded, setExpanded] = useState(false);
 
-  console.log('word', word);
   const { data: wordMeanings, isFetching, isError } = useGetWordMeaningsQuery([word.word]);
 
   const onItemPress = () => {

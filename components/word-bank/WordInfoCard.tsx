@@ -1,20 +1,13 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
-import React, { useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import ActionIcon from '../common/ActionIcon';
+import React from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import CloseIcon from '../common/CloseIcon';
 import Colors from '../../theme/colors';
 import WordDetail from './word-list/words/WordDetail';
 import { isDictionaryWordGroup } from './word-list/utils';
-import useNotifications from '../../hooks/useNotifications';
-import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import Title from '../common/Title';
 import Divider from '../common/Divider';
-import { useAddWordMutation, useGetWordListsQuery, useGetWordMeaningsQuery } from './api';
+import { useGetWordMeaningsQuery } from './api';
 import WordAddContainer from './WordAddContainer';
-import LoadingIndicator from '../common/LoadingIndicator';
-import FetchError from '../common/FetchError';
 
 interface WordInfoCardProps {
   selectedWord: string;
@@ -33,7 +26,6 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
     } else {
       const dict = data?.dict!;
       const wordGroupOrNot = dict[selectedWord];
-      console.log('wordGroupOrNot', wordGroupOrNot);
       if (isDictionaryWordGroup(wordGroupOrNot)) {
         const wordGroupObj = wordGroupOrNot;
         result = wordGroupObj.wordGroup.map((group) => <WordDetail key={group.id} definition={group} />);

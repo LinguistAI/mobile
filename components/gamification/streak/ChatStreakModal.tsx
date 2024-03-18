@@ -1,10 +1,10 @@
 import { Modal, StyleSheet, View } from 'react-native';
-import CloseIcon from '../common/CloseIcon';
-import useUser from '../../hooks/useUser';
+import CloseIcon from '../../common/CloseIcon';
+import useUser from '../../../hooks/useUser';
 import { useEffect } from 'react';
-import { isDateToday } from '../../utils/date.utils';
+import { isDateToday } from '../../../utils/date.utils';
 import ChatStreakDisplay from './ChatStreakDisplay';
-import { IUserStreak } from './types';
+import { IUserStreak } from '../types';
 
 interface ChatStreakModalProps {
   streakModalVisible: boolean;

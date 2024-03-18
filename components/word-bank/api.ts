@@ -58,7 +58,7 @@ export const wordBankApi = createApi({
         method: 'POST',
         body: addWord,
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists', 'WordList'],
     }),
     activateWordList: builder.mutation<void, string>({
       query: (listId) => ({

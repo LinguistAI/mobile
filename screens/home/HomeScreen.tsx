@@ -1,20 +1,19 @@
-import { useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ActionIcon from '../../components/common/ActionIcon';
-import ChatStreakContainer from '../../components/gamification/ChatStreakContainer';
+import ChatStreakContainer from '../../components/gamification/streak/ChatStreakContainer';
+import ExperienceBar from '../../components/gamification/experience/ExperienceBar';
 
 const HomeScreen = () => {
-  const [streakModalVisible, setModalVisible] = useState(false);
   const navigator = useNavigation();
 
   return (
     <SafeAreaView>
       <View style={styles.root}>
         <View style={styles.topContainer}>
-          <View style={styles.chatStreakContainer}>
-            <ChatStreakContainer />
+          <View style={styles.xprow}>
+            <ExperienceBar />
           </View>
           <View style={styles.profileIcon}>
             <ActionIcon
@@ -26,6 +25,9 @@ const HomeScreen = () => {
           </View>
         </View>
       </View>
+      {/* <View style={styles.chatStreakContainer}>
+        <ChatStreakContainer />
+      </View> */}
     </SafeAreaView>
   );
 };
@@ -55,15 +57,19 @@ const styles = StyleSheet.create({
   },
   chatStreakContainer: {
     maxWidth: 150,
-    marginLeft: 20,
   },
   topContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   profileIcon: {
-    marginRight: 20,
     maxWidth: 50,
+    alignSelf: 'flex-end',
+  },
+  xprow: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 10,
   },
 });

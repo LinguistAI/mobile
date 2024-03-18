@@ -1,6 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, Touchable, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, Touchable, TouchableWithoutFeedback, View, ViewBase } from 'react-native';
 import Colors from '../../theme/colors';
 import useUser from '../../hooks/useUser';
 import Button from '../../components/common/form/Button';
@@ -10,6 +10,8 @@ import UserInfoForm from './UserInfoForm';
 import Divider from '../common/Divider';
 import { useGetUserDetailsQuery } from './api';
 import LoadingIndicator from '../common/LoadingIndicator';
+import ExperienceBar from '../gamification/experience/ExperienceBar';
+import ChatStreakContainer from '../gamification/streak/ChatStreakContainer';
 
 const avatarPlaceholderImg = require('../../assets/profile-default.jpg');
 
@@ -72,6 +74,10 @@ const Profile = () => {
       </TouchableWithoutFeedback>
       <View style={styles.userInformation}>
         <Text style={styles.userName}>{user.username}</Text>
+      </View>
+      <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
+        <ExperienceBar />
+        <ChatStreakContainer />
       </View>
       <Divider />
       {renderUserInfoForm()}

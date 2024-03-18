@@ -1,26 +1,28 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
-import { IUserAnswers } from './types';
+import { IUserDetailedInfo } from './types';
 
-export const userAPi = createApi({
+export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/profile` }),
+  baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/` }),
+  tagTypes: ['User'],
   endpoints: (builder) => ({
-    setUserDetails: builder.mutation<void, IUserAnswers>({
+    setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
-        url: '/',
+        url: 'profile',
         method: 'PUT',
-        data: userAnswers,
-        secure: false,
+        body: userAnswers,
       }),
+      invalidatesTags: ['User'],
     }),
-    getUserDetails: builder.query<IUserAnswers, void>({
+    getUserDetails: builder.query<IUserDetailedInfo, void>({
       query: () => ({
-        url: '/',
+        url: 'profile',
         method: 'GET',
       }),
+      providesTags: ['User'],
     }),
   }),
 });
 
-export const { useGetUserDetailsQuery, useSetUserDetailsMutation } = userAPi;
+export const { useGetUserDetailsQuery, useSetUserDetailsMutation } = userApi;

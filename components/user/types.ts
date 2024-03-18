@@ -19,7 +19,7 @@ export type ConversationStep = {
   answerFormatter?: (input: any) => string;
 };
 
-export interface IUserAnswers {
+export interface IUserDetailedInfo {
   name: string;
   birthDate: string;
   englishLevel: string;

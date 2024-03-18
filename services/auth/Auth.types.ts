@@ -1,21 +1,19 @@
-interface LoginDto {
+import { StoredUserInfoWithTokens } from '../../types';
+
+export interface LoginDto {
   email: string;
   password: string;
 }
 
-interface RegisterDto {
+export interface RegisterDto {
   username: string;
   email: string;
   password: string;
 }
 
-interface RRegister {
-  username: string;
-  email: string;
-  id: string;
-}
+export interface RRegister extends StoredUserInfoWithTokens {}
 
-interface RLogin {
+export interface RLogin {
   username: string;
   email: string;
   id: string;
@@ -23,16 +21,16 @@ interface RLogin {
   refreshToken: string;
 }
 
-interface ChangePasswordDto {
+export interface ChangePasswordDto {
   oldPassword: string;
   newPassword: string;
 }
 
-type RequestPasswordResetDto = {
+export type RequestPasswordResetDto = {
   email: string;
 };
 
-type PasswordResetCodeDto = {
+export type PasswordResetCodeDto = {
   email: string;
   resetCode: string;
 };

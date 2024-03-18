@@ -12,49 +12,49 @@ import {
 
 export const wordBankApi = createApi({
   reducerPath: 'wordBankApi',
-  baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/wordbank/` }),
-  tagTypes: ['WordList'],
+  baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/` }),
+  tagTypes: ['WordLists', 'WordList'],
   endpoints: (builder) => ({
     createWordList: builder.mutation<IWordListWithUserInfo, ICreateWordList>({
       query: (list) => ({
-        url: 'lists',
+        url: 'wordbank/lists',
         method: 'POST',
         body: list,
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     getWordLists: builder.query<IWordListsWithUserInfo, void>({
       query: () => ({
-        url: 'lists',
+        url: 'wordbank/lists',
         method: 'GET',
       }),
-      providesTags: ['WordList'],
+      providesTags: ['WordLists'],
     }),
-    getWordList: builder.query<IWordListWithWordInfo, string>({
+    getWordListById: builder.query<IWordListWithWordInfo, string>({
       query: (listId) => ({
-        url: `list/${listId}`,
+        url: `wordbank/list/${listId}`,
         method: 'GET',
       }),
       providesTags: ['WordList'],
     }),
     editList: builder.mutation<void, IEditWordList>({
       query: (editedList) => ({
-        url: 'lists',
+        url: 'wordbank/lists',
         method: 'PUT',
         body: editedList,
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     deleteList: builder.mutation<void, string>({
       query: (listId) => ({
-        url: `list/${listId}`,
+        url: `wordbank/list/${listId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     addWord: builder.mutation<void, IAddWord>({
       query: (addWord) => ({
-        url: 'add-word',
+        url: 'wordbank/add-word',
         method: 'POST',
         body: addWord,
       }),
@@ -62,68 +62,58 @@ export const wordBankApi = createApi({
     }),
     activateWordList: builder.mutation<void, string>({
       query: (listId) => ({
-        url: 'lists/activate',
+        url: 'wordbank/lists/activate',
         method: 'POST',
         body: { listId },
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     deactivateWordList: builder.mutation<void, string>({
       query: (listId) => ({
-        url: 'lists/deactivate',
+        url: 'wordbank/lists/deactivate',
         method: 'POST',
         body: { listId },
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     addWordListToFavorite: builder.mutation<void, string>({
       query: (listId) => ({
-        url: 'lists/add-favorite',
+        url: 'wordbank/lists/add-favorite',
         method: 'POST',
         body: { listId },
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     removeWordListFromFavorites: builder.mutation<void, string>({
       query: (listId) => ({
-        url: 'lists/remove-favorite',
+        url: 'wordbank/lists/remove-favorite',
         method: 'POST',
         body: { listId },
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     pinWordList: builder.mutation<void, string>({
       query: (listId) => ({
-        url: 'lists/pin',
+        url: 'wordbank/lists/pin',
         method: 'POST',
         body: { listId },
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     unpinWordList: builder.mutation<void, string>({
       query: (listId) => ({
-        url: 'lists/unpin',
+        url: 'wordbank/lists/unpin',
         method: 'POST',
         body: { listId },
       }),
-      invalidatesTags: ['WordList'],
+      invalidatesTags: ['WordLists'],
     }),
     getWordMeanings: builder.query<IDictionaryResponse, string[]>({
-      queryFn: async (wordList, queryApi, extraOptions, baseQuery) => {
-        try {
-          // Assuming axiosSecure can be used similarly outside of the baseQuery context
-          const response = await axiosSecure.post('/dictionary', { wordList });
-          // Assuming the response structure is { data: DictionaryResponse }
-          if (response.data) {
-            return { data: response.data };
-          } else {
-            return { error: { status: 'CUSTOM_ERROR', error: 'No data returned' } };
-          }
-        } catch (axiosError) {
-          let err = axiosError;
-          return { error: { status: err.response?.status || 'FETCH_ERROR', error: err.message } };
-        }
-      },
+      query: (words) => ({
+        url: `dictionary`,
+        method: 'POST',
+        body: { wordList: words },
+      }),
     }),
   }),
 });
@@ -131,7 +121,7 @@ export const wordBankApi = createApi({
 export const {
   useCreateWordListMutation,
   useGetWordListsQuery,
-  useGetWordListQuery,
+  useGetWordListByIdQuery,
   useEditListMutation,
   useActivateWordListMutation,
   useAddWordListToFavoriteMutation,

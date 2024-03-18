@@ -10,6 +10,9 @@ import { Requirement } from '../../../components/common/form/password/Requiremen
 import useNotifications from '../../../hooks/useNotifications';
 import { login, register } from '../../../services/auth';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
+import useUser from '../../../hooks/useUser';
+import { StoredUserInfoWithTokens } from '../../../types';
+import { RegisterDto } from '../../../services/auth/Auth.types';
 
 type RegisterFormValues = {
   userName: string;
@@ -33,6 +36,7 @@ const RegisterScreen = (props: RegisterScreenProps) => {
     },
     mode: 'onSubmit',
   });
+  const { storeUserDetails } = useUser();
 
   const { mutate: registerMutate, isPending } = useMutation({
     mutationKey: ['register'],
@@ -42,14 +46,8 @@ const RegisterScreen = (props: RegisterScreenProps) => {
         password: registerDto.password,
         username: registerDto.username,
       }),
-    onSuccess: (data) => {
-      add({
-        body: 'You have successfully registered!',
-        title: 'Success!',
-        type: 'success',
-        time: 5000,
-      });
-
+    onSuccess: (res) => {
+      storeUserDetails(res.data.data as StoredUserInfoWithTokens);
       props.navigation.navigate('Welcome Conversation');
     },
     onError: (error: any) => {

@@ -11,8 +11,10 @@ import useNotifications from '../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import Title from '../common/Title';
 import Divider from '../common/Divider';
-import { useAddWordMutation, useGetWordMeaningsQuery } from './api';
+import { useAddWordMutation, useGetWordListsQuery, useGetWordMeaningsQuery } from './api';
 import WordAddContainer from './WordAddContainer';
+import LoadingIndicator from '../common/LoadingIndicator';
+import FetchError from '../common/FetchError';
 
 interface WordInfoCardProps {
   selectedWord: string;
@@ -31,6 +33,7 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
     } else {
       const dict = data?.dict!;
       const wordGroupOrNot = dict[selectedWord];
+      console.log('wordGroupOrNot', wordGroupOrNot);
       if (isDictionaryWordGroup(wordGroupOrNot)) {
         const wordGroupObj = wordGroupOrNot;
         result = wordGroupObj.wordGroup.map((group) => <WordDetail key={group.id} definition={group} />);
@@ -53,7 +56,7 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
         <Divider />
         <Title fontSize="h4">Add to your list</Title>
         <View style={styles.actionsContainer}>
-          <WordAddContainer />
+          <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
         </View>
       </ScrollView>
     </View>

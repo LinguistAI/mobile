@@ -6,15 +6,19 @@ import Avatar from '../../common/Avatar';
 import { useNavigation } from '@react-navigation/native';
 import { useGetAllConversationsQuery } from '../api';
 import { startConversation } from '../../../redux/chatSlice';
+import FetchError from '../../common/FetchError';
+import LoadingIndicator from '../../common/LoadingIndicator';
+import CenteredFeedback from '../../common/CenteredFeedback';
 
 const ConversationList = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { data: conversations, isFetching, isError } = useGetAllConversationsQuery();
 
-  if (isFetching) return <Text>Loading...</Text>;
-  if (isError) return <Text>Error...</Text>;
-  if (!conversations || conversations.length === 0) return <Text>No conversations found</Text>;
+  if (isFetching) return <LoadingIndicator subtext="Fetching your conversations..." />;
+  if (isError) return <FetchError />;
+  if (!conversations || conversations.length === 0)
+    return <CenteredFeedback message="No conversations found. Click the add button to initiate a conversation." />;
 
   const handleConversationClick = (id: string) => {
     navigation.navigate('ChatScreen', { conversationId: id });

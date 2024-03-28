@@ -8,6 +8,8 @@ import { startConversation } from '../../../redux/chatSlice';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import FetchFailErrorScreen from '../../../screens/common/FetchFailErrorScreen';
 import LoadingIndicator from '../../common/LoadingIndicator';
+import BotProfileCard from './BotProfileCard';
+import useNotifications from '../../../hooks/useNotifications';
 
 const BotLists = () => {
   const navigation = useNavigation();
@@ -20,6 +22,7 @@ const BotLists = () => {
   const { data: bots, isFetching: isFetchingBots, isError: botsNotLoaded } = useGetAvailableBotsQuery();
   const [createConvo, { isLoading: pendingBotCreateResponse, data, error: createConversationError }] =
     useCreateNewConversationMutation();
+  const { add: notify } = useNotifications();
 
   if (conversationsNotLoaded || botsNotLoaded) {
     return <FetchFailErrorScreen />;
@@ -44,7 +47,10 @@ const BotLists = () => {
           }
           navigation.navigate('ChatScreen', { conversationId: convoId });
         } else {
-          generateErrorResponseMessage(createConversationError, 'Error creating conversation');
+          notify({
+            body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+            type: 'error',
+          });
         }
       }
       dispatch(startConversation({ bot }));
@@ -57,7 +63,7 @@ const BotLists = () => {
         data={bots}
         renderItem={({ item }) => (
           <Pressable onPress={() => handleBotPress(item)} style={styles.profile}>
-            <BotProfile bot={item} />
+            <BotProfileCard bot={item} />
           </Pressable>
         )}
         contentContainerStyle={styles.botListContainer}

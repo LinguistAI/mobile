@@ -12,7 +12,7 @@ const ChatHeader = () => {
   const navigation = useNavigation();
 
   const handleGoBack = () => {
-    navigation.goBack();
+    navigation.navigate('Conversations');
   };
 
   return (

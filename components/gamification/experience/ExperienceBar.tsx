@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useGetUserExperienceQuery } from '../api';
 import * as Progress from 'react-native-progress';
 import FetchError from '../../common/FetchError';
@@ -24,7 +24,7 @@ const ExperienceBar = () => {
   }
 
   const getProgress = () => {
-    return getProgressRatio(data.currentExperience, data.totalExperienceToNextLevel + data.currentExperience);
+    return getProgressRatio(data.currentExperience, data.totalExperienceToNextLevel);
   };
 
   const renderCurrentLevel = () => {
@@ -34,8 +34,7 @@ const ExperienceBar = () => {
   const renderCurrentExperience = () => {
     return (
       <Text style={styles.xpText}>
-        {data.currentExperience} /{' '}
-        {getCurrentLevelTotalExperience(data.currentExperience, data.totalExperienceToNextLevel)}
+        {data.currentExperience} / {getCurrentLevelTotalExperience(data.totalExperienceToNextLevel)}
       </Text>
     );
   };

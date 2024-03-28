@@ -49,9 +49,8 @@ const styles = StyleSheet.create({
   innerBorder: {
     borderWidth: 2,
     borderColor: Colors.gray[600],
-    borderRadius: 16,
+    borderRadius: 24,
     paddingHorizontal: 16,
-    zIndex: 10,
     backgroundColor: Colors.gray[0],
   },
 });

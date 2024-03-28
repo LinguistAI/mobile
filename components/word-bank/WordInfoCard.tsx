@@ -46,7 +46,9 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
           {renderWordDetails()}
         </View>
         <Divider />
-        <Title fontSize="h4">Add to your list</Title>
+        <Title centered size="h4">
+          Add to your list
+        </Title>
         <View style={styles.actionsContainer}>
           <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
         </View>

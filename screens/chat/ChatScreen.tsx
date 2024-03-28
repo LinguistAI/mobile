@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Keyboard, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, View } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
-import { selectCurrentBot } from '../../redux/chatSelectors';
-import { useSelector } from 'react-redux';
 import ChatHeader from '../../components/chat/ChatHeader';
 
 interface ChatScreenProps {
@@ -118,6 +116,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           )}
           ListFooterComponent={renderLastChatMessage()}
           keyExtractor={(item) => item.id || item.timestamp.toString()}
+          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: true })}
         />
       </View>
     );
@@ -153,12 +152,10 @@ const styles = StyleSheet.create({
   textInputContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    borderRadius: 48,
-    marginHorizontal: 12,
+    marginHorizontal: 8,
   },
   messagesContainer: {
-    flex: 10,
-    marginBottom: 20,
+    flex: 6,
     marginHorizontal: 10,
   },
   centeredView: {

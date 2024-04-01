@@ -7,7 +7,7 @@ import Title from "../../components/common/Title";
 import useNotifications from "../../hooks/useNotifications";
 import { checkAuth } from "../../services/auth";
 import Colors from "../../theme/colors";
-import useUser from "../../hooks/auth/useUser";
+import useUser from "../../hooks/useUser";
 
 interface LandingScreenProps {
   navigation: any;

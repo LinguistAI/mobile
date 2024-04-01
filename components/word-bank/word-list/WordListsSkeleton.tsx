@@ -8,14 +8,8 @@ const WordListsSkeleton = () => {
       <ShimmerPlaceholder LinearGradient={LinearGradient} style={styles.skeletonSearchBar} />
       {Array.from({ length: 4 }).map((_, index) => (
         <View key={index} style={styles.skeletonRow}>
-          <ShimmerPlaceholder
-            LinearGradient={LinearGradient}
-            style={styles.skeletonListRectangle}
-          />
-          <ShimmerPlaceholder
-            LinearGradient={LinearGradient}
-            style={styles.skeletonListRectangle}
-          />
+          <ShimmerPlaceholder LinearGradient={LinearGradient} style={styles.skeletonListRectangle} />
+          <ShimmerPlaceholder LinearGradient={LinearGradient} style={styles.skeletonListRectangle} />
         </View>
       ))}
     </View>
@@ -27,7 +21,6 @@ const styles = StyleSheet.create({
     flex: 8,
     paddingHorizontal: 20,
     gap: 10,
-    marginTop: 40,
   },
   skeletonRow: {
     flexDirection: 'row',

@@ -6,52 +6,21 @@ import { FormProvider, useForm } from 'react-hook-form';
 import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import PrimarySwitch from '../../common/form/PrimarySwitch';
 import ModalControlButtons from '../../common/modal/ModalControlButtons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createList } from '../../../screens/word-list/WordList.service';
 import { ICreateWordList, TWordList } from './types';
-import { APIResponse } from '../../../screens/common';
-import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import useNotifications from '../../../hooks/useNotifications';
-import { isEmptyObj } from '../../utils';
+import { objectIsNotEmpty } from '../../utils';
 import WordListsSkeleton from './WordListsSkeleton';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  selectAreWordListsFetched,
-  selectFilteredWordLists,
-  selectWordLists,
-} from '../../../slices/chatSelectors';
-import { wordListDeleted, wordListUpdated } from '../../../slices/chatSlice';
+import { useCreateWordListMutation, useGetWordListsQuery } from '../api';
+import WordListFilter from './WordListFilter';
+import FetchError from '../../common/FetchError';
+import CenteredFeedback from '../../common/CenteredFeedback';
+import useNotifications from '../../../hooks/useNotifications';
 
 const WordLists = () => {
-  const queryClient = useQueryClient();
-  const { mutate: addListMutate, isPending } = useMutation({
-    mutationFn: (data: ICreateWordList) => createList(data),
-    mutationKey: ['createWordList'],
-    onSuccess: (data: APIResponse<TWordList>) => {
-      if (!data || !data.data) {
-        addNotification({
-          body: 'Something went wrong while creating the wordlist.',
-          type: 'error',
-        });
-        return;
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['getWordLists'] });
-      methods.reset();
-    },
-    onError: (error: any) => {
-      const msg = generateErrorResponseMessage(error);
-      addNotification({ body: msg, type: 'error' });
-    },
-  });
-  const wordLists = useSelector(selectWordLists);
-  const filteredWordLists = useSelector(selectFilteredWordLists);
-  const dispatch = useDispatch();
   const [addListModalVisible, setAddListModalVisible] = useState(false);
+  const [filteredWordLists, setFilteredWordLists] = useState<TWordList[]>([]);
   const navigation = useNavigation();
-  const { add: addNotification } = useNotifications();
   const methods = useForm({
     defaultValues: {
       listName: '',
@@ -62,9 +31,29 @@ const WordLists = () => {
     },
     mode: 'onChange',
   });
+  const [addListMutate, { error: createWordlistError, isSuccess }] = useCreateWordListMutation();
+  const {
+    data: wordLists,
+    isFetching: isFetchingWordLists,
+    isError: wordListFetchError,
+    error,
+  } = useGetWordListsQuery();
+  const { add: addNotification } = useNotifications();
+
+  if (isFetchingWordLists) {
+    return <WordListsSkeleton />;
+  }
+
+  if (wordListFetchError) {
+    return <FetchError />;
+  }
+
+  if (!wordLists?.lists || wordLists?.lists?.length === 0) {
+    return <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />;
+  }
 
   const validateSubmit = (data: any) => {
-    wordLists.forEach((list) => {
+    wordLists?.lists?.forEach((list) => {
       if (list.title === data.listName) {
         methods.setError('listName', {
           type: 'manual',
@@ -77,24 +66,29 @@ const WordLists = () => {
   const onSubmit = async (data: any) => {
     validateSubmit(data);
     setAddListModalVisible(false);
-    if (!isEmptyObj(methods.formState.errors)) {
+    if (objectIsNotEmpty(methods.formState.errors)) {
       return;
     }
-
     const createWordList: ICreateWordList = {
       title: data.listName,
       description: data.listDescription,
       isActive: data.isActive,
       isFavorite: data.favorite,
       isPinned: data.pinned,
-      imageUrl: "https://picsum.photos/200"
+      imageUrl: 'https://picsum.photos/200',
     };
-    addListMutate(createWordList);
+    await addListMutate(createWordList);
+    if (createWordlistError) {
+      console.log(createWordlistError);
+      addNotification({
+        body: 'Failed to create word list',
+        type: 'error',
+      });
+    }
   };
 
   const onError = (errors: any, e: any) => {
     if (methods.formState.isValid) {
-      console.log('No errors. This should not be called.');
       console.log(errors);
     }
   };
@@ -108,17 +102,13 @@ const WordLists = () => {
   };
 
   const handleListSelection = (listId: string) => {
-    const selectedList = wordLists.find((list) => list.listId === listId);
+    const selectedList = wordLists?.lists?.find((list) => list.listId === listId);
     navigation.navigate('WordListDetails', { listId: selectedList?.listId });
   };
 
   const renderAddListModal = () => {
     return (
-      <ModalWrapper
-        visible={addListModalVisible}
-        onRequestClose={handleCancelAddList}
-        title="Add a new list"
-      >
+      <ModalWrapper visible={addListModalVisible} onRequestClose={handleCancelAddList} title="Add a new list">
         <FormProvider {...methods}>
           <View style={styles.formContent}>
             <PrimaryTextInput
@@ -151,62 +141,58 @@ const WordLists = () => {
     );
   };
 
-  const updateList = (updatedList: TWordList) => {
-    dispatch(wordListUpdated({ targetList: updatedList }));
-  };
-
-  const deleteList = (listId: string) => {
-    dispatch(wordListDeleted({ targetListId: listId }));
-  };
-
   const renderSkeleton = () => {
     return <WordListsSkeleton />;
   };
 
   const renderLists = () => {
-    if (isPending) {
+    if (isFetchingWordLists) {
       return renderSkeleton();
     }
 
-    if (filteredWordLists.length === 0) {
-      <Text>
-        It looks like you haven't created any lists.
-      </Text>
+    if (filteredWordLists?.length === 0) {
+      <Text>It looks like you haven't created any lists.</Text>;
     }
 
     return (
-      <FlatList
-        data={filteredWordLists}
-        renderItem={({ item }) => (
-          <WordListCard
-            key={item.listId}
-            list={item}
-            handleListSelection={handleListSelection}
-            updateList={updateList}
-            deleteList={deleteList}
-          />
-        )}
-        numColumns={2}
-        keyExtractor={(item) => item.listId}
-        contentContainerStyle={styles.wordListContentContainer}
-      />
+      <View style={styles.wordListContainer}>
+        <FlatList
+          data={filteredWordLists.length === 0 ? wordLists?.lists : filteredWordLists}
+          renderItem={({ item }) => (
+            <WordListCard key={item.listId} list={item} handleListSelection={handleListSelection} />
+          )}
+          numColumns={2}
+          keyExtractor={(item) => item.listId}
+          contentContainerStyle={styles.wordListContentContainer}
+        />
+      </View>
     );
   };
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
+      <View style={styles.filterContainer}>
+        <WordListFilter wordLists={wordLists?.lists} setFilteredWordLists={setFilteredWordLists} />
+      </View>
       {renderLists()}
       <View>
         <FloatingButton handlePress={handleOpenAddListModal} />
       </View>
       {renderAddListModal()}
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   wordListContainer: {
     flex: 8,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    flex: 1,
   },
   wordListContentContainer: {
     paddingHorizontal: 10,

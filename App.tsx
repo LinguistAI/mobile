@@ -14,8 +14,10 @@ import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import { MenuProvider } from 'react-native-popup-menu';
 import PostRegistrationConversation from './components/user/PostRegistrationConversation';
 import { SafeAreaView } from 'react-native';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { Provider } from 'react-redux';
-import { store } from './slices/store';
+import { store } from './redux/store';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,48 +27,48 @@ const queryClient = new QueryClient({
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  ScreenOrientation.lockPlatformAsync({
+    screenOrientationArrayIOS: [ScreenOrientation.Orientation.PORTRAIT_UP],
+    screenOrientationConstantAndroid: ScreenOrientation.Orientation.PORTRAIT_UP,
+  });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <MenuProvider>
-        <CustomErrorBoundary>
-          <NavigationContainer>
-            <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-              <Stack.Navigator
-                screenOptions={{
-                  contentStyle: {
-                    backgroundColor: 'white',
-                  },
-                }}
-                initialRouteName="Landing"
-              >
-                <Stack.Screen
-                  name="Landing"
-                  component={LandingScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="Register" component={RegisterScreen} />
-                <Stack.Screen
-                  name="Welcome Conversation"
-                  component={PostRegistrationConversation}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="Main"
-                  component={BottomNavigation}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
-                <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
-                <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
-                <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
-              </Stack.Navigator>
-            </SafeAreaView>
-          </NavigationContainer>
-        </CustomErrorBoundary>
-        <Notifications />
-      </MenuProvider>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <AutocompleteDropdownContextProvider>
+          <MenuProvider>
+            <CustomErrorBoundary>
+              <NavigationContainer>
+                <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+                  <Stack.Navigator
+                    screenOptions={{
+                      contentStyle: {
+                        backgroundColor: 'white',
+                      },
+                    }}
+                    initialRouteName="Landing"
+                  >
+                    <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+                    <Stack.Screen name="Login" component={LoginScreen} />
+                    <Stack.Screen name="Register" component={RegisterScreen} />
+                    <Stack.Screen
+                      name="Welcome Conversation"
+                      component={PostRegistrationConversation}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="Main" component={BottomNavigation} options={{ headerShown: false }} />
+                    <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
+                    <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
+                    <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
+                    <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
+                  </Stack.Navigator>
+                </SafeAreaView>
+              </NavigationContainer>
+            </CustomErrorBoundary>
+            <Notifications />
+          </MenuProvider>
+        </AutocompleteDropdownContextProvider>
+      </QueryClientProvider>
+    </Provider>
   );
 }

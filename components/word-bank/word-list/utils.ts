@@ -1,5 +1,5 @@
-import { isEmptyObj } from '../../utils';
-import { DictionaryWordGroup, TWordList } from './types';
+import { objectIsNotEmpty } from '../../utils';
+import { IDictionaryWordGroup, TWordList } from './types';
 
 export const search = (searchText: string, wordList: TWordList[]) => {
   const searchedList = wordList.filter(
@@ -11,11 +11,12 @@ export const search = (searchText: string, wordList: TWordList[]) => {
   return searchedList;
 };
 
-
-export const isDictionaryWordGroup = (group: {} | {wordGroup: DictionaryWordGroup[]}): group is {wordGroup: DictionaryWordGroup[]}  => {
-  if (isEmptyObj(group) || !group) {
-    return false
+export const isDictionaryWordGroup = (
+  group: {} | { wordGroup: IDictionaryWordGroup[] }
+): group is { wordGroup: IDictionaryWordGroup[] } => {
+  if (!objectIsNotEmpty(group) || !group) {
+    return false;
   }
 
-  return true
-}
+  return true;
+};

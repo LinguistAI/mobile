@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import Colors from "../../theme/colors";
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Colors from '../../theme/colors';
 
 interface ActionButtonProps {
   icon: React.ReactElement;
@@ -9,6 +9,7 @@ interface ActionButtonProps {
   subText?: string;
   bgColor?: string;
   selectedBgColor?: string;
+  borderColor?: string;
   selected?: boolean;
   maxWidth?: number;
   fontSize?: number;
@@ -24,6 +25,7 @@ const ActionButton = ({
   selectedBgColor,
   selected,
   maxWidth,
+  borderColor,
   fontSize,
 }: ActionButtonProps) => {
   return (
@@ -35,9 +37,9 @@ const ActionButton = ({
             styles.container,
             bgColor != null && { backgroundColor: bgColor },
             pressed && styles.pressed,
-            selectedBgColor != null &&
-              selected && { backgroundColor: selectedBgColor },
+            selectedBgColor != null && selected && { backgroundColor: selectedBgColor },
             maxWidth != null && { maxWidth: maxWidth },
+            borderColor != null && { borderColor: borderColor },
           ];
         }}
       >
@@ -64,34 +66,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 4,
     borderWidth: 2, // Add border
-    borderColor: Colors.primary["600"], // Set border color
+    borderColor: Colors.primary['600'], // Set border color
     maxWidth: 250,
   },
   mainContentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
   contentContainer: {
-    flexDirection: "column",
-    alignItems: "center",
+    flexDirection: 'column',
+    alignItems: 'center',
     gap: 10,
   },
   divider: {
     height: 1,
-    width: "100%",
-    backgroundColor: Colors.gray["600"],
+    width: '100%',
+    backgroundColor: Colors.gray['600'],
     marginVertical: 5,
   },
   title: {
     fontSize: 16,
-    color: Colors.primary["500"],
-    fontWeight: "bold",
+    color: Colors.primary['500'],
+    fontWeight: 'bold',
   },
   subText: {
     fontSize: 14,
-    fontStyle: "italic",
-    textAlign: "center",
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
   pressed: {
     opacity: 0.75,

@@ -7,7 +7,7 @@ export type NotificationObject = {
   title?: string;
   bodyColor?: string;
   titleColor?: string;
-  type?: 'success' | 'error' | 'info';
+  type?: 'success' | 'error' | 'info' | 'warning';
   time?: number; // ms
   id?: string;
 };

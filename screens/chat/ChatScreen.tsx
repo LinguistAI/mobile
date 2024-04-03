@@ -152,14 +152,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textInputContainer: {
-    flex: 1,
     justifyContent: 'flex-end',
     borderRadius: 48,
     marginHorizontal: 12,
   },
   messagesContainer: {
     flex: 10,
-    marginBottom: 20,
+    marginTop: 10,
     marginHorizontal: 10,
   },
   centeredView: {

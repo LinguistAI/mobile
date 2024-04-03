@@ -55,7 +55,7 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
         timestamp: new Date(),
         id: uuidv4(),
       };
-      setMessages((prev) => [...prev, message]);
+      setMessages((prev) => [...prev, responseMessage]);
     }
   };
 

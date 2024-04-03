@@ -58,7 +58,9 @@ const LandingScreen = (props: LandingScreenProps) => {
       </View>
       <View style={styles.landingSection}>
         <View>
-          <Title fontSize="h2">Regular here?</Title>
+          <Title centered size="h2">
+            Regular here?
+          </Title>
           <Text style={styles.sectionDescription}>Get back on your path!</Text>
         </View>
         <View style={styles.sectionButton}>
@@ -80,7 +82,9 @@ const LandingScreen = (props: LandingScreenProps) => {
       </View>
       <View style={styles.landingSection}>
         <View>
-          <Title fontSize="h2">Just coming in?</Title>
+          <Title centered size="h2">
+            Just coming in?
+          </Title>
           <Text style={styles.sectionDescription}>Start your journey now.</Text>
         </View>
         <View style={styles.sectionButton}>

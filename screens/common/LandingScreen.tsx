@@ -1,34 +1,38 @@
-import { useMutation } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import Button from "../../components/common/form/Button";
-import SecondaryButton from "../../components/common/form/SecondaryButton";
-import Title from "../../components/common/Title";
-import useNotifications from "../../hooks/useNotifications";
-import { checkAuth } from "../../services/auth";
-import Colors from "../../theme/colors";
-import useUser from "../../hooks/useUser";
+import { useMutation } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Button from '../../components/common/form/Button';
+import SecondaryButton from '../../components/common/form/SecondaryButton';
+import Title from '../../components/common/Title';
+import useNotifications from '../../hooks/useNotifications';
+import { checkAuth } from '../../services/auth';
+import Colors from '../../theme/colors';
+import useUser from '../../hooks/useUser';
+import Splash from '../../components/common/Splash';
 
 interface LandingScreenProps {
   navigation: any;
 }
 
 const LandingScreen = (props: LandingScreenProps) => {
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
   const { updateLoginTime } = useUser();
   const { mutate: checkAuthMutate } = useMutation({
-    mutationKey: ["checkAuth"],
+    mutationKey: ['checkAuth'],
     mutationFn: () => checkAuth(),
     onSuccess: (res) => {
       updateLoginTime();
       props.navigation.reset({
         index: 0,
-        routes: [{ name: "Main", screen: "Profile" }],
+        routes: [{ name: 'Main', screen: 'Profile' }],
       });
+      setCheckingAuth(false);
     },
-
     onError: (error: any) => {
-      console.log("Error contuining auth");
+      console.log('Error contuining auth');
       console.log(error);
+      setCheckingAuth(false);
     },
   });
 
@@ -36,11 +40,15 @@ const LandingScreen = (props: LandingScreenProps) => {
     checkAuthMutate();
   }, []);
 
+  if (checkingAuth) {
+    return <Splash />;
+  }
+
   const navigateLogin = () => {
-    props.navigation.navigate("Login");
+    props.navigation.navigate('Login');
   };
   const navigateRegister = () => {
-    props.navigation.navigate("Register");
+    props.navigation.navigate('Register');
   };
 
   return (
@@ -54,7 +62,9 @@ const LandingScreen = (props: LandingScreenProps) => {
           <Text style={styles.sectionDescription}>Get back on your path!</Text>
         </View>
         <View style={styles.sectionButton}>
-          <Button type="primary" onPress={navigateLogin}>LOG IN</Button>
+          <Button type="primary" onPress={navigateLogin}>
+            LOG IN
+          </Button>
         </View>
       </View>
       <View>
@@ -62,7 +72,7 @@ const LandingScreen = (props: LandingScreenProps) => {
           style={[
             styles.landingSection,
             {
-              borderBottomColor: "black",
+              borderBottomColor: 'black',
               borderBottomWidth: StyleSheet.hairlineWidth,
             },
           ]}
@@ -85,13 +95,13 @@ const LandingScreen = (props: LandingScreenProps) => {
 
 const styles = StyleSheet.create({
   logoContainer: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 2,
   },
   logoText: {
     fontSize: 48,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: Colors.primary[500],
   },
   container: {
@@ -101,13 +111,13 @@ const styles = StyleSheet.create({
   },
   landingSection: {
     flex: 5,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   sectionDescription: {
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: '400',
     marginTop: 6,
-    textAlign: "center",
+    textAlign: 'center',
   },
   sectionButton: {
     marginTop: 18,

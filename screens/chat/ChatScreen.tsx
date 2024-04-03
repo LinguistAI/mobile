@@ -16,6 +16,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
     conversationId,
   });
+  console.log(messages);
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);
@@ -150,12 +151,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textInputContainer: {
-    flex: 1,
     justifyContent: 'flex-end',
     marginHorizontal: 8,
   },
   messagesContainer: {
-    flex: 6,
+    flex: 10,
+    marginTop: 10,
     marginHorizontal: 10,
   },
   centeredView: {

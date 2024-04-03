@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '../../components/common/form/Button';
 import SecondaryButton from '../../components/common/form/SecondaryButton';
@@ -8,12 +8,15 @@ import useNotifications from '../../hooks/useNotifications';
 import { checkAuth } from '../../services/auth';
 import Colors from '../../theme/colors';
 import useUser from '../../hooks/useUser';
+import Splash from '../../components/common/Splash';
 
 interface LandingScreenProps {
   navigation: any;
 }
 
 const LandingScreen = (props: LandingScreenProps) => {
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
   const { updateLoginTime } = useUser();
   const { mutate: checkAuthMutate } = useMutation({
     mutationKey: ['checkAuth'],
@@ -24,17 +27,22 @@ const LandingScreen = (props: LandingScreenProps) => {
         index: 0,
         routes: [{ name: 'Main', screen: 'Profile' }],
       });
+      setCheckingAuth(false);
     },
-
     onError: (error: any) => {
       console.log('Error contuining auth');
       console.log(error);
+      setCheckingAuth(false);
     },
   });
 
   useEffect(() => {
     checkAuthMutate();
   }, []);
+
+  if (checkingAuth) {
+    return <Splash />;
+  }
 
   const navigateLogin = () => {
     props.navigation.navigate('Login');

@@ -22,6 +22,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
         {text ? (
           <View style={{ flex: 1 }}>
             <ActionIcon
+              loading={props.isPending}
               disabled={props.isPending}
               icon={<Ionicons name="send" size={24} color={props.isPending ? Colors.gray[300] : Colors.primary[600]} />}
               onPress={() => {

@@ -2,8 +2,8 @@ import { ActivityIndicator, Animated, Pressable, StyleSheet, Text, View } from '
 import Colors from '../../../theme/colors';
 import { useRef } from 'react';
 
-const OUTLINED_BUTTON_TEXT_COLOR = Colors.primary[500];
-const OUTLINED_BUTTON_BORDER_COLOR = Colors.primary[500];
+const OUTLINED_BUTTON_TEXT_COLOR = Colors.secondary[500];
+const OUTLINED_BUTTON_BORDER_COLOR = Colors.secondary[500];
 
 interface PrimaryButtonProps {
   children: React.ReactNode;
@@ -12,13 +12,10 @@ interface PrimaryButtonProps {
   disabled?: boolean;
   onPress?: () => void;
   rightIcon?: React.ReactNode;
-  bgColor?: string;
-  borderColor?: string;
-  textColor?: string;
 }
 
 const Button = (props: PrimaryButtonProps) => {
-  const { children, onPress, loading, rightIcon, type, bgColor, borderColor, textColor, disabled } = props;
+  const { children, onPress, loading, rightIcon, type, disabled } = props;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const onPressIn = () => {
@@ -43,9 +40,6 @@ const Button = (props: PrimaryButtonProps) => {
     } else if (type === 'primary') {
       baseButtonStyle.push(styles.primaryButton);
     }
-    if (bgColor) {
-      baseButtonStyle = [...baseButtonStyle, { borderColor, backgroundColor: bgColor }];
-    }
     if (disabled) {
       baseButtonStyle = [...baseButtonStyle, styles.disabled];
     }
@@ -59,9 +53,6 @@ const Button = (props: PrimaryButtonProps) => {
     let baseTextStyle = [];
     if (type === 'outlined') {
       baseTextStyle.push(styles.outlinedButtonText);
-      if (textColor) {
-        baseTextStyle = [...baseTextStyle, { color: textColor }];
-      }
     } else if (type === 'primary') {
       baseTextStyle.push(styles.primaryButtonText);
     }
@@ -75,7 +66,12 @@ const Button = (props: PrimaryButtonProps) => {
 
   return (
     <Animated.View style={getButtonStyle()}>
-      <Pressable onPressIn={onPressIn} onPressOut={onPressOut} onPress={onPress} disabled={loading || disabled}>
+      <Pressable
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={onPress}
+        disabled={loading || disabled}
+      >
         <View style={styles.btnContent}>
           {loading ? (
             <ActivityIndicator color="white" />
@@ -116,7 +112,7 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingVertical: 12,
     paddingHorizontal: 8,
-    minHeight: 40,
+    minHeight: 50,
   },
   outlinedButton: {
     borderRadius: 4,
@@ -124,9 +120,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 12,
     borderColor: OUTLINED_BUTTON_BORDER_COLOR,
-    borderBottomColor: Colors.primary[700],
+    borderBottomColor: Colors.secondary[700],
     borderBottomWidth: 6,
-    borderRightColor: Colors.primary[700],
+    borderRightColor: Colors.secondary[700],
     borderRightWidth: 6,
     borderTopRightRadius: 2,
     borderBottomRightRadius: 2,

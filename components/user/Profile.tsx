@@ -85,9 +85,6 @@ const Profile = () => {
       <View style={styles.changePasswordView}>
         <Button
           rightIcon={<Ionicons name="exit-outline" size={20} color={Colors.gray[0]} />}
-          bgColor={Colors.red[600]}
-          textColor={Colors.gray[0]}
-          borderColor={Colors.red[800]}
           type="primary"
           onPress={handleSignout}
         >

@@ -2,9 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '../../components/common/form/Button';
-import SecondaryButton from '../../components/common/form/SecondaryButton';
 import Title from '../../components/common/Title';
-import useNotifications from '../../hooks/useNotifications';
 import { checkAuth } from '../../services/auth';
 import Colors from '../../theme/colors';
 import useUser from '../../hooks/useUser';
@@ -122,6 +120,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginTop: 6,
     textAlign: 'center',
+    color: Colors.gray[900],
   },
   sectionButton: {
     marginTop: 18,

@@ -18,6 +18,7 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import Colors from './theme/colors';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,11 +40,11 @@ export default function App() {
           <MenuProvider>
             <CustomErrorBoundary>
               <NavigationContainer>
-                <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+                <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
                   <Stack.Navigator
                     screenOptions={{
                       contentStyle: {
-                        backgroundColor: 'white',
+                        backgroundColor: Colors.background[500],
                       },
                     }}
                     initialRouteName="Landing"

@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProfileScreen from '../screens/user/ProfileScreen';
 import SettingsScreen from '../screens/user/SettingsScreen';
 import HomeScreen from '../screens/home/HomeScreen';
+import QuizController from '../components/quiz/QuizController';
 
 const HomeStack = createNativeStackNavigator();
 
@@ -10,7 +11,7 @@ const HomeStackNavigator = () => {
     <HomeStack.Navigator initialRouteName="HomeTab">
       <HomeStack.Screen
         name="HomeTab"
-        component={HomeScreen}
+        component={QuizController}
         options={{ headerShown: false }} // keep the header hidden for HomeTab
       />
       <HomeStack.Screen

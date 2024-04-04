@@ -4,7 +4,7 @@ import Colors from '../../theme/colors';
 const Splash = () => {
   return (
     <View style={styles.logoContainer}>
-      <Text style={styles.logoText}>Linguist AI</Text>
+      <Text style={styles.logoText}>Linguist</Text>
     </View>
   );
 };

@@ -1,6 +1,15 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, Touchable, TouchableWithoutFeedback, View, ViewBase } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Touchable,
+  TouchableWithoutFeedback,
+  View,
+  ViewBase,
+} from 'react-native';
 import Colors from '../../theme/colors';
 import useUser from '../../hooks/useUser';
 import Button from '../../components/common/form/Button';
@@ -99,7 +108,7 @@ const Profile = () => {
 
       <View style={styles.activityContainer}>
         <Text style={styles.activityTitle}>Activity</Text>
-        <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
+        <Text style={styles.lastLogin}>Last login: {user?.lastLogin?.toLocaleString()}</Text>
       </View>
     </ScrollView>
   );

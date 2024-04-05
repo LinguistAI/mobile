@@ -11,7 +11,7 @@ const HomeStackNavigator = () => {
     <HomeStack.Navigator initialRouteName="HomeTab">
       <HomeStack.Screen
         name="HomeTab"
-        component={QuizController}
+        component={HomeScreen}
         options={{ headerShown: false }} // keep the header hidden for HomeTab
       />
       <HomeStack.Screen

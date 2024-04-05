@@ -2,7 +2,6 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ActionIcon from '../../components/common/ActionIcon';
-import ChatStreakContainer from '../../components/gamification/streak/ChatStreakContainer';
 import ExperienceBar from '../../components/gamification/experience/ExperienceBar';
 import BotCarousel from '../../components/chat/bots/BotCarousel';
 import Title from '../../components/common/Title';

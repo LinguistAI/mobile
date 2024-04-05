@@ -3,3 +3,7 @@ interface TQuestion {
   answers: string[];
   correctAnswer: string;
 }
+
+type QuizPhase = 'waiting-answer' | 'answered' | 'end';
+
+type ChoiceStatus = 'default' | 'selected';

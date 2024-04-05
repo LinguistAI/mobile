@@ -18,7 +18,7 @@ const QuizQuestion = ({
   totalNumberOfQuestions,
   selectedChoice,
 }: QuestionProps) => {
-  const height = Dimensions.get('screen').height * 0.75;
+  const height = Dimensions.get('screen').height * 0.65;
 
   return (
     <View style={[styles.root, { height }]}>

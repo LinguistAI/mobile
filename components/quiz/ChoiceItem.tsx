@@ -9,8 +9,6 @@ interface ChoiceItemProps {
   disable?: boolean;
 }
 
-type ChoiceStatus = 'default' | 'selected';
-
 const ChoiceItem = ({ choice, correctChoice, handleSelectChoice, disable, status }: ChoiceItemProps) => {
   const getChoiceContainerStyle = () => {
     const style = [];

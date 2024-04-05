@@ -2,12 +2,11 @@ import { useState } from 'react';
 import QuizQuestion from './QuizQuestion';
 import { StyleSheet, View } from 'react-native';
 import Button from '../common/form/Button';
-
-type Phase = 'waiting-answer' | 'answered' | 'end';
+import QuizHeader from './QuizHeader';
 
 const QuizController = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-  const [phase, setPhase] = useState<Phase>('waiting-answer');
+  const [phase, setPhase] = useState<QuizPhase>('waiting-answer');
   const [selectedChoice, setSelectedChoice] = useState('');
   const questions: TQuestion[] = [
     {
@@ -36,7 +35,7 @@ const QuizController = () => {
   const handleAnswer = (choice: string) => {
     const newQuestionNumber = currentQuestion + 1;
     console.log(newQuestionNumber);
-    if (newQuestionNumber >= questions.length - 1) {
+    if (newQuestionNumber >= questions.length) {
       setPhase('end');
     } else {
       setPhase('answered');
@@ -82,6 +81,7 @@ const QuizController = () => {
 
   return (
     <View style={styles.root}>
+      <QuizHeader questionNo={currentQuestion + 1} totalQuestions={questions.length} />
       {renderCurrentQuestion()}
       <View style={styles.actionBtnContainer}>{renderNextQuestionButton()}</View>
     </View>
@@ -90,7 +90,7 @@ const QuizController = () => {
 
 const styles = StyleSheet.create({
   root: {
-    marginTop: 20,
+    marginTop: 30,
   },
   actionBtnContainer: {
     width: '90%',

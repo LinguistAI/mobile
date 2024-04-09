@@ -12,6 +12,8 @@ import { useGetUserDetailsQuery } from './api';
 import LoadingIndicator from '../common/LoadingIndicator';
 import ExperienceBar from '../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../gamification/streak/ChatStreakContainer';
+import ActionIcon from '../common/ActionIcon';
+import ActionButton from '../common/ActionButton';
 
 const avatarPlaceholderImg = require('../../assets/profile-default.jpg');
 
@@ -24,6 +26,10 @@ const Profile = () => {
 
   const onChangePassword = () => {
     navigation.navigate('Change Password');
+  };
+
+  const onPressFriends = () => {
+    navigation.navigate('Friends');
   };
 
   const pickImage = async () => {
@@ -62,7 +68,14 @@ const Profile = () => {
 
   return (
     <ScrollView style={styles.root}>
-      <View style={styles.topSection} />
+      <View style={styles.topSection}>
+        <View style={{ alignSelf: 'flex-end', margin: 15 }}>
+          <ActionIcon
+            onPress={onPressFriends}
+            icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
+          />
+        </View>
+      </View>
       <TouchableWithoutFeedback onPress={pickImage}>
         <Image
           source={{

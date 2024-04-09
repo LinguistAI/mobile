@@ -25,3 +25,19 @@ export interface IUserDetailedInfo {
   englishLevel: string;
   hobbies: string[];
 }
+
+export interface QFriendRequest {
+  friendId: string;
+}
+
+export enum FriendshipStatus {
+  PENDING,
+  ACCEPTED,
+}
+
+export type RFriendshipRequest = {
+  user1: User;
+  user2: User;
+  date: Date;
+  status: FriendshipStatus;
+};

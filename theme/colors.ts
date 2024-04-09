@@ -90,6 +90,18 @@ const Colors = {
     800: '#E8590C',
     900: '#D9480F',
   },
+  grape: {
+    0: 'F8F0FC',
+    100: '#F3D9FA',
+    200: '#EEBEFA',
+    300: '#E588F7',
+    400: '#DA77F2',
+    500: '#CC5DE8',
+    600: '#BE4BDB',
+    700: '#AE3EC9',
+    800: '#9C36B5',
+    900: '#862E9C',
+  },
 };
 
 export default Colors;

@@ -49,7 +49,7 @@ const ChoiceItem = ({ choice, correctChoice, handleSelectChoice, disable, status
 const styles = StyleSheet.create({
   questionContainer: {
     borderRadius: 30,
-    borderColor: Colors.primary[500],
+    borderColor: Colors.gray[500],
     borderWidth: 2,
     paddingHorizontal: 12,
     paddingVertical: 12,

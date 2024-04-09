@@ -1,19 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { TChatBot } from '../components/chat/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface ChatState {
   selectedBot: TChatBot | null;
+  currentConversation: string | null;
 }
 
 const chatSlice = createSlice({
   name: 'chat',
   initialState: {
     selectedBot: null,
+    currentConversation: null,
   } as ChatState,
   reducers: {
     startConversation: (state, action) => {
       state.selectedBot = action.payload.bot;
+      state.currentConversation = action.payload.conversation;
     },
   },
 });

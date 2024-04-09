@@ -8,8 +8,8 @@ import { TWordList } from './word-list/types';
 import ActionIcon from '../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
-import FetchError from '../common/FetchError';
-import CenteredFeedback from '../common/CenteredFeedback';
+import FetchError from '../common/feedback/FetchError';
+import CenteredFeedback from '../common/feedback/CenteredFeedback';
 
 interface WordAddContainerProps {
   selectedWord: string;

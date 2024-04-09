@@ -6,6 +6,7 @@ import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
+import { useDispatch } from 'react-redux';
 
 interface ChatScreenProps {
   route: any;
@@ -16,10 +17,10 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
     conversationId,
   });
-  console.log(messages);
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (messagesList.current) {
@@ -46,7 +47,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       timestamp: new Date(),
     };
 
-    addMessage(chatMessage);
+    const res = await addMessage(chatMessage);
   };
 
   const onSelectedWordDismiss = () => {
@@ -125,7 +126,12 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={onSelectedWordDismiss}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={onSelectedWordDismiss}
+      >
         <View style={styles.centeredView}>
           <WordInfoCard selectedWord={selectedWord} onDismiss={onSelectedWordDismiss} />
         </View>

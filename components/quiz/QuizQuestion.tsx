@@ -17,6 +17,7 @@ const QuizQuestion = ({
   questionNo,
   totalNumberOfQuestions,
   selectedChoice,
+  allowAnswer,
 }: QuestionProps) => {
   const height = Dimensions.get('screen').height * 0.65;
 
@@ -35,7 +36,7 @@ const QuizQuestion = ({
           selectedChoice={selectedChoice}
           correctChoice={question.correctAnswer}
           items={question.answers}
-          allowAnswer
+          allowAnswer={allowAnswer}
         />
       </View>
     </View>

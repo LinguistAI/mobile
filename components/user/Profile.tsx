@@ -18,7 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import UserInfoForm from './UserInfoForm';
 import Divider from '../common/Divider';
 import { useGetUserDetailsQuery } from './api';
-import LoadingIndicator from '../common/LoadingIndicator';
+import LoadingIndicator from '../common/feedback/LoadingIndicator';
 import ExperienceBar from '../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../gamification/streak/ChatStreakContainer';
 

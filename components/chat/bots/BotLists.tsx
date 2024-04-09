@@ -3,11 +3,15 @@ import { TChatBot } from '../types';
 import BotProfile from './BotProfile';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { useCreateNewConversationMutation, useGetAllConversationsQuery, useGetAvailableBotsQuery } from '../api';
+import {
+  useCreateNewConversationMutation,
+  useGetAllConversationsQuery,
+  useGetAvailableBotsQuery,
+} from '../api';
 import { startConversation } from '../../../redux/chatSlice';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import FetchFailErrorScreen from '../../../screens/common/FetchFailErrorScreen';
-import LoadingIndicator from '../../common/LoadingIndicator';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import BotProfileCard from './BotProfileCard';
 import useNotifications from '../../../hooks/useNotifications';
 
@@ -53,7 +57,7 @@ const BotLists = () => {
           });
         }
       }
-      dispatch(startConversation({ bot }));
+      dispatch(startConversation({ bot, conversation: data?.id }));
     }
   };
 

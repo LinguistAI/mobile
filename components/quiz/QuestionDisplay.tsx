@@ -25,7 +25,7 @@ const QuestionDisplay = ({ question, questionNo, totalNumberOfQuestions }: Quest
 const styles = StyleSheet.create({
   questionCard: {
     borderWidth: 1,
-    borderColor: Colors.gray[400],
+    borderColor: Colors.primary[500],
     paddingVertical: 25,
     paddingHorizontal: 15,
     borderRadius: 25,

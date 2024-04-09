@@ -1,10 +1,14 @@
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
-import { useCreateNewConversationMutation, useGetAllConversationsQuery, useGetAvailableBotsQuery } from '../api';
+import {
+  useCreateNewConversationMutation,
+  useGetAllConversationsQuery,
+  useGetAvailableBotsQuery,
+} from '../api';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
 import BotProfile from './BotProfile';
-import FetchError from '../../common/FetchError';
+import FetchError from '../../common/feedback/FetchError';
 import Colors from '../../../theme/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { getDifficultyLevel } from './utils';
@@ -69,7 +73,10 @@ const BotCarousel = () => {
       const foundExistingConvo = conversations?.find((c) => c.bot.id === bot.id);
 
       if (foundExistingConvo) {
-        navigation.navigate('Chat', { params: { conversationId: foundExistingConvo.id }, screen: 'ChatScreen' });
+        navigation.navigate('Chat', {
+          params: { conversationId: foundExistingConvo.id },
+          screen: 'ChatScreen',
+        });
       } else {
         await createConvo(bot.id);
         if (data) {
@@ -77,7 +84,11 @@ const BotCarousel = () => {
           if (!convoId) {
             return;
           }
-          navigation.navigate('Chat', { params: { conversationId: convoId }, screen: 'ChatScreen', initial: false });
+          navigation.navigate('Chat', {
+            params: { conversationId: convoId },
+            screen: 'ChatScreen',
+            initial: false,
+          });
         } else {
           notify({
             body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
@@ -85,7 +96,7 @@ const BotCarousel = () => {
           });
         }
       }
-      dispatch(startConversation({ bot }));
+      dispatch(startConversation({ bot, conversation: data?.id }));
     }
   };
 

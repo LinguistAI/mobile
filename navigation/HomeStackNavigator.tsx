@@ -9,21 +9,9 @@ const HomeStack = createNativeStackNavigator();
 const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator initialRouteName="HomeTab">
-      <HomeStack.Screen
-        name="HomeTab"
-        component={HomeScreen}
-        options={{ headerShown: false }} // keep the header hidden for HomeTab
-      />
-      <HomeStack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ headerShown: true }} // enable header (with back option) for Profile
-      />
-      <HomeStack.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{ headerShown: true }} // enable header (with back option) for Settings
-      />
+      <HomeStack.Screen name="HomeTab" component={HomeScreen} options={{ headerShown: false }} />
+      <HomeStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true }} />
+      <HomeStack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: true }} />
     </HomeStack.Navigator>
   );
 };

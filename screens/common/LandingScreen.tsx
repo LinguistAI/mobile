@@ -6,7 +6,7 @@ import Title from '../../components/common/Title';
 import { checkAuth } from '../../services/auth';
 import Colors from '../../theme/colors';
 import useUser from '../../hooks/useUser';
-import Splash from '../../components/common/Splash';
+import Splash from '../../components/common/feedback/Splash';
 
 interface LandingScreenProps {
   navigation: any;

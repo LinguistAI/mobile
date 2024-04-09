@@ -58,12 +58,13 @@ const ShimmerButton = ({ title, onPress, animated = true, disabled = false }: Sh
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    backgroundColor: Colors.grape[500],
+    backgroundColor: Colors.grape[600],
     padding: 8,
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    width: '100%',
   },
   buttonText: {
     color: '#FFFFFF',

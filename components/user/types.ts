@@ -35,9 +35,15 @@ export enum FriendshipStatus {
   ACCEPTED,
 }
 
-export type RFriendshipRequest = {
+export type RFriendship = {
   user1: User;
   user2: User;
   date: Date;
   status: FriendshipStatus;
 };
+
+export interface QUserSearch {
+  username: string;
+  page?: number;
+  size?: number;
+}

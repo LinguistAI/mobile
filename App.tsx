@@ -12,7 +12,7 @@ import ForgotPasswordScreen from './screens/common/auth/forgot-password/ForgotPa
 import LandingScreen from './screens/common/LandingScreen';
 import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import { MenuProvider } from 'react-native-popup-menu';
-import PostRegistrationConversation from './components/user/PostRegistrationConversation';
+import PostRegistrationConversation from './components/user/onboarding/PostRegistrationConversation';
 import { SafeAreaView } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';

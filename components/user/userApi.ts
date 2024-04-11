@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
-import { QFriendRequest, IUserDetailedInfo, RFriendshipRequest } from './types';
+import { QFriendRequest, IUserDetailedInfo, RFriendship, QUserSearch } from './types';
+import { Page } from '../../types';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -22,13 +23,20 @@ export const userApi = createApi({
       }),
       providesTags: ['User'],
     }),
-    getFriendRequests: builder.query<RFriendshipRequest[], void>({
+    searchUser: builder.query<Page<User>, QUserSearch>({
+      query: (searchParams) => ({
+        url: '/profile/search',
+        method: 'GET',
+        params: searchParams,
+      }),
+    }),
+    getFriendRequests: builder.query<RFriendship[], void>({
       query: () => ({
         url: '/friend/request',
         method: 'GET',
       }),
     }),
-    getFriends: builder.query<RFriendshipRequest[], void>({
+    getFriends: builder.query<RFriendship[], void>({
       query: () => ({
         url: '/friend',
         method: 'GET',
@@ -65,4 +73,14 @@ export const userApi = createApi({
   }),
 });
 
-export const { useGetUserDetailsQuery, useSetUserDetailsMutation } = userApi;
+export const {
+  useGetUserDetailsQuery,
+  useSetUserDetailsMutation,
+  useAcceptFriendRequestMutation,
+  useGetFriendRequestsQuery,
+  useGetFriendsQuery,
+  useRejectFriendRequestMutation,
+  useRemoveFriendMutation,
+  useSendFriendRequestMutation,
+  useLazySearchUserQuery,
+} = userApi;

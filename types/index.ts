@@ -1,4 +1,3 @@
-
 export interface StoredUserInfo {
   email: string;
   username: string;
@@ -21,3 +20,31 @@ export interface APIResponse<T> {
   timestamp: Date;
 }
 
+type Sort = {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+};
+
+type Pageable = {
+  pageNumber: number;
+  pageSize: number;
+  sort: Sort;
+  offset: number;
+  paged: boolean;
+  unpaged: boolean;
+};
+
+export interface Page<T> {
+  content: T[];
+  pageable: Pageable;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: Sort;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}

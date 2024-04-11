@@ -1,23 +1,23 @@
 import { FormProvider, set, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Button from '../common/form/Button';
-import { IUserDetailedInfo } from './types';
-import PrimaryTextInput from '../common/form/PrimaryTextInput';
+import Button from '../../common/form/Button';
+import { IUserDetailedInfo } from '../types';
+import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import { useEffect, useState } from 'react';
-import useUser from '../../hooks/useUser';
-import Colors from '../../theme/colors';
-import EmailTextInput from '../common/form/EmailTextInput';
+import useUser from '../../../hooks/useUser';
+import Colors from '../../../theme/colors';
+import EmailTextInput from '../../common/form/EmailTextInput';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
-import { ENGLISH_LEVELS, HOBBIES_LIST } from './constants';
-import PrimaryAutocomplete from '../common/form/PrimaryAutocomplete';
-import Selections from '../common/Selections';
-import PrimaryDatePicker from '../common/form/PrimaryDatePicker';
-import ActionButton from '../common/ActionButton';
+import { ENGLISH_LEVELS, HOBBIES_LIST } from '../constants';
+import PrimaryAutocomplete from '../../common/form/PrimaryAutocomplete';
+import Selections from '../../common/Selections';
+import PrimaryDatePicker from '../../common/form/PrimaryDatePicker';
+import ActionButton from '../../common/ActionButton';
 import { Ionicons } from '@expo/vector-icons';
-import { useSetUserDetailsMutation } from './api';
-import useNotifications from '../../hooks/useNotifications';
-import { generateErrorResponseMessage } from '../../utils/httpUtils';
-import { dateObjToISODate } from './utils';
+import { useSetUserDetailsMutation } from '../userApi';
+import useNotifications from '../../../hooks/useNotifications';
+import { generateErrorResponseMessage } from '../../../utils/httpUtils';
+import { dateObjToISODate } from '../utils';
 
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;

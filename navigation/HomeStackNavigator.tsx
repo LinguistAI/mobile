@@ -3,7 +3,7 @@ import ProfileScreen from '../screens/user/ProfileScreen';
 import SettingsScreen from '../screens/user/SettingsScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import FriendsScreen from '../screens/user/FriendsScreen';
-import FriendAddScreen from '../components/user/FriendAddScreen';
+import FriendAddScreen from '../components/user/profile/friends/FriendAddScreen';
 
 const HomeStack = createNativeStackNavigator();
 

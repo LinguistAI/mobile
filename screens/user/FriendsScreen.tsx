@@ -1,7 +1,23 @@
-import FriendsList from '../../components/user/FriendsList';
+import { StyleSheet, Text, View } from 'react-native';
+import FriendsList from '../../components/user/profile/friends/FriendsList';
+import FriendAddButton from '../../components/user/profile/friends/FriendAddButton';
 
 const FriendsScreen = () => {
-  return <FriendsList />;
+  return (
+    <View>
+      <View style={styles.friendAddBtnContainer}>
+        <FriendAddButton />
+      </View>
+      <FriendsList />
+    </View>
+  );
 };
+
+const styles = StyleSheet.create({
+  friendAddBtnContainer: {
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+});
 
 export default FriendsScreen;

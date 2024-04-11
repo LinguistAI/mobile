@@ -22,7 +22,7 @@ const FriendsSearchList = ({ items, isLoading }: FriendsSearchListProps) => {
         numColumns={1}
         data={items}
         contentContainerStyle={styles.listContainer}
-        renderItem={({ item }) => <UserProfileCard key={item.email} user={item} />}
+        renderItem={({ item }) => <UserProfileCard friendActions key={item.email} user={item} />}
       />
     </View>
   );

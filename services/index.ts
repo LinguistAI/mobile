@@ -80,11 +80,12 @@ export const createAxiosBaseQuery =
       body?: any;
       headers?: Record<string, string>;
       secure?: boolean;
+      params?: Record<string, any>;
     },
     unknown,
     unknown
   > =>
-  async ({ url, method, body, headers = {}, secure = true }) => {
+  async ({ url, method, body, headers = {}, secure = true, params }) => {
     try {
       const axiosInstance = secure ? axiosSecure : axiosBase;
       const response = await axiosInstance({
@@ -92,6 +93,7 @@ export const createAxiosBaseQuery =
         method,
         headers,
         data: body,
+        params,
       });
 
       // Successful response

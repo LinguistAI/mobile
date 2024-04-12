@@ -1,4 +1,3 @@
-
 export interface StoredUserInfo {
   email: string;
   username: string;
@@ -21,3 +20,7 @@ export interface APIResponse<T> {
   timestamp: Date;
 }
 
+export enum Sort {
+  ASC = 'asc',
+  DESC = 'desc',
+}

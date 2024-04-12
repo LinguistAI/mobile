@@ -1,36 +1,45 @@
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ActionIcon from '../../components/common/ActionIcon';
-import ChatStreakContainer from '../../components/gamification/streak/ChatStreakContainer';
-import ExperienceBar from '../../components/gamification/experience/ExperienceBar';
-import BotCarousel from '../../components/chat/bots/BotCarousel';
 import Title from '../../components/common/Title';
+import BotCarousel from '../../components/chat/bots/BotCarousel';
+import ExperienceBar from '../../components/gamification/experience/ExperienceBar';
+import LoggedDatesCalendar from '../../components/stats/LoggedDatesCalendar';
+import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.root}>
-        <View style={styles.topContainer}>
-          <View style={styles.xprow}>
-            <ExperienceBar />
+      <ScrollView style={{ flex: 1 }}>
+        <View style={styles.root}>
+          <View style={styles.topContainer}>
+            <View style={styles.xprow}>
+              <ExperienceBar />
+            </View>
+            <View style={styles.profileIcon}>
+              <ActionIcon
+                icon={<Ionicons name="person-circle-outline" size={36} color="black" />}
+                onPress={() => {
+                  navigator.navigate('Profile');
+                }}
+              />
+            </View>
           </View>
-          <View style={styles.profileIcon}>
-            <ActionIcon
-              icon={<Ionicons name="person-circle-outline" size={36} color="black" />}
-              onPress={() => {
-                navigator.navigate('Profile');
-              }}
-            />
+          <View style={styles.botCarousel}>
+            <Title size="h4">Start a conversation!</Title>
+            <BotCarousel />
+          </View>
+          <View style={styles.statSection}>
+            <WordLearningStatusBarChart />
+          </View>
+          <View style={styles.statSection}>
+            <LoggedDatesCalendar />
           </View>
         </View>
-        <View style={{ flex: 1, marginVertical: 15 }}>
-          <Title size="h4">Start a conversation!</Title>
-          <BotCarousel />
-        </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -41,28 +50,8 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     marginTop: 40,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    maxHeight: 350,
-    marginVertical: 50,
-    margin: 10,
-    borderRadius: 20,
-  },
-  modalContent: {
-    flex: 1,
-    padding: 20,
-    paddingVertical: 10,
-  },
-  closeIcon: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-  chatStreakContainer: {
-    maxWidth: 150,
   },
   topContainer: {
     flexDirection: 'row',
@@ -77,5 +66,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
     gap: 10,
+  },
+  botCarousel: {
+    marginTop: 15,
+  },
+  statSection: {
+    marginTop: 10,
   },
 });

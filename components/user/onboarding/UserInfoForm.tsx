@@ -38,8 +38,6 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
     defaultValues,
   });
 
-  console.log(userDetails);
-
   const [mutate, { isError, error, isLoading }] = useSetUserDetailsMutation();
 
   useEffect(() => {

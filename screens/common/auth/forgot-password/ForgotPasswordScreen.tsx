@@ -1,24 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
-import {
-  FormProvider,
-  SubmitErrorHandler,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import Button from "../../../../components/common/form/Button";
-import EmailTextInput from "../../../../components/common/form/EmailTextInput";
-import PasswordTextInput from "../../../../components/common/form/PasswordTextInput";
-import PasswordInputWithRequirements from "../../../../components/common/form/password/PasswordInputWithRequirements";
-import { Requirement } from "../../../../components/common/form/password/Requirement";
-import useNotifications from "../../../../hooks/useNotifications";
-import {
-  changePassword,
-  register,
-  requestPasswordReset,
-} from "../../../../services/auth/Auth.service";
-import Colors from "../../../../theme/colors";
-import { generateErrorResponseMessage } from "../../../../utils/httpUtils";
+import { useMutation } from '@tanstack/react-query';
+import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import Button from '../../../../components/common/form/Button';
+import EmailTextInput from '../../../../components/common/form/EmailTextInput';
+import PasswordTextInput from '../../../../components/common/form/PasswordTextInput';
+import PasswordInputWithRequirements from '../../../../components/common/form/password/PasswordInputWithRequirements';
+import { Requirement } from '../../../../components/common/form/password/Requirement';
+import useNotifications from '../../../../hooks/useNotifications';
+import { changePassword, register, requestPasswordReset } from '../../../../services/auth/Auth.service';
+import Colors from '../../../../theme/colors';
+import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -32,21 +23,21 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
   const { add } = useNotifications();
   const methods = useForm<ForgotPasswordFormValues>({
     defaultValues: {
-      email: "",
+      email: '',
     },
-    mode: "onSubmit",
+    mode: 'onSubmit',
   });
   const { mutate: forgotPasswordMutate, isPending } = useMutation({
-    mutationKey: ["resetPassword"],
+    mutationKey: ['resetPassword'],
     mutationFn: (resetPasswordDto: RequestPasswordResetDto) =>
       requestPasswordReset({
         email: resetPasswordDto.email,
       }),
     onSuccess: (data, requestPasswordResetDto) => {
       add({
-        body: "We have sent an email to reset your password!",
-        title: "Please check your email!",
-        type: "success",
+        body: 'We have sent an email to reset your password!',
+        title: 'Please check your email!',
+        type: 'success',
         time: 5000,
       });
 
@@ -54,7 +45,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
         index: 0,
         routes: [
           {
-            name: "Forgot Password Code",
+            name: 'Forgot Password Code',
             params: { email: requestPasswordResetDto.email },
           },
         ],
@@ -63,8 +54,8 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
     onError: (error: any) => {
       add({
         body: generateErrorResponseMessage(error),
-        title: "Error!",
-        type: "error",
+        title: 'Error!',
+        type: 'error',
         time: 5000,
       });
     },
@@ -80,7 +71,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
 
   const onError = (errors: any, e: any) => {
     if (methods.formState.isValid) {
-      console.log("No errors. This should not be called.");
+      return;
     }
   };
 
@@ -89,11 +80,7 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
       <FormProvider {...methods}>
         <View style={styles.mainSection}>
           <EmailTextInput />
-          <Button
-            type="primary"
-            loading={isPending}
-            onPress={methods.handleSubmit(onSubmit, onError)}
-          >
+          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
             REQUEST PASSWORD
           </Button>
         </View>

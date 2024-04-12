@@ -106,7 +106,6 @@ export const createAxiosBaseQuery =
       }
 
       // Error handling
-      console.log(err);
       return {
         error: { status: err.status || 'FETCH_ERROR', msg: err.msg || err.data || err },
       };

@@ -5,10 +5,14 @@ import Colors from '../../../../theme/colors';
 
 interface FriendProfileCardProps {
   friendship: RFriendship;
+  isRequest?: boolean;
 }
 
 const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
-  const { user2: friend, date } = friendship;
+  const { user2: friend, date, status } = friendship;
+  const renderRequestActions = () => {
+    // TODO: Accept, reject
+  };
   return (
     <Card>
       <View style={styles.contentRoot}>
@@ -16,7 +20,7 @@ const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
           <Text style={styles.mainInfo}>{friend.username}</Text>
           <View style={styles.subInfoContainer}>
             <Text style={styles.subinfo}>{friend.email}</Text>
-            <Text style={styles.subinfo}>{date?.toLocaleDateString()}</Text>
+            <Text style={styles.subinfo}>{new Date(date).toLocaleString()}</Text>
           </View>
         </View>
       </View>

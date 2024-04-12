@@ -1,6 +1,7 @@
 import { FlatList, StyleSheet, View } from 'react-native';
 import UserProfileCard from '../UserProfileCard';
 import FriendProfileCard from './FriendProfileCard';
+import { User } from '../../../../types';
 
 interface FriendsSearchListProps {
   isLoading: boolean;

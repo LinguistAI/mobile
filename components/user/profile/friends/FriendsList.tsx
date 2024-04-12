@@ -1,20 +1,71 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGetFriendsQuery } from '../../userApi';
+import FriendProfileCard from './FriendProfileCard';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import FetchError from '../../../common/FetchError';
+import { LinearGradient } from 'expo-linear-gradient';
+import CenteredFeedback from '../../../common/CenteredFeedback';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '../../../../theme/colors';
 
 const FriendsList = () => {
   const { data: friends, isLoading, isError } = useGetFriendsQuery();
-  console.log(friends);
+
+  const renderSkeletonList = () => {
+    return (
+      <View style={styles.skeletonContainer}>
+        {Array.from({ length: 6 }).map((_, index) => (
+          <ShimmerPlaceholder style={styles.skeletonRectangle} LinearGradient={LinearGradient} />
+        ))}
+      </View>
+    );
+  };
+
+  if (isLoading) {
+    return renderSkeletonList();
+  }
+  if (isError) return <FetchError />;
+  if (!friends || friends.length === 0) {
+    return (
+      <View style={{ height: '80%', display: 'flex', justifyContent: 'center' }}>
+        <CenteredFeedback
+          icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />}
+          message="Looks like you have no friends just yet. Send a friend request to meet with new people!"
+        />
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={styles.root}>
-      <View></View>
-    </ScrollView>
+    <View style={styles.root}>
+      <FlatList
+        numColumns={1}
+        contentContainerStyle={styles.friendsListStyle}
+        data={friends}
+        renderItem={({ item }) => <FriendProfileCard friendship={item} />}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  friendsListStyle: {
+    gap: 10,
+  },
+  skeletonContainer: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+  },
+  skeletonRectangle: {
+    borderRadius: 10,
+    width: '90%',
+    height: 75,
+    alignSelf: 'center',
   },
 });
 

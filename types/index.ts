@@ -48,3 +48,10 @@ export interface Page<T> {
   numberOfElements: number;
   empty: boolean;
 }
+
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+  password: string;
+};

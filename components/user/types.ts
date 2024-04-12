@@ -1,4 +1,5 @@
 import { ChatMessage } from '../../screens/chat/types';
+import { User } from '../../types';
 
 export interface ExtendedChatMessage extends ChatMessage {
   skippable?: boolean;
@@ -38,7 +39,7 @@ export enum FriendshipStatus {
 export type RFriendship = {
   user1: User;
   user2: User;
-  date: Date;
+  date: string;
   status: FriendshipStatus;
 };
 

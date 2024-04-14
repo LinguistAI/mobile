@@ -70,10 +70,13 @@ const Profile = () => {
     <ScrollView style={styles.root}>
       <View style={styles.topSection}>
         <View style={{ alignSelf: 'flex-end', margin: 15 }}>
-          <ActionIcon
-            onPress={onPressFriends}
-            icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
-          />
+          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold' }}>Friends</Text>
+            <ActionIcon
+              onPress={onPressFriends}
+              icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
+            />
+          </View>
         </View>
       </View>
       <TouchableWithoutFeedback onPress={pickImage}>

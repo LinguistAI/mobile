@@ -3,11 +3,13 @@ import Colors from '../../theme/colors';
 
 interface CenteredFeedbackProps {
   message: string;
+  icon?: React.ReactNode;
 }
 
-const CenteredFeedback = ({ message }: CenteredFeedbackProps) => {
+const CenteredFeedback = ({ message, icon }: CenteredFeedbackProps) => {
   return (
     <View style={styles.root}>
+      {icon}
       <Text style={styles.message}>{message}</Text>
     </View>
   );
@@ -15,14 +17,15 @@ const CenteredFeedback = ({ message }: CenteredFeedbackProps) => {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
   message: {
-    fontSize: 20,
-    color: Colors.primary[500],
-    padding: 20,
+    fontSize: 16,
+    color: Colors.gray[600],
+    paddingHorizontal: 24,
+    textAlign: 'center',
   },
 });
 

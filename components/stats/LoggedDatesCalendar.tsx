@@ -31,7 +31,7 @@ const LoggedDatesCalendar = () => {
 
   return (
     <View style={styles.container}>
-      <Title size="h4">Login Dates</Title>
+      <Title size="h4">Daily Login Tracker</Title>
       <ContributionGraph
         values={getStats()}
         endDate={new Date()}
@@ -40,6 +40,8 @@ const LoggedDatesCalendar = () => {
         height={height}
         tooltipDataAttrs={(value) => handleTooltip}
         style={{
+          borderColor: Colors.primary[600],
+          borderWidth: 1,
           borderRadius: 16,
           alignSelf: 'center',
         }}

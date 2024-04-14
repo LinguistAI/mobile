@@ -1,6 +1,6 @@
 import { BarChart } from 'react-native-chart-kit';
 import { WordStatus } from '../word-bank/word-list/types';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import Colors from '../../theme/colors';
 import { useGetWordLearningStatsQuery } from './userStatsApi';
 import Title from '../common/Title';

@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   statSection: {
-    marginTop: 10,
+    marginVertical: 8,
   },
 });

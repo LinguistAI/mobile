@@ -2,6 +2,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import UserProfileCard from '../UserProfileCard';
 import FriendProfileCard from './FriendProfileCard';
 import { User } from '../../../../types';
+import CardSkeleton from '../../../common/CardSkeleton';
 
 interface FriendsSearchListProps {
   isLoading: boolean;
@@ -14,7 +15,7 @@ const FriendsSearchList = ({ items, isLoading }: FriendsSearchListProps) => {
   };
 
   if (isLoading) {
-    return renderSkeleton();
+    return <CardSkeleton count={6} />;
   }
 
   return (

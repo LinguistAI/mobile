@@ -25,6 +25,7 @@ const SearchInput = ({ searchText, placeholder, onChangeText, onClear, onSearch 
           onChangeText={onChangeText}
           value={searchText}
           placeholder={placeholder ?? 'Type something...'}
+          onSubmitEditing={onSearch}
         />
         {searchText !== '' && (
           <View style={{ alignSelf: 'center', marginRight: 20 }}>

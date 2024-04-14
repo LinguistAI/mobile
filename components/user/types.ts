@@ -48,3 +48,8 @@ export interface QUserSearch {
   page?: number;
   size?: number;
 }
+
+export enum FriendRequest {
+  SENT = 'sent',
+  RECEIVED = 'received',
+}

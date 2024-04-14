@@ -1,12 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 import { QFriendRequest, IUserDetailedInfo, RFriendship, QUserSearch } from './types';
-import { Page } from '../../types';
+import { Page, User } from '../../types';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest'],
+  tagTypes: ['User', 'FriendRequest', 'Friend'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -35,12 +35,14 @@ export const userApi = createApi({
         url: '/friend/request',
         method: 'GET',
       }),
+      providesTags: ['FriendRequest'],
     }),
     getFriends: builder.query<RFriendship[], void>({
       query: () => ({
         url: '/friend',
         method: 'GET',
       }),
+      providesTags: ['Friend'],
     }),
     removeFriend: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
@@ -48,6 +50,7 @@ export const userApi = createApi({
         method: 'DELETE',
         body: friendReq,
       }),
+      invalidatesTags: ['Friend'],
     }),
     sendFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
@@ -62,6 +65,7 @@ export const userApi = createApi({
         method: 'POST',
         body: friendReq,
       }),
+      invalidatesTags: ['FriendRequest', 'Friend'],
     }),
     rejectFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
@@ -69,6 +73,7 @@ export const userApi = createApi({
         method: 'POST',
         body: friendReq,
       }),
+      invalidatesTags: ['FriendRequest'],
     }),
   }),
 });

@@ -1,5 +1,5 @@
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useGetFriendsQuery } from '../../userApi';
+import { useGetFriendsQuery, useRemoveFriendMutation } from '../../userApi';
 import FriendProfileCard from './FriendProfileCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FetchError from '../../../common/FetchError';
@@ -15,7 +15,7 @@ const FriendsList = () => {
     return (
       <View style={styles.skeletonContainer}>
         {Array.from({ length: 6 }).map((_, index) => (
-          <ShimmerPlaceholder style={styles.skeletonRectangle} LinearGradient={LinearGradient} />
+          <ShimmerPlaceholder key={index} style={styles.skeletonRectangle} LinearGradient={LinearGradient} />
         ))}
       </View>
     );
@@ -49,11 +49,10 @@ const FriendsList = () => {
 };
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
+  root: {},
   friendsListStyle: {
     gap: 10,
+    padding: 10,
   },
   skeletonContainer: {
     flex: 1,

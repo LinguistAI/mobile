@@ -1,0 +1,2 @@
+export const GRAPH_WIDTH_TO_SCREEN_WIDTH_RATIO = 0.9;
+export const DEFAULT_GRAPH_HEIGHT = 220;

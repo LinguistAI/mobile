@@ -14,6 +14,7 @@ import useNotifications from '../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { useDispatch } from 'react-redux';
 import { startConversation } from '../../../redux/chatSlice';
+import { isDataResponse } from '../../../services';
 
 const BotCarouselShimmer = () => {
   const width = Dimensions.get('window').width;
@@ -48,7 +49,7 @@ const BotCarousel = () => {
     isError: conversationsNotLoaded,
   } = useGetAllConversationsQuery();
   const { data: bots, isFetching: isFetchingBots, isError: botsLoadError } = useGetAvailableBotsQuery();
-  const [createConvo, { isLoading: pendingBotCreateResponse, data, error: createConversationError }] =
+  const [createConvo, { isLoading: pendingBotCreateResponse, error: createConversationError }] =
     useCreateNewConversationMutation();
   const navigation = useNavigation();
   const { add: notify } = useNotifications();
@@ -71,8 +72,10 @@ const BotCarousel = () => {
       if (foundExistingConvo) {
         navigation.navigate('Chat', { params: { conversationId: foundExistingConvo.id }, screen: 'ChatScreen' });
       } else {
-        await createConvo(bot.id);
-        if (data) {
+        const response = await createConvo(bot.id);
+
+        if (isDataResponse(response)) {
+          const data = response.data;
           const convoId = data.id;
           if (!convoId) {
             return;

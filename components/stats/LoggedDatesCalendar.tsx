@@ -1,5 +1,5 @@
 import { ContributionGraph } from 'react-native-chart-kit';
-import { Sort } from '../../types';
+import { SortBy } from '../../types';
 import { useGetLoggedDatesQuery } from './userStatsApi';
 import { StyleSheet, View } from 'react-native';
 import Colors from '../../theme/colors';
@@ -7,7 +7,7 @@ import Title from '../common/Title';
 import { getGraphDimensions } from './utils';
 
 const DEFAULT_DAY_LIMIT = 75;
-const DEFAULT_SORT = Sort.DESC;
+const DEFAULT_SORT = SortBy.DESC;
 
 const LoggedDatesCalendar = () => {
   const { width, height } = getGraphDimensions();

@@ -1,9 +1,9 @@
-import { Sort } from '../../types';
+import { SortBy } from '../../types';
 import { WordStatus } from '../word-bank/word-list/types';
 
 export interface QLoggedDate {
   daysLimit: number;
-  sort?: Sort;
+  sort?: SortBy;
 }
 
 export interface RLoggedDate {

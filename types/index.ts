@@ -20,7 +20,7 @@ export interface APIResponse<T> {
   timestamp: Date;
 }
 
-export enum Sort {
+export enum SortBy {
   ASC = 'asc',
   DESC = 'desc',
 }

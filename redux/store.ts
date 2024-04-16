@@ -3,8 +3,8 @@ import chatReducer from './chatSlice';
 import { chatApi } from '../components/chat/api';
 import { gamificationApi } from '../components/gamification/api';
 import { wordBankApi } from '../components/word-bank/api';
-import { userApi } from '../components/user/api';
 import { userStatsApi } from '../components/stats/userStatsApi';
+import { userApi } from '../components/user/userApi';
 
 export const store = configureStore({
   reducer: {

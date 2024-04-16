@@ -30,8 +30,6 @@ const LandingScreen = (props: LandingScreenProps) => {
       setCheckingAuth(false);
     },
     onError: (error: any) => {
-      console.log('Error contuining auth');
-      console.log(error);
       setCheckingAuth(false);
     },
   });

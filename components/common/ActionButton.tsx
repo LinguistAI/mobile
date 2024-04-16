@@ -26,7 +26,6 @@ const ActionButton = ({
   selected,
   maxWidth,
   borderColor,
-  fontSize,
 }: ActionButtonProps) => {
   return (
     <View>

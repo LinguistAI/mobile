@@ -90,8 +90,8 @@ export const createAxiosBaseQuery =
       const axiosInstance = secure ? axiosSecure : axiosBase;
       const response = await axiosInstance({
         url: baseUrl + url,
-        method,
         headers,
+        method,
         data: body,
         params,
       });
@@ -107,7 +107,7 @@ export const createAxiosBaseQuery =
 
       // Error handling
       return {
-        error: { status: err.status || 'FETCH_ERROR', msg: err.data || err },
+        error: { status: err.status || 'FETCH_ERROR', msg: err.msg || err.data || err },
       };
     }
   };

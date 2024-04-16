@@ -79,7 +79,6 @@ const WordLists = () => {
     };
     await addListMutate(createWordList);
     if (createWordlistError) {
-      console.log(createWordlistError);
       addNotification({
         body: 'Failed to create word list',
         type: 'error',
@@ -89,7 +88,7 @@ const WordLists = () => {
 
   const onError = (errors: any, e: any) => {
     if (methods.formState.isValid) {
-      console.log(errors);
+      return;
     }
   };
 

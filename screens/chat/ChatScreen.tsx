@@ -16,7 +16,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
     conversationId,
   });
-  console.log('messages', messages);
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);

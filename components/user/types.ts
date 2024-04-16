@@ -36,11 +36,31 @@ export enum FriendshipStatus {
   ACCEPTED,
 }
 
+export enum FriendSearchFriendshipStatus {
+  FRIEND = 'FRIEND',
+  REQUEST_SENT = 'REQUEST_SENT',
+  REQUEST_RECEIVED = 'REQUEST_RECEIVED',
+  NOT_EXIST = 'NOT_EXIST',
+}
+
+export type RFriendSearch = {
+  email: string;
+  friendshipStatus: FriendSearchFriendshipStatus;
+  id: string;
+  username: string;
+};
+
 export type RFriendship = {
+  id: string;
+  email: string;
+  username: string;
+};
+
+export type RFriendRequest = {
   user1: User;
   user2: User;
-  date: string;
   status: FriendshipStatus;
+  date: string;
 };
 
 export interface QUserSearch {

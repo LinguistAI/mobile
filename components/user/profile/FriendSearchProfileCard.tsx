@@ -6,19 +6,19 @@ import { useSendFriendRequestMutation } from '../userApi';
 import { Ionicons } from '@expo/vector-icons';
 import useNotifications from '../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
-import { User } from '../../../types';
+import { FriendSearchFriendshipStatus, RFriendSearch } from '../types';
 
-interface UserProfileCardProps {
-  user: User;
+interface FriendSearchProfileCard {
+  searchItem: RFriendSearch;
   friendActions?: boolean;
 }
 
-const UserProfileCard = ({ user, friendActions }: UserProfileCardProps) => {
+const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProfileCard) => {
   const [addFriend, { isError, error }] = useSendFriendRequestMutation();
   const { add } = useNotifications();
 
   const handleSendFriendRequest = async () => {
-    await addFriend({ friendId: user.id });
+    await addFriend({ friendId: searchItem.id });
     if (error || isError) {
       add({
         body: generateErrorResponseMessage(error),
@@ -28,25 +28,41 @@ const UserProfileCard = ({ user, friendActions }: UserProfileCardProps) => {
     }
 
     add({
-      body: `Sent a friend request to '${user.username}'`,
+      body: `Sent a friend request to '${searchItem.username}'`,
       type: 'success',
     });
   };
 
   const renderFriendActions = () => {
     if (!friendActions) return null;
+    const { friendshipStatus } = searchItem;
 
-    return (
-      <View style={styles.requestBtnContainer}>
-        <ActionIcon
-          onPress={handleSendFriendRequest}
-          icon={<Ionicons name="add-circle-outline" size={24} color={Colors.grape[500]} />}
-        />
-        <Text style={styles.requestBtnText} onPress={handleSendFriendRequest}>
-          Send request
-        </Text>
-      </View>
-    );
+    if (friendshipStatus === FriendSearchFriendshipStatus.NOT_EXIST) {
+      return (
+        <View style={styles.requestBtnContainer}>
+          <ActionIcon
+            onPress={handleSendFriendRequest}
+            icon={<Ionicons name="add-circle-outline" size={24} color={Colors.grape[500]} />}
+          />
+          <Text style={styles.requestBtnText} onPress={handleSendFriendRequest}>
+            Send request
+          </Text>
+        </View>
+      );
+    }
+
+    if (friendshipStatus === FriendSearchFriendshipStatus.FRIEND) {
+      return <Text style={styles.alreadyFriends}>Already friends</Text>;
+    }
+
+    if (friendshipStatus === FriendSearchFriendshipStatus.REQUEST_SENT) {
+      return (
+        <View style={{ display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center' }}>
+          <Ionicons name="stopwatch-outline" color={Colors.orange[500]} size={24} />
+          <Text style={styles.requestSent}>Request sent</Text>
+        </View>
+      );
+    }
   };
 
   return (
@@ -54,10 +70,7 @@ const UserProfileCard = ({ user, friendActions }: UserProfileCardProps) => {
       <View style={styles.contentRoot}>
         <View style={styles.container}>
           <View style={styles.infoContainer}>
-            <Text style={styles.mainInfo}>{user.username}</Text>
-            <View style={styles.subInfoContainer}>
-              <Text style={styles.subinfo}>{user.email}</Text>
-            </View>
+            <Text style={styles.mainInfo}>{searchItem.username}</Text>
           </View>
           <View style={styles.actionsContainer}>{renderFriendActions()}</View>
         </View>
@@ -108,9 +121,15 @@ const styles = StyleSheet.create({
   requestBtnText: {
     color: Colors.grape[400],
   },
+  requestSent: {
+    color: Colors.orange[500],
+  },
+  alreadyFriends: {
+    color: Colors.primary[500],
+  },
   actionsContainer: {
     alignSelf: 'center',
   },
 });
 
-export default UserProfileCard;
+export default FriendSearchProfileCard;

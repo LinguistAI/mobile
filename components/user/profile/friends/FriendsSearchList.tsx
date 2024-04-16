@@ -1,19 +1,16 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import UserProfileCard from '../UserProfileCard';
+import FriendSearchProfileCard from '../FriendSearchProfileCard';
 import FriendProfileCard from './FriendProfileCard';
 import { User } from '../../../../types';
 import CardSkeleton from '../../../common/CardSkeleton';
+import { RFriendSearch } from '../../types';
 
 interface FriendsSearchListProps {
   isLoading: boolean;
-  items: User[];
+  items: RFriendSearch[];
 }
 
 const FriendsSearchList = ({ items, isLoading }: FriendsSearchListProps) => {
-  const renderSkeleton = () => {
-    return null;
-  };
-
   if (isLoading) {
     return <CardSkeleton count={6} />;
   }
@@ -24,7 +21,7 @@ const FriendsSearchList = ({ items, isLoading }: FriendsSearchListProps) => {
         numColumns={1}
         data={items}
         contentContainerStyle={styles.listContainer}
-        renderItem={({ item }) => <UserProfileCard friendActions key={item.email} user={item} />}
+        renderItem={({ item }) => <FriendSearchProfileCard friendActions key={item.email} searchItem={item} />}
       />
     </View>
   );

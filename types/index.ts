@@ -20,6 +20,11 @@ export interface APIResponse<T> {
   timestamp: Date;
 }
 
+export enum SortBy {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
 type Sort = {
   empty: boolean;
   sorted: boolean;

@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginVertical: 8,
     paddingHorizontal: 16,
+    marginVertical: 4,
   },
 });
 

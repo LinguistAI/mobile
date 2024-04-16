@@ -55,7 +55,7 @@ const BotCarousel = () => {
   const dispatch = useDispatch();
 
   const width = Dimensions.get('window').width;
-  const itemHeight = width * 0.5; // Set a fixed height for each item
+  const itemHeight = width * 0.4; // Set a fixed height for each item
   if (isFetchingBots) {
     return <BotCarouselShimmer />;
   }

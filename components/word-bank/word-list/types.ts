@@ -30,6 +30,12 @@ export type WordDefinition = {
   word: string;
 };
 
+export enum WordStatus {
+  LEARNING = 'learning',
+  MASTERED = 'mastered',
+  REVIEWING = 'reviewing',
+}
+
 type ListStat = {
   learning: number;
   mastered: number;

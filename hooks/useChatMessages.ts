@@ -13,9 +13,14 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
   const { conversationId } = props;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
+  const { data: chatMessages, isFetching: isLoadingMessages, refetch } = useGetAllChatMessagesQuery(conversationId);
   const { isFetching: isLoadingMessages, data: chatMessages } = useGetAllChatMessagesQuery(conversationId);
   const [sendMessage, { isLoading: isSendingMessage, isError: responseNotReceived, data }] =
     useSendChatMessageMutation();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   useEffect(() => {
     if (chatMessages) {

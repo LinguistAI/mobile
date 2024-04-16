@@ -94,6 +94,7 @@ export const createAxiosBaseQuery =
         data: body,
       });
 
+      console.log('response', response.data.data);
       // Successful response
       return { data: response.data.data };
     } catch (axiosError: any) {

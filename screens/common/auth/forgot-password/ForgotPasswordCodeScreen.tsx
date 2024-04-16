@@ -1,38 +1,28 @@
 /*
 Concept: https://dribbble.com/shots/5476562-Forgot-Password-Verification/attachments
 */
-import React, { useState } from "react";
-import {
-  Animated,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import React, { useState } from 'react';
+import { Animated, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
-import { useMutation } from "@tanstack/react-query";
-import { FormProvider, useForm } from "react-hook-form";
+import { useMutation } from '@tanstack/react-query';
+import { FormProvider, useForm } from 'react-hook-form';
 import {
   CodeField,
   Cursor,
   RenderCellOptions,
   useBlurOnFulfill,
   useClearByFocusCell,
-} from "react-native-confirmation-code-field";
-import Button from "../../../../components/common/form/Button";
-import useNotifications from "../../../../hooks/useNotifications";
-import {
-  requestPasswordReset,
-  requestPasswordCode as resetPasswordCode,
-} from "../../../../services/auth";
-import { generateErrorResponseMessage } from "../../../../utils/httpUtils";
+} from 'react-native-confirmation-code-field';
+import Button from '../../../../components/common/form/Button';
+import useNotifications from '../../../../hooks/useNotifications';
+import { requestPasswordReset, requestPasswordCode as resetPasswordCode } from '../../../../services/auth';
+import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
 
 const CELL_SIZE = 40;
 const CELL_BORDER_RADIUS = 8;
-const DEFAULT_CELL_BG_COLOR = "#fff";
-const NOT_EMPTY_CELL_BG_COLOR = "#3557b7";
-const ACTIVE_CELL_BG_COLOR = "#f7fafe";
+const DEFAULT_CELL_BG_COLOR = '#fff';
+const NOT_EMPTY_CELL_BG_COLOR = '#3557b7';
+const ACTIVE_CELL_BG_COLOR = '#f7fafe';
 
 const { Value, Text: AnimatedText } = Animated;
 
@@ -69,11 +59,8 @@ interface ForgotPasswordCodeScreenProps {
   route: any;
 }
 
-const ForgotPasswordCodeScreen = ({
-  navigation,
-  route,
-}: ForgotPasswordCodeScreenProps) => {
-  const [value, setValue] = useState("");
+const ForgotPasswordCodeScreen = ({ navigation, route }: ForgotPasswordCodeScreenProps) => {
+  const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -127,14 +114,14 @@ const ForgotPasswordCodeScreen = ({
   const { add } = useNotifications();
   const methods = useForm<ForgotPasswordCodeFormValues>({
     defaultValues: {
-      resetCode: "",
+      resetCode: '',
       email: email,
     },
-    mode: "onSubmit",
+    mode: 'onSubmit',
   });
 
   const { mutate: resetPasswordMutate, isPending } = useMutation({
-    mutationKey: ["requestPasswordCode"],
+    mutationKey: ['requestPasswordCode'],
     mutationFn: (passwordResetCodeDto: PasswordResetCodeDto) =>
       resetPasswordCode({
         email: passwordResetCodeDto.email,
@@ -145,7 +132,7 @@ const ForgotPasswordCodeScreen = ({
         index: 0,
         routes: [
           {
-            name: "New Password",
+            name: 'New Password',
             params: {
               email: passwordResetCodeDto.email,
               resetCode: passwordResetCodeDto.resetCode,
@@ -157,8 +144,8 @@ const ForgotPasswordCodeScreen = ({
     onError: (error: any) => {
       add({
         body: generateErrorResponseMessage(error),
-        title: "Error!",
-        type: "error",
+        title: 'Error!',
+        type: 'error',
         time: 5000,
       });
     },
@@ -175,7 +162,7 @@ const ForgotPasswordCodeScreen = ({
 
   const onError = (errors: any, e: any) => {
     if (methods.formState.isValid) {
-      console.log("No errors. This should not be called.");
+      return;
     }
   };
 
@@ -183,7 +170,7 @@ const ForgotPasswordCodeScreen = ({
     <SafeAreaView style={styles.root}>
       <FormProvider {...methods}>
         <Text style={styles.subTitle}>
-          Please enter the verification code{"\n"}
+          Please enter the verification code{'\n'}
           we have sent to <Text style={styles.emailText}>{email}</Text>
         </Text>
         <CodeField
@@ -197,11 +184,7 @@ const ForgotPasswordCodeScreen = ({
           textContentType="oneTimeCode"
           renderCell={renderCell}
         />
-        <Button
-        type="primary"
-          loading={isPending}
-          onPress={methods.handleSubmit(onSubmit, onError)}
-        >
+        <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
           VERIFY
         </Button>
       </FormProvider>
@@ -214,12 +197,12 @@ const styles = StyleSheet.create({
     height: CELL_SIZE,
     marginTop: 20,
     paddingHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emailText: {
-    fontStyle: "italic",
-    fontWeight: "bold",
+    fontStyle: 'italic',
+    fontWeight: 'bold',
     lineHeight: 20,
   },
   cell: {
@@ -228,13 +211,13 @@ const styles = StyleSheet.create({
     width: CELL_SIZE,
     lineHeight: CELL_SIZE - 5,
     fontSize: 30,
-    textAlign: "center",
+    textAlign: 'center',
     borderRadius: CELL_BORDER_RADIUS,
-    color: "#3759b8",
-    backgroundColor: "#fff",
+    color: '#3759b8',
+    backgroundColor: '#fff',
 
     // IOS
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -253,14 +236,14 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   title: {
-    color: "#000",
+    color: '#000',
     fontSize: 25,
-    fontWeight: "700",
-    textAlign: "center",
+    fontWeight: '700',
+    textAlign: 'center',
   },
   subTitle: {
-    color: "#000",
-    textAlign: "center",
+    color: '#000',
+    textAlign: 'center',
   },
 });
 

@@ -3,7 +3,8 @@ import chatReducer from './chatSlice';
 import { chatApi } from '../components/chat/api';
 import { gamificationApi } from '../components/gamification/api';
 import { wordBankApi } from '../components/word-bank/api';
-import { userApi } from '../components/user/api';
+import { userStatsApi } from '../components/stats/userStatsApi';
+import { userApi } from '../components/user/userApi';
 
 export const store = configureStore({
   reducer: {
@@ -12,11 +13,13 @@ export const store = configureStore({
     [gamificationApi.reducerPath]: gamificationApi.reducer,
     [wordBankApi.reducerPath]: wordBankApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [userStatsApi.reducerPath]: userStatsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(chatApi.middleware)
       .concat(gamificationApi.middleware)
       .concat(wordBankApi.middleware)
-      .concat(userApi.middleware),
+      .concat(userApi.middleware)
+      .concat(userStatsApi.middleware),
 });

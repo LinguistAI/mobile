@@ -14,7 +14,7 @@ export function isStatusOk(statusCode: number | null | undefined): boolean {
 }
 
 export function isCustomError(error: any): error is CustomError {
-  return error.msg;
+  return error?.msg;
 }
 
 export function generateErrorResponseMessage(error: any, defaultMsg: string = '') {
@@ -27,11 +27,11 @@ export function generateErrorResponseMessage(error: any, defaultMsg: string = ''
     }
   }
   if (error?.response) {
-    return error.response.data.msg;
+    return error?.response?.data?.msg;
   }
 
   if (isCustomError(error)) {
-    return error.msg;
+    return error?.msg || defaultMsg || 'An unknown error has occurred. Please try again.';
   }
 
   return defaultMsg !== '' ? defaultMsg : 'An unknown error has occurred. Please try again.';

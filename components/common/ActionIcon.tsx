@@ -1,12 +1,6 @@
-import { ReactPropTypes } from "react";
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
-import Colors from "../../theme/colors";
+import { ReactPropTypes } from 'react';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, View } from 'react-native';
+import Colors from '../../theme/colors';
 
 interface ActionIconProps {
   icon: React.ReactElement;
@@ -33,7 +27,7 @@ const ActionIcon = ({ icon, onPress, disabled, loading }: ActionIconProps) => {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 8,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   innerContainer: {
     paddingVertical: 3,

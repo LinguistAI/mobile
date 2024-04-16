@@ -80,18 +80,20 @@ export const createAxiosBaseQuery =
       body?: any;
       headers?: Record<string, string>;
       secure?: boolean;
+      params?: Record<string, any>;
     },
     unknown,
     unknown
   > =>
-  async ({ url, method, body, headers = {}, secure = true }) => {
+  async ({ url, method, body, headers = {}, secure = true, params }) => {
     try {
       const axiosInstance = secure ? axiosSecure : axiosBase;
       const response = await axiosInstance({
         url: baseUrl + url,
-        method,
         headers,
+        method,
         data: body,
+        params,
       });
 
       console.log('response', response.data.data);
@@ -106,7 +108,7 @@ export const createAxiosBaseQuery =
 
       // Error handling
       return {
-        error: { status: err.status || 'FETCH_ERROR', msg: err.data || err },
+        error: { status: err.status || 'FETCH_ERROR', msg: err.msg || err.data || err },
       };
     }
   };

@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { FriendRequest, RFriendship } from '../../types';
+import { FriendRequest, RFriendRequest, RFriendship } from '../../types';
 import Card from '../../../common/Card';
 import Colors from '../../../../theme/colors';
 import useUser from '../../../../hooks/useUser';
@@ -11,7 +11,7 @@ import useNotifications from '../../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
 
 interface FriendRequestCardProps {
-  friendship: RFriendship;
+  friendship: RFriendRequest;
   type: FriendRequest;
 }
 

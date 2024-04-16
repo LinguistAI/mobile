@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
-import { QFriendRequest, IUserDetailedInfo, RFriendship, QUserSearch } from './types';
+import { QFriendRequest, IUserDetailedInfo, RFriendship, QUserSearch, RFriendRequest, RFriendSearch } from './types';
 import { Page, User } from '../../types';
 
 export const userApi = createApi({
@@ -23,14 +23,14 @@ export const userApi = createApi({
       }),
       providesTags: ['User'],
     }),
-    searchUser: builder.query<Page<User>, QUserSearch>({
+    searchUser: builder.query<Page<RFriendSearch>, QUserSearch>({
       query: (searchParams) => ({
         url: '/profile/search',
         method: 'GET',
         params: searchParams,
       }),
     }),
-    getFriendRequests: builder.query<RFriendship[], void>({
+    getFriendRequests: builder.query<RFriendRequest[], void>({
       query: () => ({
         url: '/friend/request',
         method: 'GET',
@@ -58,6 +58,7 @@ export const userApi = createApi({
         body: friendReq,
         method: 'POST',
       }),
+      invalidatesTags: ['FriendRequest'],
     }),
     acceptFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({

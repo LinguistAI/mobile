@@ -10,6 +10,7 @@ const emptyUserAtom = {
   accessToken: '',
   refreshToken: '',
   lastLogin: new Date('1970-01-01T00:00:00.000Z'),
+  id: '',
 };
 
 const userAtom = atom<StoredUserInfoWithTokens>(emptyUserAtom);

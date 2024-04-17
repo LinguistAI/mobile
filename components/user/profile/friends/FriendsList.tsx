@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGetFriendsQuery, useRemoveFriendMutation } from '../../userApi';
 import FriendProfileCard from './FriendProfileCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
@@ -7,9 +7,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 import CenteredFeedback from '../../../common/CenteredFeedback';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../../theme/colors';
+import { useCallback, useState } from 'react';
 
 const FriendsList = () => {
-  const { data: friends, isLoading, isError } = useGetFriendsQuery();
+  const { data: friends, isLoading, isError, refetch } = useGetFriendsQuery();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  }, []);
 
   const renderSkeletonList = () => {
     return (
@@ -25,15 +33,8 @@ const FriendsList = () => {
     return renderSkeletonList();
   }
   if (isError) return <FetchError />;
-  if (!friends || friends.length === 0) {
-    return (
-      <View style={{ height: '80%', display: 'flex', justifyContent: 'center' }}>
-        <CenteredFeedback
-          icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />}
-          message="Looks like you have no friends just yet. Send a friend request to meet with new people!"
-        />
-      </View>
-    );
+  if (!friends) {
+    return <FetchError />;
   }
 
   return (
@@ -43,6 +44,15 @@ const FriendsList = () => {
         contentContainerStyle={styles.friendsListStyle}
         data={friends}
         renderItem={({ item }) => <FriendProfileCard friendship={item} />}
+        ListEmptyComponent={
+          <View style={{ height: '80%', display: 'flex', justifyContent: 'center' }}>
+            <CenteredFeedback
+              icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />}
+              message="Looks like you have no friends just yet. Send a friend request to meet with new people!"
+            />
+          </View>
+        }
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
       />
     </View>
   );

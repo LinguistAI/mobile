@@ -14,7 +14,7 @@ interface FriendProfileCardProps {
 }
 
 const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
-  const { user1: friend, date, status } = friendship;
+  const { username: friendUsername, id: friendId } = friendship;
   const { add } = useNotifications();
 
   const [removeFriend, { isLoading: isRemovingFriend, error }] = useRemoveFriendMutation();
@@ -34,15 +34,11 @@ const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
       <View style={styles.contentRoot}>
         <View style={styles.infoContainer}>
           <View style={styles.mainInfoContainer}>
-            <Text style={styles.mainInfo}>{friend.username}</Text>
+            <Text style={styles.mainInfo}>{friendUsername}</Text>
             <ActionIcon
-              onPress={() => onRemoveFriend(friend.id)}
+              onPress={() => onRemoveFriend(friendId)}
               icon={<Ionicons name="close-circle-outline" size={24} color={Colors.red[600]} />}
             />
-          </View>
-          <View style={styles.subInfoContainer}>
-            <Text style={styles.subinfo}>{friend.email}</Text>
-            <Text style={styles.subinfo}>{new Date(date).toLocaleString()}</Text>
           </View>
         </View>
       </View>

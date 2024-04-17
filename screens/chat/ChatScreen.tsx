@@ -6,6 +6,7 @@ import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
+import { useGetAllChatMessagesQuery } from '../../components/chat/api';
 
 interface ChatScreenProps {
   route: any;

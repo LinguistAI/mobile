@@ -1,21 +1,28 @@
-import { StyleSheet, View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { useGetFriendRequestsQuery } from '../../components/user/userApi';
 import { FlatList } from 'react-native-gesture-handler';
-import FriendProfileCard from '../../components/user/profile/friends/FriendProfileCard';
 import FriendRequestCard from '../../components/user/profile/friends/FriendRequestCard';
 import useUser from '../../hooks/useUser';
-import { FriendRequest, RFriendship } from '../../components/user/types';
+import { FriendRequest, RFriendRequest, RFriendship } from '../../components/user/types';
 import CardSkeleton from '../../components/common/CardSkeleton';
 import CenteredFeedback from '../../components/common/CenteredFeedback';
 import FetchError from '../../components/common/FetchError';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
+import { useCallback, useState } from 'react';
 
 const FriendRequestsScreen = () => {
   const { user } = useUser();
-  const { data: friendRequests, isLoading, isError } = useGetFriendRequestsQuery();
+  const { data: friendRequests, isLoading, isError, refetch } = useGetFriendRequestsQuery();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const getFriendRequestType = (request: RFriendship) => {
+  const onRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  }, []);
+
+  const getFriendRequestType = (request: RFriendRequest) => {
     const { user1: sendUser } = request;
     if (sendUser.email === user.email) {
       return FriendRequest.SENT;
@@ -39,15 +46,8 @@ const FriendRequestsScreen = () => {
     return <FetchError />;
   }
 
-  if (!receivedRequestsByReceiveDate || receivedRequestsByReceiveDate.length === 0) {
-    return (
-      <View style={{ height: '80%', display: 'flex', justifyContent: 'center' }}>
-        <CenteredFeedback
-          icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />}
-          message="Your friend request inbox is empty, stay tuned for upcoming requests!"
-        />
-      </View>
-    );
+  if (!receivedRequestsByReceiveDate) {
+    return <FetchError />;
   }
 
   return (
@@ -56,6 +56,15 @@ const FriendRequestsScreen = () => {
         contentContainerStyle={styles.listContentContainer}
         data={receivedRequestsByReceiveDate}
         renderItem={({ item }) => <FriendRequestCard friendship={item} type={getFriendRequestType(item)} />}
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+        ListEmptyComponent={
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}>
+            <CenteredFeedback
+              icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />}
+              message="Your friend request inbox is empty, stay tuned for upcoming requests!"
+            />
+          </View>
+        }
       />
     </View>
   );
@@ -63,8 +72,10 @@ const FriendRequestsScreen = () => {
 
 const styles = StyleSheet.create({
   listContentContainer: {
+    flex: 1,
     gap: 10,
     padding: 10,
+    flexGrow: 1,
   },
 });
 

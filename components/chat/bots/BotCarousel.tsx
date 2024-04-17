@@ -80,7 +80,7 @@ const BotCarousel = () => {
           if (!convoId) {
             return;
           }
-          navigation.navigate('Chat', { params: { conversationId: convoId }, screen: 'ChatScreen', initial: false });
+          navigation.navigate('Chat', { params: { conversationId: convoId }, screen: 'ChatScreen' });
         } else {
           notify({
             body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),

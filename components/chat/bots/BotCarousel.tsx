@@ -82,10 +82,12 @@ const BotCarousel = () => {
           }
           navigation.navigate('Chat', { params: { conversationId: convoId }, screen: 'ChatScreen', initial: false });
         } else {
-          notify({
-            body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
-            type: 'error',
-          });
+          if (createConversationError) {
+            notify({
+              body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+              type: 'error',
+            });
+          }
         }
       }
       dispatch(startConversation({ bot }));

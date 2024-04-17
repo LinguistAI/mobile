@@ -49,10 +49,12 @@ const BotLists = () => {
           }
           navigation.navigate('ChatScreen', { conversationId: convoId });
         } else {
-          notify({
-            body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
-            type: 'error',
-          });
+          if (createConversationError) {
+            notify({
+              body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+              type: 'error',
+            });
+          }
         }
       }
       dispatch(startConversation({ bot }));

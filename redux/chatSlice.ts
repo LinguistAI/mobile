@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { TChatBot } from '../components/chat/types';
 import { chatApi } from '../components/chat/api';
+import { TChatBot } from '../components/chat/types';
 import { gamificationApi } from '../components/gamification/api';
+import { userApi } from '../components/user/userApi';
 import { wordBankApi } from '../components/word-bank/api';
-import { userApi } from '../components/user/api';
 
 export interface ChatState {
   selectedBot: TChatBot | null;

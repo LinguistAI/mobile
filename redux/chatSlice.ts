@@ -4,7 +4,7 @@ import { TChatBot } from '../components/chat/types';
 import { chatApi } from '../components/chat/api';
 import { gamificationApi } from '../components/gamification/api';
 import { wordBankApi } from '../components/word-bank/api';
-import { userApi } from '../components/user/api';
+import { userApi } from '../components/user/userApi';
 
 export interface ChatState {
   selectedBot: TChatBot | null;

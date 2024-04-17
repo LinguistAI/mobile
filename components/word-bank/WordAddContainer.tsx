@@ -22,15 +22,15 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
   const [addNewWord, { isError: addWordError, isLoading: isAddingWord }] = useAddWordMutation();
 
   const { data: wordLists, isFetching } = useGetWordListsQuery();
-  if (isFetching) {
-    return <ActivityIndicator />;
-  }
-
   useEffect(() => {
     if (wordLists) {
       setSelectedWordList(wordLists.lists[0]);
     }
   }, [wordLists]);
+
+  if (isFetching) {
+    return <ActivityIndicator />;
+  }
 
   if (!wordLists) return <FetchError />;
   if (wordLists.lists.length === 0) {

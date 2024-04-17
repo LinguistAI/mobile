@@ -1,3 +1,5 @@
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useGetUserExperienceQuery } from '../api';
 import * as Progress from 'react-native-progress';
@@ -9,7 +11,13 @@ import { BAR_HEIGHT, BAR_WIDTH } from './constants';
 import CenteredFeedback from '../../common/CenteredFeedback';
 
 const ExperienceBar = () => {
-  const { data, isLoading: isExperienceLoading, isError } = useGetUserExperienceQuery();
+  const { data, isLoading: isExperienceLoading, isError, refetch } = useGetUserExperienceQuery();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   if (isExperienceLoading) {
     return <ExperienceSkeleton />;

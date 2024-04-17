@@ -81,7 +81,6 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
         <View style={styles.infoContainer}>
           <Text style={styles.mainInfo}>{sendUser.username}</Text>
           <View style={styles.subInfoContainer}>
-            <Text style={styles.subinfo}>{sendUser.email}</Text>
             <Text style={styles.subinfo}>{new Date(date).toLocaleString()}</Text>
           </View>
         </View>

@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import FloatingButton from '../../components/common/FloatingButton';
-import WordDetails from '../../components/word-bank/word-list/words/WordDetailsCollapse';
+import WordDetailsCollapse from '../../components/word-bank/word-list/words/WordDetailsCollapse';
 import { useState } from 'react';
 import ModalWrapper from '../../components/common/ModalWrapper';
 import Button from '../../components/common/form/Button';
@@ -79,7 +79,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
       )}
       <FlatList
         data={selectedList.words}
-        renderItem={({ item }) => <WordDetails word={item} />}
+        renderItem={({ item }) => <WordDetailsCollapse word={item} />}
         contentContainerStyle={{
           justifyContent: 'center',
           gap: 15,

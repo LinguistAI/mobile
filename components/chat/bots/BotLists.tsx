@@ -37,7 +37,6 @@ const BotLists = () => {
     if (!pendingBotCreateResponse) {
       const foundExistingConvo = conversations?.find((c) => c.bot.id === bot.id);
 
-      console.log(foundExistingConvo);
       if (foundExistingConvo) {
         navigation.navigate('ChatScreen', { conversationId: foundExistingConvo.id });
       } else {

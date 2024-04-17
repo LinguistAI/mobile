@@ -3,7 +3,7 @@ import { useGetFriendRequestsQuery } from '../../components/user/userApi';
 import { FlatList } from 'react-native-gesture-handler';
 import FriendRequestCard from '../../components/user/profile/friends/FriendRequestCard';
 import useUser from '../../hooks/useUser';
-import { FriendRequest, RFriendRequest, RFriendship } from '../../components/user/types';
+import { FriendRequest, RFriendRequest } from '../../components/user/types';
 import CardSkeleton from '../../components/common/CardSkeleton';
 import CenteredFeedback from '../../components/common/CenteredFeedback';
 import FetchError from '../../components/common/FetchError';

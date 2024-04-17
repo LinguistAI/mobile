@@ -59,16 +59,21 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
   return (
     <>
       <View style={styles.picker}>
-        <Picker
-          itemStyle={styles.pickerItem}
-          selectedValue={selectedWordList}
-          onValueChange={(itemValue) => setSelectedWordList(itemValue)}
-          mode="dropdown"
-        >
-          {wordLists.lists.map((wordList) => (
-            <Picker.Item key={wordList.listId} value={wordList.listId} label={wordList.title} />
-          ))}
-        </Picker>
+      <Picker
+        itemStyle={styles.pickerItem}
+        selectedValue={selectedWordList ? selectedWordList.listId : null}
+        onValueChange={(itemValue) => {
+          const selectedList = wordLists.lists.find((list) => list.listId === itemValue);
+          if (selectedList) {
+            setSelectedWordList(selectedList);
+          }
+        }}
+        mode="dropdown"
+      >
+        {wordLists.lists.map((wordList) => (
+          <Picker.Item key={wordList.listId} value={wordList.listId} label={wordList.title} />
+        ))}
+      </Picker>
       </View>
       <View style={styles.addIconContainer}>
         <ActionIcon

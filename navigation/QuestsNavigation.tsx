@@ -6,7 +6,7 @@ const Quests = createNativeStackNavigator();
 const QuestsNavigation = () => {
   return (
     <Quests.Navigator>
-      <Quests.Screen name="Quests" component={QuestsScreen} />
+      <Quests.Screen name="Daily Quests" component={QuestsScreen} />
     </Quests.Navigator>
   );
 };

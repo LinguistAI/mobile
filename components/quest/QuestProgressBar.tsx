@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useGetQuestsQuery } from './api';
+import IonIcons from '@expo/vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
 import FetchError from '../common/FetchError';
 import Colors from '../../theme/colors';
 import ExperienceSkeleton from "../gamification/experience/ExperienceSkeleton";
-import { BAR_HEIGHT, BAR_WIDTH, EMPTY_BAR_FILL } from './constants';
+import { BAR_HEIGHT, BAR_WIDTH, EMPTY_BAR_FILL, QUEST_DONE_ICON_SIZE } from './constants';
 import CenteredFeedback from '../common/CenteredFeedback';
 
 interface QuestCardProps {
@@ -28,11 +29,25 @@ const QuestProgressBar = ({ goalTimes, progressTimes }: QuestCardProps) => {
   }
 
   const renderCurrentExperience = () => {
+    if (progressTimes < goalTimes) {
+      return (
+        <Text style={styles.xpText}>
+          {progressTimes} / {goalTimes}
+        </Text>
+      );
+    }
+
     return (
-      <Text style={styles.xpText}>
-        {progressTimes} / {goalTimes}
-      </Text>
+      <IonIcons name="checkmark-circle-sharp" size={QUEST_DONE_ICON_SIZE} color="green" />
     );
+  };
+
+  const renderQuestBarColor = () => {
+    if (progressTimes < goalTimes) {
+      return Colors.primary[600];
+    }
+
+    return Colors.green[800];
   };
 
   return (
@@ -44,7 +59,7 @@ const QuestProgressBar = ({ goalTimes, progressTimes }: QuestCardProps) => {
           width={BAR_WIDTH}
           height={BAR_HEIGHT}
           borderRadius={8}
-          color={Colors.primary[600]}
+          color={renderQuestBarColor()}
           unfilledColor={Colors.gray[100]}
           borderWidth={1}
         />

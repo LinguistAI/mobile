@@ -5,7 +5,7 @@ import { selectCurrentBot } from '../../redux/chatSelectors';
 import { useGetMessageCountByBotQuery } from './api';
 import { useNavigation } from '@react-navigation/native';
 
-const MIN_MESSAGE_COUNT = 10;
+const MIN_MESSAGE_COUNT = 3;
 const MAX_MESSAGE_COUNT = 30;
 const DAY_LIMIT = 1;
 

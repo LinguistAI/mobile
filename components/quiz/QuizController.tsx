@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import QuizQuestion from './QuizQuestion';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '../common/form/Button';
@@ -8,31 +8,80 @@ import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { getRandomPositiveFeedback } from './utils';
 import { useNavigation } from '@react-navigation/native';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
-import CenteredFeedback from '../common/feedback/CenteredFeedback';
+import { QuizPhase, RCreateMCQ, TQuestion } from './types';
+import { useCreateMCQMutation } from './quizApi';
+import { useSelector } from 'react-redux';
+import { selectCurrentConversation } from '../../redux/chatSelectors';
+import useNotifications from '../../hooks/useNotifications';
+import { isDataResponse } from '../../services';
+import AnimatedLottieView from 'lottie-react-native';
+import Colors from '../../theme/colors';
+import { generateErrorResponseMessage } from '../../utils/httpUtils';
+import useError from '../../hooks/useError';
 
 const QuizController = () => {
   useDisableBottomTab();
+  const [isQuizLoading, setIsQuizLoading] = useState(true);
+  const [quiz, setQuiz] = useState<RCreateMCQ>();
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [phase, setPhase] = useState<QuizPhase>('waiting-answer');
   const [selectedChoice, setSelectedChoice] = useState('');
   const navigation = useNavigation();
-  const questions: TQuestion[] = [
-    {
-      question: 'What is the capital of France?',
-      answers: ['Paris', 'London', 'Berlin', 'Madrid'],
-      correctAnswer: 'Paris',
-    },
-    {
-      question: 'What is the capital of Spain?',
-      answers: ['Paris', 'London', 'Berlin', 'Madrid'],
-      correctAnswer: 'Madrid',
-    },
-    {
-      question: 'What is the capital of Germany?',
-      answers: ['Paris', 'London', 'Berlin', 'Madrid'],
-      correctAnswer: 'Berlin',
-    },
-  ];
+  const conversationId = useSelector(selectCurrentConversation);
+  const { add } = useNotifications();
+
+  const [createMCQ, { error, reset }] = useCreateMCQMutation();
+
+  const errorFallback = () => {
+    navigation.goBack();
+    reset();
+  };
+  useError(error, errorFallback);
+
+  useEffect(() => {
+    const createAndSetQuiz = async () => {
+      if (!conversationId) {
+        add({
+          type: 'warning',
+          body: 'Please start a conversation before attempting a quiz!',
+        });
+        navigation.navigate('Conversations');
+        return;
+      }
+      try {
+        const quiz = await createMCQ({ conversationId });
+        if (isDataResponse(quiz)) {
+          setQuiz(quiz.data);
+          return;
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsQuizLoading(false);
+      }
+    };
+
+    createAndSetQuiz();
+  }, []);
+
+  const questions = quiz?.questions;
+  if (isQuizLoading) {
+    return (
+      <View style={styles.lottieRoot}>
+        <AnimatedLottieView
+          source={require('../../assets/lottie/quiz-loading.json')}
+          style={styles.lottie}
+          autoPlay
+          loop
+        />
+        <Text style={styles.preparationText}>Preparing your quiz...</Text>
+      </View>
+    );
+  }
+
+  if (!questions) {
+    return null;
+  }
 
   const getAnswerFeedback = () => {
     if (phase === 'end') return null;
@@ -173,6 +222,19 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: 'bold',
+  },
+  lottieRoot: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lottie: {
+    width: 250,
+    height: 250,
+  },
+  preparationText: {
+    color: Colors.primary[700],
+    fontSize: 16,
   },
 });
 

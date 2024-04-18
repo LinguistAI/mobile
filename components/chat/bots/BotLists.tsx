@@ -14,6 +14,7 @@ import FetchFailErrorScreen from '../../../screens/common/FetchFailErrorScreen';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import BotProfileCard from './BotProfileCard';
 import useNotifications from '../../../hooks/useNotifications';
+import { isDataResponse } from '../../../services';
 
 const BotLists = () => {
   const navigation = useNavigation();
@@ -42,21 +43,24 @@ const BotLists = () => {
 
       if (foundExistingConvo) {
         navigation.navigate('ChatScreen', { conversationId: foundExistingConvo.id });
-      } else {
-        await createConvo(bot.id);
-        if (data) {
-          const convoId = data.id;
-          if (!convoId) {
-            return;
-          }
-          navigation.navigate('ChatScreen', { conversationId: convoId });
-        } else {
-          notify({
-            body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
-            type: 'error',
-          });
-        }
+        dispatch(startConversation({ bot, conversation: foundExistingConvo.id }));
+        return;
       }
+      const response = await createConvo(bot.id);
+      if (!isDataResponse(response)) {
+        notify({
+          body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+          type: 'error',
+        });
+        return;
+      }
+
+      const data = response.data;
+      const convoId = data.id;
+      if (!convoId) {
+        return;
+      }
+      navigation.navigate('ChatScreen', { conversationId: convoId });
       dispatch(startConversation({ bot, conversation: data?.id }));
     }
   };

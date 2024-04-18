@@ -18,6 +18,7 @@ import useNotifications from '../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { useDispatch } from 'react-redux';
 import { startConversation } from '../../../redux/chatSlice';
+import { isDataResponse } from '../../../services';
 
 const BotCarouselShimmer = () => {
   const width = Dimensions.get('window').width;
@@ -52,7 +53,7 @@ const BotCarousel = () => {
     isError: conversationsNotLoaded,
   } = useGetAllConversationsQuery();
   const { data: bots, isFetching: isFetchingBots, isError: botsLoadError } = useGetAvailableBotsQuery();
-  const [createConvo, { isLoading: pendingBotCreateResponse, data, error: createConversationError }] =
+  const [createConvo, { isLoading: pendingBotCreateResponse, error: createConversationError }] =
     useCreateNewConversationMutation();
   const navigation = useNavigation();
   const { add: notify } = useNotifications();
@@ -71,32 +72,39 @@ const BotCarousel = () => {
   const handleBotPress = async (bot: TChatBot) => {
     if (!pendingBotCreateResponse) {
       const foundExistingConvo = conversations?.find((c) => c.bot.id === bot.id);
-
+      let convoId = '';
+      // Open existing conversation
       if (foundExistingConvo) {
         navigation.navigate('Chat', {
           params: { conversationId: foundExistingConvo.id },
           screen: 'ChatScreen',
         });
-      } else {
-        await createConvo(bot.id);
-        if (data) {
-          const convoId = data.id;
-          if (!convoId) {
-            return;
-          }
-          navigation.navigate('Chat', {
-            params: { conversationId: convoId },
-            screen: 'ChatScreen',
-            initial: false,
-          });
-        } else {
-          notify({
-            body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
-            type: 'error',
-          });
-        }
+        dispatch(startConversation({ bot, conversation: foundExistingConvo.id }));
+        return;
       }
-      dispatch(startConversation({ bot, conversation: data?.id }));
+
+      // Couldn't create conversation
+      const response = await createConvo(bot.id);
+      if (!isDataResponse(response)) {
+        notify({
+          body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+          type: 'error',
+        });
+        return;
+      }
+
+      // Start new conversation
+      const data = response.data;
+      convoId = data.id;
+      if (!convoId) {
+        return;
+      }
+      navigation.navigate('Chat', {
+        params: { conversationId: convoId },
+        screen: 'ChatScreen',
+        initial: false,
+      });
+      dispatch(startConversation({ bot, conversation: convoId }));
     }
   };
 

@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { TChatBot } from '../components/chat/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface ChatState {
   selectedBot: TChatBot | null;

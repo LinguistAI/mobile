@@ -3,12 +3,14 @@ import Colors from '../../../theme/colors';
 
 interface CenteredFeedbackProps {
   message: string;
+  children?: React.ReactNode;
 }
 
-const CenteredFeedback = ({ message }: CenteredFeedbackProps) => {
+const CenteredFeedback = ({ message, children }: CenteredFeedbackProps) => {
   return (
     <View style={styles.root}>
       <Text style={styles.message}>{message}</Text>
+      {children}
     </View>
   );
 };

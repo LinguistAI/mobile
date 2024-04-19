@@ -1,12 +1,21 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
-import { QFriendRequest, IUserDetailedInfo, RFriendship, QUserSearch, RFriendRequest, RFriendSearch } from './types';
+import {
+  QFriendRequest,
+  IUserDetailedInfo,
+  RFriendship,
+  QUserSearch,
+  RFriendRequest,
+  RFriendSearch,
+  QLeaderboard,
+  RLeaderboard,
+} from './types';
 import { Page, User } from '../../types';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Leaderboard'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -76,6 +85,14 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['FriendRequest'],
     }),
+    getGlobalLeaderboard: builder.query<RLeaderboard, QLeaderboard>({
+      query: (paginationParams) => ({
+        url: '/leaderboard/global/xp',
+        method: 'GET',
+        params: paginationParams,
+      }),
+      providesTags: ['Leaderboard'],
+    }),
   }),
 });
 
@@ -89,4 +106,5 @@ export const {
   useRemoveFriendMutation,
   useSendFriendRequestMutation,
   useLazySearchUserQuery,
+  useLazyGetGlobalLeaderboardQuery,
 } = userApi;

@@ -18,6 +18,7 @@ const LText = ({ children, size = 12, style, centered }: TextProps) => {
 
   if (!fontsLoaded) {
     currentStyle = styles.titleText;
+    return <Text style={[currentStyle, { fontSize: size, textAlign }, style]}>{children}</Text>;
   }
 
   return <Text style={[currentStyle, { fontSize: size, textAlign }, style]}>{children}</Text>;

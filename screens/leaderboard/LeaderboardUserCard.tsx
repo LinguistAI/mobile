@@ -82,10 +82,11 @@ const styles = StyleSheet.create({
   mainInfo: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: Colors.purple[500],
+    color: Colors.gray[700],
     marginRight: 5,
   },
   subinfo: {
+    fontWeight: 'bold',
     color: Colors.yellow[400],
     fontSize: 13,
   },

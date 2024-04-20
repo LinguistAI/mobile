@@ -19,6 +19,7 @@ const Title = ({ children, size: fontSize = 'h1', centered }: TitleProps) => {
 
   if (!fontsLoaded) {
     currentStyle = styles.titleText;
+    return <Text style={[currentStyle, { fontSize: TitleSizes[fontSize], textAlign }]}>{children}</Text>;
   }
 
   return <Text style={[currentStyle, { fontSize: TitleSizes[fontSize], textAlign }]}>{children}</Text>;

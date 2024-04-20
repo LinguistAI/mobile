@@ -38,10 +38,6 @@ export default function App() {
     screenOrientationConstantAndroid: ScreenOrientation.Orientation.PORTRAIT_UP,
   });
 
-  // const [fontsLoaded] = useFonts({
-  //   'Nunito-Regular': require('./assets/fonts/Nunito-Regular.ttf'),
-  // });
-
   const [fontsLoaded] = useFonts({
     Nunito: require('./assets/fonts/Nunito-Regular.ttf'),
     NunitoBold: require('./assets/fonts/Nunito-Bold.ttf'),

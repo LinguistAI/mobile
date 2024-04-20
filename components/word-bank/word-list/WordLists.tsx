@@ -156,7 +156,7 @@ const WordLists = () => {
     return (
       <View style={styles.wordListContainer}>
         <FlatList
-          data={filteredWordLists.length === 0 ? wordLists?.lists : filteredWordLists}
+          data={filteredWordLists.length > 0 ? filteredWordLists : []}
           renderItem={({ item }) => <WordListCard list={item} handleListSelection={handleListSelection} />}
           numColumns={2}
           keyExtractor={(item) => item.listId}

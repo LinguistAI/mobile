@@ -3,7 +3,7 @@ import { axiosSecure, createAxiosBaseQuery } from '../../services';
 import { QCheckMCQAnswer, QCreateMCQ, QFinishMCQ, RCheckMCQAnswer, RCreateMCQ, RFinishMCQ } from './types';
 
 export const quizApi = createApi({
-  reducerPath: 'gamificationApi',
+  reducerPath: 'quizApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/ml/mcq` }),
   endpoints: (builder) => ({
     checkAnswer: builder.mutation<RCheckMCQAnswer, QCheckMCQAnswer>({

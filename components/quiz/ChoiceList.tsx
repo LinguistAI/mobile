@@ -4,13 +4,13 @@ import ChoiceItem from './ChoiceItem';
 
 interface ChoiceListProps {
   items: string[];
-  correctChoice: string;
   selectedChoice: string;
   handleChoice: (answer: string) => void;
   allowAnswer: boolean;
+  correctAnswer?: string;
 }
 
-const ChoiceList = ({ items, correctChoice, selectedChoice, handleChoice, allowAnswer }: ChoiceListProps) => {
+const ChoiceList = ({ items, selectedChoice, handleChoice, allowAnswer, correctAnswer }: ChoiceListProps) => {
   const handleSelectChoice = (choice: string) => {
     handleChoice(choice);
   };
@@ -20,10 +20,10 @@ const ChoiceList = ({ items, correctChoice, selectedChoice, handleChoice, allowA
       <ChoiceItem
         key={i}
         choice={i}
-        correctChoice={i === correctChoice}
         handleSelectChoice={handleSelectChoice}
         disable={!allowAnswer}
         status={selectedChoice === i ? 'selected' : 'default'}
+        correctChoice={correctAnswer === selectedChoice}
       />
     ));
   };

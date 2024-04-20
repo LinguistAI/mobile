@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import QuizQuestion from './QuizQuestion';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import Button from '../common/form/Button';
 import QuizHeader from './QuizHeader';
 import ChoiceFeedback from './ChoiceFeedback';
@@ -8,21 +8,36 @@ import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { getRandomPositiveFeedback } from './utils';
 import { useNavigation } from '@react-navigation/native';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
-import { QuizPhase, RCreateMCQ, TQuestion } from './types';
-import { useCreateMCQMutation } from './quizApi';
+import { QuizPhase, RCheckMCQAnswer, RCreateMCQ } from './types';
+import { useCheckAnswerMutation, useCreateMCQMutation, useFinishMCQMutation } from './quizApi';
 import { useSelector } from 'react-redux';
 import { selectCurrentConversation } from '../../redux/chatSelectors';
 import useNotifications from '../../hooks/useNotifications';
 import { isDataResponse } from '../../services';
 import AnimatedLottieView from 'lottie-react-native';
 import Colors from '../../theme/colors';
-import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import useError from '../../hooks/useError';
+import FetchError from '../common/feedback/FetchError';
+import useCustomBackHandler from '../../hooks/useCustomBackHandler';
 
 const QuizController = () => {
   useDisableBottomTab();
+  useCustomBackHandler(() => {
+    Alert.alert('Hold on!', "Are you sure you want to quit the quiz? You won't be able to come back to it!", [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      { text: 'Yes', onPress: () => navigation.navigate('Conversations') },
+    ]);
+    return true;
+  });
+
+  const timer = useRef(Date.now());
   const [isQuizLoading, setIsQuizLoading] = useState(true);
   const [quiz, setQuiz] = useState<RCreateMCQ>();
+  const [questionCheck, setQuestionCheck] = useState<RCheckMCQAnswer>();
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [phase, setPhase] = useState<QuizPhase>('waiting-answer');
   const [selectedChoice, setSelectedChoice] = useState('');
@@ -30,13 +45,20 @@ const QuizController = () => {
   const conversationId = useSelector(selectCurrentConversation);
   const { add } = useNotifications();
 
-  const [createMCQ, { error, reset }] = useCreateMCQMutation();
+  const [createMCQ, { error }] = useCreateMCQMutation();
+  const [checkAnswer, { error: checkError }] = useCheckAnswerMutation();
+  const [finishMCQ, { error: finishError }] = useFinishMCQMutation();
 
-  const errorFallback = () => {
+  const finishMCQErrorFallback = () => {};
+  const checkErrorFallback = () => {
     navigation.goBack();
-    reset();
   };
-  useError(error, errorFallback);
+  const createErrorFallback = () => {
+    navigation.goBack();
+  };
+  useError(finishError, finishMCQErrorFallback);
+  useError(checkError, checkErrorFallback);
+  useError(error, createErrorFallback);
 
   useEffect(() => {
     const createAndSetQuiz = async () => {
@@ -48,17 +70,11 @@ const QuizController = () => {
         navigation.navigate('Conversations');
         return;
       }
-      try {
-        const quiz = await createMCQ({ conversationId });
-        if (isDataResponse(quiz)) {
-          setQuiz(quiz.data);
-          return;
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setIsQuizLoading(false);
+      const quiz = await createMCQ({ conversationId });
+      if (isDataResponse(quiz)) {
+        setQuiz(quiz.data);
       }
+      setIsQuizLoading(false);
     };
 
     createAndSetQuiz();
@@ -74,20 +90,21 @@ const QuizController = () => {
           autoPlay
           loop
         />
-        <Text style={styles.preparationText}>Preparing your quiz...</Text>
+        <Text style={styles.preparationText}>
+          Just a moment, we're cooking up some challenging questions!
+        </Text>
       </View>
     );
   }
 
   if (!questions) {
-    return null;
+    return <FetchError />;
   }
 
   const getAnswerFeedback = () => {
     if (phase === 'end') return null;
 
-    const curQ = questions[currentQuestion];
-    if (selectedChoice === curQ.correctAnswer) {
+    if (questionCheck?.isUserCorrect) {
       const feedback = getRandomPositiveFeedback();
       return (
         <View>
@@ -98,7 +115,7 @@ const QuizController = () => {
       return (
         <View style={{ flexDirection: 'row' }}>
           <Text>The correct answer was</Text>
-          <Text style={styles.bold}> {curQ.correctAnswer}</Text>
+          <Text style={styles.bold}> {questionCheck?.answer}</Text>
           <Text>.</Text>
         </View>
       );
@@ -108,8 +125,7 @@ const QuizController = () => {
   const getFeedbackType = () => {
     if (phase === 'end') return 'info';
 
-    const curQ = questions[currentQuestion];
-    if (curQ.correctAnswer === selectedChoice) {
+    if (questionCheck?.isUserCorrect) {
       return 'correct';
     }
 
@@ -134,34 +150,51 @@ const QuizController = () => {
     setSelectedChoice('');
   };
 
-  const handleAnswer = (choice: string) => {
+  const handleAnswer = async (choice: string) => {
+    setPhase('checking-answer');
+    const question = questions[currentQuestion];
+    const response = await checkAnswer({ answer: choice, questionId: question.id });
+    if (isDataResponse(response)) {
+      const data = response.data;
+      setQuestionCheck(data);
+    }
     setPhase('answered');
     setSelectedChoice(choice);
   };
 
-  const handleFinish = () => {
-    navigation.navigate('QuizResults');
+  const handleFinish = async () => {
+    setPhase('waiting-results');
+    const response = await finishMCQ({ testId: quiz.id });
+    if (isDataResponse(response)) {
+      const data = response.data;
+      const currentTime = Date.now();
+      const timeElapsed = currentTime - timer.current;
+      navigation.navigate('MCQResults', { results: data, timeElapsed });
+    }
   };
 
   const isAnswerCorrect = () => {
     if (phase === 'end') return false;
-
-    const curQ = questions[currentQuestion];
-    return curQ.correctAnswer === selectedChoice;
+    return questionCheck?.isUserCorrect;
   };
 
   const renderNextQuestionButton = () => {
     const btnSchema = isAnswerCorrect() ? 'green' : 'red';
 
-    if (phase === 'answered') {
+    if (phase === 'answered' || phase === 'checking-answer') {
       return (
-        <Button type="outlined" color={btnSchema} onPress={handleNextQuestion}>
+        <Button
+          type="outlined"
+          color={btnSchema}
+          onPress={handleNextQuestion}
+          loading={phase === 'checking-answer'}
+        >
           CONTINUE
         </Button>
       );
-    } else if (phase === 'end') {
+    } else if (phase === 'end' || phase === 'waiting-results') {
       return (
-        <Button type="outlined" color="grape" onPress={handleFinish}>
+        <Button type="outlined" color="grape" onPress={handleFinish} loading={phase === 'waiting-results'}>
           SEE RESULTS
         </Button>
       );
@@ -177,6 +210,7 @@ const QuizController = () => {
         <QuizQuestion
           question={question}
           selectedChoice={selectedChoice}
+          correctAnswer={questionCheck?.answer}
           questionNo={currentQuestion + 1}
           totalNumberOfQuestions={questions.length}
           handleChoice={handleAnswer}
@@ -235,6 +269,7 @@ const styles = StyleSheet.create({
   preparationText: {
     color: Colors.primary[700],
     fontSize: 16,
+    textAlign: 'center',
   },
 });
 

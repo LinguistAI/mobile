@@ -1,14 +1,16 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
 import ChoiceList from './ChoiceList';
 import QuestionDisplay from './QuestionDisplay';
+import { Question } from './types';
 
 interface QuestionProps {
-  question: TQuestion;
+  question: Question;
   selectedChoice: string;
   questionNo: number;
   totalNumberOfQuestions: number;
   handleChoice: (choice: string) => void;
   allowAnswer: boolean;
+  correctAnswer?: string;
 }
 
 const QuizQuestion = ({
@@ -18,6 +20,7 @@ const QuizQuestion = ({
   totalNumberOfQuestions,
   selectedChoice,
   allowAnswer,
+  correctAnswer,
 }: QuestionProps) => {
   const height = Dimensions.get('screen').height * 0.65;
 
@@ -34,8 +37,8 @@ const QuizQuestion = ({
         <ChoiceList
           handleChoice={handleChoice}
           selectedChoice={selectedChoice}
-          correctChoice={question.correctAnswer}
-          items={question.answers}
+          correctAnswer={correctAnswer}
+          items={question.options}
           allowAnswer={allowAnswer}
         />
       </View>

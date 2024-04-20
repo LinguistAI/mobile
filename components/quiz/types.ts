@@ -5,7 +5,8 @@ export interface TQuestion {
   options: string[];
 }
 
-export type QuizPhase = 'waiting-answer' | 'answered' | 'end';
+// TODO: Instead of answered make correct-answer || wrong-answer
+export type QuizPhase = 'waiting-answer' | 'answered' | 'end' | 'checking-answer' | 'waiting-results';
 
 export type ChoiceStatus = 'default' | 'selected';
 
@@ -28,7 +29,7 @@ export interface QCreateMCQ {
   conversationId: string;
 }
 
-type Question = {
+export type Question = {
   id: string;
   word: string;
   question: string;
@@ -43,7 +44,13 @@ export interface QFinishMCQ {
   testId: string;
 }
 
+export interface ResultQuestion extends Question {
+  userAnswer: string;
+  isUserCorrect: boolean;
+}
+
 export interface RFinishMCQ {
   isCompleted: boolean;
   correctPercentage: number;
+  questions: ResultQuestion[];
 }

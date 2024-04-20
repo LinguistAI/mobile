@@ -122,10 +122,12 @@ const Profile = () => {
         </Button>
       </View>
 
-      <View style={styles.activityContainer}>
-        <Text style={styles.activityTitle}>Activity</Text>
-        <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
-      </View>
+      {user.lastLogin && (
+        <View style={styles.activityContainer}>
+          <Text style={styles.activityTitle}>Activity</Text>
+          <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
+        </View>
+      )}
     </ScrollView>
   );
 };

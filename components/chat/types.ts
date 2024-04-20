@@ -42,3 +42,17 @@ export type LastMessage = {
   msg: string;
   timestamp: Date;
 };
+
+type SortBy = 'asc' | 'desc';
+
+export interface IMessageCountQuery {
+  botId: string;
+  sort?: SortBy;
+  daysLimit?: number;
+}
+
+export type MessageCount = {
+  date: Date;
+  botId: string;
+  messageCount: number;
+};

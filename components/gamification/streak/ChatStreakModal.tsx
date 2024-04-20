@@ -17,7 +17,7 @@ const ChatStreakModal = ({ handleModalClose, handleModalOpen, streakModalVisible
   const { user } = useUser();
 
   useEffect(() => {
-    if (user && isDateToday(user.lastLogin)) {
+    if (user && user.lastLogin && isDateToday(user.lastLogin)) {
       handleModalClose();
     } else {
       handleModalOpen();

@@ -6,7 +6,6 @@ import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
-import { useGetAllChatMessagesQuery } from '../../components/chat/api';
 
 interface ChatScreenProps {
   route: any;
@@ -46,7 +45,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       timestamp: new Date(),
     };
 
-    addMessage(chatMessage);
+    const res = await addMessage(chatMessage);
   };
 
   const onSelectedWordDismiss = () => {
@@ -125,7 +124,12 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={onSelectedWordDismiss}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={onSelectedWordDismiss}
+      >
         <View style={styles.centeredView}>
           <WordInfoCard selectedWord={selectedWord} onDismiss={onSelectedWordDismiss} />
         </View>

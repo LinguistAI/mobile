@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { FontLoadedContext } from '../../App';
 import TitleSizes from '../../theme/fontSizes';
+import Colors from '../../theme/colors';
 
 type FontSizeKeys = keyof typeof TitleSizes;
 

@@ -7,13 +7,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
 import { useGetWordMeaningsQuery } from '../../api';
-import LoadingIndicator from '../../../common/LoadingIndicator';
+import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 
-interface WordDetailsInterface {
+interface WordDetailsCollapseInterface {
   word: WordWithConfidence;
 }
 
-const WordDetails = ({ word }: WordDetailsInterface) => {
+const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
   const [expanded, setExpanded] = useState(false);
 
   const { data: wordMeanings, isFetching, isError } = useGetWordMeaningsQuery([word.word]);
@@ -35,7 +35,7 @@ const WordDetails = ({ word }: WordDetailsInterface) => {
       const wordGroupOrNot = dict[word.word];
       if (isDictionaryWordGroup(wordGroupOrNot)) {
         const wordGroupObj = wordGroupOrNot;
-        result = wordGroupObj.wordGroup.map((group) => <WordDetail definition={group} />);
+        result = wordGroupObj.wordGroup.map((group) => <WordDetail key={group.id} definition={group} />);
       } else {
         result = <Text>Unfortunately this word does not exist in our dictionary. Sorry...</Text>;
       }
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WordDetails;
+export default WordDetailsCollapse;

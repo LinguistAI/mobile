@@ -149,7 +149,7 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
               }}
             ></DateTimePicker>
           ) : null}
-          <Button type="primary" onPress={() => handleNext(birthdate.toISOString())}>
+          <Button type="primary" onPress={() => handleNext("I was born on " + birthdate.toLocaleDateString())}>
             CONFIRM
           </Button>
         </View>
@@ -164,7 +164,13 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
             value: option.value,
             name: option.label,
           }))}
-          onSelectionDone={(value) => handleNext(value)}
+          onSelectionDone={(name) => {
+            if (currentMessage?.name === 'hobbies' && (!name || (Array.isArray(name) && name.length === 0))) {
+              handleNext('Nothing much.'); // If no choice is selected for hobbies
+            } else {
+              handleNext(name);
+            }
+          }}
           multiple={currentMessage?.multiple ?? false}
         />
       );

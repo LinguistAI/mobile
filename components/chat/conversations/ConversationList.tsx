@@ -6,9 +6,9 @@ import Avatar from '../../common/Avatar';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useGetAllConversationsQuery } from '../api';
 import { startConversation } from '../../../redux/chatSlice';
-import FetchError from '../../common/FetchError';
-import LoadingIndicator from '../../common/LoadingIndicator';
-import CenteredFeedback from '../../common/CenteredFeedback';
+import FetchError from '../../common/feedback/FetchError';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
+import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import { useCallback, useEffect, useState } from 'react';
 import { getLastMessages } from '../utils';
 import Conversation from './Conversation';
@@ -32,11 +32,14 @@ const ConversationList = () => {
   if (isFetching) return <LoadingIndicator subtext="Fetching your conversations..." />;
   if (isError) return <FetchError />;
   if (!conversations || conversations.length === 0)
-    return <CenteredFeedback message="No conversations found. Click the add button to initiate a conversation." />;
+    return (
+      <CenteredFeedback message="No conversations found. Click the add button to initiate a conversation." />
+    );
 
   const handleConversationClick = (id: string) => {
     navigation.navigate('ChatScreen', { conversationId: id });
-    dispatch(startConversation({ bot: conversations.find((c) => c.id === id)?.bot }));
+    const conversation = conversations.find((c) => c.id === id);
+    dispatch(startConversation({ bot: conversation?.bot || null, conversation: conversation?.id }));
   };
 
   const renderConversation = (item: TConversation) => {

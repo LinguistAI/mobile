@@ -6,7 +6,7 @@
   "quoteProps": "as-needed",
   "singleQuote": true,
   "semi": true,
-  "printWidth": 120,
+  "printWidth": 110,
   "useTabs": false,
   "tabWidth": 2,
   "trailingComma": "es5"

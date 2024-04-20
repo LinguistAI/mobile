@@ -50,7 +50,9 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
       };
       setMessages((prev) => [...prev, responseMessage]);
       saveLastMessage(conversationId, responseMessage.content, responseMessage.timestamp);
+      return 1;
     }
+    return -1;
   };
 
   return { messages, addMessage, isLoadingMessages, isSendingMessage, responseNotReceived };

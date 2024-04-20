@@ -22,6 +22,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { createContext, useEffect, useState } from 'react';
 import Splash from './components/common/Splash';
+import Colors from './theme/colors';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,11 +60,11 @@ export default function App() {
                   <NavigationContainer>
                     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                       <Stack.Navigator
-                        screenOptions={{
-                          contentStyle: {
-                            backgroundColor: 'white',
-                          },
-                        }}
+                      screenOptions={{
+                        contentStyle: {
+                          backgroundColor: Colors.background[500],
+                        },
+                      }}
                         initialRouteName="Landing"
                       >
                         <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />

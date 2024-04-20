@@ -3,7 +3,7 @@ import ChatStreakButton from './ChatStreakButton';
 import ChatStreakModal from './ChatStreakModal';
 import { useState } from 'react';
 import { useGetUserStreakQuery } from '../api';
-import FetchError from '../../common/FetchError';
+import FetchError from '../../common/feedback/FetchError';
 
 const ChatStreakContainer = () => {
   const [streakModalVisible, setModalVisible] = useState(false);

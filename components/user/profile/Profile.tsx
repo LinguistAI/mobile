@@ -1,6 +1,15 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, Touchable, TouchableWithoutFeedback, View, ViewBase } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Touchable,
+  TouchableWithoutFeedback,
+  View,
+  ViewBase,
+} from 'react-native';
 import Colors from '../../../theme/colors';
 import useUser from '../../../hooks/useUser';
 import Button from '../../common/form/Button';
@@ -9,11 +18,11 @@ import { Ionicons } from '@expo/vector-icons';
 import UserInfoForm from '../onboarding/UserInfoForm';
 import Divider from '../../common/Divider';
 import { useGetUserDetailsQuery } from '../userApi';
-import LoadingIndicator from '../../common/LoadingIndicator';
 import ExperienceBar from '../../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import ActionIcon from '../../common/ActionIcon';
 import ActionButton from '../../common/ActionButton';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 
 const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
 
@@ -101,9 +110,6 @@ const Profile = () => {
       <View style={styles.changePasswordView}>
         <Button
           rightIcon={<Ionicons name="exit-outline" size={20} color={Colors.gray[0]} />}
-          bgColor={Colors.red[600]}
-          textColor={Colors.gray[0]}
-          borderColor={Colors.red[800]}
           type="primary"
           onPress={handleSignout}
         >
@@ -116,10 +122,12 @@ const Profile = () => {
         </Button>
       </View>
 
-      <View style={styles.activityContainer}>
-        <Text style={styles.activityTitle}>Activity</Text>
-        <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
-      </View>
+      {user.lastLogin && (
+        <View style={styles.activityContainer}>
+          <Text style={styles.activityTitle}>Activity</Text>
+          <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
+        </View>
+      )}
     </ScrollView>
   );
 };

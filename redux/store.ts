@@ -26,6 +26,6 @@ export const store = configureStore({
       .concat(wordBankApi.middleware)
       .concat(userApi.middleware)
       .concat(userStatsApi.middleware)
-      .concat(questsApi.middleware),
+      .concat(questsApi.middleware)
       .concat(quizApi.middleware),
 });

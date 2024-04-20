@@ -19,12 +19,17 @@ import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-d
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useFonts } from 'expo-font';
+import { createContext, useEffect, useState } from 'react';
+import Splash from './components/common/Splash';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {},
   },
 });
+
+export const FontLoadedContext = createContext<boolean>(false);
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -33,45 +38,63 @@ export default function App() {
     screenOrientationConstantAndroid: ScreenOrientation.Orientation.PORTRAIT_UP,
   });
 
+  // const [fontsLoaded] = useFonts({
+  //   'Nunito-Regular': require('./assets/fonts/Nunito-Regular.ttf'),
+  // });
+
+  const [fontsLoaded] = useFonts({
+    Nunito: require('./assets/fonts/Nunito-Regular.ttf'),
+    NunitoBold: require('./assets/fonts/Nunito-Bold.ttf'),
+    NunitoBolder: require('./assets/fonts/Nunito-Black.ttf'),
+  });
+
+  console.log(fontsLoaded);
+
+  if (!fontsLoaded) {
+    return <Splash />;
+  }
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <AutocompleteDropdownContextProvider>
-            <MenuProvider>
-              <CustomErrorBoundary>
-                <NavigationContainer>
-                  <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-                    <Stack.Navigator
-                      screenOptions={{
-                        contentStyle: {
-                          backgroundColor: 'white',
-                        },
-                      }}
-                      initialRouteName="Landing"
-                    >
-                      <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
-                      <Stack.Screen name="Login" component={LoginScreen} />
-                      <Stack.Screen name="Register" component={RegisterScreen} />
-                      <Stack.Screen
-                        name="Welcome Conversation"
-                        component={PostRegistrationConversation}
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen name="Main" component={BottomNavigation} options={{ headerShown: false }} />
-                      <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
-                      <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
-                      <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
-                      <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
-                    </Stack.Navigator>
-                  </SafeAreaView>
-                </NavigationContainer>
-              </CustomErrorBoundary>
-              <Notifications />
-            </MenuProvider>
-          </AutocompleteDropdownContextProvider>
-        </QueryClientProvider>
-      </Provider>
-    </GestureHandlerRootView>
+    <FontLoadedContext.Provider value={fontsLoaded}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <AutocompleteDropdownContextProvider>
+              <MenuProvider>
+                <CustomErrorBoundary>
+                  <NavigationContainer>
+                    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+                      <Stack.Navigator
+                        screenOptions={{
+                          contentStyle: {
+                            backgroundColor: 'white',
+                          },
+                        }}
+                        initialRouteName="Landing"
+                      >
+                        <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+                        <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen name="Register" component={RegisterScreen} />
+                        <Stack.Screen
+                          name="Welcome Conversation"
+                          component={PostRegistrationConversation}
+                          options={{ headerShown: false }}
+                        />
+                        <Stack.Screen name="Main" component={BottomNavigation} options={{ headerShown: false }} />
+                        <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
+                        <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
+                        <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
+                        <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
+                      </Stack.Navigator>
+                    </SafeAreaView>
+                  </NavigationContainer>
+                </CustomErrorBoundary>
+                <Notifications />
+              </MenuProvider>
+            </AutocompleteDropdownContextProvider>
+          </QueryClientProvider>
+        </Provider>
+      </GestureHandlerRootView>
+    </FontLoadedContext.Provider>
   );
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { RFriendship, RLeaderboardUser } from '../../components/user/types';
 import React from 'react';
@@ -28,7 +28,9 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
   };
 
   return (
-    <Card style={user.username === loggedInUser ? styles.highlightedCell : styles.contentRoot}>
+    <Card
+      style={user.username === loggedInUser ? { ...styles.highlightedCell, ...styles.contentRoot } : styles.contentRoot}
+    >
       <View>
         <View style={styles.mainInfoContainer}>
           <View style={styles.mainInfoContainer}>
@@ -48,8 +50,11 @@ const styles = StyleSheet.create({
   contentRoot: {
     padding: 10,
     alignSelf: 'center',
-    width: '96%',
+    width: '100%',
     borderRadius: 0,
+
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray[100],
   },
   infoContainer: {
     display: 'flex',
@@ -80,16 +85,10 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   subinfo: {
-    color: Colors.gray[500],
+    color: Colors.yellow[400],
     fontSize: 13,
   },
   highlightedCell: {
-    padding: 10,
-    alignSelf: 'center',
-    width: '96%',
-    borderRadius: 0,
-    // borderWidth: 1,
-    // borderColor: 'black',
     backgroundColor: '#F3E7FF',
   },
   rankImage: {

@@ -10,45 +10,21 @@ import Colors from '../../theme/colors';
 import LeaderboardUserCard from './LeaderboardUserCard';
 import useUser from '../../hooks/useUser';
 import ActionButton from '../../components/common/ActionButton';
+import { QLeaderboard, RLeaderboard } from '../../components/user/types';
 
-const DEFAULT_PAGE = 0;
-const DEFAULT_PAGE_SIZE = 15;
+interface LeaderboardListProps {
+  data: RLeaderboard | undefined;
+  message: string;
+  isDataLoading: boolean;
+  isRefreshing: boolean;
+  onRefresh: () => void;
+}
 
-const LeaderboardList = () => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
-  const [totalPageNum, setTotalPageNum] = useState(0);
-  const [trigger, { data: leaderboard, isLoading, isError, isFetching }, lastPromiseInfo] =
-    useLazyGetGlobalLeaderboardQuery();
+const LeaderboardList = ({ data, message, isDataLoading, isRefreshing, onRefresh }: LeaderboardListProps) => {
   const { user } = useUser();
   const flatListRef = useRef<FlatList<any>>(null);
   const [rowHeights, setRowHeights] = useState<number[]>([]);
   const [numVisibleRows, setNumVisibleRows] = useState<number>(0);
-
-  const goToPreviousPage = () => {
-    if (currentPage > 0) {
-      // setCurrentPage((prevPage) => prevPage - 1);
-      trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage - 1 });
-    }
-  };
-
-  const goToNextPage = () => {
-    // setCurrentPage((prevPage) => prevPage + 1);
-    if (currentPage < totalPageNum - 1) {
-      trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage + 1 });
-    }
-  };
-
-  const onRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    await trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage });
-    setIsRefreshing(false);
-  }, []);
-
-  useEffect(() => {
-    trigger({ size: DEFAULT_PAGE_SIZE });
-    // setCurrentPage(leaderboard!.currentPage);
-  }, []);
 
   useEffect(() => {
     const screenHeight = Dimensions.get('window').height - 100;
@@ -57,15 +33,8 @@ const LeaderboardList = () => {
   }, []);
 
   useEffect(() => {
-    if (leaderboard) {
-      setCurrentPage(leaderboard.currentPage);
-      setTotalPageNum(leaderboard.totalPages);
-
-      console.log('curretn:', currentPage);
-      console.log('total:', totalPageNum);
-    }
-    if (leaderboard && flatListRef.current) {
-      const loggedUserIndex = leaderboard.xprankings.findIndex((item) => item.user.username === user.username);
+    if (data && flatListRef.current) {
+      const loggedUserIndex = data.xprankings.findIndex((item) => item.user.username === user.username);
 
       if (loggedUserIndex !== -1) {
         // Calculate the target index to scroll to (approximately the middle of the screen)
@@ -73,7 +42,7 @@ const LeaderboardList = () => {
         flatListRef.current.scrollToIndex({ animated: true, index: targetIndex });
       }
     }
-  }, [leaderboard, currentPage]);
+  }, [data]);
 
   const renderSkeletonList = () => {
     return (
@@ -103,64 +72,51 @@ const LeaderboardList = () => {
     });
   };
 
-  if (isLoading) {
+  if (isDataLoading) {
     return renderSkeletonList();
   }
-  if (isError) return <FetchError />;
-  if (!leaderboard) {
+  if (!data) {
     return <FetchError />;
   }
 
   return (
     <View style={styles.root}>
-      {totalPageNum > 1 ? (
-        <View style={styles.pageButtons}>
-          <TouchableOpacity onPress={goToPreviousPage} disabled={currentPage === 0}>
-            <Ionicons name="chevron-back-circle-outline" size={32} color={currentPage === 0 ? 'gray' : 'black'} />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 18, marginHorizontal: 15 }}>{currentPage + 1}</Text>
-          <TouchableOpacity onPress={goToNextPage} disabled={currentPage === totalPageNum - 1}>
-            <Ionicons
-              name="chevron-forward-circle-outline"
-              size={32}
-              color={currentPage === totalPageNum - 1 ? 'gray' : 'black'}
-            />
-          </TouchableOpacity>
-        </View>
-      ) : null}
-
-      <FlatList
-        ref={flatListRef}
-        numColumns={1}
-        contentContainerStyle={styles.friendsListStyle}
-        data={leaderboard.xprankings}
-        renderItem={({ item, index }) => (
-          <View onLayout={(event) => measureRowHeight(index, event.nativeEvent.layout.height)}>
-            <LeaderboardUserCard leaderboardUser={item} loggedInUser={user.username} />
-          </View>
-        )}
-        ListEmptyComponent={
-          <View style={{ height: '80%', display: 'flex', justifyContent: 'center' }}>
-            <CenteredFeedback
-              icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />} // TODO update later put this only in the friends
-              message="Looks like you have no friends just yet. Send a friend request to meet with new people!"
-            />
-          </View>
-        }
-        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
-        getItemLayout={getItemLayout}
-      />
+      <View style={styles.flatList}>
+        <FlatList
+          ref={flatListRef}
+          numColumns={1}
+          contentContainerStyle={styles.friendsListStyle}
+          data={data.xprankings}
+          renderItem={({ item, index }) => (
+            <View onLayout={(event) => measureRowHeight(index, event.nativeEvent.layout.height)}>
+              <LeaderboardUserCard leaderboardUser={item} loggedInUser={user.username} />
+            </View>
+          )}
+          ListEmptyComponent={
+            <View style={{ height: '85%', display: 'flex', justifyContent: 'center' }}>
+              <CenteredFeedback
+                icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />} // TODO update later put this only in the friends
+                message={message}
+              />
+            </View>
+          }
+          refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+          getItemLayout={getItemLayout}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    marginBottom: 100,
+    maxHeight: '90%',
+    backgroundColor: 'white',
   },
-  friendsListStyle: {
-    padding: 10,
+  flatList: {
+    overflow: 'hidden', // This ensures that content inside the FlatList respects the border radius
   },
+  friendsListStyle: {},
   leaderboardItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -181,15 +137,6 @@ const styles = StyleSheet.create({
     height: 75,
     alignSelf: 'center',
     marginBottom: 10,
-  },
-  pageButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 5,
-    width: '99%',
-    alignSelf: 'center',
-    marginTop: 15,
   },
 });
 

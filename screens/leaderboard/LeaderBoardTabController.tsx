@@ -2,8 +2,8 @@ import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import { SafeAreaView, StyleSheet, useWindowDimensions } from 'react-native';
 import { useState } from 'react';
 import Colors from '../../theme/colors';
-import GlobalLeaderboardScreen from './FriendsLeaderboardScreen';
 import FriendsLeaderboardScreen from './FriendsLeaderboardScreen';
+import GlobalLeaderboardScreen from './GlobalLeaderboardScreen';
 
 const renderScene = SceneMap({
   first: GlobalLeaderboardScreen,
@@ -40,6 +40,7 @@ const LeaderboardTabController = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    marginTop: 20,
   },
 });
 

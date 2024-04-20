@@ -35,7 +35,6 @@ const QuizResults = ({ route }: ChatScreenProps) => {
   const results = route.params.results;
   const timeElapsed = route.params.timeElapsed;
   const timeElapsedSeconds = msToSeconds(timeElapsed, true);
-  console.log('time elapsed:', timeElapsed);
 
   const getQuestionFeedbackCardStyle = (q: ResultQuestion) => {
     const cardStyle = [];
@@ -51,7 +50,6 @@ const QuizResults = ({ route }: ChatScreenProps) => {
   };
 
   const renderQuestionAnswersFeedbackContent = (q: ResultQuestion) => {
-    console.log(q.isUserCorrect);
     if (q.isUserCorrect) {
       return (
         <>

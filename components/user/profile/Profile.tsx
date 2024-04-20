@@ -10,19 +10,21 @@ import {
   View,
   ViewBase,
 } from 'react-native';
-import Colors from '../../theme/colors';
-import useUser from '../../hooks/useUser';
-import Button from '../../components/common/form/Button';
+import Colors from '../../../theme/colors';
+import useUser from '../../../hooks/useUser';
+import Button from '../../common/form/Button';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import UserInfoForm from './UserInfoForm';
-import Divider from '../common/Divider';
-import { useGetUserDetailsQuery } from './api';
-import LoadingIndicator from '../common/feedback/LoadingIndicator';
-import ExperienceBar from '../gamification/experience/ExperienceBar';
-import ChatStreakContainer from '../gamification/streak/ChatStreakContainer';
+import UserInfoForm from '../onboarding/UserInfoForm';
+import Divider from '../../common/Divider';
+import { useGetUserDetailsQuery } from '../userApi';
+import ExperienceBar from '../../gamification/experience/ExperienceBar';
+import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
+import ActionIcon from '../../common/ActionIcon';
+import ActionButton from '../../common/ActionButton';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 
-const avatarPlaceholderImg = require('../../assets/profile-default.jpg');
+const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -33,6 +35,10 @@ const Profile = () => {
 
   const onChangePassword = () => {
     navigation.navigate('Change Password');
+  };
+
+  const onPressFriends = () => {
+    navigation.navigate('Friends');
   };
 
   const pickImage = async () => {
@@ -71,7 +77,17 @@ const Profile = () => {
 
   return (
     <ScrollView style={styles.root}>
-      <View style={styles.topSection} />
+      <View style={styles.topSection}>
+        <View style={{ alignSelf: 'flex-end', margin: 15 }}>
+          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold' }}>Friends</Text>
+            <ActionIcon
+              onPress={onPressFriends}
+              icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
+            />
+          </View>
+        </View>
+      </View>
       <TouchableWithoutFeedback onPress={pickImage}>
         <Image
           source={{
@@ -108,7 +124,7 @@ const Profile = () => {
 
       <View style={styles.activityContainer}>
         <Text style={styles.activityTitle}>Activity</Text>
-        <Text style={styles.lastLogin}>Last login: {user?.lastLogin?.toLocaleString()}</Text>
+        <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
       </View>
     </ScrollView>
   );

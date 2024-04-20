@@ -81,7 +81,6 @@ const WordLists = () => {
     };
     await addListMutate(createWordList);
     if (createWordlistError) {
-      console.log(createWordlistError);
       addNotification({
         body: 'Failed to create word list',
         type: 'error',
@@ -91,7 +90,7 @@ const WordLists = () => {
 
   const onError = (errors: any, e: any) => {
     if (methods.formState.isValid) {
-      console.log(errors);
+      return;
     }
   };
 
@@ -160,9 +159,7 @@ const WordLists = () => {
       <View style={styles.wordListContainer}>
         <FlatList
           data={filteredWordLists.length === 0 ? wordLists?.lists : filteredWordLists}
-          renderItem={({ item }) => (
-            <WordListCard key={item.listId} list={item} handleListSelection={handleListSelection} />
-          )}
+          renderItem={({ item }) => <WordListCard list={item} handleListSelection={handleListSelection} />}
           numColumns={2}
           keyExtractor={(item) => item.listId}
           contentContainerStyle={styles.wordListContentContainer}

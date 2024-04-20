@@ -72,7 +72,7 @@ const RegisterScreen = (props: RegisterScreenProps) => {
 
   const onError = (errors: any, e: any) => {
     if (methods.formState.isValid) {
-      console.log('No errors. This should not be called.');
+      return;
     }
   };
 

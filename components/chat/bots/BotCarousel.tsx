@@ -19,6 +19,7 @@ import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { useDispatch } from 'react-redux';
 import { startConversation } from '../../../redux/chatSlice';
 import { isDataResponse } from '../../../services';
+import { isDataResponse } from '../../../services';
 
 const BotCarouselShimmer = () => {
   const width = Dimensions.get('window').width;
@@ -60,7 +61,7 @@ const BotCarousel = () => {
   const dispatch = useDispatch();
 
   const width = Dimensions.get('window').width;
-  const itemHeight = width * 0.5; // Set a fixed height for each item
+  const itemHeight = width * 0.4; // Set a fixed height for each item
   if (isFetchingBots) {
     return <BotCarouselShimmer />;
   }

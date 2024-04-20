@@ -6,7 +6,6 @@ import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
-import { useDispatch } from 'react-redux';
 
 interface ChatScreenProps {
   route: any;
@@ -20,7 +19,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (messagesList.current) {

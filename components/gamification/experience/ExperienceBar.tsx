@@ -50,9 +50,9 @@ const ExperienceBar = () => {
         width={BAR_WIDTH}
         height={BAR_HEIGHT}
         borderRadius={8}
-        color={Colors.blue[600]}
-        unfilledColor={Colors.blue[100]}
-        borderWidth={0}
+        color={Colors.primary[600]}
+        unfilledColor={Colors.gray[300]}
+        borderWidth={1}
       />
     </View>
   );
@@ -69,11 +69,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.blue[600],
+    color: Colors.primary[600],
   },
   xpText: {
     fontSize: 16,
-    color: Colors.blue[600],
+    color: Colors.primary[600],
   },
 });
 

@@ -15,6 +15,7 @@ import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import BotProfileCard from './BotProfileCard';
 import useNotifications from '../../../hooks/useNotifications';
 import { isDataResponse } from '../../../services';
+import { isDataResponse } from '../../../services';
 
 const BotLists = () => {
   const navigation = useNavigation();
@@ -25,7 +26,7 @@ const BotLists = () => {
     isError: conversationsNotLoaded,
   } = useGetAllConversationsQuery();
   const { data: bots, isFetching: isFetchingBots, isError: botsNotLoaded } = useGetAvailableBotsQuery();
-  const [createConvo, { isLoading: pendingBotCreateResponse, data, error: createConversationError }] =
+  const [createConvo, { isLoading: pendingBotCreateResponse, error: createConversationError }] =
     useCreateNewConversationMutation();
   const { add: notify } = useNotifications();
 

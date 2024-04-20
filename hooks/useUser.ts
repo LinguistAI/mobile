@@ -1,6 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
 import { atom, useAtom } from 'jotai';
 import { StoredUserInfoWithTokens } from '../types';
+import { useDispatch } from 'react-redux';
+import { resetApiState } from '../redux/chatSlice';
 
 const emptyUserAtom = {
   username: '',
@@ -8,12 +10,14 @@ const emptyUserAtom = {
   accessToken: '',
   refreshToken: '',
   lastLogin: new Date('1970-01-01T00:00:00.000Z'),
+  id: '',
 };
 
 const userAtom = atom<StoredUserInfoWithTokens>(emptyUserAtom);
 
 const useUser = () => {
   const [user, setUser] = useAtom(userAtom);
+  const dispatch = useDispatch();
 
   const storeUser = async (details: StoredUserInfoWithTokens) => {
     try {
@@ -39,6 +43,7 @@ const useUser = () => {
 
   const clearUser = async () => {
     try {
+      dispatch(resetApiState({}));
       await SecureStore.deleteItemAsync('user');
       setUser(emptyUserAtom);
     } catch (error) {

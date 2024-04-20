@@ -90,8 +90,8 @@ export const createAxiosBaseQuery =
       const axiosInstance = secure ? axiosSecure : axiosBase;
       const response = await axiosInstance({
         url: baseUrl + url,
-        method,
         headers,
+        method,
         data: body,
         params,
       });

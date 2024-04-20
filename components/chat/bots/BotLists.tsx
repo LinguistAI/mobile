@@ -15,7 +15,6 @@ import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import BotProfileCard from './BotProfileCard';
 import useNotifications from '../../../hooks/useNotifications';
 import { isDataResponse } from '../../../services';
-import { isDataResponse } from '../../../services';
 
 const BotLists = () => {
   const navigation = useNavigation();

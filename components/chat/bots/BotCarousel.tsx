@@ -19,7 +19,6 @@ import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { useDispatch } from 'react-redux';
 import { startConversation } from '../../../redux/chatSlice';
 import { isDataResponse } from '../../../services';
-import { isDataResponse } from '../../../services';
 
 const BotCarouselShimmer = () => {
   const width = Dimensions.get('window').width;

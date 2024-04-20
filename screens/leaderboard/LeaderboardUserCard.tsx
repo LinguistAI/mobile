@@ -4,6 +4,7 @@ import { RFriendship, RLeaderboardUser } from '../../components/user/types';
 import React from 'react';
 import Card from '../../components/common/Card';
 import Colors from '../../theme/colors';
+import LText from '../../components/common/Text';
 
 interface LeaderboardUserCardProps {
   leaderboardUser: RLeaderboardUser;
@@ -37,7 +38,7 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
             {ranking <= 3 && <Image source={renderRankingImage()} style={styles.rankImage} />}
             {ranking > 3 && <Text style={styles.rankingInfo}>{ranking}.</Text>}
 
-            <Text style={styles.mainInfo}>{user.username}</Text>
+            <LText style={styles.mainInfo}>{user.username}</LText>
           </View>
           <Text style={styles.subinfo}>{xp} XP</Text>
         </View>

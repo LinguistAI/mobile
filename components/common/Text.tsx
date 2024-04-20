@@ -1,18 +1,17 @@
 import { useFonts } from 'expo-font';
 import { useContext } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 import { FontLoadedContext } from '../../App';
 import TitleSizes from '../../theme/fontSizes';
 
-type FontSizeKeys = keyof typeof TitleSizes;
-
-interface TitleProps {
+interface TextProps {
   children: React.ReactNode;
-  size?: FontSizeKeys;
+  size?: number;
+  style: StyleProp<TextStyle>;
   centered?: boolean;
 }
 
-const Title = ({ children, size: fontSize = 'h1', centered }: TitleProps) => {
+const LText = ({ children, size = 12, style, centered }: TextProps) => {
   const textAlign = centered ? 'center' : 'left';
   const fontsLoaded = useContext(FontLoadedContext);
   let currentStyle = styles.titleTextCustom;
@@ -21,23 +20,26 @@ const Title = ({ children, size: fontSize = 'h1', centered }: TitleProps) => {
     currentStyle = styles.titleText;
   }
 
-  return <Text style={[currentStyle, { fontSize: TitleSizes[fontSize], textAlign }]}>{children}</Text>;
+  return <Text style={[currentStyle, { fontSize: size, textAlign }, style]}>{children}</Text>;
 };
 
 const styles = StyleSheet.create({
   titleTextCustom: {
-    fontSize: 24,
+    fontSize: 12,
+    fontFamily: 'Nunito',
+  },
+  titleTextCustomBold: {
+    fontSize: 12,
+    fontFamily: 'NunitoBold',
+  },
+  titleTextCustomBolder: {
+    fontSize: 12,
     fontFamily: 'NunitoBolder',
-    paddingHorizontal: 16,
-    marginVertical: 4,
   },
   titleText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 12,
     fontFamily: '',
-    paddingHorizontal: 16,
-    marginVertical: 4,
   },
 });
 
-export default Title;
+export default LText;

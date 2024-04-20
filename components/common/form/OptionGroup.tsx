@@ -43,7 +43,8 @@ const OptionGroup: React.FC<OptionGroupProps> = ({
   };
 
   const handleSelectionDone = () => {
-    onSelectionDone(selectedValue)
+    const selectedLabels = items.filter((item) => selectedValue.includes(item.value)).map((item) => item.name);
+    onSelectionDone(selectedLabels)
   }
 
   return (

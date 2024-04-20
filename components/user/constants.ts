@@ -50,7 +50,7 @@ export const BOT_MESSAGES: ConversationStep[] = [
     message:
       "Hi, I'm Luna. Your personal language learning assistant. I'm here to help you learn English. What's your name?",
     skippedMsg: "Okay, let's skip that for now. What's your name?",
-    skippable: false,
+    skippable: true,
     name: 'name',
     trigger: 1,
     type: 'text',

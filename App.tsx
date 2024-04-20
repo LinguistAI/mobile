@@ -48,8 +48,6 @@ export default function App() {
     NunitoBolder: require('./assets/fonts/Nunito-Black.ttf'),
   });
 
-  console.log(fontsLoaded);
-
   if (!fontsLoaded) {
     return <Splash />;
   }

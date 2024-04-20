@@ -1,6 +1,91 @@
-import { View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useCallback, useEffect, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useLazyGetGlobalLeaderboardQuery } from '../../components/user/userApi';
+import LeaderboardList from './LeaderboardList';
+
+const DEFAULT_PAGE = 0;
+const DEFAULT_PAGE_SIZE = 10;
 
 const GlobalLeaderboardScreen = () => {
-  return <View></View>;
+  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
+  const [totalPageNum, setTotalPageNum] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [trigger, { data: leaderboard, isFetching, isError }] = useLazyGetGlobalLeaderboardQuery();
+
+  const goToPreviousPage = () => {
+    if (currentPage > 0) {
+      // setCurrentPage((prevPage) => prevPage - 1);
+      trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage - 1 });
+    }
+  };
+
+  const goToNextPage = () => {
+    // setCurrentPage((prevPage) => prevPage + 1);
+    if (currentPage < totalPageNum - 1) {
+      trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage + 1 });
+    }
+  };
+
+  const onRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage });
+    setIsRefreshing(false);
+  }, []);
+
+  useEffect(() => {
+    trigger({ size: DEFAULT_PAGE_SIZE });
+    // setCurrentPage(leaderboard!.currentPage);
+  }, []);
+
+  useEffect(() => {
+    if (leaderboard) {
+      setCurrentPage(leaderboard.currentPage);
+      setTotalPageNum(leaderboard.totalPages);
+    }
+  }, [leaderboard, currentPage]);
+
+  return (
+    <SafeAreaView style={{ flex: 1, display: 'flex', backgroundColor: 'white' }}>
+      {totalPageNum > 1 ? (
+        <View style={styles.pageButtons}>
+          <TouchableOpacity onPress={goToPreviousPage} disabled={currentPage === 0}>
+            <Ionicons name="chevron-back-circle-outline" size={32} color={currentPage === 0 ? 'gray' : 'black'} />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 18, marginHorizontal: 15 }}>{currentPage + 1}</Text>
+          <TouchableOpacity onPress={goToNextPage} disabled={currentPage === totalPageNum - 1}>
+            <Ionicons
+              name="chevron-forward-circle-outline"
+              size={32}
+              color={currentPage === totalPageNum - 1 ? 'gray' : 'black'}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : null}
+      <LeaderboardList
+        data={leaderboard}
+        message="Looks like you have no friends just yet. Send a friend request to meet with new people!"
+        isDataLoading={isFetching}
+        isRefreshing={isRefreshing}
+        onRefresh={onRefresh}
+      />
+    </SafeAreaView>
+  );
 };
+
+const styles = StyleSheet.create({
+  friendAddBtnContainer: {
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+  pageButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 5,
+    width: '99%',
+    alignSelf: 'center',
+    marginTop: 15,
+  },
+});
 export default GlobalLeaderboardScreen;

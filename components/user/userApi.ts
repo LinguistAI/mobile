@@ -15,7 +15,7 @@ import { Page, User } from '../../types';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend', 'Leaderboard'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Leaderboard', 'FriendLeaderboard'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -93,6 +93,14 @@ export const userApi = createApi({
       }),
       providesTags: ['Leaderboard'],
     }),
+    getFriendLeaderboard: builder.query<RLeaderboard, QLeaderboard>({
+      query: (paginationParams) => ({
+        url: '/leaderboard/friends/xp',
+        method: 'GET',
+        params: paginationParams,
+      }),
+      providesTags: ['FriendLeaderboard'],
+    }),
   }),
 });
 
@@ -107,4 +115,5 @@ export const {
   useSendFriendRequestMutation,
   useLazySearchUserQuery,
   useLazyGetGlobalLeaderboardQuery,
+  useLazyGetFriendLeaderboardQuery,
 } = userApi;

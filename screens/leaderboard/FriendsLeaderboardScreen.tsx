@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useLazyGetGlobalLeaderboardQuery } from '../../components/user/userApi';
+import { useLazyGetFriendLeaderboardQuery, useLazyGetGlobalLeaderboardQuery } from '../../components/user/userApi';
 import LeaderboardList from './LeaderboardList';
 
 const DEFAULT_PAGE = 0;
@@ -11,8 +11,7 @@ const FriendsLeaderboardScreen = () => {
   const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
   const [totalPageNum, setTotalPageNum] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [trigger, { data: leaderboard, isFetching, isError }] = useLazyGetGlobalLeaderboardQuery();
-  console.log(totalPageNum);
+  const [trigger, { data: leaderboard, isFetching, isError }] = useLazyGetFriendLeaderboardQuery();
 
   const goToPreviousPage = () => {
     if (currentPage > 0) {
@@ -43,9 +42,6 @@ const FriendsLeaderboardScreen = () => {
     if (leaderboard) {
       setCurrentPage(leaderboard.currentPage);
       setTotalPageNum(leaderboard.totalPages);
-
-      console.log('curretn:', currentPage);
-      console.log('total:', totalPageNum);
     }
   }, [leaderboard, currentPage]);
 

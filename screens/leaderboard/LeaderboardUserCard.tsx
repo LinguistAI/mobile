@@ -20,9 +20,9 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
     if (ranking === 1) {
       return require('../../assets/rank_icons/first.png');
     } else if (ranking === 2) {
-      return require('../../assets/rank_icons/first.png');
+      return require('../../assets/rank_icons/second.png');
     } else if (ranking === 3) {
-      return require('../../assets/rank_icons/first.png');
+      return require('../../assets/rank_icons/third.png');
     } else {
       return null;
     }

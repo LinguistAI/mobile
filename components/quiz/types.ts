@@ -45,6 +45,7 @@ export interface QFinishMCQ {
 }
 
 export interface ResultQuestion extends Question {
+  answer: string;
   userAnswer: string;
   isUserCorrect: boolean;
 }

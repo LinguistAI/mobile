@@ -30,7 +30,6 @@ const QuizStartButton = () => {
     return count;
   };
   const msgCount = countMessages();
-  console.log(msgCount);
 
   const handleStartQuiz = () => {
     navigation.navigate('ChatMCQ');

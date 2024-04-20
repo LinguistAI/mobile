@@ -120,14 +120,7 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
           ) : null}
           <View style={styles.btnsContainer}>
             <View style={styles.btn}>
-              <Button
-                textColor={Colors.gray[700]}
-                borderColor={Colors.gray[800]}
-                bgColor={Colors.gray[0]}
-                onPress={resetForm}
-                disabled={!unsavedChanges}
-                type="outlined"
-              >
+              <Button onPress={resetForm} disabled={!unsavedChanges} type="outlined">
                 CANCEL
               </Button>
             </View>

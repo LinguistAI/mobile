@@ -4,10 +4,10 @@ import FriendProfileCard from './FriendProfileCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FetchError from '../../../common/FetchError';
 import { LinearGradient } from 'expo-linear-gradient';
-import CenteredFeedback from '../../../common/CenteredFeedback';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../../theme/colors';
 import { useCallback, useState } from 'react';
+import CenteredFeedback from '../../../common/feedback/CenteredFeedback';
 
 const FriendsList = () => {
   const { data: friends, isLoading, isError, refetch } = useGetFriendsQuery();
@@ -46,10 +46,9 @@ const FriendsList = () => {
         renderItem={({ item }) => <FriendProfileCard friendship={item} />}
         ListEmptyComponent={
           <View style={{ height: '80%', display: 'flex', justifyContent: 'center' }}>
-            <CenteredFeedback
-              icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />}
-              message="Looks like you have no friends just yet. Send a friend request to meet with new people!"
-            />
+            <CenteredFeedback message="Looks like you have no friends just yet. Send a friend request to meet with new people!">
+              <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
+            </CenteredFeedback>
           </View>
         }
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}

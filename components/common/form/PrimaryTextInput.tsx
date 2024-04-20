@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
     borderRadius: 8,
     width: '100%',
   },
@@ -83,6 +82,7 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     color: Colors.gray[600],
+    backgroundColor: Colors.background[500],
   },
   errorMessage: {
     color: Colors.red[500],

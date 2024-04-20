@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import FloatingButton from '../../components/common/FloatingButton';
-import WordDetails from '../../components/word-bank/word-list/words/WordDetailsCollapse';
+import WordDetailsCollapse from '../../components/word-bank/word-list/words/WordDetailsCollapse';
 import { useState } from 'react';
 import ModalWrapper from '../../components/common/ModalWrapper';
 import Button from '../../components/common/form/Button';
@@ -11,8 +11,8 @@ import useNotifications from '../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import { objectIsNotEmpty } from '../../components/utils';
 import { useAddWordMutation, useGetWordListByIdQuery } from '../../components/word-bank/api';
-import LoadingIndicator from '../../components/common/LoadingIndicator';
-import FetchError from '../../components/common/FetchError';
+import LoadingIndicator from '../../components/common/feedback/LoadingIndicator';
+import FetchError from '../../components/common/feedback/FetchError';
 
 interface WordListDetailsScreenProps {
   route: any;
@@ -30,7 +30,8 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
     mode: 'onChange',
   });
   const { data: selectedList, isFetching: isFetchingList } = useGetWordListByIdQuery(listId);
-  const [addNewWord, { isLoading: isAddingWord, isError: isAddWordError, error: addWordError }] = useAddWordMutation();
+  const [addNewWord, { isLoading: isAddingWord, isError: isAddWordError, error: addWordError }] =
+    useAddWordMutation();
 
   if (isFetchingList) {
     return <LoadingIndicator subtext="Loading your word list..." />;
@@ -64,7 +65,10 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 
   const onError = (error: any) => {
     addNotification({
-      body: generateErrorResponseMessage(error, 'Something went wrong while adding the word to the word list.'),
+      body: generateErrorResponseMessage(
+        error,
+        'Something went wrong while adding the word to the word list.'
+      ),
       type: 'error',
     });
   };
@@ -73,13 +77,13 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
     <View style={styles.container}>
       {selectedList.words.length === 0 && (
         <Text style={{ textAlign: 'center', marginTop: 10 }}>
-          It looks like there are no words in this list. Use the add button on the bottom right part of the page to add
-          your first word.
+          It looks like there are no words in this list. Use the add button on the bottom right part of the
+          page to add your first word.
         </Text>
       )}
       <FlatList
         data={selectedList.words}
-        renderItem={({ item }) => <WordDetails word={item} />}
+        renderItem={({ item }) => <WordDetailsCollapse word={item} />}
         contentContainerStyle={{
           justifyContent: 'center',
           gap: 15,

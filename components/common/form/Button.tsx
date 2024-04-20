@@ -2,8 +2,19 @@ import { ActivityIndicator, Animated, Pressable, StyleSheet, Text, View } from '
 import Colors from '../../../theme/colors';
 import { useRef } from 'react';
 
-const OUTLINED_BUTTON_TEXT_COLOR = Colors.primary[500];
-const OUTLINED_BUTTON_BORDER_COLOR = Colors.primary[500];
+const OUTLINED_BUTTON_TEXT_COLOR = Colors.secondary[500];
+const OUTLINED_BUTTON_BORDER_COLOR = Colors.secondary[500];
+
+type ButtonColor =
+  | 'primary'
+  | 'secondary'
+  | 'gray'
+  | 'green'
+  | 'red'
+  | 'blue'
+  | 'yellow'
+  | 'orange'
+  | 'grape';
 
 interface PrimaryButtonProps {
   children: React.ReactNode;
@@ -12,13 +23,11 @@ interface PrimaryButtonProps {
   disabled?: boolean;
   onPress?: () => void;
   rightIcon?: React.ReactNode;
-  bgColor?: string;
-  borderColor?: string;
-  textColor?: string;
+  color?: ButtonColor;
 }
 
 const Button = (props: PrimaryButtonProps) => {
-  const { children, onPress, loading, rightIcon, type, bgColor, borderColor, textColor, disabled } = props;
+  const { children, onPress, loading, rightIcon, type, disabled, color } = props;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const onPressIn = () => {
@@ -43,11 +52,30 @@ const Button = (props: PrimaryButtonProps) => {
     } else if (type === 'primary') {
       baseButtonStyle.push(styles.primaryButton);
     }
-    if (bgColor) {
-      baseButtonStyle = [...baseButtonStyle, { borderColor, backgroundColor: bgColor }];
-    }
+
     if (disabled) {
       baseButtonStyle = [...baseButtonStyle, styles.disabled];
+    }
+    if (color) {
+      if (type === 'primary') {
+        baseButtonStyle = [
+          ...baseButtonStyle,
+          {
+            backgroundColor: Colors[color][500],
+            borderColor: Colors[color][700],
+          },
+        ];
+      }
+      if (type === 'outlined') {
+        baseButtonStyle = [
+          ...baseButtonStyle,
+          {
+            borderColor: Colors[color][500],
+            borderBottomColor: Colors[color][700],
+            borderRightColor: Colors[color][700],
+          },
+        ];
+      }
     }
 
     baseButtonStyle = [...baseButtonStyle, { transform: [{ scale: scaleAnim }] }];
@@ -59,11 +87,19 @@ const Button = (props: PrimaryButtonProps) => {
     let baseTextStyle = [];
     if (type === 'outlined') {
       baseTextStyle.push(styles.outlinedButtonText);
-      if (textColor) {
-        baseTextStyle = [...baseTextStyle, { color: textColor }];
-      }
     } else if (type === 'primary') {
       baseTextStyle.push(styles.primaryButtonText);
+    }
+
+    if (color) {
+      if (type === 'outlined') {
+        baseTextStyle = [
+          ...baseTextStyle,
+          {
+            color: Colors[color][500],
+          },
+        ];
+      }
     }
 
     if (disabled) {
@@ -75,7 +111,12 @@ const Button = (props: PrimaryButtonProps) => {
 
   return (
     <Animated.View style={getButtonStyle()}>
-      <Pressable onPressIn={onPressIn} onPressOut={onPressOut} onPress={onPress} disabled={loading || disabled}>
+      <Pressable
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={onPress}
+        disabled={loading || disabled}
+      >
         <View style={styles.btnContent}>
           {loading ? (
             <ActivityIndicator color="white" />
@@ -94,13 +135,15 @@ const Button = (props: PrimaryButtonProps) => {
 const styles = StyleSheet.create({
   primaryButton: {
     backgroundColor: Colors.primary[500],
-    borderRadius: 4,
+    borderRadius: 20,
     borderBottomColor: Colors.primary[700],
     borderBottomWidth: 6,
+    borderLeftColor: Colors.primary[500],
+    borderLeftWidth: 6,
     borderRightColor: Colors.primary[700],
     borderRightWidth: 6,
-    borderTopRightRadius: 2,
-    borderBottomRightRadius: 2,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
     elevation: 4,
   },
   primaryButtonText: {
@@ -116,20 +159,20 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingVertical: 12,
     paddingHorizontal: 8,
-    minHeight: 40,
+    minHeight: 45,
   },
   outlinedButton: {
-    borderRadius: 4,
+    borderRadius: 20,
     borderWidth: 1.5,
     overflow: 'hidden',
     elevation: 12,
     borderColor: OUTLINED_BUTTON_BORDER_COLOR,
-    borderBottomColor: Colors.primary[700],
+    borderBottomColor: Colors.secondary[700],
     borderBottomWidth: 6,
-    borderRightColor: Colors.primary[700],
+    borderRightColor: Colors.secondary[700],
     borderRightWidth: 6,
-    borderTopRightRadius: 2,
-    borderBottomRightRadius: 2,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
     backgroundColor: 'white',
   },
   outlinedButtonText: {

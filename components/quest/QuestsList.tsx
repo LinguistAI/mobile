@@ -4,7 +4,6 @@ import QuestCard from './QuestCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FetchError from '../common/FetchError';
 import { LinearGradient } from 'expo-linear-gradient';
-import CenteredFeedback from '../common/CenteredFeedback';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import React, { useCallback, useState } from 'react';

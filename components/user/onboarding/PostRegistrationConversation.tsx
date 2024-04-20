@@ -165,8 +165,6 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
             name: option.label,
           }))}
           onSelectionDone={(name) => {
-            console.log('Selected Name:', name);
-            console.log('Current Message Name:', currentMessage?.name);
             if (currentMessage?.name === 'hobbies' && (!name || (Array.isArray(name) && name.length === 0))) {
               handleNext('Nothing much.'); // If no choice is selected for hobbies
             } else {

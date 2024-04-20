@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, StyleSheet, View, Text } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { useGetQuestsQuery } from './api';
 import QuestCard from './QuestCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
@@ -7,47 +7,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import CenteredFeedback from '../common/CenteredFeedback';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
-import { useCallback, useEffect, useState } from 'react';
-import { DAYS_IN_MILLIS, HOURS_IN_MILLIS, MINUTES_IN_MILLIS, SECONDS_IN_MILLIS } from "./constants";
-
-const CountdownTimer = ({ assignedDate }) => {
-  const [timeLeft, setTimeLeft] = useState('');
-
-  useEffect(() => {
-    const updateTimer = () => {
-      const now = new Date();
-      const deadline = new Date(assignedDate).getTime() + DAYS_IN_MILLIS;
-      const distance = deadline - now.getTime();
-
-      if (distance < 0) {
-        setTimeLeft('Deadline passed');
-        return;
-      }
-
-      const hours = Math.floor((distance % DAYS_IN_MILLIS) / HOURS_IN_MILLIS).toString();
-      const minutes = Math.floor((distance % HOURS_IN_MILLIS) / MINUTES_IN_MILLIS).toString();
-      const seconds = Math.floor((distance % MINUTES_IN_MILLIS) / SECONDS_IN_MILLIS).toString();
-
-      setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
-    };
-
-    updateTimer();
-    const intervalId = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [assignedDate]);
-
-  return (
-    <View style={styles.timerContainer}>
-      <Ionicons name="timer-outline" size={40} color="white" />
-      <Text style={styles.timerText}>{timeLeft}</Text>
-    </View>
-  );
-};
+import React, { useCallback, useState } from 'react';
+import QuestCountdownTimer from "./QuestCountdownTimer";
+import {useFocusEffect} from "@react-navigation/native";
 
 const QuestsList = () => {
   const { data: quests, isLoading, isError, refetch } = useGetQuestsQuery();
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -74,7 +46,7 @@ const QuestsList = () => {
 
   return (
     <View style={styles.root}>
-      {quests.length > 0 && <CountdownTimer assignedDate={quests[0].assignedDate} />}
+      {quests.length > 0 && <QuestCountdownTimer assignedDate={quests[0].assignedDate} />}
       <FlatList
         numColumns={1}
         contentContainerStyle={styles.questsListStyle}

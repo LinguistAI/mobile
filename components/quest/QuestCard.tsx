@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import IonIcons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Card from '../common/Card';
 import Colors from '../../theme/colors';
 import { RUserQuests } from "./types";
@@ -10,10 +9,6 @@ import {
   QUEST_TYPE_WORD,
   QUEST_TYPE_MESSAGE,
   QUEST_ICON_SIZE,
-  DAYS_IN_MILLIS,
-  SECONDS_IN_MILLIS,
-  MINUTES_IN_MILLIS,
-  HOURS_IN_MILLIS
 } from './constants';
 
 interface QuestCardProps {
@@ -22,7 +17,7 @@ interface QuestCardProps {
 }
 
 const QuestCard = ({ quest }: QuestCardProps) => {
-  const { title, description, reward, completionCriteria, type, progress, assignedDate } = quest;
+  const { title, description, reward, completionCriteria, type, progress } = quest;
 
   const renderQuestImage = () => {
     switch (type) {

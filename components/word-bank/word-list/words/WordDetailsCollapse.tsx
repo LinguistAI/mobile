@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
 import { useGetWordMeaningsQuery } from '../../api';
-import LoadingIndicator from '../../../common/LoadingIndicator';
+import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 
 interface WordDetailsCollapseInterface {
   word: WordWithConfidence;

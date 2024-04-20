@@ -5,11 +5,11 @@ import FriendRequestCard from '../../components/user/profile/friends/FriendReque
 import useUser from '../../hooks/useUser';
 import { FriendRequest, RFriendRequest } from '../../components/user/types';
 import CardSkeleton from '../../components/common/CardSkeleton';
-import CenteredFeedback from '../../components/common/CenteredFeedback';
 import FetchError from '../../components/common/FetchError';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import { useCallback, useState } from 'react';
+import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
 
 const FriendRequestsScreen = () => {
   const { user } = useUser();
@@ -58,11 +58,12 @@ const FriendRequestsScreen = () => {
         renderItem={({ item }) => <FriendRequestCard friendship={item} type={getFriendRequestType(item)} />}
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
         ListEmptyComponent={
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}>
-            <CenteredFeedback
-              icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />}
-              message="Your friend request inbox is empty, stay tuned for upcoming requests!"
-            />
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}
+          >
+            <CenteredFeedback message="Your friend request inbox is empty, stay tuned for upcoming requests!">
+              <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
+            </CenteredFeedback>
           </View>
         }
       />

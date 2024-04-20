@@ -19,6 +19,7 @@ import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-d
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Colors from './theme/colors';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,16 +42,20 @@ export default function App() {
             <MenuProvider>
               <CustomErrorBoundary>
                 <NavigationContainer>
-                  <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+                  <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
                     <Stack.Navigator
                       screenOptions={{
                         contentStyle: {
-                          backgroundColor: 'white',
+                          backgroundColor: Colors.background[500],
                         },
                       }}
                       initialRouteName="Landing"
                     >
-                      <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+                      <Stack.Screen
+                        name="Landing"
+                        component={LandingScreen}
+                        options={{ headerShown: false }}
+                      />
                       <Stack.Screen name="Login" component={LoginScreen} />
                       <Stack.Screen name="Register" component={RegisterScreen} />
                       <Stack.Screen
@@ -58,7 +63,11 @@ export default function App() {
                         component={PostRegistrationConversation}
                         options={{ headerShown: false }}
                       />
-                      <Stack.Screen name="Main" component={BottomNavigation} options={{ headerShown: false }} />
+                      <Stack.Screen
+                        name="Main"
+                        component={BottomNavigation}
+                        options={{ headerShown: false }}
+                      />
                       <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
                       <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
                       <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />

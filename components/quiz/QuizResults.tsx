@@ -69,7 +69,7 @@ const QuizResults = ({ route }: ChatScreenProps) => {
             Your answer was: <Text style={styles.answer}>{q.userAnswer}</Text>
           </Text>
           <Text style={styles.incorrectFeedbackAnswerText}>
-            Correct answer was: <Text style={styles.answer}>{q.word}</Text>
+            Correct answer was: <Text style={styles.answer}>{q.answer}</Text>
           </Text>
         </>
       );

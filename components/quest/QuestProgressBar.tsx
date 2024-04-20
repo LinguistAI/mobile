@@ -6,7 +6,6 @@ import FetchError from '../common/FetchError';
 import Colors from '../../theme/colors';
 import ExperienceSkeleton from "../gamification/experience/ExperienceSkeleton";
 import { BAR_HEIGHT, BAR_WIDTH, EMPTY_BAR_FILL, QUEST_DONE_ICON_SIZE } from './constants';
-import CenteredFeedback from '../common/CenteredFeedback';
 
 interface QuestCardProps {
   goalTimes: number;

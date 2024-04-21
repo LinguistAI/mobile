@@ -50,7 +50,7 @@ const QuestsList = () => {
         numColumns={1}
         contentContainerStyle={styles.questsListStyle}
         data={quests}
-        renderItem={({ item }) => <QuestCard quest={item} isLoading={isLoading} />}
+        renderItem={({ item }) => <QuestCard quest={item} />}
         ListEmptyComponent={<CenteredFeedback icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />} message="No quests available right now. Check back later!" />}
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
       />

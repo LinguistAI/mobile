@@ -7,15 +7,15 @@ import Colors from '../../theme/colors';
 import ExperienceSkeleton from "../gamification/experience/ExperienceSkeleton";
 import { BAR_HEIGHT, BAR_WIDTH, EMPTY_BAR_FILL, QUEST_DONE_ICON_SIZE } from './constants';
 
-interface QuestCardProps {
+interface QuestProgressBarProps {
   goalTimes: number;
   progressTimes: number;
 }
 
-const QuestProgressBar = ({ goalTimes, progressTimes }: QuestCardProps) => {
-  const { data, isLoading: isQuestsLoading, isError } = useGetQuestsQuery();
+const QuestProgressBar = ({ goalTimes, progressTimes }: QuestProgressBarProps) => {
+  const { data, isFetching: isQuestsFetching, isError } = useGetQuestsQuery();
 
-  if (isQuestsLoading) {
+  if (isQuestsFetching) {
     return <ExperienceSkeleton />;
   }
 
@@ -37,7 +37,7 @@ const QuestProgressBar = ({ goalTimes, progressTimes }: QuestCardProps) => {
     }
 
     return (
-      <IonIcons name="checkmark-circle-sharp" size={QUEST_DONE_ICON_SIZE} color="green" />
+      <IonIcons name="checkmark-circle-sharp" size={QUEST_DONE_ICON_SIZE} color={Colors.green[800]} />
     );
   };
 

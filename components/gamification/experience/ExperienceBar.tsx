@@ -11,7 +11,7 @@ import { BAR_HEIGHT, BAR_WIDTH } from './constants';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 
 const ExperienceBar = () => {
-  const { data, isLoading: isExperienceLoading, isError, refetch } = useGetUserExperienceQuery();
+  const { data, isFetching: isExperienceFetching, isError, refetch } = useGetUserExperienceQuery();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -19,7 +19,7 @@ const ExperienceBar = () => {
     }, [refetch])
   );
 
-  if (isExperienceLoading) {
+  if (isExperienceFetching) {
     return <ExperienceSkeleton />;
   }
 

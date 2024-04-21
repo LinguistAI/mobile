@@ -13,7 +13,6 @@ import {
 
 interface QuestCardProps {
   quest: RUserQuests;
-  isLoading: boolean;
 }
 
 const QuestCard = ({ quest }: QuestCardProps) => {

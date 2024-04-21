@@ -37,9 +37,9 @@ export const HOBBIES_LIST = [
 ];
 
 export const ENGLISH_LEVELS = [
-  { value: "DON'T KNOW", label: "I don't know" },
+  { value: "DONT_KNOW", label: "I don't know" },
   { value: 'BEGINNER', label: 'Beginner' },
-  { value: 'INTERMEDIEAET', label: 'Intermediate' },
+  { value: 'INTERMEDIATE', label: 'Intermediate' },
   { value: 'ADVANCED', label: 'Advanced' },
   { value: 'NATIVE', label: 'Native' },
 ];
@@ -60,7 +60,7 @@ export const BOT_MESSAGES: ConversationStep[] = [
     message: 'Nice to meet you! How old are you?',
     skippedMsg: "Okay, let's skip that for now. How old are you?",
     skippable: true,
-    name: 'age',
+    name: 'birthDate',
     trigger: 2,
     type: 'date',
   },

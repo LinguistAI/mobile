@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LeaderboardScreen from '../screens/leaderboard/LeaderboardScreen';
 import HomeStackNavigator from './HomeStackNavigator';
 import Colors from '../theme/colors';
+import QuestsNavigation from './QuestsNavigation';
 import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
 
@@ -21,6 +22,14 @@ const BottomNavigation = () => {
         component={HomeStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => <IonIcons name="home-outline" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Quests"
+        component={QuestsNavigation}
+        options={{
+          tabBarLabel: 'Quests',
+          tabBarIcon: ({ color, size }) => <IonIcons name="gift-outline" size={size} color={color} />,
         }}
       />
       <Tab.Screen

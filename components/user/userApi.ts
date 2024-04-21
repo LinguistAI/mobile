@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 import { QFriendRequest, IUserDetailedInfo, RFriendship, QUserSearch, RFriendRequest, RFriendSearch } from './types';
 import { Page, User } from '../../types';
+import {RUserQuests} from "../quest/types";
 
 export const userApi = createApi({
   reducerPath: 'userApi',

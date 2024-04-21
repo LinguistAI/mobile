@@ -5,6 +5,7 @@ import { gamificationApi } from '../components/gamification/api';
 import { wordBankApi } from '../components/word-bank/api';
 import { userStatsApi } from '../components/stats/userStatsApi';
 import { userApi } from '../components/user/userApi';
+import { questsApi } from "../components/quest/api";
 import { quizApi } from '../components/quiz/quizApi';
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     [wordBankApi.reducerPath]: wordBankApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [userStatsApi.reducerPath]: userStatsApi.reducer,
+    [questsApi.reducerPath]: questsApi.reducer,
     [quizApi.reducerPath]: quizApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -24,5 +26,6 @@ export const store = configureStore({
       .concat(wordBankApi.middleware)
       .concat(userApi.middleware)
       .concat(userStatsApi.middleware)
+      .concat(questsApi.middleware)
       .concat(quizApi.middleware),
 });

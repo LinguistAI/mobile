@@ -11,7 +11,7 @@ import QuestCountdownTimer from "./QuestCountdownTimer";
 import {useFocusEffect} from "@react-navigation/native";
 
 const QuestsList = () => {
-  const { data: quests, isLoading, isError, refetch } = useGetQuestsQuery();
+  const { data: quests, isFetching, isError, refetch } = useGetQuestsQuery();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useFocusEffect(
@@ -36,7 +36,7 @@ const QuestsList = () => {
     );
   };
 
-  if (isLoading) {
+  if (isFetching) {
     return renderSkeletonList();
   }
   if (isError || !quests) {

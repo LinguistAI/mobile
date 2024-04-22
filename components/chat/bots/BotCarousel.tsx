@@ -1,10 +1,14 @@
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
-import { useCreateNewConversationMutation, useGetAllConversationsQuery, useGetAvailableBotsQuery } from '../api';
+import {
+  useCreateNewConversationMutation,
+  useGetAllConversationsQuery,
+  useGetAvailableBotsQuery,
+} from '../api';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
 import BotProfile from './BotProfile';
-import FetchError from '../../common/FetchError';
+import FetchError from '../../common/feedback/FetchError';
 import Colors from '../../../theme/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { getDifficultyLevel } from './utils';
@@ -68,27 +72,39 @@ const BotCarousel = () => {
   const handleBotPress = async (bot: TChatBot) => {
     if (!pendingBotCreateResponse) {
       const foundExistingConvo = conversations?.find((c) => c.bot.id === bot.id);
-
+      let convoId = '';
+      // Open existing conversation
       if (foundExistingConvo) {
-        navigation.navigate('Chat', { params: { conversationId: foundExistingConvo.id }, screen: 'ChatScreen' });
-      } else {
-        const response = await createConvo(bot.id);
-
-        if (isDataResponse(response)) {
-          const data = response.data;
-          const convoId = data.id;
-          if (!convoId) {
-            return;
-          }
-          navigation.navigate('Chat', { params: { conversationId: convoId }, screen: 'ChatScreen', initial: false });
-        } else {
-          notify({
-            body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
-            type: 'error',
-          });
-        }
+        navigation.navigate('Chat', {
+          params: { conversationId: foundExistingConvo.id },
+          screen: 'ChatScreen',
+        });
+        dispatch(startConversation({ bot, conversation: foundExistingConvo.id }));
+        return;
       }
-      dispatch(startConversation({ bot }));
+
+      // Couldn't create conversation
+      const response = await createConvo(bot.id);
+      if (!isDataResponse(response)) {
+        notify({
+          body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+          type: 'error',
+        });
+        return;
+      }
+
+      // Start new conversation
+      const data = response.data;
+      convoId = data.id;
+      if (!convoId) {
+        return;
+      }
+      navigation.navigate('Chat', {
+        params: { conversationId: convoId },
+        screen: 'ChatScreen',
+        initial: false,
+      });
+      dispatch(startConversation({ bot, conversation: convoId }));
     }
   };
 

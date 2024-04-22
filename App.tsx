@@ -22,6 +22,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { createContext } from 'react';
 import Splash from './components/common/Splash';
 import { useFonts, Nunito_400Regular, Nunito_700Bold, Nunito_900Black } from '@expo-google-fonts/nunito';
+import Colors from './theme/colors';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,7 +70,11 @@ export default function App() {
                       }}
                       initialRouteName="Landing"
                     >
-                      <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+                      <Stack.Screen
+                        name="Landing"
+                        component={LandingScreen}
+                        options={{ headerShown: false }}
+                      />
                       <Stack.Screen name="Login" component={LoginScreen} />
                       <Stack.Screen name="Register" component={RegisterScreen} />
                       <Stack.Screen
@@ -77,7 +82,11 @@ export default function App() {
                         component={PostRegistrationConversation}
                         options={{ headerShown: false }}
                       />
-                      <Stack.Screen name="Main" component={BottomNavigation} options={{ headerShown: false }} />
+                      <Stack.Screen
+                        name="Main"
+                        component={BottomNavigation}
+                        options={{ headerShown: false }}
+                      />
                       <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
                       <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
                       <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />

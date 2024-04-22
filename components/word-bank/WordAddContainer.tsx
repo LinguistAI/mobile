@@ -8,8 +8,8 @@ import { TWordList } from './word-list/types';
 import ActionIcon from '../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
-import FetchError from '../common/FetchError';
-import CenteredFeedback from '../common/CenteredFeedback';
+import FetchError from '../common/feedback/FetchError';
+import CenteredFeedback from '../common/feedback/CenteredFeedback';
 
 interface WordAddContainerProps {
   selectedWord: string;
@@ -22,15 +22,15 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
   const [addNewWord, { isError: addWordError, isLoading: isAddingWord }] = useAddWordMutation();
 
   const { data: wordLists, isFetching } = useGetWordListsQuery();
-  if (isFetching) {
-    return <ActivityIndicator />;
-  }
-
   useEffect(() => {
     if (wordLists) {
       setSelectedWordList(wordLists.lists[0]);
     }
   }, [wordLists]);
+
+  if (isFetching) {
+    return <ActivityIndicator />;
+  }
 
   if (!wordLists) return <FetchError />;
   if (wordLists.lists.length === 0) {
@@ -59,16 +59,21 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
   return (
     <>
       <View style={styles.picker}>
-        <Picker
-          itemStyle={styles.pickerItem}
-          selectedValue={selectedWordList}
-          onValueChange={(itemValue) => setSelectedWordList(itemValue)}
-          mode="dropdown"
-        >
-          {wordLists.lists.map((wordList) => (
-            <Picker.Item key={wordList.listId} value={wordList.listId} label={wordList.title} />
-          ))}
-        </Picker>
+      <Picker
+        itemStyle={styles.pickerItem}
+        selectedValue={selectedWordList ? selectedWordList.listId : null}
+        onValueChange={(itemValue) => {
+          const selectedList = wordLists.lists.find((list) => list.listId === itemValue);
+          if (selectedList) {
+            setSelectedWordList(selectedList);
+          }
+        }}
+        mode="dropdown"
+      >
+        {wordLists.lists.map((wordList) => (
+          <Picker.Item key={wordList.listId} value={wordList.listId} label={wordList.title} />
+        ))}
+      </Picker>
       </View>
       <View style={styles.addIconContainer}>
         <ActionIcon

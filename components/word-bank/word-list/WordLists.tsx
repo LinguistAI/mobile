@@ -13,8 +13,8 @@ import { objectIsNotEmpty } from '../../utils';
 import WordListsSkeleton from './WordListsSkeleton';
 import { useCreateWordListMutation, useGetWordListsQuery } from '../api';
 import WordListFilter from './WordListFilter';
-import FetchError from '../../common/FetchError';
-import CenteredFeedback from '../../common/CenteredFeedback';
+import FetchError from '../../common/feedback/FetchError';
+import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import useNotifications from '../../../hooks/useNotifications';
 
 const WordLists = () => {
@@ -49,7 +49,9 @@ const WordLists = () => {
   }
 
   if (!wordLists?.lists || wordLists?.lists?.length === 0) {
-    return <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />;
+    return (
+      <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />
+    );
   }
 
   const validateSubmit = (data: any) => {
@@ -156,10 +158,8 @@ const WordLists = () => {
     return (
       <View style={styles.wordListContainer}>
         <FlatList
-          data={filteredWordLists.length === 0 ? wordLists?.lists : filteredWordLists}
-          renderItem={({ item }) => (
-            <WordListCard key={item.listId} list={item} handleListSelection={handleListSelection} />
-          )}
+          data={filteredWordLists.length > 0 ? filteredWordLists : []}
+          renderItem={({ item }) => <WordListCard list={item} handleListSelection={handleListSelection} />}
           numColumns={2}
           keyExtractor={(item) => item.listId}
           contentContainerStyle={styles.wordListContentContainer}

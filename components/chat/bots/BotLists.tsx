@@ -3,11 +3,15 @@ import { TChatBot } from '../types';
 import BotProfile from './BotProfile';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { useCreateNewConversationMutation, useGetAllConversationsQuery, useGetAvailableBotsQuery } from '../api';
+import {
+  useCreateNewConversationMutation,
+  useGetAllConversationsQuery,
+  useGetAvailableBotsQuery,
+} from '../api';
 import { startConversation } from '../../../redux/chatSlice';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import FetchFailErrorScreen from '../../../screens/common/FetchFailErrorScreen';
-import LoadingIndicator from '../../common/LoadingIndicator';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import BotProfileCard from './BotProfileCard';
 import useNotifications from '../../../hooks/useNotifications';
 import { isDataResponse } from '../../../services';
@@ -37,26 +41,27 @@ const BotLists = () => {
     if (!pendingBotCreateResponse) {
       const foundExistingConvo = conversations?.find((c) => c.bot.id === bot.id);
 
-      console.log(foundExistingConvo);
       if (foundExistingConvo) {
         navigation.navigate('ChatScreen', { conversationId: foundExistingConvo.id });
-      } else {
-        const response = await createConvo(bot.id);
-        if (isDataResponse(response)) {
-          const data = response.data;
-          const convoId = data.id;
-          if (!convoId) {
-            return;
-          }
-          navigation.navigate('ChatScreen', { conversationId: convoId });
-        } else {
-          notify({
-            body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
-            type: 'error',
-          });
-        }
+        dispatch(startConversation({ bot, conversation: foundExistingConvo.id }));
+        return;
       }
-      dispatch(startConversation({ bot }));
+      const response = await createConvo(bot.id);
+      if (!isDataResponse(response)) {
+        notify({
+          body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+          type: 'error',
+        });
+        return;
+      }
+
+      const data = response.data;
+      const convoId = data.id;
+      if (!convoId) {
+        return;
+      }
+      navigation.navigate('ChatScreen', { conversationId: convoId });
+      dispatch(startConversation({ bot, conversation: data?.id }));
     }
   };
 

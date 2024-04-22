@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useGetUserExperienceQuery } from '../api';
 import * as Progress from 'react-native-progress';
-import FetchError from '../../common/FetchError';
+import FetchError from '../../common/feedback/FetchError';
 import Colors from '../../../theme/colors';
 import ExperienceSkeleton from './ExperienceSkeleton';
 import { getCurrentLevelTotalExperience, getProgressRatio } from './utils';
 import { BAR_HEIGHT, BAR_WIDTH } from './constants';
-import CenteredFeedback from '../../common/CenteredFeedback';
+import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 
 const ExperienceBar = () => {
   const { data, isLoading: isExperienceLoading, isError } = useGetUserExperienceQuery();

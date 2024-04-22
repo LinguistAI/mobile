@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   notificationCard: {
-    padding: 20,
+    padding: 15,
     marginBottom: 10,
     flex: 1,
     flexDirection: 'row',

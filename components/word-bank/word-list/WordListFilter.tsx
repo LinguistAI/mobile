@@ -1,15 +1,14 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import ActionIcon from '../../common/ActionIcon';
-import Colors from '../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import Colors from '../../../theme/colors';
+import ActionButton from '../../common/ActionButton';
+import ActionIcon from '../../common/ActionIcon';
 import ModalWrapper from '../../common/ModalWrapper';
 import ModalControlButtons from '../../common/modal/ModalControlButtons';
-import { TWordList } from './types';
-import { IFilterCriteria } from './types';
+import { IFilterCriteria, TWordList } from './types';
 import { search } from './utils';
-import ActionButton from '../../common/ActionButton';
-import { useDispatch } from 'react-redux';
 
 export const SORT_BY_OPTIONS = [
   {
@@ -114,10 +113,7 @@ const WordListFilter = ({ wordLists, setFilteredWordLists }: WordListFilterProps
         <View style={[styles.inputContainer]}>
           <Ionicons name="search-outline" size={24} color={Colors.primary[600]} />
           <TextInput
-            style={[
-              styles.textInput,
-              tempFilter?.search?.searchText === '' ? { flexBasis: '85%' } : null,
-            ]}
+            style={[styles.textInput, tempFilter?.search?.searchText === '' ? { flexBasis: '85%' } : null]}
             onChangeText={(value) =>
               setTempFilter({
                 ...tempFilter,
@@ -128,7 +124,7 @@ const WordListFilter = ({ wordLists, setFilteredWordLists }: WordListFilterProps
               })
             }
             value={tempFilter?.search?.searchText}
-            placeholder="Search by title, description, or word"
+            placeholder="Search by title"
           />
           {tempFilter?.search?.searchText !== '' && (
             <View style={{ alignSelf: 'center', marginRight: 20 }}>
@@ -173,9 +169,7 @@ const WordListFilter = ({ wordLists, setFilteredWordLists }: WordListFilterProps
                     selected={tempFilter?.sort?.accessor === option.value}
                     selectedBgColor={Colors.primary[600]}
                     maxWidth={150}
-                    onPress={() =>
-                      handleSetTempFilter('sort', 'accessor', option.value as keyof TWordList)
-                    }
+                    onPress={() => handleSetTempFilter('sort', 'accessor', option.value as keyof TWordList)}
                   />
                 ))}
               </View>
@@ -188,21 +182,13 @@ const WordListFilter = ({ wordLists, setFilteredWordLists }: WordListFilterProps
                   )
                 }
                 onPress={() =>
-                  handleSetTempFilter(
-                    'sort',
-                    'order',
-                    tempFilter?.sort?.order === 'asc' ? 'desc' : 'asc'
-                  )
+                  handleSetTempFilter('sort', 'order', tempFilter?.sort?.order === 'asc' ? 'desc' : 'asc')
                 }
               />
             </View>
           </View>
           <View style={styles.formControls}>
-            <ModalControlButtons
-              onCancel={handleClearFilter}
-              onSubmit={handleApplyFilter}
-              okText="Apply"
-            />
+            <ModalControlButtons onCancel={handleClearFilter} onSubmit={handleApplyFilter} okText="Apply" />
           </View>
         </View>
       </ModalWrapper>

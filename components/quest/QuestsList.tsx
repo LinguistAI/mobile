@@ -9,6 +9,7 @@ import Colors from '../../theme/colors';
 import React, { useCallback, useState } from 'react';
 import QuestCountdownTimer from "./QuestCountdownTimer";
 import {useFocusEffect} from "@react-navigation/native";
+import CenteredFeedback from '../common/feedback/CenteredFeedback';
 
 const QuestsList = () => {
   const { data: quests, isFetching, isError, refetch } = useGetQuestsQuery();

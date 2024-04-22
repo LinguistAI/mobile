@@ -36,11 +36,15 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
         <View style={styles.mainInfoContainer}>
           <View style={styles.mainInfoContainer}>
             {ranking <= 3 && <Image source={renderRankingImage()} style={styles.rankImage} />}
-            {ranking > 3 && <Text style={styles.rankingInfo}>{ranking}.</Text>}
+            {ranking > 3 && <LText style={styles.rankingInfo}>{ranking}.</LText>}
 
-            <LText style={styles.mainInfo}>{user.username}</LText>
+            <LText style={styles.mainInfo} size={16}>
+              {user.username}
+            </LText>
           </View>
-          <Text style={styles.subinfo}>{xp} XP</Text>
+          <LText style={styles.subinfo} size={14}>
+            {xp} XP
+          </LText>
         </View>
       </View>
     </Card>
@@ -77,13 +81,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.purple[500],
     marginLeft: 10,
-    marginRight: 10,
+    marginRight: 15,
   },
   mainInfo: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
     color: Colors.gray[700],
-    marginRight: 5,
   },
   subinfo: {
     fontWeight: 'bold',
@@ -96,7 +99,7 @@ const styles = StyleSheet.create({
   rankImage: {
     width: 30,
     height: 30,
-    marginRight: 5,
+    marginRight: 10,
   },
 });
 

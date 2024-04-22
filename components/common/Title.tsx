@@ -1,7 +1,4 @@
-import { useFonts } from 'expo-font';
-import { useContext } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { FontLoadedContext } from '../../App';
 import TitleSizes from '../../theme/fontSizes';
 
 type FontSizeKeys = keyof typeof TitleSizes;
@@ -14,13 +11,7 @@ interface TitleProps {
 
 const Title = ({ children, size: fontSize = 'h1', centered }: TitleProps) => {
   const textAlign = centered ? 'center' : 'left';
-  const fontsLoaded = useContext(FontLoadedContext);
   let currentStyle = styles.titleTextCustom;
-
-  if (!fontsLoaded) {
-    currentStyle = styles.titleText;
-    return <Text style={[currentStyle, { fontSize: TitleSizes[fontSize], textAlign }]}>{children}</Text>;
-  }
 
   return <Text style={[currentStyle, { fontSize: TitleSizes[fontSize], textAlign }]}>{children}</Text>;
 };
@@ -28,7 +19,7 @@ const Title = ({ children, size: fontSize = 'h1', centered }: TitleProps) => {
 const styles = StyleSheet.create({
   titleTextCustom: {
     fontSize: 24,
-    fontFamily: 'NunitoBolder',
+    fontFamily: 'Bold',
     paddingHorizontal: 16,
     marginVertical: 4,
   },

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useLazyGetGlobalLeaderboardQuery } from '../../components/user/userApi';
 import LeaderboardList from './LeaderboardList';
+import LText from '../../components/common/Text';
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 10;
@@ -52,7 +53,9 @@ const GlobalLeaderboardScreen = () => {
           <TouchableOpacity onPress={goToPreviousPage} disabled={currentPage === 0}>
             <Ionicons name="chevron-back-circle-outline" size={32} color={currentPage === 0 ? 'gray' : 'black'} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 18, marginHorizontal: 15 }}>{currentPage + 1}</Text>
+          <LText size={17} marginHorizontal={15}>
+            {currentPage + 1}
+          </LText>
           <TouchableOpacity onPress={goToNextPage} disabled={currentPage === totalPageNum - 1}>
             <Ionicons
               name="chevron-forward-circle-outline"

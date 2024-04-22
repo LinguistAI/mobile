@@ -122,7 +122,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 10,
+    marginVertical: 16,
   },
   modalContents: {
     rowGap: 20,

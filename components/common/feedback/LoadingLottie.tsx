@@ -1,6 +1,4 @@
-import AnimatedLottieView from 'lottie-react-native';
 import { StyleSheet, Text, View } from 'react-native';
-import QuizLoadingLottie from './QuizLoadingLottie';
 
 interface LoadingLottieProps {
   lottie: React.ReactNode;

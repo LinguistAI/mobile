@@ -5,11 +5,11 @@ import FriendRequestCard from '../../components/user/profile/friends/FriendReque
 import useUser from '../../hooks/useUser';
 import { FriendRequest, RFriendRequest } from '../../components/user/types';
 import CardSkeleton from '../../components/common/CardSkeleton';
-import FetchError from '../../components/common/FetchError';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import { useCallback, useState } from 'react';
 import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
+import FetchError from '../../components/common/feedback/FetchError';
 
 const FriendRequestsScreen = () => {
   const { user } = useUser();

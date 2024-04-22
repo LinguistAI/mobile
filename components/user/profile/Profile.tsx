@@ -1,15 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  Touchable,
-  TouchableWithoutFeedback,
-  View,
-  ViewBase,
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import Colors from '../../../theme/colors';
 import useUser from '../../../hooks/useUser';
 import Button from '../../common/form/Button';
@@ -21,7 +12,6 @@ import { useGetUserDetailsQuery } from '../userApi';
 import ExperienceBar from '../../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import ActionIcon from '../../common/ActionIcon';
-import ActionButton from '../../common/ActionButton';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 
 const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');

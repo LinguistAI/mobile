@@ -148,8 +148,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    marginTop: 30,
-    marginBottom: 10,
   },
   header: {
     flex: 1,
@@ -157,6 +155,7 @@ const styles = StyleSheet.create({
   textInputContainer: {
     justifyContent: 'flex-end',
     marginHorizontal: 8,
+    paddingBottom: 8,
   },
   messagesContainer: {
     flex: 10,

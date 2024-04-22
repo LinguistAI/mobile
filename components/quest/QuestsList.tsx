@@ -2,14 +2,14 @@ import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { useGetQuestsQuery } from './api';
 import QuestCard from './QuestCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import FetchError from '../common/FetchError';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import React, { useCallback, useState } from 'react';
-import QuestCountdownTimer from "./QuestCountdownTimer";
-import {useFocusEffect} from "@react-navigation/native";
+import QuestCountdownTimer from './QuestCountdownTimer';
+import { useFocusEffect } from '@react-navigation/native';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
+import FetchError from '../common/feedback/FetchError';
 
 const QuestsList = () => {
   const { data: quests, isFetching, isError, refetch } = useGetQuestsQuery();
@@ -52,7 +52,11 @@ const QuestsList = () => {
         contentContainerStyle={styles.questsListStyle}
         data={quests}
         renderItem={({ item }) => <QuestCard quest={item} />}
-        ListEmptyComponent={<CenteredFeedback icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />} message="No quests available right now. Check back later!" />}
+        ListEmptyComponent={
+          <CenteredFeedback message="No quests available right now. Check back later!">
+            <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
+          </CenteredFeedback>
+        }
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
       />
     </View>
@@ -61,7 +65,7 @@ const QuestsList = () => {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1
+    flex: 1,
   },
   questsListStyle: {
     gap: 10,
@@ -70,8 +74,9 @@ const styles = StyleSheet.create({
   skeletonContainer: {
     flex: 1,
     flexDirection: 'column',
-    gap: 10,
     display: 'flex',
+    gap: 10,
+    marginTop: 16,
   },
   skeletonRectangle: {
     borderRadius: 10,
@@ -97,7 +102,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,
     marginLeft: 6,
     marginRight: 5,
-  }
+  },
 });
 
 export default QuestsList;

@@ -2,10 +2,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useGetQuestsQuery } from './api';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
-import FetchError from '../common/FetchError';
 import Colors from '../../theme/colors';
-import ExperienceSkeleton from "../gamification/experience/ExperienceSkeleton";
+import ExperienceSkeleton from '../gamification/experience/ExperienceSkeleton';
 import { BAR_HEIGHT, BAR_WIDTH, EMPTY_BAR_FILL, QUEST_DONE_ICON_SIZE } from './constants';
+import FetchError from '../common/feedback/FetchError';
+import CenteredFeedback from '../common/feedback/CenteredFeedback';
 
 interface QuestProgressBarProps {
   goalTimes: number;
@@ -36,9 +37,7 @@ const QuestProgressBar = ({ goalTimes, progressTimes }: QuestProgressBarProps) =
       );
     }
 
-    return (
-      <IonIcons name="checkmark-circle-sharp" size={QUEST_DONE_ICON_SIZE} color={Colors.green[800]} />
-    );
+    return <IonIcons name="checkmark-circle-sharp" size={QUEST_DONE_ICON_SIZE} color={Colors.green[800]} />;
   };
 
   const renderQuestBarColor = () => {

@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
-import SecondaryButton from '../form/SecondaryButton';
 import { useNavigation } from '@react-navigation/native';
 import Button from '../form/Button';
 

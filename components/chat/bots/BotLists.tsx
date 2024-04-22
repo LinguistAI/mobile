@@ -1,6 +1,5 @@
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { TChatBot } from '../types';
-import BotProfile from './BotProfile';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import {
@@ -80,18 +79,16 @@ const BotLists = () => {
     );
   };
 
-  return <View style={styles.container}>{renderBots()}</View>;
+  return <View>{renderBots()}</View>;
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginVertical: 10,
-  },
   profile: {
     marginHorizontal: 12,
   },
   botListContainer: {
     gap: 15,
+    paddingVertical: 16,
   },
 });
 

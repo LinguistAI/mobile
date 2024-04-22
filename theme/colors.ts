@@ -102,6 +102,18 @@ const Colors = {
     800: '#9C36B5',
     900: '#862E9C',
   },
+  purple: {
+    0: '#DBBDF9',
+    100: '#CB9CFC',
+    200: '#B36FF8',
+    300: '#9A3EF9',
+    400: '#7E10ED',
+    500: '#6201C4',
+    600: '#3D0079', // purple until here
+    700: '#AE3EC9',
+    800: '#230145',
+    900: '#0F001E',
+  },
 };
 
 export default Colors;

@@ -1,6 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
-import { QFriendRequest, IUserDetailedInfo, RFriendship, QUserSearch, RFriendRequest, RFriendSearch } from './types';
+import {
+  QFriendRequest,
+  IUserDetailedInfo,
+  RFriendship,
+  QUserSearch,
+  RFriendRequest,
+  RFriendSearch,
+  QLeaderboard,
+  RLeaderboard,
+} from './types';
 import { Page, User } from '../../types';
 import {RUserQuests} from "../quest/types";
 
@@ -77,6 +86,20 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['FriendRequest'],
     }),
+    getGlobalLeaderboard: builder.query<RLeaderboard, QLeaderboard>({
+      query: (paginationParams) => ({
+        url: '/leaderboard/global/xp',
+        method: 'GET',
+        params: paginationParams,
+      }),
+    }),
+    getFriendLeaderboard: builder.query<RLeaderboard, QLeaderboard>({
+      query: (paginationParams) => ({
+        url: '/leaderboard/friends/xp',
+        method: 'GET',
+        params: paginationParams,
+      }),
+    }),
   }),
 });
 
@@ -90,4 +113,6 @@ export const {
   useRemoveFriendMutation,
   useSendFriendRequestMutation,
   useLazySearchUserQuery,
+  useLazyGetGlobalLeaderboardQuery,
+  useLazyGetFriendLeaderboardQuery,
 } = userApi;

@@ -63,8 +63,26 @@ export type RFriendRequest = {
   date: string;
 };
 
+export type RLeaderboard = {
+  loggedUserXPRanking: RLeaderboardUser;
+  totalPages: number;
+  currentPage: number;
+  xprankings: RLeaderboardUser[];
+};
+
+export type RLeaderboardUser = {
+  user: User;
+  experience: number;
+  ranking: number;
+};
+
 export interface QUserSearch {
   username: string;
+  page?: number;
+  size?: number;
+}
+
+export interface QLeaderboard {
   page?: number;
   size?: number;
 }

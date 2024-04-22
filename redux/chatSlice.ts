@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { chatApi } from '../components/chat/api';
-import { TChatBot } from '../components/chat/types';
+import { TChatBot, TConversation } from '../components/chat/types';
 import { gamificationApi } from '../components/gamification/api';
 import { userApi } from '../components/user/userApi';
 import { wordBankApi } from '../components/word-bank/api';
 
 export interface ChatState {
   selectedBot: TChatBot | null;
-  currentConversation: string | null;
+  currentConversation: TConversation | null;
 }
 
 const chatSlice = createSlice({

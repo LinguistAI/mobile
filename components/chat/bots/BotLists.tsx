@@ -43,7 +43,7 @@ const BotLists = () => {
 
       if (foundExistingConvo) {
         navigation.navigate('ChatScreen', { conversationId: foundExistingConvo.id });
-        dispatch(startConversation({ bot, conversation: foundExistingConvo.id }));
+        dispatch(startConversation({ bot, conversation: foundExistingConvo }));
         return;
       }
       const response = await createConvo(bot.id);
@@ -61,7 +61,7 @@ const BotLists = () => {
         return;
       }
       navigation.navigate('ChatScreen', { conversationId: convoId });
-      dispatch(startConversation({ bot, conversation: data?.id }));
+      dispatch(startConversation({ bot, conversation: data }));
     }
   };
 

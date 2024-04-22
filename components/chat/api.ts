@@ -54,6 +54,13 @@ export const chatApi = createApi({
       }),
       providesTags: ['Stat'],
     }),
+    clearConversation: builder.mutation<MessageCount[], string>({
+      query: (convoId) => ({
+        url: `/clear/${convoId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Message'],
+    }),
   }),
 });
 
@@ -64,4 +71,5 @@ export const {
   useGetAvailableBotsQuery,
   useSendChatMessageMutation,
   useGetMessageCountByBotQuery,
+  useClearConversationMutation,
 } = chatApi;

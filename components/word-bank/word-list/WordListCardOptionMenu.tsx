@@ -2,8 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import Colors from '../../../theme/colors';
 import { StyleSheet, Text, View } from 'react-native';
-import { TMenuOption } from './types';
-import { TMenuOptionObject } from './types';
+import { TMenuOption, TMenuOptionObject } from './types';
 
 interface WordListCardOptionMenuProps {
   menuVisible: boolean;
@@ -28,10 +27,7 @@ const WordListCardOptionMenu = ({
           <MenuOption
             key={option.value}
             onSelect={() => triggerOption(option.value)}
-            style={[
-              styles.optionContainer,
-              index === menuOptions.length - 1 && styles.lastOptionContainer,
-            ]}
+            style={[styles.optionContainer, index === menuOptions.length - 1 && styles.lastOptionContainer]}
           >
             <View style={styles.optionContent}>
               {option.icon}

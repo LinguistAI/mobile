@@ -79,7 +79,7 @@ const BotCarousel = () => {
           params: { conversationId: foundExistingConvo.id },
           screen: 'ChatScreen',
         });
-        dispatch(startConversation({ bot, conversation: foundExistingConvo.id }));
+        dispatch(startConversation({ bot, conversation: foundExistingConvo }));
         return;
       }
 
@@ -104,7 +104,7 @@ const BotCarousel = () => {
         screen: 'ChatScreen',
         initial: false,
       });
-      dispatch(startConversation({ bot, conversation: convoId }));
+      dispatch(startConversation({ bot, conversation: data }));
     }
   };
 

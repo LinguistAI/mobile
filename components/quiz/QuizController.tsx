@@ -42,7 +42,7 @@ const QuizController = () => {
   const [phase, setPhase] = useState<QuizPhase>('waiting-answer');
   const [selectedChoice, setSelectedChoice] = useState('');
   const navigation = useNavigation();
-  const conversationId = useSelector(selectCurrentConversation);
+  const conversationId = useSelector(selectCurrentConversation)?.id;
   const { add } = useNotifications();
 
   const [createMCQ, { error }] = useCreateMCQMutation();

@@ -15,6 +15,11 @@ export type TChatBot = {
   difficultyLevel: number;
 };
 
+export type UnknownWord = {
+  confidenceLevel: number;
+  word: string;
+};
+
 export type TConversation = {
   id: string;
   createdDate: Date;
@@ -22,6 +27,7 @@ export type TConversation = {
   userEmail: string;
   title: string;
   bot: TChatBot;
+  unknownWords: UnknownWord[];
 };
 
 export type Message = {
@@ -55,4 +61,15 @@ export type MessageCount = {
   date: Date;
   botId: string;
   messageCount: number;
+};
+
+export enum ChatOption {
+  CLEAR_CONVERSATION = 'Clear Conversation',
+  ACTIVE_WORDS = 'Active Words',
+}
+
+export type ChatOptionObject = {
+  label: string;
+  value: ChatOption;
+  icon: React.ReactElement;
 };

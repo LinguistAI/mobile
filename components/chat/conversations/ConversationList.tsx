@@ -39,7 +39,7 @@ const ConversationList = () => {
   const handleConversationClick = (id: string) => {
     navigation.navigate('ChatScreen', { conversationId: id });
     const conversation = conversations.find((c) => c.id === id);
-    dispatch(startConversation({ bot: conversation?.bot || null, conversation: conversation?.id }));
+    dispatch(startConversation({ bot: conversation?.bot || null, conversation: conversation }));
   };
 
   const renderConversation = (item: TConversation) => {

@@ -18,6 +18,7 @@ import { useSetUserDetailsMutation } from '../userApi';
 import useNotifications from '../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { dateObjToISODate } from '../utils';
+import ItemGroup from '../../common/form/ItemGroup';
 
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;
@@ -120,6 +121,22 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
               defaultValue={userDetails.birthDate ?? new Date()}
             />
           ) : null}
+          <ItemGroup
+            label='Hobbies'
+            name='hobbies'
+            items={userDetails.hobbies.map((hobby) => ({
+              value: hobby,
+              name: hobby,
+            }))}
+            onChange={(selectedHobbies: string[]) => {
+              methods.setValue('hobbies', selectedHobbies);
+            }}
+            addable={true}
+            addItems={HOBBIES_LIST.map((option) => ({
+              value: option.value,
+              name: option.label,
+            }))}
+          />
           <View style={styles.btnsContainer}>
             <View style={styles.btn}>
               <Button onPress={resetForm} disabled={!unsavedChanges} type="outlined">

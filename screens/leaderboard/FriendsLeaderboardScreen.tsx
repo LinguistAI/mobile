@@ -9,20 +9,19 @@ const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 10;
 
 const FriendsLeaderboardScreen = () => {
-  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
-  const [totalPageNum, setTotalPageNum] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [trigger, { data: leaderboard, isFetching, isError }] = useLazyGetFriendLeaderboardQuery();
 
+  const currentPage = leaderboard?.currentPage || DEFAULT_PAGE;
+  const totalPageNum = leaderboard?.totalPages || 0;
+
   const goToPreviousPage = () => {
     if (currentPage > 0) {
-      // setCurrentPage((prevPage) => prevPage - 1);
       trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage - 1 });
     }
   };
 
   const goToNextPage = () => {
-    // setCurrentPage((prevPage) => prevPage + 1);
     if (currentPage < totalPageNum - 1) {
       trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage + 1 });
     }
@@ -36,15 +35,7 @@ const FriendsLeaderboardScreen = () => {
 
   useEffect(() => {
     trigger({ size: DEFAULT_PAGE_SIZE });
-    // setCurrentPage(leaderboard!.currentPage);
   }, []);
-
-  useEffect(() => {
-    if (leaderboard) {
-      setCurrentPage(leaderboard.currentPage);
-      setTotalPageNum(leaderboard.totalPages);
-    }
-  }, [leaderboard, currentPage]);
 
   return (
     <SafeAreaView style={{ flex: 1, display: 'flex', backgroundColor: 'white' }}>

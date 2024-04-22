@@ -18,7 +18,6 @@ const LText = ({ children, size = 16, style, centered, marginHorizontal = 0 }: T
       ...styles.titleTextCustomBolder,
       ...rest,
     };
-    console.log(rest);
   }
 
   return (

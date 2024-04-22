@@ -10,8 +10,8 @@ import Colors from '../../theme/colors';
 import React, { useCallback, useState } from 'react';
 import FetchError from '../../components/common/feedback/FetchError';
 import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
-import Card from '../../components/common/Card';
-import LText from '../../components/common/Text';
+import Title from '../../components/common/Title';
+import Divider from '../../components/common/Divider';
 
 const FriendRequestsScreen = () => {
   const { user } = useUser();
@@ -56,12 +56,8 @@ const FriendRequestsScreen = () => {
   }
 
   return (
-    <View>
-      {/* <Card style={styles.requestTypeCard}> */}
-      <LText centered={false} style={{ fontWeight: 'bold', marginLeft: 10 }}>
-        Received
-      </LText>
-      {/* </Card> */}
+    <View style={{ paddingTop: 8 }}>
+      <Title size={'h4'}>Received</Title>
       <FlatList
         contentContainerStyle={styles.listContentContainer}
         data={receivedRequestsByReceiveDate}
@@ -71,17 +67,17 @@ const FriendRequestsScreen = () => {
           <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}
           >
-            <CenteredFeedback message="You don't have any incoming friendship requests, stay tuned for upcoming requests!">
-              <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
+            <CenteredFeedback
+              message="You don't have any incoming friendship requests, stay tuned for upcoming requests!"
+              size={16}
+            >
+              <Ionicons name="file-tray-sharp" size={30} color={Colors.gray[600]} />
             </CenteredFeedback>
           </View>
         }
       />
-      {/* <Card style={styles.requestTypeCard}> */}
-      <LText centered={false} style={{ fontWeight: 'bold', marginTop: 12, marginLeft: 10 }}>
-        Sent
-      </LText>
-      {/* </Card> */}
+      <Divider />
+      <Title size={'h4'}>Sent</Title>
       <FlatList
         contentContainerStyle={styles.listContentContainer}
         data={sentRequestsByReceiveDate}
@@ -91,8 +87,8 @@ const FriendRequestsScreen = () => {
           <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}
           >
-            <CenteredFeedback message="You don't have any pending requests">
-              <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
+            <CenteredFeedback message="You don't have any pending requests" size={16}>
+              <Ionicons name="file-tray-sharp" size={30} color={Colors.gray[600]} />
             </CenteredFeedback>
           </View>
         }

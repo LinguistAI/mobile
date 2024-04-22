@@ -30,7 +30,11 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
 
   return (
     <Card
-      style={user.username === loggedInUser ? { ...styles.highlightedCell, ...styles.contentRoot } : styles.contentRoot}
+      style={
+        user.username === loggedInUser
+          ? { ...styles.highlightedCell, ...styles.contentRoot }
+          : styles.contentRoot
+      }
     >
       <View>
         <View style={styles.mainInfoContainer}>
@@ -38,13 +42,9 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
             {ranking <= 3 && <Image source={renderRankingImage()} style={styles.rankImage} />}
             {ranking > 3 && <LText style={styles.rankingInfo}>{ranking}.</LText>}
 
-            <LText style={styles.mainInfo} size={16}>
-              {user.username}
-            </LText>
+            <LText style={styles.mainInfo}>{user.username}</LText>
           </View>
-          <LText style={styles.subinfo} size={14}>
-            {xp} XP
-          </LText>
+          <LText style={styles.subinfo}>{xp} XP</LText>
         </View>
       </View>
     </Card>
@@ -85,13 +85,13 @@ const styles = StyleSheet.create({
   },
   mainInfo: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
     color: Colors.gray[700],
   },
   subinfo: {
     fontWeight: 'bold',
     color: Colors.yellow[400],
-    fontSize: 13,
+    fontSize: 14,
   },
   highlightedCell: {
     backgroundColor: '#F3E7FF',

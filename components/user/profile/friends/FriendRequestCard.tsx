@@ -2,13 +2,14 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FriendRequest, RFriendRequest, RFriendship } from '../../types';
 import Card from '../../../common/Card';
 import Colors from '../../../../theme/colors';
-import useUser from '../../../../hooks/useUser';
 import { Ionicons } from '@expo/vector-icons';
-import Divider from '../../../common/Divider';
 import ActionIcon from '../../../common/ActionIcon';
 import { useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../../userApi';
 import useNotifications from '../../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
+import React from 'react';
+import LText from '../../../common/Text';
+import { formatDistanceToNow } from 'date-fns';
 
 interface FriendRequestCardProps {
   friendship: RFriendRequest;
@@ -34,6 +35,7 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
     }
   };
   const handleRejectRequest = async () => {
+    console.log('usre', sendUser);
     await reject({ friendId: sendUser.id });
 
     if (rejectError) {
@@ -61,7 +63,7 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
                 disabled={isTakingAction}
                 icon={<Ionicons name="checkmark-circle-outline" size={21} color={Colors.gray[100]} />}
               />
-              <Text style={styles.actionText}>Accept</Text>
+              <LText style={styles.actionText}>Accept</LText>
             </Pressable>
             <Pressable
               onPress={handleRejectRequest}
@@ -73,7 +75,7 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
                 disabled={isTakingAction}
                 icon={<Ionicons name="close-circle-outline" size={21} color={Colors.gray[100]} />}
               />
-              <Text style={styles.actionText}>Reject</Text>
+              <LText style={styles.actionText}>Reject</LText>
             </Pressable>
           </View>
         );
@@ -90,7 +92,7 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
                 disabled={isTakingAction}
                 icon={<Ionicons name="close-circle-outline" size={22} color={Colors.gray[100]} />}
               />
-              <Text style={styles.actionText}>Cancel</Text>
+              <LText style={styles.actionText}>Cancel</LText>
             </Pressable>
           </View>
         );
@@ -103,10 +105,8 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
     <Card>
       <View style={styles.contentRoot}>
         <View style={styles.infoContainer}>
-          <Text style={styles.mainInfo}>{sendUser.username}</Text>
-          <View style={styles.subInfoContainer}>
-            <Text style={styles.subinfo}>{new Date(date).toLocaleString()}</Text>
-          </View>
+          <LText style={styles.mainInfo}>{sendUser.username}</LText>
+          <LText style={styles.subinfo}>{formatDistanceToNow(new Date(date))} ago</LText>
         </View>
         <View style={styles.actionsRoot}>{renderRequestActions()}</View>
       </View>
@@ -120,14 +120,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 20,
-    // borderWidth: 1,
-    // borderColor: 'red',
+    gap: 18,
   },
   infoContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 4,
   },
   subInfoContainer: {
     display: 'flex',
@@ -141,12 +139,12 @@ const styles = StyleSheet.create({
   },
   subinfo: {
     color: Colors.gray[500],
-    fontSize: 10,
+    fontSize: 12,
   },
   actionContainer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 3,
+    gap: 1,
     alignItems: 'center',
     paddingHorizontal: 5,
     paddingVertical: 4,
@@ -174,8 +172,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
-    // borderWidth: 2,
-    // borderColor: 'black',
   },
   actionsRootSent: {
     display: 'flex',
@@ -183,8 +179,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     gap: 10,
-    // borderWidth: 1,
-    // borderColor: 'red',
   },
 });
 

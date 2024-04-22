@@ -11,7 +11,7 @@ import {
   RLeaderboard,
 } from './types';
 import { Page, User } from '../../types';
-import {RUserQuests} from "../quest/types";
+import { RUserQuests } from '../quest/types';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -80,7 +80,7 @@ export const userApi = createApi({
     }),
     rejectFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
-        url: '/friend/request/accept',
+        url: '/friend/request/reject',
         method: 'POST',
         body: friendReq,
       }),

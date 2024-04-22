@@ -1,30 +1,38 @@
-import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
+import React from 'react';
+import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity } from 'react-native';
 
 interface TextProps {
   children: React.ReactNode;
-  size?: number;
   style?: StyleProp<TextStyle>;
+  size?: number;
+  onPress?: () => void;
   centered?: boolean;
   marginHorizontal?: number;
 }
 
-const LText = ({ children, size = 16, style, centered, marginHorizontal = 0 }: TextProps) => {
+const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress }: TextProps) => {
   const textAlign = centered ? 'center' : 'left';
+
   let currentStyle = styles.titleTextCustom;
+  let mergedStyle = StyleSheet.compose(currentStyle, style as TextStyle);
 
   if (style && (style as TextStyle).fontWeight === 'bold') {
     const { fontWeight, ...rest } = style as TextStyle;
-    currentStyle = {
-      ...styles.titleTextCustomBolder,
-      ...rest,
-    };
+    mergedStyle = StyleSheet.compose(styles.titleTextCustomBolder, rest);
   }
 
-  return (
-    <Text style={[currentStyle, { fontSize: size, textAlign, marginHorizontal: marginHorizontal }]}>{children}</Text>
-  );
-};
+  if (size) {
+    mergedStyle = StyleSheet.compose(mergedStyle, { fontSize: size });
+  }
 
+  console.log('aloo', mergedStyle);
+
+  const content = (
+    <Text style={[mergedStyle, { textAlign, marginHorizontal: marginHorizontal }]}>{children}</Text>
+  );
+
+  return onPress ? <TouchableOpacity onPress={onPress}>{content}</TouchableOpacity> : content;
+};
 const styles = StyleSheet.create({
   titleTextCustom: {
     fontFamily: 'Regular',

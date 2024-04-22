@@ -13,7 +13,7 @@ import LandingScreen from './screens/common/LandingScreen';
 import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import { MenuProvider } from 'react-native-popup-menu';
 import PostRegistrationConversation from './components/user/onboarding/PostRegistrationConversation';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { Provider } from 'react-redux';
@@ -42,7 +42,8 @@ export default function App() {
             <MenuProvider>
               <CustomErrorBoundary>
                 <NavigationContainer>
-                  <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+                  <SafeAreaView style={styles.root}>
+                    <StatusBar />
                     <Stack.Navigator
                       screenOptions={{
                         contentStyle: {
@@ -84,3 +85,10 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: Colors.background[500],
+  },
+});

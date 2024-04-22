@@ -2,12 +2,12 @@ import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 're
 import { useGetFriendsQuery, useRemoveFriendMutation } from '../../userApi';
 import FriendProfileCard from './FriendProfileCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import FetchError from '../../../common/FetchError';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../../theme/colors';
 import { useCallback, useState } from 'react';
 import CenteredFeedback from '../../../common/feedback/CenteredFeedback';
+import FetchError from '../../../common/feedback/FetchError';
 
 const FriendsList = () => {
   const { data: friends, isLoading, isError, refetch } = useGetFriendsQuery();

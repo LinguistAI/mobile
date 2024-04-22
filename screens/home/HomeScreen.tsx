@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ActionIcon from '../../components/common/ActionIcon';
@@ -14,7 +14,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
-        <View style={styles.root}>
+        <View style={styles.container}>
           <View style={styles.topContainer}>
             <View style={styles.xprow}>
               <ExperienceBar />
@@ -46,12 +46,11 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  root: {
+  container: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    marginTop: 40,
   },
   topContainer: {
     flexDirection: 'row',

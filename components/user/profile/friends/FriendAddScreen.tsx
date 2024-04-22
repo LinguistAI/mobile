@@ -9,7 +9,7 @@ const DEFAULT_PAGE_SIZE = 5;
 
 const FriendAddScreen = () => {
   const [searchText, setSearchText] = useState('');
-  const [trigger, { data, isError, error, isFetching }, lastPromiseInfo] = useLazySearchUserQuery();
+  const [trigger, { data, isFetching }] = useLazySearchUserQuery();
 
   const handleSearchTextChange = (text: string) => {
     setSearchText(text);

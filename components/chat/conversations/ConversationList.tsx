@@ -1,15 +1,13 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { LastMessageObject, TConversation } from '../types';
 import { useDispatch } from 'react-redux';
-import Colors from '../../../theme/colors';
-import Avatar from '../../common/Avatar';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useGetAllConversationsQuery } from '../api';
 import { startConversation } from '../../../redux/chatSlice';
 import FetchError from '../../common/feedback/FetchError';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { getLastMessages } from '../utils';
 import Conversation from './Conversation';
 

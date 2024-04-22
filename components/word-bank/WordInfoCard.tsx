@@ -15,7 +15,8 @@ interface WordInfoCardProps {
 }
 
 const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
-  const { data, isFetching, isError } = useGetWordMeaningsQuery([selectedWord], { refetchOnFocus: false });
+  const lowercaseWord = selectedWord.toLowerCase();
+  const { data, isFetching, isError } = useGetWordMeaningsQuery([lowercaseWord], { refetchOnFocus: false });
 
   const renderWordDetails = () => {
     let result = null;
@@ -25,7 +26,7 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
       result = <Text>We couldn't fetch the details for this word.</Text>;
     } else {
       const dict = data?.dict!;
-      const wordGroupOrNot = dict[selectedWord];
+      const wordGroupOrNot = dict[lowercaseWord];
       if (isDictionaryWordGroup(wordGroupOrNot)) {
         const wordGroupObj = wordGroupOrNot;
         result = wordGroupObj.wordGroup.map((group) => <WordDetail key={group.id} definition={group} />);

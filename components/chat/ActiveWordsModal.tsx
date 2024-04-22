@@ -4,6 +4,7 @@ import Colors from '../../theme/colors';
 import { useSelector } from 'react-redux';
 import { selectCurrentConversation } from '../../redux/chatSelectors';
 import Divider from '../common/Divider';
+import Title from '../common/Title';
 
 interface ActiveWordsModalProps {
   visible: boolean;
@@ -12,7 +13,7 @@ interface ActiveWordsModalProps {
 
 const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
   const conversation = useSelector(selectCurrentConversation);
-  console.log(conversation?.unknownWords);
+
   return (
     <ReactNativeModal isVisible={visible} onBackdropPress={() => setVisible(false)}>
       <View style={styles.modalContent}>
@@ -25,7 +26,11 @@ const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
           <Divider style={{ width: '100%', borderColor: Colors.primary[500] }} />
           <ScrollView style={{}}>
             <View style={{ flex: 1, padding: 16, rowGap: 8 }}>
-              {conversation?.unknownWords.map((w) => <Text style={styles.word}>{w.word}</Text>)}
+              {conversation?.unknownWords.map((w) => (
+                <Text key={w.id} style={styles.word}>
+                  {w.word}
+                </Text>
+              ))}
             </View>
           </ScrollView>
         </View>

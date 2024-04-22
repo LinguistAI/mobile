@@ -9,13 +9,12 @@ interface ConversationProps {
 }
 
 const Conversation = ({ data, lastMessage }: ConversationProps) => {
-  const { msg, timestamp } = lastMessage;
+  const { msg } = lastMessage;
   return (
     <View style={styles.cardContainer}>
       <View style={styles.conversationRowContainer}>
         <Avatar src={data.bot.profileImage} width={40} height={40} />
         <View style={styles.conversationInfoContainer}>
-          {/* <Text style={styles.conversationTimestamp}>{timestamp ? new Date(timestamp).toDateString() : ''}</Text> */}
           <Text style={styles.conversationTitle}>{data.title}</Text>
           <Text numberOfLines={1} ellipsizeMode="tail" style={styles.conversationLastMessage}>
             {msg}

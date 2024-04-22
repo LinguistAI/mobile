@@ -19,7 +19,6 @@ const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps)
   const conversation = useSelector(selectCurrentConversation);
   const navigation = useNavigation();
   const { add } = useNotifications();
-  const [clearConvo, {}] = useClearConversationMutation();
   if (!conversation) {
     navigation.navigate('Conversations');
     add({ body: 'Please start a conversation first!', type: 'warning' });
@@ -42,7 +41,7 @@ const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps)
   return (
     <Menu opened={menuVisible} onBackdropPress={() => setMenuVisible(false)}>
       <MenuTrigger onPress={() => setMenuVisible(true)}>
-        <Ionicons size={24} name="ellipsis-vertical" color={Colors.primary['500']} />
+        <Ionicons size={24} name="ellipsis-vertical" color={Colors.primary['900']} />
       </MenuTrigger>
       <MenuOptions>
         {menuOptions.map((option, index) => (

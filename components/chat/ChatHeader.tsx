@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../theme/colors';
 import Avatar from '../common/Avatar';
@@ -13,6 +13,8 @@ import { ChatOption } from './types';
 import useNotifications from '../../hooks/useNotifications';
 import { useClearConversationMutation } from './api';
 import ActiveWordsModal from './ActiveWordsModal';
+import { clearLastMessages } from './utils';
+import { clearMessages } from '../../redux/chatSlice';
 
 const ChatHeader = () => {
   const [chatMenuVisible, setChatMenuVisible] = useState(false);
@@ -22,6 +24,7 @@ const ChatHeader = () => {
   const navigation = useNavigation();
   const { add } = useNotifications();
 
+  const dispatch = useDispatch();
   const [clearConvo, {}] = useClearConversationMutation();
 
   const handleGoBack = () => {
@@ -41,6 +44,14 @@ const ChatHeader = () => {
         break;
       case ChatOption.CLEAR_CONVERSATION:
         clearConvo(conversation.id);
+        clearLastMessages(conversation.id);
+        dispatch(clearMessages({ id: conversation.id }));
+        navigation.goBack();
+        add({
+          type: 'success',
+          body: 'Cleared the conversation.',
+        });
+        break;
       default:
         break;
     }

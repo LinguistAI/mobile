@@ -18,6 +18,7 @@ export type TChatBot = {
 export type UnknownWord = {
   confidenceLevel: number;
   word: string;
+  id: string;
 };
 
 export type TConversation = {

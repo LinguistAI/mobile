@@ -28,8 +28,11 @@ const chatSlice = createSlice({
       wordBankApi.util.resetApiState();
       userApi.util.resetApiState();
     },
+    clearMessages: (state, action) => {
+      chatApi.util.invalidateTags([{ type: 'Message', id: action.payload.id }]);
+    },
   },
 });
 
-export const { startConversation, resetApiState } = chatSlice.actions;
+export const { startConversation, resetApiState, clearMessages } = chatSlice.actions;
 export default chatSlice.reducer;

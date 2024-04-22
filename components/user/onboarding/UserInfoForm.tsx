@@ -53,7 +53,7 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
       name: data.name,
       englishLevel: data.englishLevel,
       hobbies: data.hobbies,
-      birthDate,
+      birthDate: birthDate,
     };
     await mutate(newProfile);
 
@@ -99,6 +99,9 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
             label="English Level"
             dataSet={ENGLISH_LEVELS.map((level) => ({ id: level.value, title: level.label }))}
             initialValue={userDetails.englishLevel ?? null}
+            clearOnFocus={true}
+            showClear={false}
+            showChevron={false}
           />
           <ActionButton
             title={
@@ -112,7 +115,6 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
           {isDateSelectionVisible ? (
             <PrimaryDatePicker
               name="birthDate"
-              label="Birth Date"
               rules={{}}
               close={() => setIsDateSelectionVisible(false)}
               defaultValue={userDetails.birthDate ?? new Date()}

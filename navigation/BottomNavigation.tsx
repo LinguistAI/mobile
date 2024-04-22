@@ -1,11 +1,12 @@
 import IonIcons from '@expo/vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LeaderboardScreen from '../screens/leaderboard/LeaderboardScreen';
+import LeaderboardScreen from '../screens/leaderboard/FriendsLeaderboardScreen';
 import HomeStackNavigator from './HomeStackNavigator';
 import Colors from '../theme/colors';
 import QuestsNavigation from './QuestsNavigation';
 import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
+import LeaderboardTabController from '../screens/leaderboard/LeaderBoardTabController';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +50,7 @@ const BottomNavigation = () => {
       />
       <Tab.Screen
         name="Leaderboard"
-        component={LeaderboardScreen}
+        component={LeaderboardTabController}
         options={{
           tabBarIcon: ({ color, size }) => <IonIcons name="podium-outline" size={size} color={color} />,
         }}

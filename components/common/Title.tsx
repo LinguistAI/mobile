@@ -12,13 +12,22 @@ interface TitleProps {
 
 const Title = ({ children, size: fontSize = 'h1', centered }: TitleProps) => {
   const textAlign = centered ? 'center' : 'left';
-  return <Text style={[styles.titleText, { fontSize: TitleSizes[fontSize], textAlign }]}>{children}</Text>;
+  let currentStyle = styles.titleTextCustom;
+
+  return <Text style={[currentStyle, { fontSize: TitleSizes[fontSize], textAlign }]}>{children}</Text>;
 };
 
 const styles = StyleSheet.create({
+  titleTextCustom: {
+    fontSize: 24,
+    fontFamily: 'Bold',
+    paddingHorizontal: 16,
+    marginVertical: 4,
+  },
   titleText: {
     fontSize: 24,
     fontWeight: 'bold',
+    fontFamily: '',
     paddingHorizontal: 16,
     marginVertical: 4,
   },

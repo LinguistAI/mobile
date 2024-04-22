@@ -19,6 +19,9 @@ import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-d
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { createContext } from 'react';
+import Splash from './components/common/Splash';
+import { useFonts, Nunito_400Regular, Nunito_700Bold, Nunito_900Black } from '@expo-google-fonts/nunito';
 import Colors from './theme/colors';
 
 const queryClient = new QueryClient({
@@ -27,12 +30,28 @@ const queryClient = new QueryClient({
   },
 });
 
+export const FontLoadedContext = createContext<boolean>(false);
+
 export default function App() {
   const Stack = createNativeStackNavigator();
   ScreenOrientation.lockPlatformAsync({
     screenOrientationArrayIOS: [ScreenOrientation.Orientation.PORTRAIT_UP],
     screenOrientationConstantAndroid: ScreenOrientation.Orientation.PORTRAIT_UP,
   });
+
+  try {
+    let [fontsLoaded] = useFonts({
+      Regular: Nunito_400Regular,
+      SemiBold: Nunito_700Bold,
+      Bold: Nunito_900Black,
+    });
+
+    if (!fontsLoaded) {
+      return <Splash />;
+    }
+  } catch (error) {
+    console.log('Could not load fonts', error);
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -47,7 +66,7 @@ export default function App() {
                     <Stack.Navigator
                       screenOptions={{
                         contentStyle: {
-                          backgroundColor: Colors.background[500],
+                          backgroundColor: 'white',
                         },
                       }}
                       initialRouteName="Landing"

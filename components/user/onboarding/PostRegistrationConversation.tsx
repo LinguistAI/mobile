@@ -15,11 +15,12 @@ import { formatAsStr } from '../../../utils';
 import CloseIcon from '../../common/CloseIcon';
 import Divider from '../../common/Divider';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { BOT_MESSAGES } from '../constants';
+import { ENGLISH_LEVELS, BOT_MESSAGES } from '../constants';
 import { useSetUserDetailsMutation } from '../userApi';
 import useNotifications from '../../../hooks/useNotifications';
 import { objectIsNotEmpty } from '../../utils';
 import useUser from '../../../hooks/useUser';
+import { dateObjToISODate } from '../utils';
 
 interface PostRegistrationConversationProps {
   navigation: any;
@@ -99,8 +100,34 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
     }
 
     const nextStep = currentMessage.trigger;
+    let shownAnswer: string;
+
+    switch (currentMessage.name) {
+      case 'birthDate':
+        const localDateString = new Date(String(userAnswer)).toLocaleDateString();
+        shownAnswer = `I was born on ${formatAsStr(localDateString)}.`;
+        userAnswer = formatAsStr(userAnswer);
+        break;
+      case 'hobbies':
+        if (!userAnswer || (Array.isArray(userAnswer) && userAnswer.length === 0)) {
+          shownAnswer = 'Nothing much.';
+        } else {
+          shownAnswer = formatAsStr(userAnswer);
+        }
+        break;
+      case 'englishLevel':
+        shownAnswer = formatAsStr(userAnswer);
+        const foundLevel = ENGLISH_LEVELS.find((level) => level.label === shownAnswer);
+        userAnswer = foundLevel ? foundLevel.value : "";
+        break;
+      default:
+        shownAnswer = formatAsStr(userAnswer);
+        userAnswer = formatAsStr(userAnswer);
+    }
+    
+
     const userResponse: ExtendedChatMessage = {
-      content: formatAsStr(userAnswer),
+      content: shownAnswer,
       sender: ChatMessageSender.user,
       timestamp: new Date(),
       id: uuidv4(),
@@ -149,7 +176,7 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
               }}
             ></DateTimePicker>
           ) : null}
-          <Button type="primary" onPress={() => handleNext("I was born on " + birthdate.toLocaleDateString())}>
+          <Button type="primary" onPress={() => handleNext(dateObjToISODate(new Date(birthdate)))}>
             CONFIRM
           </Button>
         </View>
@@ -165,11 +192,7 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
             name: option.label,
           }))}
           onSelectionDone={(name) => {
-            if (currentMessage?.name === 'hobbies' && (!name || (Array.isArray(name) && name.length === 0))) {
-              handleNext('Nothing much.'); // If no choice is selected for hobbies
-            } else {
-              handleNext(name);
-            }
+            handleNext(name)
           }}
           multiple={currentMessage?.multiple ?? false}
         />

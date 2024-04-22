@@ -17,7 +17,8 @@ interface FriendRequestCardProps {
 
 const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
   const { add } = useNotifications();
-  const { user1: sendUser, date } = friendship;
+  const { user1, user2, date } = friendship;
+  const sendUser = type === FriendRequest.RECEIVED ? user1 : user2;
 
   const [accept, { isLoading: isAccepting, error: acceptError }] = useAcceptFriendRequestMutation();
   const [reject, { isLoading: isRejecting, error: rejectError }] = useRejectFriendRequestMutation();
@@ -50,23 +51,46 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
       case FriendRequest.RECEIVED:
         return (
           <View style={styles.actionsRoot}>
-            <Pressable onPress={handleAcceptRequest} style={[styles.actionContainer, styles.acceptActionContainer]}>
+            <Pressable
+              onPress={handleAcceptRequest}
+              style={[styles.actionContainer, styles.acceptActionContainer]}
+            >
               <ActionIcon
                 onPress={handleAcceptRequest}
                 loading={isAccepting}
                 disabled={isTakingAction}
-                icon={<Ionicons name="checkmark-circle-outline" size={24} color={Colors.gray[100]} />}
+                icon={<Ionicons name="checkmark-circle-outline" size={21} color={Colors.gray[100]} />}
               />
               <Text style={styles.actionText}>Accept</Text>
             </Pressable>
-            <Pressable onPress={handleRejectRequest} style={[styles.actionContainer, styles.rejectActionContainer]}>
+            <Pressable
+              onPress={handleRejectRequest}
+              style={[styles.actionContainer, styles.rejectActionContainer]}
+            >
               <ActionIcon
                 onPress={handleRejectRequest}
                 loading={isRejecting}
                 disabled={isTakingAction}
-                icon={<Ionicons name="close-circle-outline" size={24} color={Colors.gray[100]} />}
+                icon={<Ionicons name="close-circle-outline" size={21} color={Colors.gray[100]} />}
               />
               <Text style={styles.actionText}>Reject</Text>
+            </Pressable>
+          </View>
+        );
+      case FriendRequest.SENT:
+        return (
+          <View style={styles.actionsRootSent}>
+            <Pressable
+              onPress={handleRejectRequest}
+              style={[styles.actionContainer, styles.rejectActionContainer]}
+            >
+              <ActionIcon
+                onPress={handleRejectRequest}
+                loading={isRejecting}
+                disabled={isTakingAction}
+                icon={<Ionicons name="close-circle-outline" size={22} color={Colors.gray[100]} />}
+              />
+              <Text style={styles.actionText}>Cancel</Text>
             </Pressable>
           </View>
         );
@@ -84,8 +108,7 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
             <Text style={styles.subinfo}>{new Date(date).toLocaleString()}</Text>
           </View>
         </View>
-        <Divider />
-        <View>{renderRequestActions()}</View>
+        <View style={styles.actionsRoot}>{renderRequestActions()}</View>
       </View>
     </Card>
   );
@@ -94,6 +117,12 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
 const styles = StyleSheet.create({
   contentRoot: {
     padding: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 20,
+    // borderWidth: 1,
+    // borderColor: 'red',
   },
   infoContainer: {
     display: 'flex',
@@ -112,14 +141,15 @@ const styles = StyleSheet.create({
   },
   subinfo: {
     color: Colors.gray[500],
-    fontSize: 13,
+    fontSize: 10,
   },
   actionContainer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 5,
+    gap: 3,
     alignItems: 'center',
-    padding: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 4,
     borderWidth: 2,
     borderStyle: 'solid',
     borderRadius: 4,
@@ -135,12 +165,26 @@ const styles = StyleSheet.create({
   actionText: {
     color: Colors.gray[100],
     fontWeight: 'bold',
+    fontSize: 13,
+    marginRight: 2,
   },
   actionsRoot: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 15,
+    alignItems: 'center',
+    gap: 10,
+    // borderWidth: 2,
+    // borderColor: 'black',
+  },
+  actionsRootSent: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 10,
+    // borderWidth: 1,
+    // borderColor: 'red',
   },
 });
 

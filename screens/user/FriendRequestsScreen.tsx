@@ -1,4 +1,4 @@
-import { RefreshControl, StyleSheet, View } from 'react-native';
+import { RefreshControl, StyleSheet, View, Text } from 'react-native';
 import { useGetFriendRequestsQuery } from '../../components/user/userApi';
 import { FlatList } from 'react-native-gesture-handler';
 import FriendRequestCard from '../../components/user/profile/friends/FriendRequestCard';
@@ -7,9 +7,11 @@ import { FriendRequest, RFriendRequest } from '../../components/user/types';
 import CardSkeleton from '../../components/common/CardSkeleton';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
-import { useCallback, useState } from 'react';
-import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
+import React, { useCallback, useState } from 'react';
 import FetchError from '../../components/common/feedback/FetchError';
+import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
+import Card from '../../components/common/Card';
+import LText from '../../components/common/Text';
 
 const FriendRequestsScreen = () => {
   const { user } = useUser();
@@ -35,6 +37,9 @@ const FriendRequestsScreen = () => {
   const receivedRequestsByReceiveDate = requestsCopy
     .filter((req) => getFriendRequestType(req) === FriendRequest.RECEIVED)
     .sort((a, b) => new Date(a.date).getMilliseconds() - new Date(b.date).getMilliseconds());
+  const sentRequestsByReceiveDate = requestsCopy
+    .filter((req) => getFriendRequestType(req) === FriendRequest.SENT)
+    .sort((a, b) => new Date(a.date).getMilliseconds() - new Date(b.date).getMilliseconds());
 
   const renderListSkeleton = () => <CardSkeleton height={100} count={6} />;
 
@@ -52,6 +57,11 @@ const FriendRequestsScreen = () => {
 
   return (
     <View>
+      {/* <Card style={styles.requestTypeCard}> */}
+      <LText centered={false} style={{ fontWeight: 'bold', marginLeft: 10 }}>
+        Received
+      </LText>
+      {/* </Card> */}
       <FlatList
         contentContainerStyle={styles.listContentContainer}
         data={receivedRequestsByReceiveDate}
@@ -61,7 +71,27 @@ const FriendRequestsScreen = () => {
           <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}
           >
-            <CenteredFeedback message="Your friend request inbox is empty, stay tuned for upcoming requests!">
+            <CenteredFeedback message="You don't have any incoming friendship requests, stay tuned for upcoming requests!">
+              <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
+            </CenteredFeedback>
+          </View>
+        }
+      />
+      {/* <Card style={styles.requestTypeCard}> */}
+      <LText centered={false} style={{ fontWeight: 'bold', marginTop: 12, marginLeft: 10 }}>
+        Sent
+      </LText>
+      {/* </Card> */}
+      <FlatList
+        contentContainerStyle={styles.listContentContainer}
+        data={sentRequestsByReceiveDate}
+        renderItem={({ item }) => <FriendRequestCard friendship={item} type={getFriendRequestType(item)} />}
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+        ListEmptyComponent={
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}
+          >
+            <CenteredFeedback message="You don't have any pending requests">
               <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
             </CenteredFeedback>
           </View>
@@ -77,6 +107,9 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 10,
     flexGrow: 1,
+  },
+  requestTypeCard: {
+    borderRadius: 0,
   },
 });
 

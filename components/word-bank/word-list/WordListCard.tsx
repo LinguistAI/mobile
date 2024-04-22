@@ -4,7 +4,7 @@ import { type TWordList, TMenuOption } from './types';
 import ActionIcon from '../../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
-import WordListCardOptionMenu from './WordListCardOptionMenu';
+import PopupMenu from './WordListCardOptionMenu';
 import { useMutation } from '@tanstack/react-query';
 import {
   useActivateWordListMutation,
@@ -178,7 +178,11 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
     ];
   };
 
-  const getTotalNumOfWords = (listStats: { learning: number; reviewing: number; mastered: number }): number => {
+  const getTotalNumOfWords = (listStats: {
+    learning: number;
+    reviewing: number;
+    mastered: number;
+  }): number => {
     return listStats.learning + listStats.reviewing + listStats.mastered;
   };
 
@@ -208,7 +212,7 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
               <Text style={styles.stat}>Mastered: {list.listStats.mastered}</Text>
             </View>
             <View style={styles.menuContainer}>
-              <WordListCardOptionMenu
+              <PopupMenu
                 menuVisible={menuVisible}
                 setMenuVisible={setMenuVisible}
                 triggerOption={triggerOption}

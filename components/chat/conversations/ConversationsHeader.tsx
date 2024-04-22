@@ -1,8 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
-import ActionIcon from '../../common/ActionIcon';
-import { Ionicons } from '@expo/vector-icons';
 import useUser from '../../../hooks/useUser';
 import Avatar from '../../common/Avatar';
 

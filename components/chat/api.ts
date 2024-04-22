@@ -26,6 +26,8 @@ export const chatApi = createApi({
         method: 'GET',
         url: `/chat/all/${conversationId}`,
       }),
+      providesTags: (result, error, conversationId) => [{ type: 'Message', id: conversationId }],
+      keepUnusedDataFor: 0,
     }),
     createNewConversation: builder.mutation<TConversation, string>({
       query: (botId: string) => ({
@@ -54,6 +56,13 @@ export const chatApi = createApi({
       }),
       providesTags: ['Stat'],
     }),
+    clearConversation: builder.mutation<TConversation, string>({
+      query: (convoId) => ({
+        url: `/clear/${convoId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }],
+    }),
   }),
 });
 
@@ -64,4 +73,5 @@ export const {
   useGetAvailableBotsQuery,
   useSendChatMessageMutation,
   useGetMessageCountByBotQuery,
+  useClearConversationMutation,
 } = chatApi;

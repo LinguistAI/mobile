@@ -27,3 +27,16 @@ export const getLastMessages = async () => {
 export const getLastMessage = (messages: { [key: string]: string }, conversationId: string) => {
   return messages[conversationId] || '';
 };
+
+export const clearLastMessages = async (conversationId: string) => {
+  try {
+    const existingMessagesJson = await AsyncStorage.getItem('conversationMessages');
+    const existingMessages = existingMessagesJson ? JSON.parse(existingMessagesJson) : {};
+
+    delete existingMessages[conversationId];
+
+    await AsyncStorage.setItem('conversationMessages', JSON.stringify(existingMessages));
+  } catch (error) {
+    console.error('Error clearing last message:', error);
+  }
+};

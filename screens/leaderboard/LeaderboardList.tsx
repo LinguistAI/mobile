@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useGetFriendsQuery, useLazyGetGlobalLeaderboardQuery } from '../../components/user/userApi';
-import FetchError from '../../components/common/FetchError';
-import CenteredFeedback from '../../components/common/CenteredFeedback';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
+import FetchError from '../../components/common/feedback/FetchError';
+import { RLeaderboard } from '../../components/user/types';
+import useUser from '../../hooks/useUser';
 import Colors from '../../theme/colors';
 import LeaderboardUserCard from './LeaderboardUserCard';
-import useUser from '../../hooks/useUser';
-import ActionButton from '../../components/common/ActionButton';
-import { QLeaderboard, RLeaderboard } from '../../components/user/types';
 
 interface LeaderboardListProps {
   data: RLeaderboard | undefined;

@@ -91,3 +91,12 @@ export enum FriendRequest {
   SENT = 'sent',
   RECEIVED = 'received',
 }
+
+export type RProfile = {
+  loves: string[];
+  likes: string[];
+  dislikes: string[];
+  hates: string[];
+  createdDate: Date;
+  updatedDate: Date;
+};

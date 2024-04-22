@@ -1,12 +1,9 @@
-import { useController, useFormContext } from 'react-hook-form';
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text, StyleSheet, ScrollView, Modal } from "react-native";
 import Colors from "../../../theme/colors";
-import Button from "./Button";
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import OptionGroup from './OptionGroup';
-import { HOBBIES_LIST } from '../../user/constants';
 
 type Item = {
   name: string;
@@ -20,6 +17,7 @@ type ItemGroupProps = {
   name: string;
   addable: boolean;
   addItems?: Item[];
+  noItemsText?: string;
 };
 
 const ItemGroup: React.FC<ItemGroupProps> = ({
@@ -27,7 +25,8 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
   onChange: onChange,
   label,
   addable,
-  addItems
+  addItems,
+  noItemsText
 }) => {
   const [displayedItems, setDisplayedItems] = useState<Item[]>(items);
   const [showOptions, setShowOptions] = useState(false);
@@ -56,16 +55,19 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
     <View>
       <View style={styles.labelContainer}>
       <Text style={styles.label}>{label}</Text>
-      {addable && (
-        <TouchableOpacity onPress={() => setShowOptions(true)} style={styles.addButton}>
-          <Ionicons name="add-circle-outline" size={32} color={Colors.primary["500"]} />
-        </TouchableOpacity>
-      )}
+      
       </View>
       <ScrollView style={styles.container}>
         {displayedItems.length === 0 ? (
-          <Text style={styles.noItemsText}>You have no hobbies.</Text>
-        ) : (
+          <View style={styles.rowContainer}>
+            <Text style={styles.noItemsText}>{noItemsText}</Text>
+            {addable && (
+              <TouchableOpacity onPress={() => setShowOptions(true)} style={styles.addButton}>
+                <Ionicons name="add-circle-outline" size={32} color={Colors.primary["500"]} />
+              </TouchableOpacity>
+            )}
+          </View>
+          ) : (
           <View style={styles.itemGroup}>
             {displayedItems.map((item) => (
               <View
@@ -80,6 +82,11 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
                 </TouchableOpacity>
               </View>
             ))}
+            {addable && (
+              <TouchableOpacity onPress={() => setShowOptions(true)} style={styles.addButton}>
+                <Ionicons name="add-circle-outline" size={32} color={Colors.primary["500"]} />
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </ScrollView>
@@ -117,23 +124,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10, // Add some spacing between the label and the items
+    marginBottom: 5, // Add some spacing between the label and the items
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.gray[900],
     fontWeight: 'bold',
   },
   noItemsText: {
-    fontSize: 14,
-    color: Colors.gray[0],
+    fontSize: 16,
+    color: Colors.gray[900],
+    margin: 6
   },
   btnContainer: {
     margin: 10,
   },
   container: {
-    paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingVertical: 3,
+    paddingHorizontal: 3,
     borderRadius: 4,
     borderWidth: 2, 
     borderColor: Colors.primary['500'], 
@@ -144,7 +152,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   item: {
-    margin: 4,
+    margin: 3,
     backgroundColor: Colors.primary["400"],
     borderRadius: 20,
     paddingHorizontal: 12,
@@ -179,6 +187,11 @@ const styles = StyleSheet.create({
   closeButton: {
     marginTop: 2,
     alignSelf: 'flex-end',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', 
+    alignItems: 'center', // Vertically align items
   },
 });
 

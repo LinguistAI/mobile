@@ -1,6 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View, RefreshControl } from 'react-native';
 import Colors from '../../../theme/colors';
 import useUser from '../../../hooks/useUser';
 import Button from '../../common/form/Button';
@@ -9,10 +9,12 @@ import { Ionicons } from '@expo/vector-icons';
 import UserInfoForm from '../onboarding/UserInfoForm';
 import Divider from '../../common/Divider';
 import { useGetUserDetailsQuery } from '../userApi';
+import { useGetProfileQuery } from '../profileApi';
 import ExperienceBar from '../../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import ActionIcon from '../../common/ActionIcon';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
+import { useFocusEffect } from '@react-navigation/native';
 
 const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
 
@@ -21,7 +23,9 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
   const { clearUserDetails, user } = useUser();
 
-  const { data: userInfo, isFetching, error } = useGetUserDetailsQuery();
+  const { data: userInfo, isFetching: isUserInfoFetching, error, refetch: userInfoRefetch} = useGetUserDetailsQuery();
+  const { data: profileInfo, isFetching: isProfileFetching, error: profileError, refetch: profileRefetch } = useGetProfileQuery();
+  const [refreshing, setRefreshing] = useState(false);
 
   const onChangePassword = () => {
     navigation.navigate('Change Password');
@@ -30,6 +34,13 @@ const Profile = () => {
   const onPressFriends = () => {
     navigation.navigate('Friends');
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      userInfoRefetch();
+      profileRefetch();
+    }, [userInfoRefetch, profileRefetch])
+  );
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -45,6 +56,13 @@ const Profile = () => {
     }
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await userInfoRefetch();
+    await profileRefetch();
+    setRefreshing(false);
+  }, [userInfoRefetch, profileRefetch]);
+
   const handleSignout = async () => {
     clearUserDetails();
     navigation.reset({
@@ -54,19 +72,21 @@ const Profile = () => {
   };
 
   const renderUserInfoForm = () => {
-    if (isFetching) {
+    if (isUserInfoFetching || isProfileFetching) {
       return <LoadingIndicator />;
     }
 
-    if (error || !userInfo) {
+    if (error || profileError|| !userInfo || !profileInfo) {
       return <Text>Something went wrong</Text>;
     }
 
-    return <UserInfoForm userDetails={userInfo} />;
+    return <UserInfoForm userDetails={userInfo} profileDetails = {profileInfo}/>;
   };
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView style={styles.root} refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <View style={styles.topSection}>
         <View style={{ alignSelf: 'flex-end', margin: 15 }}>
           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

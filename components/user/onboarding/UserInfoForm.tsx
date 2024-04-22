@@ -1,16 +1,14 @@
 import { FormProvider, set, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../common/form/Button';
-import { IUserDetailedInfo } from '../types';
+import { IUserDetailedInfo, RProfile } from '../types';
 import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import { useEffect, useState } from 'react';
 import useUser from '../../../hooks/useUser';
 import Colors from '../../../theme/colors';
 import EmailTextInput from '../../common/form/EmailTextInput';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import { ENGLISH_LEVELS, HOBBIES_LIST } from '../constants';
 import PrimaryAutocomplete from '../../common/form/PrimaryAutocomplete';
-import Selections from '../../common/Selections';
 import PrimaryDatePicker from '../../common/form/PrimaryDatePicker';
 import ActionButton from '../../common/ActionButton';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,9 +20,32 @@ import ItemGroup from '../../common/form/ItemGroup';
 
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;
+  profileDetails: RProfile;
 }
 
-const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
+const generateItemGroup = (
+  label: string,
+  name: string,
+  items: string[] | undefined,
+  onChange: (selected: string[]) => void,
+  addable: boolean
+): React.ReactNode => {
+  if (!items || items.length === 0) {
+    return null; // Return null if items are empty
+  }
+
+  return (
+    <ItemGroup
+      label={label}
+      name={name}
+      items={items.map((item) => ({ value: item, name: item }))}
+      onChange={onChange}
+      addable={addable}
+    />
+  );
+};
+
+const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isDateSelectionVisible, setIsDateSelectionVisible] = useState(false);
   const { user } = useUser();
@@ -122,7 +143,7 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
             />
           ) : null}
           <ItemGroup
-            label='Hobbies'
+            label='Hobbies:'
             name='hobbies'
             items={userDetails.hobbies.map((hobby) => ({
               value: hobby,
@@ -136,7 +157,12 @@ const UserInfoForm = ({ userDetails }: UserInfoFormProps) => {
               value: option.value,
               name: option.label,
             }))}
+            noItemsText="You can add some hobbies!"
           />
+          {generateItemGroup('You like: ', 'likes', profileDetails.likes, (selected) => {}, false)}
+          {generateItemGroup('You love: ', 'loves', profileDetails.loves, (selected) => {}, false)}
+          {generateItemGroup('You dislike: ', 'dislikes', profileDetails.dislikes, (selected) => {}, false)}
+          {generateItemGroup('You hate: ', 'hates', profileDetails.hates, (selected) => {}, false)}
           <View style={styles.btnsContainer}>
             <View style={styles.btn}>
               <Button onPress={resetForm} disabled={!unsavedChanges} type="outlined">

@@ -1,20 +1,18 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { type TWordList, TMenuOption } from './types';
-import ActionIcon from '../../common/ActionIcon';
-import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
-import PopupMenu from './WordListCardOptionMenu';
-import { useMutation } from '@tanstack/react-query';
+import ActionIcon from '../../common/ActionIcon';
 import {
   useActivateWordListMutation,
-  useAddWordListToFavoriteMutation,
   useDeactivateWordListMutation,
   useDeleteListMutation,
   usePinWordListMutation,
-  useRemoveWordListFromFavoritesMutation,
   useUnpinWordListMutation,
 } from '../api';
+import PopupMenu from './WordListCardOptionMenu';
+import { TMenuOption, type TWordList } from './types';
 
 interface WordListProps {
   list: TWordList;
@@ -25,8 +23,6 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const [deleteList] = useDeleteListMutation();
-  const [addWordListToFavorite] = useAddWordListToFavoriteMutation();
-  const [removeWordListFromFavorites] = useRemoveWordListFromFavoritesMutation();
   const [activateWordList] = useActivateWordListMutation();
   const [deactivateWordList] = useDeactivateWordListMutation();
   const [pinWordList] = usePinWordListMutation();
@@ -35,16 +31,6 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
   const { mutate: deleteListMutate } = useMutation({
     mutationFn: async () => await deleteList(list.listId),
     mutationKey: ['deleteWordList'],
-  });
-
-  const { mutate: addFavoriteMutate } = useMutation({
-    mutationFn: async () => await addWordListToFavorite(list.listId),
-    mutationKey: ['addListFavorite'],
-  });
-
-  const { mutate: removeFavoriteMutate } = useMutation({
-    mutationFn: async () => await removeWordListFromFavorites(list.listId),
-    mutationKey: ['removeListFavorite'],
   });
 
   const { mutate: activateMutate } = useMutation({
@@ -71,12 +57,6 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
     switch (option) {
       case TMenuOption.DELETE:
         deleteListMutate();
-        break;
-      case TMenuOption.FAVORITE:
-        addFavoriteMutate();
-        break;
-      case TMenuOption.UNFAVORITE:
-        removeFavoriteMutate();
         break;
       case TMenuOption.ACTIVATE:
         activateMutate();
@@ -105,27 +85,31 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
     if (list.isPinned) {
       return (
         <View style={styles.pin}>
-          <ActionIcon
-            icon={<Ionicons size={24} name="pin" color={Colors.gray['900']} />}
-            onPress={() => {
-              triggerOption(TMenuOption.PIN);
-            }}
-          />
+          <View style={styles.actionItemLeft}>
+            <ActionIcon
+              icon={<Ionicons size={18} name="pin" color={Colors.gray['900']} />}
+              onPress={() => {
+                triggerOption(TMenuOption.UNPIN);
+              }}
+            />
+          </View>
         </View>
       );
     }
   };
 
-  const renderFavourite = () => {
-    if (list.isFavorite) {
+  const renderActive = () => {
+    if (list.isActive) {
       return (
-        <View style={styles.favourite}>
-          <ActionIcon
-            icon={<Ionicons size={24} name="heart-circle-outline" color={Colors.gray['100']} />}
-            onPress={() => {
-              triggerOption(TMenuOption.FAVORITE);
-            }}
-          />
+        <View style={styles.activate}>
+          <View style={styles.actionItemRight}>
+            <ActionIcon
+              icon={<Ionicons size={18} name="bookmark-sharp" color={Colors.gray[700]} />}
+              onPress={() => {
+                triggerOption(TMenuOption.DEACTIVATE);
+              }}
+            />
+          </View>
         </View>
       );
     }
@@ -137,15 +121,6 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
         label: 'Edit',
         value: TMenuOption.EDIT,
         icon: <Ionicons name="create-outline" size={18} color={Colors.blue[600]} />,
-      },
-      {
-        label: list.isFavorite ? 'Unfavorite' : 'Favorite',
-        value: list.isFavorite ? TMenuOption.UNFAVORITE : TMenuOption.FAVORITE,
-        icon: list.isFavorite ? (
-          <Ionicons name="heart" size={18} color={Colors.primary[600]} />
-        ) : (
-          <Ionicons name="heart-outline" size={18} color={Colors.primary[600]} />
-        ),
       },
       {
         label: list.isPinned ? 'Unpin' : 'Pin',
@@ -186,6 +161,8 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
     return listStats.learning + listStats.reviewing + listStats.mastered;
   };
 
+  const cardTitle = list.title.length > 30 ? `${list.title.substring(0, 30)}...` : list.title;
+
   return (
     <Pressable
       style={styles.card}
@@ -197,27 +174,31 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
       }}
     >
       <View key={list.listId}>
-        <Image source={{ uri: 'https://picsum.photos/150' }} style={styles.image} />
-        <View style={styles.overlay}>
-          {renderPin()}
-          {renderFavourite()}
-          <View>
-            <Text style={styles.title}>{list.title}</Text>
-            <Text style={styles.words}>{getTotalNumOfWords(list.listStats)} words in total</Text>
-          </View>
-          <View style={styles.bottomRow}>
-            <View style={styles.stats}>
-              <Text style={styles.stat}>Learning: {list.listStats.learning}</Text>
-              <Text style={styles.stat}>Reviewing: {list.listStats.reviewing}</Text>
-              <Text style={styles.stat}>Mastered: {list.listStats.mastered}</Text>
+        <View>
+          <Image source={{ uri: 'https://picsum.photos/150' }} style={styles.image} />
+          <View style={styles.overlay}>
+            <View>
+              {renderPin()}
+              {renderActive()}
             </View>
-            <View style={styles.menuContainer}>
-              <PopupMenu
-                menuVisible={menuVisible}
-                setMenuVisible={setMenuVisible}
-                triggerOption={triggerOption}
-                menuOptions={getMenuOptions()}
-              />
+            <View style={styles.details}>
+              <Text style={styles.title}>{cardTitle}</Text>
+              <Text style={styles.words}>{getTotalNumOfWords(list.listStats)} words in total</Text>
+            </View>
+            <View style={styles.bottomRow}>
+              <View style={styles.stats}>
+                <Text style={styles.stat}>Learning: {list.listStats.learning}</Text>
+                <Text style={styles.stat}>Reviewing: {list.listStats.reviewing}</Text>
+                <Text style={styles.stat}>Mastered: {list.listStats.mastered}</Text>
+              </View>
+              <View style={styles.menuContainer}>
+                <PopupMenu
+                  menuVisible={menuVisible}
+                  setMenuVisible={setMenuVisible}
+                  triggerOption={triggerOption}
+                  menuOptions={getMenuOptions()}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -239,11 +220,34 @@ const styles = StyleSheet.create({
     left: 0,
     zIndex: 1,
   },
-  favourite: {
+  details: {
+    top: 15,
+  },
+  activate: {
     position: 'absolute',
     top: 0,
     right: 0,
     zIndex: 1,
+  },
+  actionItemRight: {
+    backgroundColor: 'white',
+    padding: 0.3,
+    borderRadius: 8,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionItemLeft: {
+    backgroundColor: 'white',
+    padding: 0.3,
+    borderRadius: 8,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    borderTopRightRadius: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   words: {
     fontSize: 14,
@@ -269,6 +273,7 @@ const styles = StyleSheet.create({
   title: {
     paddingHorizontal: 10,
     paddingTop: 15,
+    height: 60,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
@@ -282,7 +287,8 @@ const styles = StyleSheet.create({
   stat: {
     fontSize: 13,
     color: '#fff',
-    fontStyle: 'italic',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
   },
   menuContainer: {
     alignSelf: 'flex-end',

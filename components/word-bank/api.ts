@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 import {
-  IDictionaryResponse,
   IAddWord,
   ICreateWordList,
+  IDictionaryResponse,
   IEditWordList,
   IWordListWithUserInfo,
   IWordListWithWordInfo,
@@ -76,22 +76,6 @@ export const wordBankApi = createApi({
       }),
       invalidatesTags: ['WordLists'],
     }),
-    addWordListToFavorite: builder.mutation<void, string>({
-      query: (listId) => ({
-        url: 'wordbank/lists/add-favorite',
-        method: 'POST',
-        body: { listId },
-      }),
-      invalidatesTags: ['WordLists'],
-    }),
-    removeWordListFromFavorites: builder.mutation<void, string>({
-      query: (listId) => ({
-        url: 'wordbank/lists/remove-favorite',
-        method: 'POST',
-        body: { listId },
-      }),
-      invalidatesTags: ['WordLists'],
-    }),
     pinWordList: builder.mutation<void, string>({
       query: (listId) => ({
         url: 'wordbank/lists/pin',
@@ -124,12 +108,10 @@ export const {
   useGetWordListByIdQuery,
   useEditListMutation,
   useActivateWordListMutation,
-  useAddWordListToFavoriteMutation,
   useAddWordMutation,
   useDeactivateWordListMutation,
   useDeleteListMutation,
   useGetWordMeaningsQuery,
   usePinWordListMutation,
-  useRemoveWordListFromFavoritesMutation,
   useUnpinWordListMutation,
 } = wordBankApi;

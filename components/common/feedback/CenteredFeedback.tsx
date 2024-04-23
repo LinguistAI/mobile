@@ -22,9 +22,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   message: {
-    fontSize: 20,
-    color: Colors.primary[500],
+    fontSize: 18,
+    color: Colors.gray[900],
     padding: 20,
+    textAlign: 'center',
   },
 });
 

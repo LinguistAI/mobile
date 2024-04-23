@@ -99,10 +99,8 @@ const FriendRequestsScreen = () => {
 
 const styles = StyleSheet.create({
   listContentContainer: {
-    flex: 1,
     gap: 10,
     padding: 10,
-    flexGrow: 1,
   },
   requestTypeCard: {
     borderRadius: 0,

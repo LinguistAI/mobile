@@ -92,10 +92,9 @@ const LeaderboardList = ({ data, message, isDataLoading, isRefreshing, onRefresh
           )}
           ListEmptyComponent={
             <View style={{ height: '85%', display: 'flex', justifyContent: 'center' }}>
-              <CenteredFeedback
-                icon={<Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />} // TODO update later put this only in the friends
-                message={message}
-              />
+              <CenteredFeedback message={message}>
+                <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
+              </CenteredFeedback>
             </View>
           }
           refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}

@@ -6,7 +6,8 @@ import { useSendFriendRequestMutation } from '../userApi';
 import { Ionicons } from '@expo/vector-icons';
 import useNotifications from '../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
-import { FriendSearchFriendshipStatus, RFriendSearch } from '../types';
+import { FriendSearchFriendshipStatus, FriendshipStatus, RFriendSearch } from '../types';
+import { useState } from 'react';
 
 interface FriendSearchProfileCard {
   searchItem: RFriendSearch;
@@ -16,6 +17,7 @@ interface FriendSearchProfileCard {
 const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProfileCard) => {
   const [addFriend, { isError, error }] = useSendFriendRequestMutation();
   const { add } = useNotifications();
+  const [updatedSearchItem, setUpdatedSearchItem] = useState(searchItem);
 
   const handleSendFriendRequest = async () => {
     await addFriend({ friendId: searchItem.id });
@@ -27,6 +29,12 @@ const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProf
       return;
     }
 
+    // Client update
+    setUpdatedSearchItem({
+      ...updatedSearchItem,
+      friendshipStatus: FriendSearchFriendshipStatus.REQUEST_SENT,
+    });
+
     add({
       body: `Sent a friend request to '${searchItem.username}'`,
       type: 'success',
@@ -35,7 +43,7 @@ const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProf
 
   const renderFriendActions = () => {
     if (!friendActions) return null;
-    const { friendshipStatus } = searchItem;
+    const { friendshipStatus } = updatedSearchItem;
 
     if (friendshipStatus === FriendSearchFriendshipStatus.NOT_EXIST) {
       return (

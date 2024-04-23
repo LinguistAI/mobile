@@ -2,13 +2,15 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FriendRequest, RFriendRequest, RFriendship } from '../../types';
 import Card from '../../../common/Card';
 import Colors from '../../../../theme/colors';
-import useUser from '../../../../hooks/useUser';
 import { Ionicons } from '@expo/vector-icons';
-import Divider from '../../../common/Divider';
 import ActionIcon from '../../../common/ActionIcon';
 import { useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../../userApi';
 import useNotifications from '../../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
+import React from 'react';
+import LText from '../../../common/Text';
+import { formatDistanceToNow } from 'date-fns';
+import useError from '../../../../hooks/useError';
 
 interface FriendRequestCardProps {
   friendship: RFriendRequest;
@@ -16,31 +18,19 @@ interface FriendRequestCardProps {
 }
 
 const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
-  const { add } = useNotifications();
-  const { user1: sendUser, date } = friendship;
+  const { user1, user2, date } = friendship;
+  const sendUser = type === FriendRequest.RECEIVED ? user1 : user2;
 
   const [accept, { isLoading: isAccepting, error: acceptError }] = useAcceptFriendRequestMutation();
   const [reject, { isLoading: isRejecting, error: rejectError }] = useRejectFriendRequestMutation();
+  useError(acceptError);
+  useError(rejectError);
 
   const handleAcceptRequest = async () => {
     await accept({ friendId: sendUser.id });
-
-    if (acceptError) {
-      add({
-        body: generateErrorResponseMessage(acceptError, "Couldn't accept the request."),
-        type: 'error',
-      });
-    }
   };
   const handleRejectRequest = async () => {
     await reject({ friendId: sendUser.id });
-
-    if (rejectError) {
-      add({
-        body: generateErrorResponseMessage(rejectError, "Couldn't reject the request."),
-        type: 'error',
-      });
-    }
   };
 
   const isTakingAction = isAccepting || isRejecting;
@@ -50,23 +40,46 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
       case FriendRequest.RECEIVED:
         return (
           <View style={styles.actionsRoot}>
-            <Pressable onPress={handleAcceptRequest} style={[styles.actionContainer, styles.acceptActionContainer]}>
+            <Pressable
+              onPress={handleAcceptRequest}
+              style={[styles.actionContainer, styles.acceptActionContainer]}
+            >
               <ActionIcon
                 onPress={handleAcceptRequest}
                 loading={isAccepting}
                 disabled={isTakingAction}
-                icon={<Ionicons name="checkmark-circle-outline" size={24} color={Colors.gray[100]} />}
+                icon={<Ionicons name="checkmark-circle-outline" size={20} color={Colors.gray[100]} />}
               />
-              <Text style={styles.actionText}>Accept</Text>
+              <LText style={styles.actionText}>Accept</LText>
             </Pressable>
-            <Pressable onPress={handleRejectRequest} style={[styles.actionContainer, styles.rejectActionContainer]}>
+            <Pressable
+              onPress={handleRejectRequest}
+              style={[styles.actionContainer, styles.rejectActionContainer]}
+            >
               <ActionIcon
                 onPress={handleRejectRequest}
                 loading={isRejecting}
                 disabled={isTakingAction}
-                icon={<Ionicons name="close-circle-outline" size={24} color={Colors.gray[100]} />}
+                icon={<Ionicons name="close-circle-outline" size={20} color={Colors.gray[100]} />}
               />
-              <Text style={styles.actionText}>Reject</Text>
+              <LText style={styles.actionText}>Reject</LText>
+            </Pressable>
+          </View>
+        );
+      case FriendRequest.SENT:
+        return (
+          <View style={styles.actionsRootSent}>
+            <Pressable
+              onPress={handleRejectRequest}
+              style={[styles.actionContainer, styles.rejectActionContainer]}
+            >
+              <ActionIcon
+                onPress={handleRejectRequest}
+                loading={isRejecting}
+                disabled={isTakingAction}
+                icon={<Ionicons name="close-circle-outline" size={22} color={Colors.gray[100]} />}
+              />
+              <LText style={styles.actionText}>Cancel</LText>
             </Pressable>
           </View>
         );
@@ -79,13 +92,10 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
     <Card>
       <View style={styles.contentRoot}>
         <View style={styles.infoContainer}>
-          <Text style={styles.mainInfo}>{sendUser.username}</Text>
-          <View style={styles.subInfoContainer}>
-            <Text style={styles.subinfo}>{new Date(date).toLocaleString()}</Text>
-          </View>
+          <LText style={styles.mainInfo}>{sendUser.username}</LText>
+          <LText style={styles.subinfo}>{formatDistanceToNow(new Date(date))} ago</LText>
         </View>
-        <Divider />
-        <View>{renderRequestActions()}</View>
+        <View style={styles.actionsRoot}>{renderRequestActions()}</View>
       </View>
     </Card>
   );
@@ -94,11 +104,15 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
 const styles = StyleSheet.create({
   contentRoot: {
     padding: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 18,
   },
   infoContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 4,
   },
   subInfoContainer: {
     display: 'flex',
@@ -112,14 +126,15 @@ const styles = StyleSheet.create({
   },
   subinfo: {
     color: Colors.gray[500],
-    fontSize: 13,
+    fontSize: 12,
   },
   actionContainer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 5,
+    gap: 1,
     alignItems: 'center',
-    padding: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 4,
     borderWidth: 2,
     borderStyle: 'solid',
     borderRadius: 4,
@@ -135,12 +150,22 @@ const styles = StyleSheet.create({
   actionText: {
     color: Colors.gray[100],
     fontWeight: 'bold',
+    fontSize: 13,
+    marginRight: 2,
   },
   actionsRoot: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 15,
+    alignItems: 'center',
+    gap: 10,
+  },
+  actionsRootSent: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 10,
   },
 });
 

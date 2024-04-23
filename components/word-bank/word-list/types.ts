@@ -15,8 +15,6 @@ export enum TMenuOption {
   CANCEL = 'Cancel',
   PIN = 'Pin',
   UNPIN = 'Unpin',
-  FAVORITE = 'Favorite',
-  UNFAVORITE = 'Unfavorite',
   ACTIVATE = 'Activate',
   DEACTIVATE = 'Deactivate',
 }

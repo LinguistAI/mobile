@@ -5,11 +5,9 @@ import Colors from '../../../theme/colors';
 
 interface ConversationProps {
   data: TConversation;
-  lastMessage: LastMessage;
 }
 
-const Conversation = ({ data, lastMessage }: ConversationProps) => {
-  const { msg } = lastMessage;
+const Conversation = ({ data }: ConversationProps) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.conversationRowContainer}>
@@ -26,7 +24,7 @@ const Conversation = ({ data, lastMessage }: ConversationProps) => {
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {msg}
+            {data.lastMessage}
           </Text>
         </View>
       </View>

@@ -5,6 +5,10 @@ import { QLoggedDate, RLoggedDate, RWordLearning } from './types';
 export const userStatsApi = createApi({
   reducerPath: 'statsApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  invalidationBehavior: 'immediately',
+  keepUnusedDataFor: 3,
   endpoints: (builder) => ({
     getLoggedDates: builder.query<RLoggedDate, QLoggedDate>({
       query: (statParams) => ({

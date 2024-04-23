@@ -1,15 +1,20 @@
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
+import LText from '../Text';
 
 interface CenteredFeedbackProps {
   message: string;
   children?: React.ReactNode;
+  size?: number;
 }
 
-const CenteredFeedback = ({ message, children }: CenteredFeedbackProps) => {
+const CenteredFeedback = ({ message, children, size }: CenteredFeedbackProps) => {
   return (
     <View style={styles.root}>
-      <Text style={styles.message}>{message}</Text>
+      <LText style={styles.message} size={size} centered={true}>
+        {message}
+      </LText>
       {children}
     </View>
   );
@@ -22,9 +27,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   message: {
-    fontSize: 20,
-    color: Colors.primary[500],
-    padding: 20,
+    fontSize: 18,
+    color: Colors.gray[900],
+    padding: 24,
+    textAlign: 'center',
   },
 });
 

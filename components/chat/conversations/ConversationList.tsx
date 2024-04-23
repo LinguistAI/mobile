@@ -1,5 +1,5 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { LastMessageObject, TConversation } from '../types';
+import { FlatList, Pressable } from 'react-native';
+import { TConversation } from '../types';
 import { useDispatch } from 'react-redux';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useGetAllConversationsQuery } from '../api';
@@ -7,24 +7,18 @@ import { startConversation } from '../../../redux/chatSlice';
 import FetchError from '../../common/feedback/FetchError';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
-import { useCallback, useState } from 'react';
-import { getLastMessages } from '../utils';
 import Conversation from './Conversation';
+import { useCallback } from 'react';
 
 const ConversationList = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { data: conversations, isFetching, isError } = useGetAllConversationsQuery();
-  const [lastMessages, setLastMessages] = useState<LastMessageObject>({});
+  const { data: conversations, isFetching, isError, refetch } = useGetAllConversationsQuery();
 
   useFocusEffect(
     useCallback(() => {
-      const fetchLastMessages = async () => {
-        const messages = await getLastMessages();
-        setLastMessages(messages);
-      };
-      fetchLastMessages();
-    }, [])
+      refetch();
+    }, [refetch])
   );
 
   if (isFetching) return <LoadingIndicator subtext="Fetching your conversations..." />;
@@ -41,21 +35,15 @@ const ConversationList = () => {
   };
 
   const renderConversation = (item: TConversation) => {
-    const lastMessage = lastMessages[item.id] ?? { msg: '', timestamp: '' };
     return (
       <Pressable onPress={() => handleConversationClick(item.id)}>
-        <Conversation data={item} lastMessage={lastMessage} />
+        <Conversation data={item} />
       </Pressable>
     );
   };
 
   return (
-    <FlatList
-      style={{ flex: 1 }}
-      data={conversations}
-      extraData={lastMessages}
-      renderItem={({ item }) => renderConversation(item)}
-    />
+    <FlatList style={{ flex: 1 }} data={conversations} renderItem={({ item }) => renderConversation(item)} />
   );
 };
 

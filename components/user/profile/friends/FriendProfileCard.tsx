@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { RFriendship } from '../../types';
 import Card from '../../../common/Card';
 import Colors from '../../../../theme/colors';
@@ -8,6 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRemoveFriendMutation } from '../../userApi';
 import useNotifications from '../../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
+import React from 'react';
+import LText from '../../../common/Text';
 
 interface FriendProfileCardProps {
   friendship: RFriendship;
@@ -34,11 +36,17 @@ const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
       <View style={styles.contentRoot}>
         <View style={styles.infoContainer}>
           <View style={styles.mainInfoContainer}>
-            <Text style={styles.mainInfo}>{friendUsername}</Text>
-            <ActionIcon
+            <LText style={styles.mainInfo}>{friendUsername}</LText>
+            <Pressable
               onPress={() => onRemoveFriend(friendId)}
-              icon={<Ionicons name="close-circle-outline" size={24} color={Colors.red[600]} />}
-            />
+              style={[styles.actionContainer, styles.removeActionContainer]}
+            >
+              <ActionIcon
+                onPress={() => onRemoveFriend(friendId)}
+                icon={<Ionicons name="close-circle-outline" size={22} color={Colors.red[600]} />}
+              />
+              <LText style={styles.actionText}>Remove</LText>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -63,16 +71,39 @@ const styles = StyleSheet.create({
   mainInfoContainer: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   mainInfo: {
     fontWeight: 'bold',
     fontSize: 16,
     color: Colors.primary[500],
+    marginLeft: 8,
   },
   subinfo: {
     color: Colors.gray[500],
     fontSize: 13,
+  },
+  actionContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 1,
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 4,
+    borderWidth: 2,
+    borderStyle: 'solid',
+    borderRadius: 4,
+  },
+  removeActionContainer: {
+    borderColor: Colors.red[600],
+    backgroundColor: Colors.red[0],
+  },
+  actionText: {
+    color: Colors.red[600],
+    fontWeight: 'bold',
+    fontSize: 13,
+    marginRight: 2,
   },
 });
 

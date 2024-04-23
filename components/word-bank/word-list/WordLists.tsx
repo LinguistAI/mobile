@@ -1,21 +1,21 @@
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import WordListCard from './WordListCard';
+import useNotifications from '../../../hooks/useNotifications';
 import FloatingButton from '../../common/FloatingButton';
 import ModalWrapper from '../../common/ModalWrapper';
-import { FormProvider, useForm } from 'react-hook-form';
-import PrimaryTextInput from '../../common/form/PrimaryTextInput';
-import PrimarySwitch from '../../common/form/PrimarySwitch';
-import ModalControlButtons from '../../common/modal/ModalControlButtons';
-import { ICreateWordList, TWordList } from './types';
-import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { objectIsNotEmpty } from '../../utils';
-import WordListsSkeleton from './WordListsSkeleton';
-import { useCreateWordListMutation, useGetWordListsQuery } from '../api';
-import WordListFilter from './WordListFilter';
-import FetchError from '../../common/feedback/FetchError';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
-import useNotifications from '../../../hooks/useNotifications';
+import FetchError from '../../common/feedback/FetchError';
+import PrimarySwitch from '../../common/form/PrimarySwitch';
+import PrimaryTextInput from '../../common/form/PrimaryTextInput';
+import ModalControlButtons from '../../common/modal/ModalControlButtons';
+import { objectIsNotEmpty } from '../../utils';
+import { useCreateWordListMutation, useGetWordListsQuery } from '../api';
+import WordListCard from './WordListCard';
+import WordListFilter from './WordListFilter';
+import WordListsSkeleton from './WordListsSkeleton';
+import { ICreateWordList, TWordList } from './types';
 
 const WordLists = () => {
   const [addListModalVisible, setAddListModalVisible] = useState(false);
@@ -75,7 +75,7 @@ const WordLists = () => {
       title: data.listName,
       description: data.listDescription,
       isActive: data.isActive,
-      isFavorite: data.favorite,
+      isFavorite: false,
       isPinned: data.pinned,
       imageUrl: 'https://picsum.photos/200',
     };
@@ -127,7 +127,6 @@ const WordLists = () => {
               rules={{ required: 'List description is required' }}
             />
             <PrimarySwitch name="pinned" label="Pin this list" defaultValue={false} />
-            <PrimarySwitch name="favorite" label="Add to favorites" defaultValue={false} />
             <PrimarySwitch name="isActive" label="Set as active list" defaultValue={true} />
             <View style={styles.formControls}>
               <ModalControlButtons
@@ -162,7 +161,7 @@ const WordLists = () => {
           renderItem={({ item }) => <WordListCard list={item} handleListSelection={handleListSelection} />}
           numColumns={2}
           keyExtractor={(item) => item.listId}
-          contentContainerStyle={styles.wordListContentContainer}
+          style={styles.wordListContentContainer}
         />
       </View>
     );

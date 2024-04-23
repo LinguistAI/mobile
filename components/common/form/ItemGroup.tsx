@@ -84,6 +84,7 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
             <TouchableOpacity onPress={() => setShowOptions(false)} style={styles.closeButton}>
               <Ionicons name="close-circle-outline" size={24} color="black" />
             </TouchableOpacity>
+            <Text style={styles.label}>{label}:</Text>
             {itemOptions ? (
               <OptionGroup
                 items={itemOptions

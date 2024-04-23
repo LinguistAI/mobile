@@ -41,8 +41,8 @@ const BotLists = () => {
       const foundExistingConvo = conversations?.find((c) => c.bot.id === bot.id);
 
       if (foundExistingConvo) {
-        navigation.navigate('ChatScreen', { conversationId: foundExistingConvo.id });
         dispatch(startConversation({ bot, conversation: foundExistingConvo }));
+        navigation.navigate('ChatScreen', { conversationId: foundExistingConvo.id });
         return;
       }
       const response = await createConvo(bot.id);
@@ -59,8 +59,8 @@ const BotLists = () => {
       if (!convoId) {
         return;
       }
-      navigation.navigate('ChatScreen', { conversationId: convoId });
       dispatch(startConversation({ bot, conversation: data }));
+      navigation.navigate('ChatScreen', { conversationId: convoId });
     }
   };
 

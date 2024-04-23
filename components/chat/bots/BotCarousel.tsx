@@ -75,11 +75,11 @@ const BotCarousel = () => {
       let convoId = '';
       // Open existing conversation
       if (foundExistingConvo) {
+        dispatch(startConversation({ bot, conversation: foundExistingConvo }));
         navigation.navigate('Chat', {
           params: { conversationId: foundExistingConvo.id },
           screen: 'ChatScreen',
         });
-        dispatch(startConversation({ bot, conversation: foundExistingConvo }));
         return;
       }
 
@@ -99,12 +99,12 @@ const BotCarousel = () => {
       if (!convoId) {
         return;
       }
+      dispatch(startConversation({ bot, conversation: data }));
       navigation.navigate('Chat', {
         params: { conversationId: convoId },
         screen: 'ChatScreen',
         initial: false,
       });
-      dispatch(startConversation({ bot, conversation: data }));
     }
   };
 

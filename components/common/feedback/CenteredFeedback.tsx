@@ -9,7 +9,7 @@ interface CenteredFeedbackProps {
   size?: number;
 }
 
-const CenteredFeedback = ({ message, children, size = 18 }: CenteredFeedbackProps) => {
+const CenteredFeedback = ({ message, children, size }: CenteredFeedbackProps) => {
   return (
     <View style={styles.root}>
       <LText style={styles.message} size={size} centered={true}>
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 18,
     color: Colors.gray[900],
-    padding: 20,
+    padding: 24,
     textAlign: 'center',
   },
 });

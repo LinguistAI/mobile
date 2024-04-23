@@ -2,14 +2,10 @@ import IonIcons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Text, View } from 'react-native';
 import Card from '../common/Card';
 import Colors from '../../theme/colors';
-import { RUserQuests } from "./types";
-import QuestProgressBar from "./QuestProgressBar";
-import Divider from "../common/Divider";
-import {
-  QUEST_TYPE_WORD,
-  QUEST_TYPE_MESSAGE,
-  QUEST_ICON_SIZE,
-} from './constants';
+import { RUserQuests } from './types';
+import QuestProgressBar from './QuestProgressBar';
+import Divider from '../common/Divider';
+import { QUEST_TYPE_WORD, QUEST_TYPE_MESSAGE, QUEST_ICON_SIZE } from './constants';
 
 interface QuestCardProps {
   quest: RUserQuests;
@@ -33,10 +29,7 @@ const QuestCard = ({ quest }: QuestCardProps) => {
     <Card>
       <View style={styles.cardContainer}>
         <View style={styles.iconAndDetailsContainer}>
-          <View>
-            {renderQuestImage()}
-          </View>
-
+          <View>{renderQuestImage()}</View>
           <View style={styles.contentRoot}>
             <View style={styles.titleRoot}>
               <Text style={styles.title}>{title}</Text>
@@ -45,14 +38,8 @@ const QuestCard = ({ quest }: QuestCardProps) => {
             <Text style={styles.detail}>Reward: {reward} points</Text>
           </View>
         </View>
-
         <Divider style={styles.divider} />
-
-        <QuestProgressBar
-          style={styles.progressBar}
-          goalTimes={completionCriteria.times}
-          progressTimes={progress.times}
-        />
+        <QuestProgressBar goalTimes={completionCriteria.times} progressTimes={progress.times} />
       </View>
     </Card>
   );
@@ -101,7 +88,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   progressBar: {
-    textAlign: "center"
+    textAlign: 'center',
   },
 });
 

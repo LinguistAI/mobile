@@ -1,23 +1,30 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { LastMessage, TConversation } from '../types';
 import Avatar from '../../common/Avatar';
 import Colors from '../../../theme/colors';
 
 interface ConversationProps {
   data: TConversation;
-  lastMessage: LastMessage;
 }
 
-const Conversation = ({ data, lastMessage }: ConversationProps) => {
-  const { msg } = lastMessage;
+const Conversation = ({ data }: ConversationProps) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.conversationRowContainer}>
         <Avatar src={data.bot.profileImage} width={40} height={40} />
         <View style={styles.conversationInfoContainer}>
           <Text style={styles.conversationTitle}>{data.title}</Text>
-          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.conversationLastMessage}>
-            {msg}
+          <Text
+            style={[
+              {
+                width: Platform.OS === 'ios' ? '80%' : undefined, // Only force width on iOS
+              },
+              styles.conversationLastMessage,
+            ]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {data.lastMessage}
           </Text>
         </View>
       </View>

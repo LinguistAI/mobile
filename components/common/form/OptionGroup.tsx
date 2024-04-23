@@ -84,8 +84,9 @@ const styles = StyleSheet.create({
   container: {
     margin: 10,
     maxHeight: 250,
-    borderColor: Colors.gray[600],
+    borderColor: Colors.primary['600'],
     borderWidth: 2,
+    borderRadius: 4,
   },
   optionGroup: {
     flexDirection: "row",

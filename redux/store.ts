@@ -5,7 +5,7 @@ import { gamificationApi } from '../components/gamification/api';
 import { wordBankApi } from '../components/word-bank/api';
 import { userStatsApi } from '../components/stats/userStatsApi';
 import { userApi } from '../components/user/userApi';
-import { questsApi } from "../components/quest/api";
+import { questsApi } from '../components/quest/api';
 import { quizApi } from '../components/quiz/quizApi';
 
 export const store = configureStore({

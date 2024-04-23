@@ -31,8 +31,12 @@ const chatSlice = createSlice({
     clearMessages: (state, action) => {
       chatApi.util.invalidateTags([{ type: 'Message', id: action.payload.id }]);
     },
+    updateSelectedConversation: (state, action) => {
+      state.currentConversation = action.payload.conversation;
+    },
   },
 });
 
-export const { startConversation, resetApiState, clearMessages } = chatSlice.actions;
+export const { startConversation, resetApiState, clearMessages, updateSelectedConversation } =
+  chatSlice.actions;
 export default chatSlice.reducer;

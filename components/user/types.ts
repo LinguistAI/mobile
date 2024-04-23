@@ -91,3 +91,12 @@ export enum FriendRequest {
   SENT = 'sent',
   RECEIVED = 'received',
 }
+
+export type QProfile = {
+  loves: string[];
+  likes: string[];
+  dislikes: string[];
+  hates: string[];
+};
+
+export type RProfile = QProfile;

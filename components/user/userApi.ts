@@ -9,6 +9,8 @@ import {
   RFriendSearch,
   QLeaderboard,
   RLeaderboard,
+  QProfile,
+  RProfile,
 } from './types';
 import { Page, User } from '../../types';
 import { RUserQuests } from '../quest/types';
@@ -16,7 +18,7 @@ import { RUserQuests } from '../quest/types';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -100,6 +102,21 @@ export const userApi = createApi({
         params: paginationParams,
       }),
     }),
+    getProfile: builder.query<RProfile, void>({
+      query: () => ({
+        method: 'GET',
+        url: '/ml/profile/user',
+      }),
+      providesTags: ['Profile'],
+    }),
+    setProfile: builder.mutation<void, QProfile>({
+      query: (profile) => ({
+        url: '/ml/profile/update-ml',
+        method: 'PUT',
+        body: profile,
+      }),
+      invalidatesTags: ['Profile'],
+    }),
   }),
 });
 
@@ -115,4 +132,6 @@ export const {
   useLazySearchUserQuery,
   useLazyGetGlobalLeaderboardQuery,
   useLazyGetFriendLeaderboardQuery,
+  useGetProfileQuery,
+  useSetProfileMutation,
 } = userApi;

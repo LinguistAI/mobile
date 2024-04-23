@@ -27,7 +27,6 @@ const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
       const data = response.data;
       if (!isDataResponse(data)) return;
       const updatedConvo = data.find((d) => d.id === conversation?.id);
-      console.log(updatedConvo);
       dispatch(updateSelectedConversation({ conversation: updatedConvo }));
     };
     updateConvo();

@@ -12,8 +12,8 @@ import {
   useUnpinWordListMutation,
 } from '../api';
 import PopupMenu from './WordListCardOptionMenu';
-import { TMenuOption, type TWordList } from './types';
-import GreenCircleIcon from '../../common/LiveIcon';
+import { ActiveIconShades, TMenuOption, type TWordList } from './types';
+import ActiveWordListIcon from '../../common/ActiveWordListIcon';
 
 interface WordListProps {
   list: TWordList;
@@ -73,9 +73,6 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
         break;
       case TMenuOption.EDIT:
         break;
-      case TMenuOption.CANCEL:
-        setMenuVisible(false);
-        break;
       default:
         break;
     }
@@ -105,7 +102,7 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
         <View style={styles.activate}>
           <View style={styles.actionItemRight}>
             <ActionIcon
-              icon={<GreenCircleIcon />}
+              icon={<ActiveWordListIcon />}
               onPress={() => {
                 triggerOption(TMenuOption.DEACTIVATE);
               }}
@@ -136,20 +133,15 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
         label: list.isActive ? 'Deactivate' : 'Activate',
         value: list.isActive ? TMenuOption.DEACTIVATE : TMenuOption.ACTIVATE,
         icon: list.isActive ? (
-          <Ionicons name="bookmark-sharp" size={18} color="black" />
+          <ActiveWordListIcon animated={false} shades={ActiveIconShades.DEACTIVATE} />
         ) : (
-          <Ionicons name="bookmark-outline" size={18} color="black" />
+          <ActiveWordListIcon animated={false} shades={ActiveIconShades.ACTIVE} />
         ),
       },
       {
         label: 'Delete',
         value: TMenuOption.DELETE,
         icon: <Ionicons name="trash-outline" size={18} color={Colors.red[600]} />,
-      },
-      {
-        label: 'Cancel',
-        value: TMenuOption.CANCEL,
-        icon: <Ionicons name="close-circle-outline" size={18} color={Colors.gray[600]} />,
       },
     ];
   };

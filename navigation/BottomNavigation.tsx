@@ -45,7 +45,7 @@ const BottomNavigation = () => {
         component={WordBankNavigation}
         options={{
           tabBarLabel: 'Word Bank',
-          tabBarIcon: ({ color, size }) => <IonIcons name="list-outline" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <IonIcons name="book-outline" size={size} color={color} />,
         }}
       />
       <Tab.Screen

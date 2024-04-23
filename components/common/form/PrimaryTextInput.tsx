@@ -58,9 +58,10 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.gray[900],
     fontWeight: 'bold',
+    marginBottom: 4
   },
   textInput: {
     flexBasis: '100%',

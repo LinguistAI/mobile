@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { LastMessage, TConversation } from '../types';
 import Avatar from '../../common/Avatar';
 import Colors from '../../../theme/colors';
@@ -14,7 +14,16 @@ const Conversation = ({ data }: ConversationProps) => {
         <Avatar src={data.bot.profileImage} width={40} height={40} />
         <View style={styles.conversationInfoContainer}>
           <Text style={styles.conversationTitle}>{data.title}</Text>
-          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.conversationLastMessage}>
+          <Text
+            style={[
+              {
+                width: Platform.OS === 'ios' ? '80%' : undefined, // Only force width on iOS
+              },
+              styles.conversationLastMessage,
+            ]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             {data.lastMessage}
           </Text>
         </View>

@@ -1,7 +1,7 @@
 import { FormProvider, set, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../common/form/Button';
-import { IUserDetailedInfo, RProfile } from '../types';
+import { IUserDetailedInfo, IProfile } from '../types';
 import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import { useState } from 'react';
 import useUser from '../../../hooks/useUser';
@@ -13,15 +13,18 @@ import PrimaryDatePicker from '../../common/form/PrimaryDatePicker';
 import ActionButton from '../../common/ActionButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useSetUserDetailsMutation } from '../userApi';
+import { useSetProfileMutation } from '../profileApi';
 import useNotifications from '../../../hooks/useNotifications';
 import { dateObjToISODate } from '../utils';
 import ItemGroup from '../../common/form/ItemGroup';
 import useError from '../../../hooks/useError';
 import { isDataResponse } from '../../../services';
+import { generateErrorResponseMessage } from '../../../utils/httpUtils';
+
 
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;
-  profileDetails: RProfile;
+  profileDetails: IProfile;
 }
 
 const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
@@ -38,20 +41,42 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
     defaultValues,
   });
 
-  const [mutate, { error, isLoading }] = useSetUserDetailsMutation();
-  useError(error);
+  const [mutateUserDetails, { isError: isUserDetailsError, error: userDetailsError, isLoading: isUserDetailsLoading }] = useSetUserDetailsMutation();
+  const [mutateProfile, { isError: isProfileError, error: profileError, isLoading: isProfileLoading }] = useSetProfileMutation();
+  useError(userDetailsError);
+  useError(profileError);
 
   const onSubmit = async (data: any) => {
-    const birthDate = dateObjToISODate(new Date(data.birthDate));
-    const newProfile = {
-      name: data.name,
-      englishLevel: data.englishLevel,
-      hobbies: data.hobbies,
-      birthDate: birthDate,
-    };
-    const response = await mutate(newProfile);
-    if (!isDataResponse(response)) return;
-    add({ type: 'success', body: 'Profile updated successfully.' });
+    try {
+      const birthDate = dateObjToISODate(new Date(data.birthDate));
+      const newProfile = {
+        name: data.name,
+        englishLevel: data.englishLevel,
+        hobbies: data.hobbies,
+        birthDate: birthDate,
+      };
+
+      await mutateUserDetails(newProfile);
+  
+      const newMLProfile = {
+        likes: data.likes,
+        loves: data.loves,
+        dislikes: data.dislikes,
+        hates: data.hates,
+      };
+  
+      await mutateProfile(newMLProfile);
+  
+      add({ type: 'success', body: 'Profile updated successfully.' });
+    } catch (error) {
+      if (isUserDetailsError) {
+        add({ type: 'error', body: generateErrorResponseMessage(userDetailsError) });
+      } else if (isProfileError) {
+        add({ type: 'error', body: generateErrorResponseMessage(profileError) });
+      } else {
+        add({ type: 'error', body: 'An unexpected error occurred.' });
+      }
+    }
   };
 
   const renderItemGroup = (
@@ -156,8 +181,8 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
           <View style={styles.btnsContainer}>
             <View style={styles.btn}>
               <Button
-                rightIcon={<Ionicons name="save-outline" size={24} color={Colors.gray[0]} />}
-                loading={isLoading}
+              rightIcon={<Ionicons name="save-outline" size={24} color={Colors.gray[0]} />}
+                loading={isUserDetailsLoading || isProfileLoading}
                 onPress={methods.handleSubmit(onSubmit)}
                 type="primary"
               >

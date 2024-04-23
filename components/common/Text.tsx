@@ -14,7 +14,7 @@ const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress 
   const textAlign = centered ? 'center' : 'left';
 
   let currentStyle = styles.titleTextCustom;
-  let mergedStyle = StyleSheet.compose(currentStyle, style as TextStyle);
+  let mergedStyle = StyleSheet.compose(currentStyle, style);
 
   // if the custom style includes font weight bold, remove it and set the bold version of the default font
   if (style && (style as TextStyle).fontWeight === 'bold') {
@@ -27,11 +27,11 @@ const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress 
     mergedStyle = StyleSheet.compose(mergedStyle, { fontSize: size });
   }
 
-  const content = (
-    <Text style={[mergedStyle, { textAlign, marginHorizontal: marginHorizontal }]}>{children}</Text>
+  return (
+    <Text onPress={onPress} style={[mergedStyle, { textAlign, marginHorizontal: marginHorizontal }]}>
+      {children}
+    </Text>
   );
-
-  return onPress ? <TouchableOpacity onPress={onPress}>{content}</TouchableOpacity> : content;
 };
 const styles = StyleSheet.create({
   titleTextCustom: {

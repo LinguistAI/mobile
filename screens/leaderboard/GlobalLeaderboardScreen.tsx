@@ -48,7 +48,7 @@ const GlobalLeaderboardScreen = () => {
               color={currentPage === 0 ? 'gray' : 'black'}
             />
           </TouchableOpacity>
-          <LText style={{ fontSize: 17 }} marginHorizontal={15}>
+          <LText style={{ fontSize: 16 }} marginHorizontal={15}>
             {currentPage + 1}
           </LText>
           <TouchableOpacity onPress={goToNextPage} disabled={currentPage === totalPageNum - 1}>

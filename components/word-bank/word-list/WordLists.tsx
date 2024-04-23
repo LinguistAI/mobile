@@ -162,7 +162,7 @@ const WordLists = () => {
           renderItem={({ item }) => <WordListCard list={item} handleListSelection={handleListSelection} />}
           numColumns={2}
           keyExtractor={(item) => item.listId}
-          contentContainerStyle={styles.wordListContentContainer}
+          style={styles.wordListContentContainer}
         />
       </View>
     );

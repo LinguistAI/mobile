@@ -11,8 +11,6 @@ interface LeaderboardUserCardProps {
   loggedInUser: string;
 }
 
-const space = '   ';
-
 const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserCardProps) => {
   const { user, experience: xp, ranking } = leaderboardUser;
 

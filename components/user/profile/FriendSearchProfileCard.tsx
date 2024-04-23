@@ -29,6 +29,7 @@ const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProf
       return;
     }
 
+    // Client update
     setUpdatedSearchItem({
       ...updatedSearchItem,
       friendshipStatus: FriendSearchFriendshipStatus.REQUEST_SENT,

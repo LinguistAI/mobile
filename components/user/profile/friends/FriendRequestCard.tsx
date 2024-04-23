@@ -10,6 +10,7 @@ import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
 import React from 'react';
 import LText from '../../../common/Text';
 import { formatDistanceToNow } from 'date-fns';
+import useError from '../../../../hooks/useError';
 
 interface FriendRequestCardProps {
   friendship: RFriendRequest;
@@ -17,33 +18,19 @@ interface FriendRequestCardProps {
 }
 
 const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
-  const { add } = useNotifications();
   const { user1, user2, date } = friendship;
   const sendUser = type === FriendRequest.RECEIVED ? user1 : user2;
 
   const [accept, { isLoading: isAccepting, error: acceptError }] = useAcceptFriendRequestMutation();
   const [reject, { isLoading: isRejecting, error: rejectError }] = useRejectFriendRequestMutation();
+  useError(acceptError);
+  useError(rejectError);
 
   const handleAcceptRequest = async () => {
     await accept({ friendId: sendUser.id });
-
-    if (acceptError) {
-      add({
-        body: generateErrorResponseMessage(acceptError, "Couldn't accept the request."),
-        type: 'error',
-      });
-    }
   };
   const handleRejectRequest = async () => {
-    console.log('usre', sendUser);
     await reject({ friendId: sendUser.id });
-
-    if (rejectError) {
-      add({
-        body: generateErrorResponseMessage(rejectError, "Couldn't reject the request."),
-        type: 'error',
-      });
-    }
   };
 
   const isTakingAction = isAccepting || isRejecting;
@@ -61,7 +48,7 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
                 onPress={handleAcceptRequest}
                 loading={isAccepting}
                 disabled={isTakingAction}
-                icon={<Ionicons name="checkmark-circle-outline" size={21} color={Colors.gray[100]} />}
+                icon={<Ionicons name="checkmark-circle-outline" size={20} color={Colors.gray[100]} />}
               />
               <LText style={styles.actionText}>Accept</LText>
             </Pressable>
@@ -73,7 +60,7 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
                 onPress={handleRejectRequest}
                 loading={isRejecting}
                 disabled={isTakingAction}
-                icon={<Ionicons name="close-circle-outline" size={21} color={Colors.gray[100]} />}
+                icon={<Ionicons name="close-circle-outline" size={20} color={Colors.gray[100]} />}
               />
               <LText style={styles.actionText}>Reject</LText>
             </Pressable>

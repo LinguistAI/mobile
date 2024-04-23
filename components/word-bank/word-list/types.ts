@@ -109,3 +109,8 @@ interface WordDef {
   definition: string[];
   examples?: string[];
 }
+
+export enum ActiveIconShades {
+  ACTIVE = 0,
+  DEACTIVATE = 1,
+}

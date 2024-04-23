@@ -1,10 +1,15 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import ReactNativeModal from 'react-native-modal';
 import Colors from '../../theme/colors';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentConversation } from '../../redux/chatSelectors';
 import Divider from '../common/Divider';
 import Title from '../common/Title';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useEffect } from 'react';
+import { useGetAllConversationsQuery } from './api';
+import { isDataResponse } from '../../services';
+import { updateSelectedConversation } from '../../redux/chatSlice';
 
 interface ActiveWordsModalProps {
   visible: boolean;
@@ -12,7 +17,21 @@ interface ActiveWordsModalProps {
 }
 
 const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
+  const { refetch } = useGetAllConversationsQuery();
+  const dispatch = useDispatch();
   const conversation = useSelector(selectCurrentConversation);
+
+  useEffect(() => {
+    const updateConvo = async () => {
+      const response = await refetch();
+      const data = response.data;
+      if (!isDataResponse(data)) return;
+      const updatedConvo = data.find((d) => d.id === conversation?.id);
+      console.log(updatedConvo);
+      dispatch(updateSelectedConversation({ conversation: updatedConvo }));
+    };
+    updateConvo();
+  }, [visible]);
 
   return (
     <ReactNativeModal isVisible={visible} onBackdropPress={() => setVisible(false)}>

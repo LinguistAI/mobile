@@ -12,7 +12,7 @@ import PrimaryAutocomplete from '../../common/form/PrimaryAutocomplete';
 import PrimaryDatePicker from '../../common/form/PrimaryDatePicker';
 import ActionButton from '../../common/ActionButton';
 import { Ionicons } from '@expo/vector-icons';
-import { useSetUserDetailsMutation } from '../userApi';
+import { useSetProfileMutation, useSetUserDetailsMutation } from '../userApi';
 import useNotifications from '../../../hooks/useNotifications';
 import { dateObjToISODate } from '../utils';
 import ItemGroup from '../../common/form/ItemGroup';

@@ -61,7 +61,7 @@ export const chatApi = createApi({
         url: `/clear/${convoId}`,
         method: 'POST',
       }),
-      invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }],
+      invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }, { type: 'Conversation' }],
     }),
   }),
 });

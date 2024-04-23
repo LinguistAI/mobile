@@ -27,7 +27,6 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
 
   useEffect(() => {
     if (chatMessages) {
-      console.log('here');
       const messages: ChatMessage[] = chatMessages.map((m) => {
         return {
           id: m.id,

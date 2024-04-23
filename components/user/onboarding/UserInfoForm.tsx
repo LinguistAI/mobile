@@ -22,7 +22,7 @@ import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;
-  profileDetails: QProfile;
+  profileDetails: RProfile;
 }
 
 const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
@@ -34,10 +34,10 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
     birthDate: new Date(userDetails.birthDate) ?? new Date(),
     englishLevel: null,
     hobbies: userDetails.hobbies ?? [],
-    likes: profileDetails.likes,
-    dislikes: profileDetails.dislikes,
-    loves: profileDetails.loves,
-    hates: profileDetails.hates,
+    likes: profileDetails.likes ?? null,
+    loves: profileDetails.loves ?? null,
+    dislikes: profileDetails.dislikes ?? null,
+    hates: profileDetails.hates ?? null,
   };
   const methods = useForm({
     defaultValues,
@@ -54,7 +54,6 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
 
   const onSubmit = async (data: any) => {
     try {
-      console.log(data);
       const birthDate = dateObjToISODate(new Date(data.birthDate));
       const newProfile = {
         name: data.name,
@@ -62,15 +61,18 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
         hobbies: data.hobbies,
         birthDate: birthDate,
       };
-      const newMLProfile = {
-        likes: data.likes,
-        loves: data.loves,
-        dislikes: data.dislikes,
-        hates: data.hates,
+      const newMLProfile: QProfile = {
+        profile: {
+          likes: data.likes,
+          loves: data.loves,
+          dislikes: data.dislikes,
+          hates: data.hates
+        },
       };
 
       const userResponse = await mutateUserDetails(newProfile);
       const mlResponse = await mutateProfile(newMLProfile);
+
       if (!isDataResponse(userResponse) || !isDataResponse(mlResponse)) return;
       add({ type: 'success', body: 'Profile updated successfully.' });
     } catch (error) {

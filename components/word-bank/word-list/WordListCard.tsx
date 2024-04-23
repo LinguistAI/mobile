@@ -13,6 +13,7 @@ import {
 } from '../api';
 import PopupMenu from './WordListCardOptionMenu';
 import { TMenuOption, type TWordList } from './types';
+import GreenCircleIcon from '../../common/LiveIcon';
 
 interface WordListProps {
   list: TWordList;
@@ -104,7 +105,7 @@ const WordListCard = ({ list, handleListSelection }: WordListProps) => {
         <View style={styles.activate}>
           <View style={styles.actionItemRight}>
             <ActionIcon
-              icon={<Ionicons size={18} name="bookmark-sharp" color={Colors.gray[700]} />}
+              icon={<GreenCircleIcon />}
               onPress={() => {
                 triggerOption(TMenuOption.DEACTIVATE);
               }}

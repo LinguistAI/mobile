@@ -1,7 +1,7 @@
 import { FormProvider, set, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../common/form/Button';
-import { IUserDetailedInfo, IProfile } from '../types';
+import { IUserDetailedInfo, QProfile } from '../types';
 import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import { useState } from 'react';
 import useUser from '../../../hooks/useUser';
@@ -21,10 +21,9 @@ import useError from '../../../hooks/useError';
 import { isDataResponse } from '../../../services';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 
-
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;
-  profileDetails: IProfile;
+  profileDetails: QProfile;
 }
 
 const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
@@ -41,8 +40,12 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
     defaultValues,
   });
 
-  const [mutateUserDetails, { isError: isUserDetailsError, error: userDetailsError, isLoading: isUserDetailsLoading }] = useSetUserDetailsMutation();
-  const [mutateProfile, { isError: isProfileError, error: profileError, isLoading: isProfileLoading }] = useSetProfileMutation();
+  const [
+    mutateUserDetails,
+    { isError: isUserDetailsError, error: userDetailsError, isLoading: isUserDetailsLoading },
+  ] = useSetUserDetailsMutation();
+  const [mutateProfile, { isError: isProfileError, error: profileError, isLoading: isProfileLoading }] =
+    useSetProfileMutation();
   useError(userDetailsError);
   useError(profileError);
 
@@ -55,18 +58,16 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
         hobbies: data.hobbies,
         birthDate: birthDate,
       };
-
-      await mutateUserDetails(newProfile);
-  
       const newMLProfile = {
         likes: data.likes,
         loves: data.loves,
         dislikes: data.dislikes,
         hates: data.hates,
       };
-  
-      await mutateProfile(newMLProfile);
-  
+
+      const userResponse = await mutateUserDetails(newProfile);
+      const mlResponse = await mutateProfile(newMLProfile);
+      if (!isDataResponse(userResponse) || !isDataResponse(mlResponse)) return;
       add({ type: 'success', body: 'Profile updated successfully.' });
     } catch (error) {
       if (isUserDetailsError) {
@@ -181,7 +182,7 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
           <View style={styles.btnsContainer}>
             <View style={styles.btn}>
               <Button
-              rightIcon={<Ionicons name="save-outline" size={24} color={Colors.gray[0]} />}
+                rightIcon={<Ionicons name="save-outline" size={24} color={Colors.gray[0]} />}
                 loading={isUserDetailsLoading || isProfileLoading}
                 onPress={methods.handleSubmit(onSubmit)}
                 type="primary"

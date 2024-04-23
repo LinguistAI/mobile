@@ -78,7 +78,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
   return (
     <View style={styles.container}>
       <Card style={styles.listInfo}>
-        <Image source={{ uri: 'https://picsum.photos/200' }} style={styles.image} />
+        <Image source={{ uri: 'https://picsum.photos/520' }} style={styles.image} />
         <Text style={styles.titleText}>{selectedList.unknownWordList.title}</Text>
         <Text style={styles.descriptionText}>{selectedList.unknownWordList.description}</Text>
       </Card>

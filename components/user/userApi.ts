@@ -111,7 +111,7 @@ export const userApi = createApi({
     }),
     setProfile: builder.mutation<void, QProfile>({
       query: (profile) => ({
-        url: '/ml/profile/update',
+        url: '/ml/profile/update-ml',
         method: 'PUT',
         body: profile,
       }),

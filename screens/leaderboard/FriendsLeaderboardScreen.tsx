@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useLazyGetFriendLeaderboardQuery, useLazyGetGlobalLeaderboardQuery } from '../../components/user/userApi';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useLazyGetFriendLeaderboardQuery } from '../../components/user/userApi';
 import LeaderboardList from './LeaderboardList';
 import LText from '../../components/common/Text';
 
@@ -42,9 +42,13 @@ const FriendsLeaderboardScreen = () => {
       {totalPageNum > 1 ? (
         <View style={styles.pageButtons}>
           <TouchableOpacity onPress={goToPreviousPage} disabled={currentPage === 0}>
-            <Ionicons name="chevron-back-circle-outline" size={32} color={currentPage === 0 ? 'gray' : 'black'} />
+            <Ionicons
+              name="chevron-back-circle-outline"
+              size={32}
+              color={currentPage === 0 ? 'gray' : 'black'}
+            />
           </TouchableOpacity>
-          <LText size={17} marginHorizontal={15}>
+          <LText style={{ fontSize: 16 }} marginHorizontal={15}>
             {currentPage + 1}
           </LText>
           <TouchableOpacity onPress={goToNextPage} disabled={currentPage === totalPageNum - 1}>

@@ -82,7 +82,7 @@ export const userApi = createApi({
     }),
     rejectFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
-        url: '/friend/request/accept',
+        url: '/friend/request/reject',
         method: 'POST',
         body: friendReq,
       }),

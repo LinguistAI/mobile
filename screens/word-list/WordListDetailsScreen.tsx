@@ -1,18 +1,20 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import FloatingButton from '../../components/common/FloatingButton';
-import WordDetailsCollapse from '../../components/word-bank/word-list/words/WordDetailsCollapse';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import Card from '../../components/common/Card';
+import FloatingButton from '../../components/common/FloatingButton';
 import ModalWrapper from '../../components/common/ModalWrapper';
+import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
+import FetchError from '../../components/common/feedback/FetchError';
+import LoadingIndicator from '../../components/common/feedback/LoadingIndicator';
 import Button from '../../components/common/form/Button';
 import PrimaryTextInput from '../../components/common/form/PrimaryTextInput';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import useNotifications from '../../hooks/useNotifications';
-import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import { objectIsNotEmpty } from '../../components/utils';
 import { useAddWordMutation, useGetWordListByIdQuery } from '../../components/word-bank/api';
-import LoadingIndicator from '../../components/common/feedback/LoadingIndicator';
-import FetchError from '../../components/common/feedback/FetchError';
+import WordDetailsCollapse from '../../components/word-bank/word-list/words/WordDetailsCollapse';
+import useNotifications from '../../hooks/useNotifications';
+import { generateErrorResponseMessage } from '../../utils/httpUtils';
+import Colors from '../../theme/colors';
 
 interface WordListDetailsScreenProps {
   route: any;
@@ -75,11 +77,13 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 
   return (
     <View style={styles.container}>
+      <Card style={styles.listInfo}>
+        <Image source={{ uri: 'https://picsum.photos/200' }} style={styles.image} />
+        <Text style={styles.titleText}>{selectedList.unknownWordList.title}</Text>
+        <Text style={styles.descriptionText}>{selectedList.unknownWordList.description}</Text>
+      </Card>
       {selectedList.words.length === 0 && (
-        <Text style={{ textAlign: 'center', marginTop: 10 }}>
-          It looks like there are no words in this list. Use the add button on the bottom right part of the
-          page to add your first word.
-        </Text>
+        <CenteredFeedback message="It looks like there are no words in this list. Use the add button on the bottom right part of the page to add your first word." />
       )}
       <FlatList
         data={selectedList.words}
@@ -122,10 +126,42 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 16,
   },
   modalContents: {
     rowGap: 20,
+  },
+  listInfo: {
+    width: '100%',
+    height: 250,
+    position: 'relative',
+    marginBottom: 20,
+    borderRadius: 0,
+    overflow: 'hidden', // Ensures nothing overflows outside the card boundaries
+  },
+  image: {
+    width: '100%', // Full width of the card
+    height: '100%', // Full height of the card
+    position: 'absolute', // Positioned absolutely to cover the entire card
+  },
+  titleText: {
+    position: 'absolute', // Absolute position to float over the image
+    top: '10%',
+    width: '100%',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.gray[0],
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 10,
+  },
+  descriptionText: {
+    position: 'absolute',
+    bottom: '10%',
+    width: '100%',
+    textAlign: 'center',
+    color: Colors.gray[0],
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 10,
   },
 });
 

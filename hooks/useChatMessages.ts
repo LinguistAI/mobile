@@ -3,7 +3,6 @@ import { ChatMessage, ChatMessageSender } from '../screens/chat/types';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import { useGetAllChatMessagesQuery, useSendChatMessageMutation } from '../components/chat/api';
-import { saveLastMessage } from '../components/chat/utils';
 
 interface UseChatMessagesProps {
   conversationId: string;
@@ -53,7 +52,6 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
         id: uuidv4(),
       };
       setMessages((prev) => [...prev, responseMessage]);
-      saveLastMessage(conversationId, responseMessage.content, responseMessage.timestamp);
       return 1;
     }
     return -1;

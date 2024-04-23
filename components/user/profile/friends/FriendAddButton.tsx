@@ -3,6 +3,8 @@ import Colors from '../../../../theme/colors';
 import ActionIcon from '../../../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import LText from '../../../common/Text';
 
 const FriendAddButton = () => {
   const navigation = useNavigation();
@@ -17,9 +19,9 @@ const FriendAddButton = () => {
         icon={<Ionicons name="add-circle-sharp" size={24} color={Colors.primary[500]} />}
         onPress={openAddFriendsScreen}
       />
-      <Text style={styles.addFriendText} onPress={openAddFriendsScreen}>
+      <LText style={styles.addFriendText} onPress={openAddFriendsScreen}>
         Add new friend
-      </Text>
+      </LText>
     </View>
   );
 };
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
   },
   addFriendText: {
     color: Colors.primary[500],
+    fontSize: 14,
   },
 });
 

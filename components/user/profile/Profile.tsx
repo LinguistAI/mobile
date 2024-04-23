@@ -1,6 +1,14 @@
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useCallback } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View, RefreshControl } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  RefreshControl,
+} from 'react-native';
 import Colors from '../../../theme/colors';
 import useUser from '../../../hooks/useUser';
 import Button from '../../common/form/Button';
@@ -23,8 +31,18 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
   const { clearUserDetails, user } = useUser();
 
-  const { data: userInfo, isFetching: isUserInfoFetching, error, refetch: userInfoRefetch} = useGetUserDetailsQuery();
-  const { data: profileInfo, isFetching: isProfileFetching, error: profileError, refetch: profileRefetch } = useGetProfileQuery();
+  const {
+    data: userInfo,
+    isFetching: isUserInfoFetching,
+    error,
+    refetch: userInfoRefetch,
+  } = useGetUserDetailsQuery();
+  const {
+    data: profileInfo,
+    isFetching: isProfileFetching,
+    error: profileError,
+    refetch: profileRefetch,
+  } = useGetProfileQuery();
   const [refreshing, setRefreshing] = useState(false);
 
   const onChangePassword = () => {
@@ -76,17 +94,18 @@ const Profile = () => {
       return <LoadingIndicator />;
     }
 
-    if (error || profileError|| !userInfo || !profileInfo) {
+    if (error || profileError || !userInfo || !profileInfo) {
       return <Text>Something went wrong</Text>;
     }
 
-    return <UserInfoForm userDetails={userInfo} profileDetails = {profileInfo}/>;
+    return <UserInfoForm userDetails={userInfo} profileDetails={profileInfo} />;
   };
 
   return (
-    <ScrollView style={styles.root} refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }>
+    <ScrollView
+      style={styles.root}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       <View style={styles.topSection}>
         <View style={{ alignSelf: 'flex-end', margin: 15 }}>
           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -122,12 +141,13 @@ const Profile = () => {
           rightIcon={<Ionicons name="exit-outline" size={20} color={Colors.gray[0]} />}
           type="primary"
           onPress={handleSignout}
+          color="red"
         >
           Sign Out
         </Button>
       </View>
       <View style={styles.changePasswordView}>
-        <Button type="outlined" onPress={onChangePassword}>
+        <Button type="outlined" onPress={onChangePassword} color="red">
           Change Password
         </Button>
       </View>

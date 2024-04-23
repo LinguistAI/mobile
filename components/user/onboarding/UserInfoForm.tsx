@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../common/form/Button';
 import { IUserDetailedInfo, RProfile } from '../types';
 import PrimaryTextInput from '../../common/form/PrimaryTextInput';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useUser from '../../../hooks/useUser';
 import Colors from '../../../theme/colors';
 import EmailTextInput from '../../common/form/EmailTextInput';
@@ -14,39 +14,17 @@ import ActionButton from '../../common/ActionButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useSetUserDetailsMutation } from '../userApi';
 import useNotifications from '../../../hooks/useNotifications';
-import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { dateObjToISODate } from '../utils';
 import ItemGroup from '../../common/form/ItemGroup';
+import useError from '../../../hooks/useError';
+import { isDataResponse } from '../../../services';
 
 interface UserInfoFormProps {
   userDetails: IUserDetailedInfo;
   profileDetails: RProfile;
 }
 
-const generateItemGroup = (
-  label: string,
-  name: string,
-  items: string[] | undefined,
-  onChange: (selected: string[]) => void,
-  addable: boolean
-): React.ReactNode => {
-  if (!items || items.length === 0) {
-    return null; // Return null if items are empty
-  }
-
-  return (
-    <ItemGroup
-      label={label}
-      name={name}
-      items={items.map((item) => ({ value: item, name: item }))}
-      onChange={onChange}
-      addable={addable}
-    />
-  );
-};
-
 const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isDateSelectionVisible, setIsDateSelectionVisible] = useState(false);
   const { user } = useUser();
   const { add } = useNotifications();
@@ -60,14 +38,8 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
     defaultValues,
   });
 
-  const [mutate, { isError, error, isLoading }] = useSetUserDetailsMutation();
-
-  useEffect(() => {
-    const subscription = methods.watch(() => {
-      setUnsavedChanges(true);
-    });
-    return () => subscription.unsubscribe();
-  }, [methods.watch]);
+  const [mutate, { error, isLoading }] = useSetUserDetailsMutation();
+  useError(error);
 
   const onSubmit = async (data: any) => {
     const birthDate = dateObjToISODate(new Date(data.birthDate));
@@ -77,20 +49,31 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
       hobbies: data.hobbies,
       birthDate: birthDate,
     };
-    await mutate(newProfile);
-
-    if (isError) {
-      add({ type: 'error', body: generateErrorResponseMessage(error) });
-      return;
-    }
-
+    const response = await mutate(newProfile);
+    if (!isDataResponse(response)) return;
     add({ type: 'success', body: 'Profile updated successfully.' });
-    setUnsavedChanges(false);
   };
 
-  const resetForm = () => {
-    methods.reset(defaultValues);
-    setUnsavedChanges(false);
+  const renderItemGroup = (
+    label: string,
+    name: string,
+    items: string[] | undefined,
+    onChange: (selected: string[]) => void,
+    addable: boolean
+  ) => {
+    if (!items || items.length === 0) {
+      return null;
+    }
+
+    return (
+      <ItemGroup
+        label={label}
+        name={name}
+        items={items.map((item) => ({ value: item, name: item }))}
+        onChange={onChange}
+        addable={addable}
+      />
+    );
   };
 
   return (
@@ -115,7 +98,13 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
             disabled
             subtitle="Your email is unique and cannot be changed."
           />
-          <PrimaryTextInput placeholder="Name" rules={{}} defaultValue={userDetails.name} name="name" label="Name" />
+          <PrimaryTextInput
+            placeholder="Name"
+            rules={{}}
+            defaultValue={userDetails.name}
+            name="name"
+            label="Name"
+          />
           <PrimaryAutocomplete
             name="englishLevel"
             label="English Level"
@@ -136,15 +125,16 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
           />
           {isDateSelectionVisible ? (
             <PrimaryDatePicker
+              label=""
               name="birthDate"
               rules={{}}
               close={() => setIsDateSelectionVisible(false)}
-              defaultValue={userDetails.birthDate ?? new Date()}
+              defaultValue={new Date(userDetails.birthDate) ?? new Date()}
             />
           ) : null}
           <ItemGroup
-            label='Hobbies:'
-            name='hobbies'
+            label="Hobbies"
+            name="hobbies"
             items={userDetails.hobbies.map((hobby) => ({
               value: hobby,
               name: hobby,
@@ -153,30 +143,25 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
               methods.setValue('hobbies', selectedHobbies);
             }}
             addable={true}
-            addItems={HOBBIES_LIST.map((option) => ({
+            itemOptions={HOBBIES_LIST.map((option) => ({
               value: option.value,
               name: option.label,
             }))}
             noItemsText="You can add some hobbies!"
           />
-          {generateItemGroup('You like: ', 'likes', profileDetails.likes, (selected) => {}, false)}
-          {generateItemGroup('You love: ', 'loves', profileDetails.loves, (selected) => {}, false)}
-          {generateItemGroup('You dislike: ', 'dislikes', profileDetails.dislikes, (selected) => {}, false)}
-          {generateItemGroup('You hate: ', 'hates', profileDetails.hates, (selected) => {}, false)}
+          {renderItemGroup('You like: ', 'likes', profileDetails.likes, (selected) => {}, false)}
+          {renderItemGroup('You love: ', 'loves', profileDetails.loves, (selected) => {}, false)}
+          {renderItemGroup('You dislike: ', 'dislikes', profileDetails.dislikes, (selected) => {}, false)}
+          {renderItemGroup('You hate: ', 'hates', profileDetails.hates, (selected) => {}, false)}
           <View style={styles.btnsContainer}>
             <View style={styles.btn}>
-              <Button onPress={resetForm} disabled={!unsavedChanges} type="outlined">
-                CANCEL
-              </Button>
-            </View>
-            <View style={styles.btn}>
               <Button
+                rightIcon={<Ionicons name="save-outline" size={24} color={Colors.gray[0]} />}
                 loading={isLoading}
                 onPress={methods.handleSubmit(onSubmit)}
-                disabled={!unsavedChanges}
                 type="primary"
               >
-                SAVE
+                SAVE PROFILE
               </Button>
             </View>
           </View>
@@ -198,11 +183,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnsContainer: {
-    marginTop: 20,
     display: 'flex',
     flexDirection: 'row',
     gap: 20,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   btn: {
     alignSelf: 'center',

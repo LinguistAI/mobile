@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet, ScrollView, Modal } from "react-native";
-import Colors from "../../../theme/colors";
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, ScrollView, Modal } from 'react-native';
+import Colors from '../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import OptionGroup from './OptionGroup';
@@ -16,36 +16,29 @@ type ItemGroupProps = {
   label: string;
   name: string;
   addable: boolean;
-  addItems?: Item[];
+  itemOptions?: Item[];
   noItemsText?: string;
 };
 
 const ItemGroup: React.FC<ItemGroupProps> = ({
   items,
-  onChange: onChange,
+  onChange,
   label,
   addable,
-  addItems,
-  noItemsText
+  itemOptions,
+  noItemsText,
 }) => {
   const [displayedItems, setDisplayedItems] = useState<Item[]>(items);
   const [showOptions, setShowOptions] = useState(false);
 
-  useEffect(() => {
-    setDisplayedItems(items);
-  }, [items]);
-
   const handleDeleteItem = (valueToDelete: string) => {
-    const updatedItems = displayedItems.filter(item => item.value !== valueToDelete);
+    const updatedItems = displayedItems.filter((item) => item.value !== valueToDelete);
     setDisplayedItems(updatedItems);
-    onChange(updatedItems.map(item => item.value));
+    onChange(updatedItems.map((item) => item.value));
   };
 
   const handleAddItems = (selectedHobbies: string[]) => {
-    const updatedItems = [
-      ...displayedItems,
-      ...selectedHobbies.map((name) => ({ value: name, name })),
-    ];
+    const updatedItems = [...displayedItems, ...selectedHobbies.map((name) => ({ value: name, name }))];
     setDisplayedItems(updatedItems);
     onChange(updatedItems.map((item) => item.value));
     setShowOptions(false);
@@ -54,8 +47,7 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
   return (
     <View>
       <View style={styles.labelContainer}>
-      <Text style={styles.label}>{label}</Text>
-      
+        <Text style={styles.label}>{label}</Text>
       </View>
       <ScrollView style={styles.container}>
         {displayedItems.length === 0 ? (
@@ -63,19 +55,14 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
             <Text style={styles.noItemsText}>{noItemsText}</Text>
             {addable && (
               <TouchableOpacity onPress={() => setShowOptions(true)} style={styles.addButton}>
-                <Ionicons name="add-circle-outline" size={32} color={Colors.primary["500"]} />
+                <Ionicons name="add-circle-outline" size={32} color={Colors.primary['500']} />
               </TouchableOpacity>
             )}
           </View>
-          ) : (
+        ) : (
           <View style={styles.itemGroup}>
             {displayedItems.map((item) => (
-              <View
-                key={item.value}
-                style={[
-                  styles.item,
-                ]}
-              >
+              <View key={item.value} style={[styles.item]}>
                 <Text style={styles.itemText}>{item.name} </Text>
                 <TouchableOpacity onPress={() => handleDeleteItem(item.value)}>
                   <Ionicons name="close-circle-outline" size={18} color={Colors.gray[0]} />
@@ -84,28 +71,26 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
             ))}
             {addable && (
               <TouchableOpacity onPress={() => setShowOptions(true)} style={styles.addButton}>
-                <Ionicons name="add-circle-outline" size={32} color={Colors.primary["500"]} />
+                <Ionicons name="add-circle-outline" size={32} color={Colors.primary['500']} />
               </TouchableOpacity>
             )}
           </View>
         )}
       </ScrollView>
-      <Modal
-        visible={showOptions}
-        animationType="slide"
-        transparent={true}
-      >
+      <Modal visible={showOptions} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity onPress={() => setShowOptions(false)} style={styles.closeButton}>
               <Ionicons name="close-circle-outline" size={24} color="black" />
             </TouchableOpacity>
-            {addItems ? (
+            {itemOptions ? (
               <OptionGroup
-                items={addItems.filter(option => !displayedItems.some(item => item.value === option.value)).map((option) => ({
-                  value: option.value,
-                  name: option.name,
-                }))}
+                items={itemOptions
+                  .filter((option) => !displayedItems.some((item) => item.value === option.value))
+                  .map((option) => ({
+                    value: option.value,
+                    name: option.name,
+                  }))}
                 multiple={true}
                 onSelectionDone={(selectedHobbies: string[]) => handleAddItems(selectedHobbies)}
               />
@@ -134,7 +119,7 @@ const styles = StyleSheet.create({
   noItemsText: {
     fontSize: 16,
     color: Colors.gray[900],
-    margin: 6
+    margin: 6,
   },
   btnContainer: {
     margin: 10,
@@ -143,33 +128,33 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 3,
     borderRadius: 4,
-    borderWidth: 2, 
-    borderColor: Colors.primary['500'], 
+    borderWidth: 2,
+    borderColor: Colors.primary['500'],
   },
   itemGroup: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     padding: 10,
   },
   item: {
     margin: 3,
-    backgroundColor: Colors.primary["400"],
+    backgroundColor: Colors.primary['400'],
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   itemText: {
     fontSize: 13,
-    fontWeight: "bold",
-    textAlign: "center",
-    textTransform: "uppercase",
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
     letterSpacing: 1,
-    color: Colors.gray["0"],
+    color: Colors.gray['0'],
   },
   addButton: {
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
   },
   modalContainer: {
     flex: 1,
@@ -181,8 +166,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
-    width: '90%', 
-    maxHeight: '90%', 
+    width: '90%',
+    maxHeight: '90%',
   },
   closeButton: {
     marginTop: 2,
@@ -190,7 +175,7 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between', 
+    justifyContent: 'space-between',
     alignItems: 'center', // Vertically align items
   },
 });

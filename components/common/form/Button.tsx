@@ -53,9 +53,6 @@ const Button = (props: PrimaryButtonProps) => {
       baseButtonStyle.push(styles.primaryButton);
     }
 
-    if (disabled) {
-      baseButtonStyle = [...baseButtonStyle, styles.disabled];
-    }
     if (color) {
       if (type === 'primary') {
         baseButtonStyle = [
@@ -76,6 +73,9 @@ const Button = (props: PrimaryButtonProps) => {
           },
         ];
       }
+    }
+    if (disabled) {
+      baseButtonStyle = [...baseButtonStyle, styles.disabled];
     }
 
     baseButtonStyle = [...baseButtonStyle, { transform: [{ scale: scaleAnim }] }];
@@ -105,7 +105,6 @@ const Button = (props: PrimaryButtonProps) => {
     if (disabled) {
       baseTextStyle = [...baseTextStyle, styles.disabled];
     }
-
     return baseTextStyle;
   };
 
@@ -185,8 +184,8 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   disabled: {
-    backgroundColor: Colors.gray[400],
-    borderColor: Colors.gray[500],
+    backgroundColor: Colors.gray[300],
+    borderColor: Colors.gray[400],
     color: 'white',
   },
 });

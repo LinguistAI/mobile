@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import Colors from '../../../theme/colors';
 
 interface CenteredFeedbackProps {
   message: string;
@@ -21,8 +22,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   message: {
-    fontSize: 20,
-    color: 'black',
+    fontSize: 18,
+    color: Colors.gray[900],
     padding: 20,
     textAlign: 'center',
   },

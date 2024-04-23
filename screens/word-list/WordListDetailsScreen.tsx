@@ -14,6 +14,7 @@ import { useAddWordMutation, useGetWordListByIdQuery } from '../../components/wo
 import WordDetailsCollapse from '../../components/word-bank/word-list/words/WordDetailsCollapse';
 import useNotifications from '../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../utils/httpUtils';
+import Colors from '../../theme/colors';
 
 interface WordListDetailsScreenProps {
   route: any;
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: Colors.gray[0],
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     padding: 10,
   },
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     bottom: '10%',
     width: '100%',
     textAlign: 'center',
-    color: 'white',
+    color: Colors.gray[0],
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     padding: 10,
   },

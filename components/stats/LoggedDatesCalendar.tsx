@@ -5,19 +5,27 @@ import { StyleSheet, View } from 'react-native';
 import Colors from '../../theme/colors';
 import Title from '../common/Title';
 import { getGraphDimensions } from './utils';
+import RefetchButton from './RefetchButton';
+import FetchError from '../common/feedback/FetchError';
+import { STAT_POLLING_INTERVAL } from './constants';
 
 const DEFAULT_DAY_LIMIT = 75;
 const DEFAULT_SORT = SortBy.DESC;
 
 const LoggedDatesCalendar = () => {
   const { width, height } = getGraphDimensions();
-  const { data, isLoading, isError } = useGetLoggedDatesQuery({
-    daysLimit: DEFAULT_DAY_LIMIT,
-    sort: DEFAULT_SORT,
-  });
+  const { data, isLoading, isError, fulfilledTimeStamp, refetch } = useGetLoggedDatesQuery(
+    {
+      daysLimit: DEFAULT_DAY_LIMIT,
+      sort: DEFAULT_SORT,
+    },
+    {
+      pollingInterval: STAT_POLLING_INTERVAL,
+    }
+  );
 
   if (isLoading) return null;
-  if (isError) return null;
+  if (isError || !data) return <FetchError withNavigation={false} />;
 
   const getStats = () => {
     if (!data) return [];
@@ -25,6 +33,10 @@ const LoggedDatesCalendar = () => {
     return data?.loggedDates.map((d) => {
       return { date: d, count: 1 };
     });
+  };
+
+  const handleRefetch = () => {
+    refetch();
   };
 
   const handleTooltip: any = {};
@@ -52,6 +64,11 @@ const LoggedDatesCalendar = () => {
           labelColor: () => Colors.primary[600],
         }}
         gutterSize={4}
+      />
+      <RefetchButton
+        style={{ alignSelf: 'flex-end' }}
+        lastUpdate={new Date(fulfilledTimeStamp)}
+        onPress={handleRefetch}
       />
     </View>
   );

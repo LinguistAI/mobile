@@ -1,10 +1,13 @@
 import { BarChart } from 'react-native-chart-kit';
 import { WordStatus } from '../word-bank/word-list/types';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Colors from '../../theme/colors';
 import { useGetWordLearningStatsQuery } from './userStatsApi';
 import Title from '../common/Title';
 import { getGraphDimensions } from './utils';
+import RefetchButton from './RefetchButton';
+import FetchError from '../common/feedback/FetchError';
+import { STAT_POLLING_INTERVAL } from './constants';
 
 const LABELS = {
   [WordStatus.LEARNING]: 'Learning',
@@ -14,11 +17,16 @@ const LABELS = {
 
 const WordLearningStatusBarChart = () => {
   const { width, height } = getGraphDimensions();
-  const { data: wordLearningStats, isLoading, isError } = useGetWordLearningStatsQuery();
+  const {
+    data: wordLearningStats,
+    isLoading,
+    isError,
+    refetch,
+    fulfilledTimeStamp,
+  } = useGetWordLearningStatsQuery(undefined, { pollingInterval: STAT_POLLING_INTERVAL });
 
   if (isLoading) return null;
-  if (isError) return null;
-  if (!wordLearningStats) return null;
+  if (isError || !wordLearningStats) return <FetchError withNavigation={false} />;
 
   const stats = wordLearningStats.listStats;
   const data = {
@@ -31,8 +39,12 @@ const WordLearningStatusBarChart = () => {
     ],
   };
 
+  const handleRefresh = () => {
+    refetch();
+  };
+
   return (
-    <View>
+    <View style={styles.root}>
       <Title size="h4">Word Learning Progress</Title>
       <BarChart
         data={data}
@@ -53,15 +65,24 @@ const WordLearningStatusBarChart = () => {
         withCustomBarColorFromData={true}
         flatColor={true}
         withInnerLines={false}
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-          alignSelf: 'center',
-        }}
         fromZero={true}
+        style={{
+          borderRadius: 16,
+        }}
+      />
+      <RefetchButton
+        style={{ alignSelf: 'flex-end' }}
+        lastUpdate={new Date(fulfilledTimeStamp)}
+        onPress={handleRefresh}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  root: {
+    alignSelf: 'center',
+  },
+});
 
 export default WordLearningStatusBarChart;

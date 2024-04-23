@@ -1,5 +1,4 @@
-import { ReactPropTypes } from 'react';
-import { ActivityIndicator, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../theme/colors';
 
 interface ActionIconProps {
@@ -7,9 +6,10 @@ interface ActionIconProps {
   onPress: () => void;
   disabled?: boolean;
   loading?: boolean;
+  label?: string;
 }
 
-const ActionIcon = ({ icon, onPress, disabled, loading }: ActionIconProps) => {
+const ActionIcon = ({ icon, onPress, disabled, loading, label }: ActionIconProps) => {
   return (
     <Pressable
       disabled={disabled}
@@ -18,8 +18,11 @@ const ActionIcon = ({ icon, onPress, disabled, loading }: ActionIconProps) => {
         return [styles.innerContainer, pressed && styles.pressed];
       }}
     >
-      {loading && <ActivityIndicator />}
-      {!loading && icon}
+      <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+        {loading && <ActivityIndicator />}
+        {!loading && icon}
+        {!loading && label && <Text style={{ color: Colors.primary[500], fontSize: 13 }}>{label}</Text>}
+      </View>
     </Pressable>
   );
 };

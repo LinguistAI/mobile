@@ -28,6 +28,7 @@ export type TConversation = {
   userEmail: string;
   title: string;
   bot: TChatBot;
+  lastMessage: string;
   unknownWords: UnknownWord[];
 };
 

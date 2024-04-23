@@ -13,7 +13,6 @@ import { ChatOption } from './types';
 import useNotifications from '../../hooks/useNotifications';
 import { useClearConversationMutation } from './api';
 import ActiveWordsModal from './ActiveWordsModal';
-import { clearLastMessages } from './utils';
 import { clearMessages } from '../../redux/chatSlice';
 
 const ChatHeader = () => {
@@ -24,7 +23,6 @@ const ChatHeader = () => {
   const navigation = useNavigation();
   const { add } = useNotifications();
 
-  const dispatch = useDispatch();
   const [clearConvo, {}] = useClearConversationMutation();
 
   const handleGoBack = () => {
@@ -44,8 +42,6 @@ const ChatHeader = () => {
         break;
       case ChatOption.CLEAR_CONVERSATION:
         clearConvo(conversation.id);
-        clearLastMessages(conversation.id);
-        dispatch(clearMessages({ id: conversation.id }));
         navigation.goBack();
         add({
           type: 'success',

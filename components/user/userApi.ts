@@ -133,4 +133,5 @@ export const {
   useLazyGetGlobalLeaderboardQuery,
   useLazyGetFriendLeaderboardQuery,
   useGetProfileQuery,
+  useSetProfileMutation,
 } = userApi;

@@ -13,7 +13,6 @@ import PrimaryDatePicker from '../../common/form/PrimaryDatePicker';
 import ActionButton from '../../common/ActionButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useSetUserDetailsMutation } from '../userApi';
-import { useSetProfileMutation } from '../profileApi';
 import useNotifications from '../../../hooks/useNotifications';
 import { dateObjToISODate } from '../utils';
 import ItemGroup from '../../common/form/ItemGroup';

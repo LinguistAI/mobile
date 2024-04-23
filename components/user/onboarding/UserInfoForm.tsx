@@ -34,6 +34,10 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
     birthDate: new Date(userDetails.birthDate) ?? new Date(),
     englishLevel: null,
     hobbies: userDetails.hobbies ?? [],
+    likes: profileDetails.likes,
+    dislikes: profileDetails.dislikes,
+    loves: profileDetails.loves,
+    hates: profileDetails.hates,
   };
   const methods = useForm({
     defaultValues,
@@ -50,6 +54,7 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
 
   const onSubmit = async (data: any) => {
     try {
+      console.log(data);
       const birthDate = dateObjToISODate(new Date(data.birthDate));
       const newProfile = {
         name: data.name,
@@ -174,10 +179,42 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
             }))}
             noItemsText="You can add some hobbies!"
           />
-          {renderItemGroup('You like: ', 'likes', profileDetails.likes, (selected) => {}, false)}
-          {renderItemGroup('You love: ', 'loves', profileDetails.loves, (selected) => {}, false)}
-          {renderItemGroup('You dislike: ', 'dislikes', profileDetails.dislikes, (selected) => {}, false)}
-          {renderItemGroup('You hate: ', 'hates', profileDetails.hates, (selected) => {}, false)}
+          {renderItemGroup(
+            'You like: ',
+            'likes',
+            profileDetails.likes,
+            (selected) => {
+              methods.setValue('likes', selected);
+            },
+            false
+          )}
+          {renderItemGroup(
+            'You love: ',
+            'loves',
+            profileDetails.loves,
+            (selected) => {
+              methods.setValue('loves', selected);
+            },
+            false
+          )}
+          {renderItemGroup(
+            'You dislike: ',
+            'dislikes',
+            profileDetails.dislikes,
+            (selected) => {
+              methods.setValue('dislikes', selected);
+            },
+            false
+          )}
+          {renderItemGroup(
+            'You hate: ',
+            'hates',
+            profileDetails.hates,
+            (selected) => {
+              methods.setValue('hates', selected);
+            },
+            false
+          )}
           <View style={styles.btnsContainer}>
             <View style={styles.btn}>
               <Button

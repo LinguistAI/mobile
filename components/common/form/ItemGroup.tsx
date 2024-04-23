@@ -27,6 +27,7 @@ const ItemGroup: React.FC<ItemGroupProps> = ({
   addable,
   itemOptions,
   noItemsText,
+  name,
 }) => {
   const [displayedItems, setDisplayedItems] = useState<Item[]>(items);
   const [showOptions, setShowOptions] = useState(false);

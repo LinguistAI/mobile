@@ -23,6 +23,7 @@ import ForgotPasswordNewPasswordScreen from './screens/common/auth/forgot-passwo
 import ForgotPasswordScreen from './screens/common/auth/forgot-password/ForgotPasswordScreen';
 import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import Colors from './theme/colors';
+import FriendProfileScreen from './screens/user/FriendProfileScreen';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -10,6 +10,7 @@ import useNotifications from '../../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
 import React from 'react';
 import LText from '../../../common/Text';
+import { useNavigation } from '@react-navigation/native';
 
 interface FriendProfileCardProps {
   friendship: RFriendship;
@@ -18,17 +19,12 @@ interface FriendProfileCardProps {
 const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
   const { username: friendUsername, id: friendId } = friendship;
   const { add } = useNotifications();
+  const navigation = useNavigation();
 
   const [removeFriend, { isLoading: isRemovingFriend, error }] = useRemoveFriendMutation();
 
-  const onRemoveFriend = async (friendId: string) => {
-    await removeFriend({ friendId });
-    if (error) {
-      add({
-        body: generateErrorResponseMessage(error),
-        type: 'error',
-      });
-    }
+  const onPressFriendProfile = () => {
+    navigation.navigate('FriendProfile', { friendId });
   };
 
   return (
@@ -38,13 +34,17 @@ const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
           <View style={styles.mainInfoContainer}>
             <LText style={styles.mainInfo}>{friendUsername}</LText>
             <Pressable
-              onPress={() => onRemoveFriend(friendId)}
+              onPress={onPressFriendProfile}
               style={[styles.actionContainer, styles.removeActionContainer]}
             >
               <ActionIcon
-                onPress={() => onRemoveFriend(friendId)}
-                icon={<Ionicons name="close-circle-outline" size={22} color={Colors.red[600]} />}
+                onPress={onPressFriendProfile}
+                icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
               />
+              {/* <ActionIcon
+                onPress={() => onRemoveFriend(friendId)}
+                icon={<Ionicons name="close-circle-outline" size={22} color={Colors.red[500]} />}
+              /> */}
               <LText style={styles.actionText}>Remove</LText>
             </Pressable>
           </View>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 5,
     paddingVertical: 4,
-    borderWidth: 2,
+    borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 4,
   },
@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
   },
   actionText: {
     color: Colors.red[600],
-    fontWeight: 'bold',
     fontSize: 13,
     marginRight: 2,
   },

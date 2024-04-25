@@ -5,6 +5,7 @@ import HomeScreen from '../screens/home/HomeScreen';
 import FriendsScreen from '../screens/user/FriendsScreen';
 import FriendAddScreen from '../components/user/profile/friends/FriendAddScreen';
 import FriendTabController from '../screens/user/FriendTabController';
+import FriendProfileScreen from '../screens/user/FriendProfileScreen';
 
 const HomeStack = createNativeStackNavigator();
 
@@ -30,6 +31,11 @@ const HomeStackNavigator = () => {
       <HomeStack.Screen
         name="FriendAdd"
         component={FriendAddScreen}
+        options={{ headerShown: true, headerTitle: 'Add Friend' }}
+      />
+      <HomeStack.Screen
+        name="FriendProfile"
+        component={FriendProfileScreen}
         options={{ headerShown: true, headerTitle: 'Add Friend' }}
       />
     </HomeStack.Navigator>

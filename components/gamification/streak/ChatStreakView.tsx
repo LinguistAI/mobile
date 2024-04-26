@@ -26,14 +26,18 @@ const ChatStreakView = ({ currentStreak }: ChatStreakButtonProps) => {
 const styles = StyleSheet.create({
   root: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'center',
     gap: 4,
+    // borderWidth: 2,
+    // borderColor: 'black',
+    padding: 5,
   },
   lottie: {
     width: 40,
     height: 40,
     margin: 0,
+    marginBottom: 0,
     padding: 0,
   },
   textStyle: {
@@ -41,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     margin: 0,
     padding: 0,
-    marginBottom: -5,
+    marginBottom: -4,
   },
 });
 

@@ -22,6 +22,9 @@ import { IUserDetailedInfo } from '../../types';
 import ExperienceBarFromData from '../../../gamification/experience/ExperienceBarFromData';
 import ChatStreakView from '../../../gamification/streak/ChatStreakView';
 import LText from '../../../common/Text';
+import Title from '../../../common/Title';
+import ItemGroup from '../../../common/form/ItemGroup';
+import ReadOnlyItemGroup from '../../../common/form/ReadOnlyItemGroup';
 
 // const avatarPlaceholderImg = require('../../../../assets/profile-default.jpg');
 
@@ -59,23 +62,6 @@ const FriendProfile = () => {
     setRefreshing(false);
   }, [profileRefetch]);
 
-  const renderUserInfoForm = () => {
-    if (isProfileFetching) {
-      return <LoadingIndicator />;
-    }
-
-    if (profileError || !profileInfo) {
-      return <Text>Something went wrong</Text>;
-    }
-    const userDet: IUserDetailedInfo = {
-      name: profileInfo.name || '',
-      birthDate: profileInfo.birthDate || '',
-      englishLevel: profileInfo.englishLevel || '',
-      hobbies: profileInfo.hobbies,
-    };
-    return <UserInfoForm userDetails={userDet} profileDetails={profileInfo} />;
-  };
-
   return (
     <ScrollView
       style={styles.root}
@@ -94,17 +80,47 @@ const FriendProfile = () => {
       </TouchableWithoutFeedback>
       <View style={styles.userInformation}>
         <LText style={styles.userName}>{profileInfo?.name}</LText>
-        <ChatStreakView currentStreak={profileInfo?.currentStreak} />
-      </View>
-      <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
-        <View>
-          <ExperienceBarFromData data={profileInfo?.xp} isFetching={isProfileFetching} isError={isError} />
+        <View style={styles.rankAndStreak}>
+          <ChatStreakView currentStreak={profileInfo?.currentStreak} />
+          <View style={styles.rowView}>
+            <LText style={{ fontSize: 21, fontWeight: 'bold', marginBottom: 2, marginRight: 5 }}>
+              Global Rank:
+            </LText>
+            <LText style={{ fontSize: 21, marginBottom: 2 }}>{profileInfo?.globalRank}</LText>
+          </View>
         </View>
       </View>
+      <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
+        <ExperienceBarFromData data={profileInfo?.xp} isFetching={isProfileFetching} isError={isError} />
+      </View>
       <Divider />
-      {renderUserInfoForm()}
+      <View style={styles.rowView}>
+        <Title size="h4">English Level</Title>
+        <LText style={{ fontSize: 16 }}>
+          {profileInfo?.englishLevel == null
+            ? capitalizeFirstLetter("Doesn't Know")
+            : capitalizeFirstLetter(profileInfo?.englishLevel!)}
+        </LText>
+      </View>
+      <Title size="h4">Hobbies</Title>
+      <View style={styles.hobbyContainer}>
+        <ReadOnlyItemGroup
+          name="hobbies"
+          items={(profileInfo?.hobbies || []).map((hobby) => ({
+            value: hobby,
+            name: hobby,
+          }))}
+        />
+      </View>
     </ScrollView>
   );
+};
+
+const capitalizeFirstLetter = (string: string) => {
+  if (string == null || string.length == 0) {
+    return '';
+  }
+  return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
 };
 
 const styles = StyleSheet.create({
@@ -128,10 +144,27 @@ const styles = StyleSheet.create({
   },
   userInformation: {
     marginVertical: 12,
-    gap: 35,
-    flexDirection: 'row',
+    gap: 10,
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    // borderWidth: 2,
+    // borderColor: 'red',
+  },
+  rowView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    // marginLeft: 5,
+  },
+  rankAndStreak: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    gap: 15,
+  },
+  hobbyContainer: {
+    marginHorizontal: 0,
   },
   userName: {
     fontSize: 30,

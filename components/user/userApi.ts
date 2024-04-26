@@ -11,6 +11,7 @@ import {
   RLeaderboard,
   QProfile,
   RProfile,
+  FriendProfile,
 } from './types';
 import { Page, User } from '../../types';
 import { RUserQuests } from '../quest/types';
@@ -117,6 +118,12 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['Profile'],
     }),
+    getFriendProfile: builder.query<FriendProfile, string>({
+      query: (userId: string) => ({
+        method: 'GET',
+        url: `/profile/${userId}`,
+      }),
+    }),
   }),
 });
 
@@ -134,4 +141,5 @@ export const {
   useLazyGetFriendLeaderboardQuery,
   useGetProfileQuery,
   useSetProfileMutation,
+  useGetFriendProfileQuery,
 } = userApi;

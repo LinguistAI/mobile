@@ -1,5 +1,6 @@
 import { ChatMessage } from '../../screens/chat/types';
 import { User } from '../../types';
+import { IUserExperience } from '../gamification/types';
 
 export interface ExtendedChatMessage extends ChatMessage {
   skippable?: boolean;
@@ -101,5 +102,16 @@ export type RProfile = {
 
 export type QProfile = {
   profile: RProfile;
-}
+};
 
+export type FriendProfile = {
+  id: string;
+  name: string | null;
+  birthDate: string | null;
+  englishLevel: string | null;
+  hobbies: string[];
+  currentStreak: number;
+  xp: IUserExperience;
+  globalRank: number | null;
+  friendshipStatus: FriendSearchFriendshipStatus;
+};

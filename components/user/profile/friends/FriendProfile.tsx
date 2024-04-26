@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import useUser from '../../../../hooks/useUser';
-import { useGetProfileQuery } from '../../userApi';
+import { useGetFriendProfileQuery, useGetProfileQuery } from '../../userApi';
 import Colors from '../../../../theme/colors';
 import Divider from '../../../common/Divider';
 import ExperienceBar from '../../../gamification/experience/ExperienceBar';
@@ -19,12 +19,12 @@ import ChatStreakContainer from '../../../gamification/streak/ChatStreakContaine
 import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 import UserInfoForm from '../../onboarding/UserInfoForm';
 import { IUserDetailedInfo } from '../../types';
+import ExperienceBarFromData from '../../../gamification/experience/ExperienceBarFromData';
 
 // const avatarPlaceholderImg = require('../../../../assets/profile-default.jpg');
 
 const FriendProfile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
-  const { clearUserDetails, user } = useUser();
   const route = useRoute();
   const { friendId } = route.params;
 
@@ -32,8 +32,9 @@ const FriendProfile = () => {
     data: profileInfo,
     isFetching: isProfileFetching,
     error: profileError,
+    isError,
     refetch: profileRefetch,
-  } = useGetProfileQuery(); // TODO update this with friend profile
+  } = useGetFriendProfileQuery(friendId); // TODO update this with friend profile
   const [refreshing, setRefreshing] = useState(false);
 
   const pickImage = async () => {
@@ -65,10 +66,10 @@ const FriendProfile = () => {
       return <Text>Something went wrong</Text>;
     }
     const userDet: IUserDetailedInfo = {
-      name: 'elogus',
-      birthDate: 'January 9 2002',
-      englishLevel: 'ADVANCED',
-      hobbies: ['Swimming'],
+      name: profileInfo.name || '',
+      birthDate: profileInfo.birthDate || '',
+      englishLevel: profileInfo.englishLevel || '',
+      hobbies: profileInfo.hobbies,
     };
     return <UserInfoForm userDetails={userDet} profileDetails={profileInfo} />;
   };
@@ -81,31 +82,25 @@ const FriendProfile = () => {
       <View style={styles.topSection}>
         <View style={{ alignSelf: 'flex-end', margin: 15 }}></View>
       </View>
-      {/* <TouchableWithoutFeedback onPress={pickImage}>
+      <TouchableWithoutFeedback onPress={pickImage}>
         <Image
           source={{
             uri: profileImage,
           }}
-          defaultSource={avatarPlaceholderImg}
           style={styles.profileImage}
         />
-      </TouchableWithoutFeedback> */}
+      </TouchableWithoutFeedback>
       <View style={styles.userInformation}>
-        <Text style={styles.userName}>{user.username}</Text>
+        <Text style={styles.userName}>{profileInfo?.name}</Text>
       </View>
       <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
-        <ExperienceBar />
+        <View>
+          <ExperienceBarFromData data={profileInfo?.xp} isFetching={isProfileFetching} isError={isError} />
+        </View>
         <ChatStreakContainer />
       </View>
       <Divider />
       {renderUserInfoForm()}
-
-      {user.lastLogin && (
-        <View style={styles.activityContainer}>
-          <Text style={styles.activityTitle}>Activity</Text>
-          <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
-        </View>
-      )}
     </ScrollView>
   );
 };

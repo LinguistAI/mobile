@@ -20,6 +20,8 @@ import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 import UserInfoForm from '../../onboarding/UserInfoForm';
 import { IUserDetailedInfo } from '../../types';
 import ExperienceBarFromData from '../../../gamification/experience/ExperienceBarFromData';
+import ChatStreakView from '../../../gamification/streak/ChatStreakView';
+import LText from '../../../common/Text';
 
 // const avatarPlaceholderImg = require('../../../../assets/profile-default.jpg');
 
@@ -91,13 +93,13 @@ const FriendProfile = () => {
         />
       </TouchableWithoutFeedback>
       <View style={styles.userInformation}>
-        <Text style={styles.userName}>{profileInfo?.name}</Text>
+        <LText style={styles.userName}>{profileInfo?.name}</LText>
+        <ChatStreakView currentStreak={profileInfo?.currentStreak} />
       </View>
       <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
         <View>
           <ExperienceBarFromData data={profileInfo?.xp} isFetching={isProfileFetching} isError={isError} />
         </View>
-        <ChatStreakContainer />
       </View>
       <Divider />
       {renderUserInfoForm()}
@@ -126,11 +128,13 @@ const styles = StyleSheet.create({
   },
   userInformation: {
     marginVertical: 12,
+    gap: 35,
+    flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    justifyContent: 'center',
   },
   userName: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
   },
   userDescription: {

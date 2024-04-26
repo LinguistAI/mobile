@@ -15,7 +15,6 @@ interface XPBarProps {
   data: IUserExperience | undefined;
   isFetching: boolean;
   isError: boolean;
-  // refetch: () => void; // TODO wtf
 }
 
 const ExperienceBarFromData = ({ data, isFetching: isExperienceFetching, isError }: XPBarProps) => {

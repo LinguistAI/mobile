@@ -51,7 +51,10 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
         </View>
       </View>
       {props?.subtitle && <Text style={styles.subtitle}>{props?.subtitle}</Text>}
-      <ErrorMessage name={props.name} render={({ message }) => <Text style={styles.errorMessage}>{message}</Text>} />
+      <ErrorMessage
+        name={props.name}
+        render={({ message }) => <Text style={styles.errorMessage}>{message}</Text>}
+      />
     </View>
   );
 };
@@ -61,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.gray[900],
     fontWeight: 'bold',
-    marginBottom: 4
+    marginBottom: 4,
   },
   textInput: {
     flexBasis: '100%',

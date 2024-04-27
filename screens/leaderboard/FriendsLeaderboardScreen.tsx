@@ -10,7 +10,7 @@ const DEFAULT_PAGE_SIZE = 10;
 
 const FriendsLeaderboardScreen = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [trigger, { data: leaderboard, isFetching, isError }] = useLazyGetFriendLeaderboardQuery();
+  const [trigger, { data: leaderboard, isFetching }] = useLazyGetFriendLeaderboardQuery();
 
   const currentPage = leaderboard?.currentPage || DEFAULT_PAGE;
   const totalPageNum = leaderboard?.totalPages || 0;

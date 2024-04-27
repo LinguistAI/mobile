@@ -14,18 +14,14 @@ interface QuestProgressBarProps {
 }
 
 const QuestProgressBar = ({ goalTimes, progressTimes }: QuestProgressBarProps) => {
-  const { data, isFetching: isQuestsFetching, isError } = useGetQuestsQuery();
+  const { data, isLoading: isQuestsLOading, isError } = useGetQuestsQuery();
 
-  if (isQuestsFetching) {
+  if (isQuestsLOading) {
     return <ExperienceSkeleton />;
   }
 
-  if (isError) {
-    return <FetchError />;
-  }
-
-  if (!data) {
-    return <CenteredFeedback message="Cannot access quests info." />;
+  if (isError || !data) {
+    return <FetchError withNavigation={false} />;
   }
 
   const renderCurrentExperience = () => {

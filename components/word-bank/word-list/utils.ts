@@ -1,5 +1,5 @@
 import { objectIsNotEmpty } from '../../utils';
-import { IDictionaryWordGroup, TWordList } from './types';
+import { IDictionaryWordGroup, TWordList, WordConfidence } from './types';
 
 export const search = (searchText: string, wordList: TWordList[]) => {
   const searchedList = wordList.filter(
@@ -19,4 +19,38 @@ export const isDictionaryWordGroup = (
   }
 
   return true;
+};
+
+export const displayWordConfidence = (confidence: WordConfidence) => {
+  switch (confidence) {
+    case WordConfidence.LOWEST:
+      return 'Lowest';
+    case WordConfidence.LOW:
+      return 'Low';
+    case WordConfidence.MODERATE:
+      return 'Moderate';
+    case WordConfidence.HIGH:
+      return 'High';
+    case WordConfidence.HIGHEST:
+      return 'Highest';
+    default:
+      return 'Unknown';
+  }
+};
+
+export const getReviewValueOfWordConfidence = (confidence: WordConfidence) => {
+  switch (confidence) {
+    case WordConfidence.LOWEST:
+      return 1;
+    case WordConfidence.LOW:
+      return 2;
+    case WordConfidence.MODERATE:
+      return 3;
+    case WordConfidence.HIGH:
+      return 4;
+    case WordConfidence.HIGHEST:
+      return 5;
+    default:
+      return 0;
+  }
 };

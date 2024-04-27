@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import Card from '../../components/common/Card';
 import FloatingButton from '../../components/common/FloatingButton';
 import ModalWrapper from '../../components/common/ModalWrapper';
@@ -104,19 +104,21 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
         visible={isAddWordModalVisible}
         title="Add new word"
       >
-        <KeyboardAvoidingView behavior="position" contentContainerStyle={styles.modalContents}>
-          <FormProvider {...methods}>
-            <PrimaryTextInput
-              label="New word"
-              name="newWord"
-              defaultValue=""
-              rules={{ required: true }}
-              placeholder="Apple"
-            />
-            <Button type="primary" loading={isAddingWord} onPress={methods.handleSubmit(onSubmit, onError)}>
-              ADD
-            </Button>
-          </FormProvider>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
+          <View style={styles.modalContents}>
+            <FormProvider {...methods}>
+              <PrimaryTextInput
+                label="New word"
+                name="newWord"
+                defaultValue=""
+                rules={{ required: true }}
+                placeholder="Apple"
+              />
+              <Button type="primary" loading={isAddingWord} onPress={methods.handleSubmit(onSubmit, onError)}>
+                ADD
+              </Button>
+            </FormProvider>
+          </View>
         </KeyboardAvoidingView>
       </ModalWrapper>
     </View>

@@ -4,6 +4,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   StyleSheet,
   View,
@@ -146,10 +147,12 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.header}>
         <ChatHeader />
       </View>
-      <KeyboardAvoidingView style={styles.flexContainer} behavior="padding">
-        {renderMessages()}
-        <View style={styles.textInputContainer}>
-          <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.flexContainer}>
+          {renderMessages()}
+          <View style={styles.textInputContainer}>
+            <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

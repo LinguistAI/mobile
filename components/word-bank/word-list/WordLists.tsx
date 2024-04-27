@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FlatList, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import useNotifications from '../../../hooks/useNotifications';
 import FloatingButton from '../../common/FloatingButton';
 import ModalWrapper from '../../common/ModalWrapper';
@@ -110,32 +110,34 @@ const WordLists = () => {
   const renderAddListModal = () => {
     return (
       <ModalWrapper visible={addListModalVisible} onRequestClose={handleCancelAddList} title="Add a new list">
-        <KeyboardAvoidingView behavior="position" contentContainerStyle={styles.formContent}>
-          <FormProvider {...methods}>
-            <PrimaryTextInput
-              name="listName"
-              label="List Name"
-              defaultValue=""
-              placeholder="Enter list name"
-              rules={{ required: 'List name is required', minLength: 3 }}
-            />
-            <PrimaryTextInput
-              name="listDescription"
-              label="List Description"
-              defaultValue=""
-              placeholder="Enter list description"
-              rules={{ required: 'List description is required' }}
-            />
-            <PrimarySwitch name="pinned" label="Pin this list" defaultValue={false} />
-            <PrimarySwitch name="isActive" label="Set as active list" defaultValue={true} />
-            <View style={styles.formControls}>
-              <ModalControlButtons
-                onCancel={handleCancelAddList}
-                onSubmit={methods.handleSubmit(onSubmit, onError)}
-                okText="Add"
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
+          <View style={styles.formContent}>
+            <FormProvider {...methods}>
+              <PrimaryTextInput
+                name="listName"
+                label="List Name"
+                defaultValue=""
+                placeholder="Enter list name"
+                rules={{ required: 'List name is required', minLength: 3 }}
               />
-            </View>
-          </FormProvider>
+              <PrimaryTextInput
+                name="listDescription"
+                label="List Description"
+                defaultValue=""
+                placeholder="Enter list description"
+                rules={{ required: 'List description is required' }}
+              />
+              <PrimarySwitch name="pinned" label="Pin this list" defaultValue={false} />
+              <PrimarySwitch name="isActive" label="Set as active list" defaultValue={true} />
+              <View style={styles.formControls}>
+                <ModalControlButtons
+                  onCancel={handleCancelAddList}
+                  onSubmit={methods.handleSubmit(onSubmit, onError)}
+                  okText="Add"
+                />
+              </View>
+            </FormProvider>
+          </View>
         </KeyboardAvoidingView>
       </ModalWrapper>
     );

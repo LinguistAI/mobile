@@ -146,7 +146,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.header}>
         <ChatHeader />
       </View>
-      <KeyboardAvoidingView style={styles.flexContainer} behavior="padding" enabled>
+      <KeyboardAvoidingView style={styles.flexContainer} behavior="padding">
         {renderMessages()}
         <View style={styles.textInputContainer}>
           <ChatTextInputContainer onSend={onSend} isPending={isPending} />

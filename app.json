@@ -2,7 +2,7 @@
   "expo": {
     "name": "LinguistAI",
     "slug": "LinguistAI",
-    "version": "1.0.0",
+    "version": "2.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,7 +14,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.linguistai.mobile"
+      "bundleIdentifier": "app.linguistai.mobile",
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +23,8 @@
         "backgroundColor": "#FFFFFF"
       },
       "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "app.linguistai.mobile"
+      "package": "app.linguistai.mobile",
+      "versionCode": "4"
     },
     "web": {
       "favicon": "./assets/favicon.png"

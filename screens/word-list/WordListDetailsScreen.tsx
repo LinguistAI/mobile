@@ -77,11 +77,6 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <Card style={styles.listInfo}>
-        <Image source={{ uri: 'https://picsum.photos/520' }} style={styles.image} />
-        <Text style={styles.titleText}>{selectedList.unknownWordList.title}</Text>
-        <Text style={styles.descriptionText}>{selectedList.unknownWordList.description}</Text>
-      </Card>
       {selectedList.words.length === 0 && (
         <CenteredFeedback message="It looks like there are no words in this list. Use the add button on the bottom right part of the page to add your first word." />
       )}
@@ -91,8 +86,16 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
         contentContainerStyle={{
           justifyContent: 'center',
           gap: 15,
-          marginHorizontal: 10,
+          marginVertical: 8,
+          marginHorizontal: 8,
         }}
+        ListHeaderComponent={
+          <Card style={styles.listInfo}>
+            <Image source={{ uri: 'https://picsum.photos/200' }} style={styles.image} />
+            <Text style={styles.titleText}>{selectedList.unknownWordList.title}</Text>
+            <Text style={styles.descriptionText}>{selectedList.unknownWordList.description}</Text>
+          </Card>
+        }
       />
       <FloatingButton
         handlePress={() => {
@@ -132,19 +135,17 @@ const styles = StyleSheet.create({
   },
   listInfo: {
     width: '100%',
-    height: 250,
-    position: 'relative',
-    marginBottom: 20,
-    borderRadius: 0,
-    overflow: 'hidden', // Ensures nothing overflows outside the card boundaries
+    height: 200,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
   image: {
-    width: '100%', // Full width of the card
-    height: '100%', // Full height of the card
-    position: 'absolute', // Positioned absolutely to cover the entire card
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
   },
   titleText: {
-    position: 'absolute', // Absolute position to float over the image
+    position: 'absolute',
     top: '10%',
     width: '100%',
     textAlign: 'center',

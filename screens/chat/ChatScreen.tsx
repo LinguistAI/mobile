@@ -1,11 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import ChatHeader from '../../components/chat/ChatHeader';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
-import ChatHeader from '../../components/chat/ChatHeader';
 
 interface ChatScreenProps {
   route: any;
@@ -107,6 +115,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         <FlatList
           ref={messagesList}
           data={messages}
+          automaticallyAdjustKeyboardInsets={true}
           renderItem={({ item }) => (
             <ChatMessageComponent
               onWordPress={handleWordPress}
@@ -137,10 +146,12 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.header}>
         <ChatHeader />
       </View>
-      {renderMessages()}
-      <View style={styles.textInputContainer}>
-        <ChatTextInputContainer onSend={onSend} isPending={isPending} />
-      </View>
+      <KeyboardAvoidingView style={styles.flexContainer} behavior="padding" enabled>
+        {renderMessages()}
+        <View style={styles.textInputContainer}>
+          <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -159,7 +170,7 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 10,
-    marginTop: 10,
+    paddingTop: 25,
     marginHorizontal: 10,
   },
   centeredView: {
@@ -168,6 +179,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 12,
+  },
+  flexContainer: {
+    flex: 10,
   },
 });
 

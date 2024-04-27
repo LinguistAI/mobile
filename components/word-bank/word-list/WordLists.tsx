@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import useNotifications from '../../../hooks/useNotifications';
 import FloatingButton from '../../common/FloatingButton';
 import ModalWrapper from '../../common/ModalWrapper';
@@ -110,8 +110,8 @@ const WordLists = () => {
   const renderAddListModal = () => {
     return (
       <ModalWrapper visible={addListModalVisible} onRequestClose={handleCancelAddList} title="Add a new list">
-        <FormProvider {...methods}>
-          <View style={styles.formContent}>
+        <KeyboardAvoidingView behavior="position" contentContainerStyle={styles.formContent}>
+          <FormProvider {...methods}>
             <PrimaryTextInput
               name="listName"
               label="List Name"
@@ -135,8 +135,8 @@ const WordLists = () => {
                 okText="Add"
               />
             </View>
-          </View>
-        </FormProvider>
+          </FormProvider>
+        </KeyboardAvoidingView>
       </ModalWrapper>
     );
   };

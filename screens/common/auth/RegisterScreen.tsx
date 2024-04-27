@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
@@ -8,16 +8,16 @@ import PrimaryTextInput from '../../../components/common/form/PrimaryTextInput';
 import PasswordInputWithRequirements from '../../../components/common/form/password/PasswordInputWithRequirements';
 import { Requirement } from '../../../components/common/form/password/Requirement';
 import useNotifications from '../../../hooks/useNotifications';
-import { login, register } from '../../../services/auth';
-import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import useUser from '../../../hooks/useUser';
-import { StoredUserInfoWithTokens } from '../../../types';
+import { register } from '../../../services/auth';
 import { RegisterDto } from '../../../services/auth/Auth.types';
+import { StoredUserInfoWithTokens } from '../../../types';
+import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 
 type RegisterFormValues = {
   userName: string;
-  email: string;
   password: string;
+  email: string;
   repeatPassword: string;
 };
 
@@ -97,7 +97,7 @@ const RegisterScreen = (props: RegisterScreenProps) => {
 
   return (
     <ScrollView style={styles.scrollContainer}>
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="position" contentContainerStyle={styles.container}>
         <FormProvider {...methods}>
           <PrimaryTextInput
             defaultValue=""
@@ -133,7 +133,7 @@ const RegisterScreen = (props: RegisterScreenProps) => {
             REGISTER
           </Button>
         </FormProvider>
-      </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };

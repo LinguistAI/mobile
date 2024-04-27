@@ -1,14 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
-import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FormProvider, useForm } from 'react-hook-form';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../../../components/common/form/Button';
 import EmailTextInput from '../../../../components/common/form/EmailTextInput';
-import PasswordTextInput from '../../../../components/common/form/PasswordTextInput';
-import PasswordInputWithRequirements from '../../../../components/common/form/password/PasswordInputWithRequirements';
-import { Requirement } from '../../../../components/common/form/password/Requirement';
 import useNotifications from '../../../../hooks/useNotifications';
-import { changePassword, register, requestPasswordReset } from '../../../../services/auth/Auth.service';
-import Colors from '../../../../theme/colors';
+import { requestPasswordReset } from '../../../../services/auth/Auth.service';
+import { RequestPasswordResetDto } from '../../../../services/auth/Auth.types';
 import { generateErrorResponseMessage } from '../../../../utils/httpUtils';
 
 type ForgotPasswordFormValues = {
@@ -76,15 +73,17 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <FormProvider {...methods}>
-        <View style={styles.mainSection}>
-          <EmailTextInput />
-          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-            REQUEST PASSWORD
-          </Button>
-        </View>
-      </FormProvider>
+    <ScrollView>
+      <KeyboardAvoidingView behavior="position" contentContainerStyle={styles.container}>
+        <FormProvider {...methods}>
+          <View style={styles.mainSection}>
+            <EmailTextInput />
+            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+              REQUEST PASSWORD
+            </Button>
+          </View>
+        </FormProvider>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };

@@ -147,7 +147,10 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.header}>
         <ChatHeader />
       </View>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.flexContainer}
+      >
         <View style={styles.flexContainer}>
           {renderMessages()}
           <View style={styles.textInputContainer}>

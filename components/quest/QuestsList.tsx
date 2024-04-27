@@ -7,19 +7,12 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import React, { useCallback, useState } from 'react';
 import QuestCountdownTimer from './QuestCountdownTimer';
-import { useFocusEffect } from '@react-navigation/native';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
 import FetchError from '../common/feedback/FetchError';
 
 const QuestsList = () => {
-  const { data: quests, isFetching, isError, refetch } = useGetQuestsQuery();
+  const { data: quests, isLoading, isError, refetch } = useGetQuestsQuery();
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      refetch();
-    }, [refetch])
-  );
 
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -37,7 +30,7 @@ const QuestsList = () => {
     );
   };
 
-  if (isFetching) {
+  if (isLoading) {
     return renderSkeletonList();
   }
   if (isError || !quests) {

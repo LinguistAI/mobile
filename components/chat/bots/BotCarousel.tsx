@@ -47,12 +47,8 @@ const shimmerStyles = StyleSheet.create({
 });
 
 const BotCarousel = () => {
-  const {
-    data: conversations,
-    isFetching: isFetchingConversations,
-    isError: conversationsNotLoaded,
-  } = useGetAllConversationsQuery();
-  const { data: bots, isFetching: isFetchingBots, isError: botsLoadError } = useGetAvailableBotsQuery();
+  const { data: conversations } = useGetAllConversationsQuery();
+  const { data: bots, isLoading: isLoadingBots, isError: botsLoadError } = useGetAvailableBotsQuery();
   const [createConvo, { isLoading: pendingBotCreateResponse, error: createConversationError }] =
     useCreateNewConversationMutation();
   const navigation = useNavigation();
@@ -61,12 +57,12 @@ const BotCarousel = () => {
 
   const width = Dimensions.get('window').width;
   const itemHeight = width * 0.4; // Set a fixed height for each item
-  if (isFetchingBots) {
+  if (isLoadingBots) {
     return <BotCarouselShimmer />;
   }
 
   if (!bots || botsLoadError) {
-    return <FetchError />;
+    return <FetchError withNavigation={false} />;
   }
 
   const handleBotPress = async (bot: TChatBot) => {

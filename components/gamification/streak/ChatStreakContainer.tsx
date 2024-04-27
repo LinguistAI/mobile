@@ -1,25 +1,21 @@
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import ChatStreakButton from './ChatStreakButton';
 import ChatStreakModal from './ChatStreakModal';
 import { useState } from 'react';
 import { useGetUserStreakQuery } from '../api';
 import FetchError from '../../common/feedback/FetchError';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 
 const ChatStreakContainer = () => {
   const [streakModalVisible, setModalVisible] = useState(false);
+  const { data: streak, isLoading, isError } = useGetUserStreakQuery();
 
-  const { data: streak, isFetching, isError } = useGetUserStreakQuery();
-
-  if (isFetching) {
-    return <ActivityIndicator />;
+  if (isLoading) {
+    return <LoadingIndicator subtext="Wondering your streak? Hold on, we are calculating..." />;
   }
 
-  if (isError) {
-    return <FetchError />;
-  }
-
-  if (!streak) {
-    return <View />;
+  if (isError || !streak) {
+    return <FetchError withNavigation={false} />;
   }
 
   const handleOpenModal = () => {

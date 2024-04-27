@@ -16,11 +16,15 @@ interface WordInfoCardProps {
 
 const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
   const lowercaseWord = selectedWord.toLowerCase();
-  const { data, isFetching, isError } = useGetWordMeaningsQuery([lowercaseWord], { refetchOnFocus: false });
+  const { data, isLoading, isError } = useGetWordMeaningsQuery([lowercaseWord], {
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMountOrArgChange: false,
+  });
 
   const renderWordDetails = () => {
     let result = null;
-    if (isFetching) {
+    if (isLoading) {
       result = <ActivityIndicator />;
     } else if (isError) {
       result = <Text>We couldn't fetch the details for this word.</Text>;

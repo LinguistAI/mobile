@@ -14,7 +14,7 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
 
   const {
     data: chatMessages,
-    isFetching: isLoadingMessages,
+    isLoading: isLoadingMessages,
     refetch,
   } = useGetAllChatMessagesQuery(conversationId);
   const [sendMessage, { isLoading: isSendingMessage, isError: responseNotReceived, data }] =

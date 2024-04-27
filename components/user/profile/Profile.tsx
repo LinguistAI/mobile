@@ -22,6 +22,7 @@ import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import ActionIcon from '../../common/ActionIcon';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import { useFocusEffect } from '@react-navigation/native';
+import FetchError from '../../common/feedback/FetchError';
 
 const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
 
@@ -32,13 +33,13 @@ const Profile = () => {
 
   const {
     data: userInfo,
-    isFetching: isUserInfoFetching,
+    isLoading: isUserInfoFetching,
     error,
     refetch: userInfoRefetch,
   } = useGetUserDetailsQuery();
   const {
     data: profileInfo,
-    isFetching: isProfileFetching,
+    isLoading: isProfileFetching,
     error: profileError,
     refetch: profileRefetch,
   } = useGetProfileQuery();
@@ -90,11 +91,11 @@ const Profile = () => {
 
   const renderUserInfoForm = () => {
     if (isUserInfoFetching || isProfileFetching) {
-      return <LoadingIndicator />;
+      return <LoadingIndicator subtext="Gathering your info..." />;
     }
 
     if (error || profileError || !userInfo || !profileInfo) {
-      return <Text>Something went wrong</Text>;
+      return <FetchError withNavigation={false} />;
     }
 
     return <UserInfoForm userDetails={userInfo} profileDetails={profileInfo} />;

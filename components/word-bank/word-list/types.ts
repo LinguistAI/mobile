@@ -60,9 +60,17 @@ export interface IWordListWithUserInfo extends TWordList {
   ownerUsername: string;
 }
 
+export enum WordConfidence {
+  LOWEST = 'LOWEST',
+  LOW = 'LOW',
+  MODERATE = 'MODERATE',
+  HIGH = 'HIGH',
+  HIGHEST = 'HIGHEST',
+}
+
 export type WordWithConfidence = {
   word: string;
-  confidence: number;
+  confidence: WordConfidence;
 };
 
 export interface IWordListWithWordInfo {

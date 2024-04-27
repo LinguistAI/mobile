@@ -20,10 +20,10 @@ const BotLists = () => {
   const dispatch = useDispatch();
   const {
     data: conversations,
-    isFetching: isFetchingConversations,
+    isLoading: isLoadingConversations,
     isError: conversationsNotLoaded,
   } = useGetAllConversationsQuery();
-  const { data: bots, isFetching: isFetchingBots, isError: botsNotLoaded } = useGetAvailableBotsQuery();
+  const { data: bots, isLoading: isLoadingBots, isError: botsNotLoaded } = useGetAvailableBotsQuery();
   const [createConvo, { isLoading: pendingBotCreateResponse, error: createConversationError }] =
     useCreateNewConversationMutation();
   const { add: notify } = useNotifications();
@@ -32,7 +32,7 @@ const BotLists = () => {
     return <FetchFailErrorScreen />;
   }
 
-  if (isFetchingConversations || isFetchingBots) {
+  if (isLoadingConversations || isLoadingBots) {
     return <LoadingIndicator subtext="Get ready to meet your language companion!" />;
   }
 

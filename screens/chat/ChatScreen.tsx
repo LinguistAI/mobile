@@ -19,19 +19,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);
-
-  useEffect(() => {
-    if (messagesList.current) {
-      messagesList.current.scrollToEnd({ animated: true });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (messagesList.current) {
-      messagesList.current.scrollToEnd({ animated: true });
-    }
-  }, [messages]);
-
   const isPending = isLoadingMessages || isSendingMessage;
 
   const onSend = async (text: string) => {
@@ -116,7 +103,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           )}
           ListFooterComponent={renderLastChatMessage()}
           keyExtractor={(item) => item.id || item.timestamp.toString()}
-          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: true })}
+          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: false })}
         />
       </View>
     );

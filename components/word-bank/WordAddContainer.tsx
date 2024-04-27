@@ -10,6 +10,9 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import FetchError from '../common/feedback/FetchError';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
+import LoadingIndicator from '../common/feedback/LoadingIndicator';
+import { isDataResponse } from '../../services';
+import useError from '../../hooks/useError';
 
 interface WordAddContainerProps {
   selectedWord: string;
@@ -19,17 +22,18 @@ interface WordAddContainerProps {
 const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) => {
   const { add: addNotification } = useNotifications();
   const [selectedWordList, setSelectedWordList] = useState<TWordList | null>(null);
-  const [addNewWord, { isError: addWordError, isLoading: isAddingWord }] = useAddWordMutation();
+  const [addNewWord, { error: wordAddError, isLoading: isAddingWord }] = useAddWordMutation();
+  useError(wordAddError);
+  const { data: wordLists, isLoading } = useGetWordListsQuery();
 
-  const { data: wordLists, isFetching } = useGetWordListsQuery();
   useEffect(() => {
     if (wordLists) {
       setSelectedWordList(wordLists.lists[0]);
     }
   }, [wordLists]);
 
-  if (isFetching) {
-    return <ActivityIndicator />;
+  if (isLoading) {
+    return <LoadingIndicator />;
   }
 
   if (!wordLists) return <FetchError />;
@@ -40,14 +44,8 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
     onDismiss();
     if (!selectedWordList) return;
 
-    await addNewWord({ listId: selectedWordList.listId, word: selectedWord });
-    if (addWordError) {
-      addNotification({
-        body: generateErrorResponseMessage(addWordError),
-        type: 'error',
-        time: 3000,
-      });
-    } else {
+    const response = await addNewWord({ listId: selectedWordList.listId, word: selectedWord });
+    if (isDataResponse(response)) {
       addNotification({
         body: 'The word has been successfully added to your list.',
         type: 'success',
@@ -59,27 +57,28 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
   return (
     <>
       <View style={styles.picker}>
-      <Picker
-        itemStyle={styles.pickerItem}
-        selectedValue={selectedWordList ? selectedWordList.listId : null}
-        onValueChange={(itemValue) => {
-          const selectedList = wordLists.lists.find((list) => list.listId === itemValue);
-          if (selectedList) {
-            setSelectedWordList(selectedList);
-          }
-        }}
-        mode="dropdown"
-      >
-        {wordLists.lists.map((wordList) => (
-          <Picker.Item key={wordList.listId} value={wordList.listId} label={wordList.title} />
-        ))}
-      </Picker>
+        <Picker
+          itemStyle={styles.pickerItem}
+          selectedValue={selectedWordList ? selectedWordList.listId : null}
+          onValueChange={(itemValue) => {
+            const selectedList = wordLists.lists.find((list) => list.listId === itemValue);
+            if (selectedList) {
+              setSelectedWordList(selectedList);
+            }
+          }}
+          mode="dropdown"
+        >
+          {wordLists.lists.map((wordList) => (
+            <Picker.Item key={wordList.listId} value={wordList.listId} label={wordList.title} />
+          ))}
+        </Picker>
       </View>
       <View style={styles.addIconContainer}>
         <ActionIcon
           icon={<Ionicons name="add-circle" size={36} color={Colors.gray[0]} />}
           onPress={handleAddNewWord}
-          disabled={isAddingWord || !selectedWordList}
+          disabled={!selectedWordList}
+          loading={isAddingWord}
         />
       </View>
     </>

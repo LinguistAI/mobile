@@ -16,7 +16,7 @@ interface WordDetailsCollapseInterface {
 const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
   const [expanded, setExpanded] = useState(false);
 
-  const { data: wordMeanings, isFetching, isError } = useGetWordMeaningsQuery([word.word]);
+  const { data: wordMeanings, isLoading, isError } = useGetWordMeaningsQuery([word.word]);
 
   const onItemPress = () => {
     setExpanded(!expanded);
@@ -24,7 +24,7 @@ const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
 
   const renderWordDetails = () => {
     let result = null;
-    if (isFetching) {
+    if (isLoading) {
       result = <LoadingIndicator subtext="Get ready to learn!" />;
     } else if (isError) {
       result = <Text>We couldn't fetch the details for this word.</Text>;

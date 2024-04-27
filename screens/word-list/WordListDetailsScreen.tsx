@@ -31,11 +31,11 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
     },
     mode: 'onChange',
   });
-  const { data: selectedList, isFetching: isFetchingList } = useGetWordListByIdQuery(listId);
+  const { data: selectedList, isLoading: isLoadingList } = useGetWordListByIdQuery(listId);
   const [addNewWord, { isLoading: isAddingWord, isError: isAddWordError, error: addWordError }] =
     useAddWordMutation();
 
-  if (isFetchingList) {
+  if (isLoadingList) {
     return <LoadingIndicator subtext="Loading your word list..." />;
   }
 

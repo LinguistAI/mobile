@@ -1,4 +1,3 @@
-import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useGetUserExperienceQuery } from '../api';
@@ -11,20 +10,14 @@ import { BAR_HEIGHT, BAR_WIDTH } from './constants';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 
 const ExperienceBar = () => {
-  const { data, isFetching: isExperienceFetching, isError, refetch } = useGetUserExperienceQuery();
+  const { data, isLoading: isXpLoading, isError } = useGetUserExperienceQuery();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      refetch();
-    }, [refetch])
-  );
-
-  if (isExperienceFetching) {
+  if (isXpLoading) {
     return <ExperienceSkeleton />;
   }
 
   if (isError) {
-    return <FetchError />;
+    return <FetchError withNavigation={false} />;
   }
 
   if (!data) {

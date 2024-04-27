@@ -16,6 +16,7 @@ import WordListCard from './WordListCard';
 import WordListFilter from './WordListFilter';
 import WordListsSkeleton from './WordListsSkeleton';
 import { ICreateWordList, TWordList } from './types';
+import useError from '../../../hooks/useError';
 
 const WordLists = () => {
   const [addListModalVisible, setAddListModalVisible] = useState(false);
@@ -31,16 +32,15 @@ const WordLists = () => {
     },
     mode: 'onChange',
   });
-  const [addListMutate, { error: createWordlistError, isSuccess }] = useCreateWordListMutation();
+  const [addListMutate, { error: createWordlistError }] = useCreateWordListMutation();
+  useError(createWordlistError);
   const {
     data: wordLists,
-    isFetching: isFetchingWordLists,
-    isError: wordListFetchError,
-    error,
+    isLoading: isLoadingWordLists,
+    error: wordListFetchError,
   } = useGetWordListsQuery();
-  const { add: addNotification } = useNotifications();
 
-  if (isFetchingWordLists) {
+  if (isLoadingWordLists) {
     return <WordListsSkeleton />;
   }
 
@@ -80,12 +80,6 @@ const WordLists = () => {
       imageUrl: 'https://picsum.photos/200',
     };
     await addListMutate(createWordList);
-    if (createWordlistError) {
-      addNotification({
-        body: 'Failed to create word list',
-        type: 'error',
-      });
-    }
   };
 
   const onError = (errors: any, e: any) => {
@@ -146,7 +140,7 @@ const WordLists = () => {
   };
 
   const renderLists = () => {
-    if (isFetchingWordLists) {
+    if (isLoadingWordLists) {
       return renderSkeleton();
     }
 

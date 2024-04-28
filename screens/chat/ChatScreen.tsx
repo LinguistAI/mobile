@@ -9,7 +9,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import ChatHeader from '../../components/chat/ChatHeader';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ShimmerButton from '../common/ShimmerButton';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot } from '../../redux/chatSelectors';

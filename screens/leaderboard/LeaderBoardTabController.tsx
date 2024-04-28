@@ -40,7 +40,6 @@ const LeaderboardTabController = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    marginTop: 20,
   },
 });
 

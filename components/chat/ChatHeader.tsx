@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../theme/colors';
 import Avatar from '../common/Avatar';

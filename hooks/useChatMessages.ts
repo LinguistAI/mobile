@@ -2,41 +2,50 @@ import { useEffect, useState } from 'react';
 import { ChatMessage, ChatMessageSender } from '../screens/chat/types';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
-import { useGetAllChatMessagesQuery, useSendChatMessageMutation } from '../components/chat/api';
+import {
+  useGetPaginatedChatMessagesQuery,
+  useLazyGetPaginatedChatMessagesQuery,
+  useSendChatMessageMutation,
+} from '../components/chat/api';
+import { isDataResponse } from '../services';
+import useNotifications from './useNotifications';
 
 interface UseChatMessagesProps {
   conversationId: string;
+  pageSize?: number;
 }
 
+const DEFAULT_PAGE_SIZE = 10;
+
 export const useChatMessages = (props: UseChatMessagesProps) => {
-  const { conversationId } = props;
+  const { conversationId, pageSize = DEFAULT_PAGE_SIZE } = props;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-
   const {
-    data: chatMessages,
-    isLoading: isLoadingMessages,
-    refetch,
-  } = useGetAllChatMessagesQuery(conversationId);
-  const [sendMessage, { isLoading: isSendingMessage, isError: responseNotReceived, data }] =
+    data: initialMessages,
+    isLoading: isLoadingInitialMessages,
+    currentData,
+  } = useGetPaginatedChatMessagesQuery({
+    conversationId,
+    params: { pageSize: DEFAULT_PAGE_SIZE },
+  });
+  const [trigger, { isFetching: isFetchingMore }] = useLazyGetPaginatedChatMessagesQuery();
+  const [sendMessage, { isLoading: isSendingMessage, isError: responseNotReceived }] =
     useSendChatMessageMutation();
+  const { add } = useNotifications();
 
   useEffect(() => {
-    refetch();
-  }, []);
-
-  useEffect(() => {
-    if (chatMessages) {
-      const messages: ChatMessage[] = chatMessages.map((m) => {
+    if (initialMessages) {
+      const newMessageObjs: ChatMessage[] = initialMessages.content.map((m) => {
         return {
-          id: m.id,
           content: m.messageText,
           sender: m.senderType,
           timestamp: m.createdDate,
+          id: m.id,
         };
       });
-      setMessages(messages);
+      setMessages(newMessageObjs);
     }
-  }, [chatMessages]);
+  }, [initialMessages]);
 
   const addMessage = async (message: ChatMessage) => {
     setMessages((prev) => [...prev, message]);
@@ -57,5 +66,40 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
     return -1;
   };
 
-  return { messages, addMessage, isLoadingMessages, isSendingMessage, responseNotReceived };
+  const fetchEarlier = async (lastMessageId: string) => {
+    const response = await trigger({ conversationId, params: { pageSize, lastMessageId } });
+    if (!isDataResponse(response)) {
+      add({
+        body: 'Something went wrong while accessing earlier messages.',
+        type: 'error',
+      });
+    }
+    const newMessages = response.data;
+    if (!newMessages) {
+      add({
+        body: 'Something went wrong while accessing earlier messages.',
+        type: 'error',
+      });
+      return;
+    }
+    const newMessageObjs: ChatMessage[] = newMessages.content.map((m) => {
+      return {
+        content: m.messageText,
+        sender: m.senderType,
+        timestamp: m.createdDate,
+        id: m.id,
+      };
+    });
+    setMessages([...newMessageObjs, ...messages]);
+  };
+
+  return {
+    messages,
+    addMessage,
+    isFetchingMore,
+    isLoadingInitialMessages,
+    isSendingMessage,
+    responseNotReceived,
+    fetchEarlier,
+  };
 };

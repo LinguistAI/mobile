@@ -42,6 +42,11 @@ export type Message = {
   updatedDate: Date;
 };
 
+export type QPaginatedMessage = {
+  lastMessageId?: string;
+  pageSize?: number;
+};
+
 export interface LastMessageObject {
   [key: string]: LastMessage;
 }

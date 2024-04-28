@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { FlatList, Modal, SafeAreaView, StyleSheet, View } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
@@ -7,6 +7,8 @@ import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
+import { v4 as uuidv4 } from 'uuid';
+import 'react-native-get-random-values';
 
 interface ChatScreenProps {
   route: any;
@@ -14,7 +16,15 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
-  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
+  const {
+    addMessage,
+    isLoadingInitialMessages,
+    isFetchingMore: isLoadingMore,
+    messages,
+    isSendingMessage,
+    responseNotReceived,
+    fetchEarlier,
+  } = useChatMessages({
     conversationId,
   });
   const [selectedWord, setSelectedWord] = useState('');
@@ -22,7 +32,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const messagesList = useRef<FlatList>(null);
   useDisableBottomTab();
 
-  const isPending = isLoadingMessages || isSendingMessage;
+  const isPending = isLoadingMore || isSendingMessage;
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -33,6 +43,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       sender: ChatMessageSender.user,
       content: text,
       timestamp: new Date(),
+      id: uuidv4(),
     };
 
     const res = await addMessage(chatMessage);
@@ -61,6 +72,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
             sender: ChatMessageSender.assistant,
             content: 'Something went wrong...',
             timestamp: new Date(),
+            id: uuidv4(),
           }}
         />
       );
@@ -75,6 +87,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
             sender: ChatMessageSender.assistant,
             content: '',
             timestamp: new Date(),
+            id: uuidv4(),
           }}
         />
       );
@@ -84,17 +97,22 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   };
 
   const renderMessages = () => {
-    if (isLoadingMessages) {
-      return (
-        <View style={styles.centeredView}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }
+    // if (isLoadingMore) {
+    //   return (
+    //     <View style={styles.centeredView}>
+    //       <ActivityIndicator size="large" />
+    //     </View>
+    //   );
+    // }
 
     return (
       <View style={styles.messagesContainer}>
         <FlatList
+          onStartReached={() => {
+            if (!isLoadingMore && !isLoadingInitialMessages) {
+              fetchEarlier(messages[0].id);
+            }
+          }}
           ref={messagesList}
           data={messages}
           renderItem={({ item }) => (

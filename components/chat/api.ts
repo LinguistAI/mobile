@@ -1,7 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
-import { IMessageCountQuery, Message, MessageCount, TChatBot, TConversation } from './types';
+import {
+  IMessageCountQuery,
+  Message,
+  MessageCount,
+  QPaginatedMessage,
+  TChatBot,
+  TConversation,
+} from './types';
+import { Page } from '../../types';
 
 export const chatApi = createApi({
   reducerPath: 'chatApi',
@@ -28,6 +36,16 @@ export const chatApi = createApi({
       }),
       providesTags: (result, error, conversationId) => [{ type: 'Message', id: conversationId }],
       keepUnusedDataFor: 0,
+    }),
+    getPaginatedChatMessages: builder.query<
+      Page<Message>,
+      { conversationId: string; params: QPaginatedMessage }
+    >({
+      query: ({ conversationId, params }) => ({
+        method: 'GET',
+        url: `/chat/messages/${conversationId}`,
+        params,
+      }),
     }),
     createNewConversation: builder.mutation<TConversation, string>({
       query: (botId: string) => ({
@@ -74,4 +92,6 @@ export const {
   useSendChatMessageMutation,
   useGetMessageCountByBotQuery,
   useClearConversationMutation,
+  useLazyGetPaginatedChatMessagesQuery,
+  useGetPaginatedChatMessagesQuery,
 } = chatApi;

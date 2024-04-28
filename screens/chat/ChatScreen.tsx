@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
@@ -97,6 +106,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         <FlatList
           ref={messagesList}
           data={messages}
+          automaticallyAdjustKeyboardInsets={true}
           renderItem={({ item }) => (
             <ChatMessageComponent
               onWordPress={handleWordPress}
@@ -127,10 +137,17 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.header}>
         <ChatHeader />
       </View>
-      {renderMessages()}
-      <View style={styles.textInputContainer}>
-        <ChatTextInputContainer onSend={onSend} isPending={isPending} />
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.flexContainer}
+      >
+        <View style={styles.flexContainer}>
+          {renderMessages()}
+          <View style={styles.textInputContainer}>
+            <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -149,7 +166,7 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 10,
-    marginTop: 10,
+    paddingTop: 25,
     marginHorizontal: 10,
   },
   centeredView: {
@@ -158,6 +175,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 12,
+  },
+  flexContainer: {
+    flex: 10,
   },
 });
 

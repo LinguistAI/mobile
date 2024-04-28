@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import { LastMessage, TConversation } from '../types';
+import { TConversation } from '../types';
 import Avatar from '../../common/Avatar';
 import Colors from '../../../theme/colors';
 

@@ -3,7 +3,6 @@ import { ChatOption, ChatOptionObject } from './types';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import { StyleSheet, Text, View } from 'react-native';
-import { useClearConversationMutation } from './api';
 import { useSelector } from 'react-redux';
 import { selectCurrentConversation } from '../../redux/chatSelectors';
 import { useNavigation } from '@react-navigation/native';

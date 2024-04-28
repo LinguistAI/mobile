@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import Card from '../../components/common/Card';
 import FloatingButton from '../../components/common/FloatingButton';
 import ModalWrapper from '../../components/common/ModalWrapper';
@@ -13,8 +13,8 @@ import { objectIsNotEmpty } from '../../components/utils';
 import { useAddWordMutation, useGetWordListByIdQuery } from '../../components/word-bank/api';
 import WordDetailsCollapse from '../../components/word-bank/word-list/words/WordDetailsCollapse';
 import useNotifications from '../../hooks/useNotifications';
-import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import Colors from '../../theme/colors';
+import { generateErrorResponseMessage } from '../../utils/httpUtils';
 
 interface WordListDetailsScreenProps {
   route: any;
@@ -107,20 +107,22 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
         visible={isAddWordModalVisible}
         title="Add new word"
       >
-        <View style={styles.modalContents}>
-          <FormProvider {...methods}>
-            <PrimaryTextInput
-              label="New word"
-              name="newWord"
-              defaultValue=""
-              rules={{ required: true }}
-              placeholder="Apple"
-            />
-            <Button type="primary" loading={isAddingWord} onPress={methods.handleSubmit(onSubmit, onError)}>
-              ADD
-            </Button>
-          </FormProvider>
-        </View>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
+          <View style={styles.modalContents}>
+            <FormProvider {...methods}>
+              <PrimaryTextInput
+                label="New word"
+                name="newWord"
+                defaultValue=""
+                rules={{ required: true }}
+                placeholder="Apple"
+              />
+              <Button type="primary" loading={isAddingWord} onPress={methods.handleSubmit(onSubmit, onError)}>
+                ADD
+              </Button>
+            </FormProvider>
+          </View>
+        </KeyboardAvoidingView>
       </ModalWrapper>
     </View>
   );

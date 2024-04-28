@@ -8,6 +8,7 @@ import { getGraphDimensions } from './utils';
 import RefetchButton from './RefetchButton';
 import FetchError from '../common/feedback/FetchError';
 import { STAT_POLLING_INTERVAL } from './constants';
+import CardSkeleton from '../common/CardSkeleton';
 
 const DEFAULT_DAY_LIMIT = 75;
 const DEFAULT_SORT = SortBy.DESC;
@@ -24,7 +25,7 @@ const LoggedDatesCalendar = () => {
     }
   );
 
-  if (isLoading) return null;
+  if (isLoading) return <CardSkeleton count={1} height={height} width={width} />;
   if (isError || !data) return <FetchError withNavigation={false} />;
 
   const getStats = () => {

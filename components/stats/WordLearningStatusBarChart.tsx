@@ -8,6 +8,7 @@ import { getGraphDimensions } from './utils';
 import RefetchButton from './RefetchButton';
 import FetchError from '../common/feedback/FetchError';
 import { STAT_POLLING_INTERVAL } from './constants';
+import CardSkeleton from '../common/CardSkeleton';
 
 const LABELS = {
   [WordStatus.LEARNING]: 'Learning',
@@ -25,7 +26,7 @@ const WordLearningStatusBarChart = () => {
     fulfilledTimeStamp,
   } = useGetWordLearningStatsQuery(undefined, { pollingInterval: STAT_POLLING_INTERVAL });
 
-  if (isLoading) return null;
+  if (isLoading) return <CardSkeleton count={1} height={height} width={width} />;
   if (isError || !wordLearningStats) return <FetchError withNavigation={false} />;
 
   const stats = wordLearningStats.listStats;

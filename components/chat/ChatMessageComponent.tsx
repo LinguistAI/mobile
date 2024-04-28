@@ -1,19 +1,13 @@
-import {
-  GestureResponderEvent,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import WritingAnimation from "./WritingAnimation";
-import Colors from "../../theme/colors";
-import ActionIcon from "../common/ActionIcon";
-import { Ionicons } from "@expo/vector-icons";
-import * as Speech from "expo-speech";
-import { ChatMessage, ChatMessageSender } from "../../screens/chat/types";
-import Avatar from "../common/Avatar";
-import { useSelector } from "react-redux";
-import { selectCurrentBot } from "../../redux/chatSelectors";
+import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from 'react-native';
+import WritingAnimation from './WritingAnimation';
+import Colors from '../../theme/colors';
+import ActionIcon from '../common/ActionIcon';
+import { Ionicons } from '@expo/vector-icons';
+import * as Speech from 'expo-speech';
+import { ChatMessage, ChatMessageSender } from '../../screens/chat/types';
+import Avatar from '../common/Avatar';
+import { useSelector } from 'react-redux';
+import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -23,53 +17,44 @@ interface ChatMessageComponentProps {
 
 const ChatMessageComponent = (props: ChatMessageComponentProps) => {
   const { chatMessage, isWriting, onWordPress } = props;
-  const currentBot = useSelector(selectCurrentBot)
+  const currentBot = useSelector(selectCurrentBot);
+  const currentConversation = useSelector(selectCurrentConversation);
 
   const timestamp = new Date(chatMessage.timestamp);
-  const lines = chatMessage?.content?.split("\n");
+  const lines = chatMessage?.content?.split('\n');
   const isSentByUser = chatMessage.sender === ChatMessageSender.user;
 
-  const handleWordPress = (
-    event: GestureResponderEvent,
-    pressedWord: string
-  ) => {
+  const handleWordPress = (event: GestureResponderEvent, pressedWord: string) => {
     const word = sanitizeWord(pressedWord);
     onWordPress(word);
   };
 
   const sanitizeWord = (word: string) => {
-    return word.replace(/[^a-zA-Z ]/g, "");
+    return word.replace(/[^a-zA-Z ]/g, '');
+  };
+
+  const isHighlighted = (word: string) => {
+    const activeWords = currentConversation?.unknownWords;
+    if (!activeWords || activeWords.length === 0) return;
+
+    return !!activeWords.find((a) => a.word === word);
   };
 
   return (
-    <View
-      style={[
-        styles.messageRoot,
-        isSentByUser ? styles.sentMessageRoot : styles.receivedMessageRoot,
-      ]}
-    >
+    <View style={[styles.messageRoot, isSentByUser ? styles.sentMessageRoot : styles.receivedMessageRoot]}>
       {!isSentByUser && (
         <View>
-          <Avatar
-            src={currentBot?.profileImage}
-            height={40}
-            width={40}
-          />
+          <Avatar src={currentBot?.profileImage} height={40} width={40} />
         </View>
       )}
-      <View
-        style={[
-          styles.messageContainer,
-          isSentByUser ? styles.sentMsgCard : styles.receivedMsgCard,
-        ]}
-      >
+      <View style={[styles.messageContainer, isSentByUser ? styles.sentMsgCard : styles.receivedMsgCard]}>
         {isWriting ? (
           <WritingAnimation />
         ) : (
           <View>
             <View style={styles.messageLineContainer}>
               {lines.map((line, index) => {
-                const words = line?.split(" ");
+                const words = line?.split(' ');
 
                 return (
                   <View key={`line-${index}`} style={styles.messageLine}>
@@ -79,7 +64,13 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
                           key={`${chatMessage?.id}-${word}-${index}`}
                           onPress={(event) => handleWordPress(event, word)}
                         >
-                          <Text style={styles.message}>{word} </Text>
+                          <Text
+                            style={
+                              isHighlighted(sanitizeWord(word)) ? styles.highlightedMessage : styles.message
+                            }
+                          >
+                            {word}{' '}
+                          </Text>
                         </Pressable>
                       );
                     })}
@@ -94,26 +85,18 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
                     <Ionicons
                       name="volume-medium"
                       size={32}
-                      color={
-                        isSentByUser
-                          ? Colors.gray["100"]
-                          : Colors.primary["500"]
-                      }
+                      color={isSentByUser ? Colors.gray['100'] : Colors.primary['500']}
                     />
                   }
                   onPress={() => {
                     Speech.speak(chatMessage.content, {
-                      language: "en",
+                      language: 'en',
                     });
                   }}
                 />
               </View>
-              <Text
-                style={
-                  isSentByUser ? styles.timestampSent : styles.timestampReceived
-                }
-              >
-                {timestamp?.toLocaleTimeString() || ""}
+              <Text style={isSentByUser ? styles.timestampSent : styles.timestampReceived}>
+                {timestamp?.toLocaleTimeString() || ''}
               </Text>
             </View>
           </View>
@@ -125,19 +108,19 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
 
 const styles = StyleSheet.create({
   messageContainer: {
-    maxWidth: "80%",
-    minWidth: "20%",
+    maxWidth: '80%',
+    minWidth: '20%',
     borderRadius: 12,
     padding: 8,
     marginVertical: 4,
   },
   messageLineContainer: {
-    flexDirection: "column",
-    flexWrap: "wrap",
+    flexDirection: 'column',
+    flexWrap: 'wrap',
   },
   messageLine: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   sentMsgCard: {
     backgroundColor: Colors.primary[600],
@@ -154,41 +137,46 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 16,
   },
   message: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
   },
+  highlightedMessage: {
+    color: Colors.yellow[600],
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   bottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 8,
   },
   timestampSent: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     fontSize: 11,
     color: Colors.gray[700],
   },
   timestampReceived: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     fontSize: 11,
     color: Colors.gray[100],
   },
   micSent: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
   },
   micReceived: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
   },
   messageRoot: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: 8,
   },
   sentMessageRoot: {
-    flexDirection: "row-reverse",
+    flexDirection: 'row-reverse',
   },
   receivedMessageRoot: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 });
 

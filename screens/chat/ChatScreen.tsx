@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 10,
-    paddingTop: 25,
     marginHorizontal: 10,
   },
   centeredView: {

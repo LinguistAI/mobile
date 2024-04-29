@@ -28,7 +28,7 @@ const Notifications = () => {
         <Animated.View
           key={notification.id}
           entering={FadeInLeft}
-          exiting={FadeOutLeft.duration(300)}
+          exiting={FadeOutLeft.duration(400)}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >

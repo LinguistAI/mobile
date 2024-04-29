@@ -14,7 +14,7 @@ const LeaderboardNavigator = () => {
   return (
     <HomeStack.Navigator initialRouteName="HomeTab">
       <HomeStack.Screen
-        name="Leaderboard"
+        name="Leaderboards"
         component={LeaderboardTabController}
         options={{ headerShown: false, headerTitle: 'Leaderboards' }}
       />

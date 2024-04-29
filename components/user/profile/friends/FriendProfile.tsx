@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Pressable,
   ActionSheetIOS,
+  ActivityIndicator,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import {
@@ -30,6 +31,7 @@ import { FriendSearchFriendshipStatus } from '../../types';
 import FriendshipCardOptionMenu from './FriendshipCardOptionMenu';
 import { ECancelMenuOption, EIncomingMenuOption, EMenuOption } from './types';
 import PopupMenu from '../../../common/PopupMenu';
+import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 
 const FriendProfile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
@@ -46,6 +48,7 @@ const FriendProfile = () => {
     data: profileInfo,
     isFetching: isProfileFetching,
     error: profileError,
+    fulfilledTimeStamp,
     isError,
     refetch: profileRefetch,
   } = useGetFriendProfileQuery(friendId); // TODO update this with friend profile
@@ -103,7 +106,18 @@ const FriendProfile = () => {
   };
 
   const renderSendRequestButton = () => {
-    return (
+    return isProfileFetching && fulfilledTimeStamp ? (
+      <View>
+        <Pressable
+          onPress={handleSendFriendRequest}
+          style={[styles.actionContainer, styles.actionSendRequest]}
+        >
+          <Ionicons name="person-add" size={22} color={Colors.gray[0]} style={styles.actionIcon} />
+          <LText style={styles.actionText}>Sending </LText>
+          <ActivityIndicator size={24} color={Colors.gray[0]} />
+        </Pressable>
+      </View>
+    ) : (
       <View>
         <Pressable
           onPress={handleSendFriendRequest}

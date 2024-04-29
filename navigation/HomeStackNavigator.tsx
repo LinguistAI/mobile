@@ -34,7 +34,7 @@ const HomeStackNavigator = () => {
         options={{ headerShown: true, headerTitle: 'Add Friend' }}
       />
       <HomeStack.Screen
-        name="FriendProfile"
+        name="FriendProfile" // TODO leader board olan farklı isimle koy
         component={FriendProfileScreen}
         options={{ headerShown: true, headerTitle: 'Add Friend' }}
       />

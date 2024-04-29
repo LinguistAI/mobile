@@ -4,29 +4,22 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
   RefreshControl,
+  Pressable,
 } from 'react-native';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
-import useUser from '../../../../hooks/useUser';
-import { useGetFriendProfileQuery, useGetProfileQuery } from '../../userApi';
+import { useRoute } from '@react-navigation/native';
+import { useGetFriendProfileQuery } from '../../userApi';
 import Colors from '../../../../theme/colors';
 import Divider from '../../../common/Divider';
-import ExperienceBar from '../../../gamification/experience/ExperienceBar';
-import ChatStreakContainer from '../../../gamification/streak/ChatStreakContainer';
-import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
-import UserInfoForm from '../../onboarding/UserInfoForm';
-import { IUserDetailedInfo } from '../../types';
 import ExperienceBarFromData from '../../../gamification/experience/ExperienceBarFromData';
 import ChatStreakView from '../../../gamification/streak/ChatStreakView';
 import LText from '../../../common/Text';
 import Title from '../../../common/Title';
-import ItemGroup from '../../../common/form/ItemGroup';
 import ReadOnlyItemGroup from '../../../common/form/ReadOnlyItemGroup';
-
-// const avatarPlaceholderImg = require('../../../../assets/profile-default.jpg');
+import { Ionicons } from '@expo/vector-icons';
+import { FriendSearchFriendshipStatus } from '../../types';
 
 const FriendProfile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
@@ -41,6 +34,8 @@ const FriendProfile = () => {
     refetch: profileRefetch,
   } = useGetFriendProfileQuery(friendId); // TODO update this with friend profile
   const [refreshing, setRefreshing] = useState(false);
+  const friendshipStatus = FriendSearchFriendshipStatus.FRIEND;
+  // const friendshipStatus = profileInfo?.friendshipStatus;
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -56,38 +51,118 @@ const FriendProfile = () => {
     }
   };
 
+  const hobbies =
+    profileInfo?.hobbies.map((h) => {
+      return {
+        value: h,
+        name: h,
+      };
+    }) || [];
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await profileRefetch();
     setRefreshing(false);
   }, [profileRefetch]);
 
+  const renderFriendsButton = () => {
+    return (
+      <View>
+        <Pressable
+          onPress={handleFriendDropDown}
+          style={[styles.actionContainer, styles.actionAlreadyFriend]}
+        >
+          <LText style={styles.actionText}>Friends</LText>
+          <Ionicons name="caret-down" size={22} color={Colors.green[800]} style={styles.actionIcon} />
+        </Pressable>
+      </View>
+    );
+  };
+
+  const renderSendRequestButton = () => {
+    return (
+      <View>
+        <Pressable onPress={handleFriendDropDown} style={[styles.actionContainer, styles.actionSendRequest]}>
+          <Ionicons name="person-add" size={22} color={Colors.gray[0]} style={styles.actionIcon} />
+          <LText style={styles.actionText}>Send Request</LText>
+        </Pressable>
+      </View>
+    );
+  };
+
+  const renderAcceptRequestButton = () => {
+    return (
+      <View>
+        <Pressable
+          onPress={handleFriendDropDown}
+          style={[styles.actionContainer, styles.actionIncomingRequest]}
+        >
+          <LText style={styles.actionText}>Accept</LText>
+          <Ionicons name="checkmark-circle" size={24} color={Colors.gray[0]} style={styles.actionIcon} />
+        </Pressable>
+      </View>
+    );
+  };
+
+  const renderPendingRequestButton = () => {
+    return (
+      <View>
+        <Pressable
+          onPress={handleFriendDropDown}
+          style={[styles.actionContainer, styles.actionPendingRequest]}
+        >
+          <LText style={styles.actionText}>Pending</LText>
+          <Ionicons name="time" size={20} color={Colors.gray[0]} style={styles.actionIcon} />
+        </Pressable>
+      </View>
+    );
+  };
+
+  const handleFriendDropDown = async () => {
+    console.log('pressed');
+  };
+
+  const renderFriendButtonBasedOnStatus = () => {
+    switch (friendshipStatus) {
+      case FriendSearchFriendshipStatus.FRIEND:
+        return renderFriendsButton();
+      case FriendSearchFriendshipStatus.NOT_EXIST:
+        return renderSendRequestButton();
+      case FriendSearchFriendshipStatus.REQUEST_RECEIVED:
+        return renderAcceptRequestButton();
+      case FriendSearchFriendshipStatus.REQUEST_SENT:
+        return renderPendingRequestButton();
+      default:
+        return renderSendRequestButton();
+    }
+  };
+
   return (
     <ScrollView
       style={styles.root}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <View style={styles.topSection}>
-        <View style={{ alignSelf: 'flex-end', margin: 15 }}></View>
-      </View>
-      <TouchableWithoutFeedback onPress={pickImage}>
-        <Image
-          source={{
-            uri: profileImage,
-          }}
-          style={styles.profileImage}
-        />
-      </TouchableWithoutFeedback>
-      <View style={styles.userInformation}>
+      <View style={styles.topSection}></View>
+      <View style={styles.profileContainer}>
+        <TouchableWithoutFeedback onPress={pickImage}>
+          <Image
+            source={{
+              uri: profileImage,
+            }}
+            style={styles.profileImage}
+          />
+        </TouchableWithoutFeedback>
         <LText style={styles.userName}>{profileInfo?.name}</LText>
+      </View>
+      <View style={styles.friendButtonContainer}>{renderFriendButtonBasedOnStatus()}</View>
+      <View style={styles.userInformation}>
         <View style={styles.rankAndStreak}>
           <ChatStreakView currentStreak={profileInfo?.currentStreak} />
-          <View style={styles.rowView}>
-            <LText style={{ fontSize: 21, fontWeight: 'bold', marginBottom: 2, marginRight: 5 }}>
-              Global Rank:
-            </LText>
-            <LText style={{ fontSize: 21, marginBottom: 2 }}>{profileInfo?.globalRank}</LText>
-          </View>
+          <LText style={{ fontSize: 25, marginBottom: 0, marginRight: 2, fontWeight: 'bold' }}>
+            {profileInfo?.globalRank}
+          </LText>
+          <Ionicons name="trophy" size={30} color={Colors.yellow[600]} style={{ marginBottom: 4 }} />
+          {/* </View> */}
         </View>
       </View>
       <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
@@ -97,20 +172,14 @@ const FriendProfile = () => {
       <View style={styles.rowView}>
         <Title size="h4">English Level</Title>
         <LText style={{ fontSize: 16 }}>
-          {profileInfo?.englishLevel == null
+          {profileInfo?.englishLevel === null
             ? capitalizeFirstLetter("Doesn't Know")
             : capitalizeFirstLetter(profileInfo?.englishLevel!)}
         </LText>
       </View>
       <Title size="h4">Hobbies</Title>
       <View style={styles.hobbyContainer}>
-        <ReadOnlyItemGroup
-          name="hobbies"
-          items={(profileInfo?.hobbies || []).map((hobby) => ({
-            value: hobby,
-            name: hobby,
-          }))}
-        />
+        <ReadOnlyItemGroup name="hobbies" items={hobbies} />
       </View>
     </ScrollView>
   );
@@ -130,17 +199,33 @@ const styles = StyleSheet.create({
   },
   topSection: {
     backgroundColor: Colors.primary[200],
-    height: 200,
+    height: 130,
     width: '100%',
   },
   profileImage: {
-    width: 200,
-    height: 200,
-    marginTop: -130,
-    borderRadius: 200 / 2,
+    width: 150,
+    height: 150,
+    // marginTop: -130,
+    borderRadius: 150 / 2,
     alignSelf: 'center',
     borderWidth: 6,
     borderColor: 'white',
+  },
+  profileContainer: {
+    marginTop: -130,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    // borderWidth: 2,
+    // borderColor: 'red',
+    padding: 20,
+    gap: 25,
+  },
+  friendButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 5,
   },
   userInformation: {
     marginVertical: 12,
@@ -148,14 +233,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    // borderWidth: 2,
-    // borderColor: 'red',
   },
   rowView: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    // marginLeft: 5,
   },
   rankAndStreak: {
     flexDirection: 'row',
@@ -164,11 +246,17 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   hobbyContainer: {
+    flex: 1,
     marginHorizontal: 0,
   },
   userName: {
     fontSize: 30,
     fontWeight: 'bold',
+    marginBottom: 40,
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   userDescription: {
     fontSize: 16,
@@ -182,14 +270,57 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  lastLogin: {
-    fontSize: 16,
-    color: Colors.gray[600],
+  actionText: {
+    color: Colors.gray[0],
+    fontWeight: 'bold',
+    fontSize: 18,
+    textShadowColor: 'rgba(0, 0, 0, 0.45)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
-  changePasswordView: {
-    width: 250,
-    height: 80,
-    alignSelf: 'center',
+  actionIcon: {
+    color: Colors.gray[0],
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.45)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+  },
+  actionContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    paddingHorizontal: 22,
+    paddingVertical: 6,
+    borderWidth: 1.5,
+    borderStyle: 'solid',
+    borderRadius: 4,
+    maxWidth: 250,
+    shadowColor: 'black',
+
+    // Shadow properties for iOS
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.9,
+    shadowRadius: 3,
+
+    // Shadow properties for Android
+    elevation: 6,
+  },
+  actionSendRequest: {
+    borderColor: Colors.primary[600],
+    backgroundColor: Colors.primary[100],
+  },
+  actionAlreadyFriend: {
+    borderColor: Colors.green[600],
+    backgroundColor: Colors.green[100],
+  },
+  actionPendingRequest: {
+    borderColor: Colors.orange[700],
+    backgroundColor: Colors.orange[400],
+  },
+  actionIncomingRequest: {
+    borderColor: Colors.purple[700],
+    backgroundColor: Colors.purple[200],
   },
 });
 export default FriendProfile;

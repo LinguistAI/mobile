@@ -29,15 +29,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     gap: 4,
-    // borderWidth: 2,
-    // borderColor: 'black',
-    padding: 5,
+    margin: 0,
+    padding: 0,
   },
   lottie: {
     width: 40,
     height: 40,
     margin: 0,
-    marginBottom: 0,
+    marginBottom: 5,
     padding: 0,
   },
   textStyle: {
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     margin: 0,
     padding: 0,
-    marginBottom: -4,
+    marginBottom: 0,
   },
 });
 

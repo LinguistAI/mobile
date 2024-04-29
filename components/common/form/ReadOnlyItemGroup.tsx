@@ -18,19 +18,17 @@ type ReadOnlyItemGroupProps = {
 };
 
 const ReadOnlyItemGroup: React.FC<ReadOnlyItemGroupProps> = ({ items, label, name, noItemsText }) => {
-  const [displayedItems, setDisplayedItems] = useState<Item[]>(items);
-
   return (
     <View>
       <View style={styles.labelContainer}>{label ? <Text style={styles.label}>{label}</Text> : null}</View>
       <ScrollView style={styles.container}>
-        {displayedItems.length === 0 ? (
+        {items.length === 0 ? (
           <View style={styles.rowContainer}>
             <Text style={styles.noItemsText}>{noItemsText}</Text>
           </View>
         ) : (
           <View style={styles.itemGroup}>
-            {displayedItems.map((item) => (
+            {items.map((item) => (
               <View key={item.value} style={[styles.item]}>
                 <Text style={styles.itemText}>{item.name} </Text>
               </View>

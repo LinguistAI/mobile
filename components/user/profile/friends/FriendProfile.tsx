@@ -84,6 +84,7 @@ const FriendProfile = () => {
     setRefreshing(false);
   }, [profileRefetch]);
 
+  // TODO SELIM burası kafayı yedi, gondermiyo requestler donuyo falan bazen oluyo
   const renderFriendsButton = () => {
     return (
       <View>
@@ -92,7 +93,11 @@ const FriendProfile = () => {
           style={[styles.actionContainer, styles.actionAlreadyFriend]}
         >
           <LText style={styles.actionText}>Friends</LText>
-          <Ionicons name="caret-down" size={22} color={Colors.green[800]} style={styles.actionIcon} />
+          {isProfileFetching && fulfilledTimeStamp ? (
+            <ActivityIndicator size={24} color={Colors.gray[0]} />
+          ) : (
+            <Ionicons name="caret-down" size={20} color={Colors.gray[0]} style={styles.actionIcon} />
+          )}
         </Pressable>
         <FriendshipCardOptionMenu
           menuVisible={menuVisible}
@@ -138,7 +143,11 @@ const FriendProfile = () => {
           style={[styles.actionContainer, styles.actionIncomingRequest]}
         >
           <LText style={styles.actionText}>Incoming Request</LText>
-          <Ionicons name="caret-down" size={24} color={Colors.gray[0]} style={styles.actionIcon} />
+          {isProfileFetching && fulfilledTimeStamp ? (
+            <ActivityIndicator size={24} color={Colors.gray[0]} />
+          ) : (
+            <Ionicons name="caret-down" size={24} color={Colors.gray[0]} style={styles.actionIcon} />
+          )}
         </Pressable>
         <PopupMenu
           menuVisible={menuVisible}
@@ -158,7 +167,11 @@ const FriendProfile = () => {
           style={[styles.actionContainer, styles.actionPendingRequest]}
         >
           <LText style={styles.actionText}>Pending</LText>
-          <Ionicons name="caret-down" size={20} color={Colors.gray[0]} style={styles.actionIcon} />
+          {isProfileFetching && fulfilledTimeStamp ? (
+            <ActivityIndicator size={24} color={Colors.gray[0]} />
+          ) : (
+            <Ionicons name="caret-down" size={24} color={Colors.gray[0]} style={styles.actionIcon} />
+          )}
         </Pressable>
         <PopupMenu
           menuVisible={menuVisible}

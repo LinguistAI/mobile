@@ -42,7 +42,9 @@ const FriendsList = () => {
 
   return (
     <View style={styles.root}>
-      <LText style={styles.infoText}>You have {friends.length} friends</LText>
+      <LText style={styles.infoText}>
+        You have {friends.length} {friends.length == 1 ? 'friend' : 'friends'}
+      </LText>
       <Divider style={styles.divider} />
       <FlatList
         numColumns={1}

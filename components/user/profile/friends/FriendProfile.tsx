@@ -10,7 +10,7 @@ import {
   Pressable,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { useGetFriendProfileQuery } from '../../userApi';
+import { useGetFriendProfileQuery, useRemoveFriendMutation } from '../../userApi';
 import Colors from '../../../../theme/colors';
 import Divider from '../../../common/Divider';
 import ExperienceBarFromData from '../../../gamification/experience/ExperienceBarFromData';
@@ -20,11 +20,16 @@ import Title from '../../../common/Title';
 import ReadOnlyItemGroup from '../../../common/form/ReadOnlyItemGroup';
 import { Ionicons } from '@expo/vector-icons';
 import { FriendSearchFriendshipStatus } from '../../types';
+import PopupMenu from './FriendshipCardOptionMenu';
+import { EMenuOption } from './types';
 
 const FriendProfile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
   const route = useRoute();
   const { friendId } = route.params;
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [removeFriend] = useRemoveFriendMutation();
 
   const {
     data: profileInfo,
@@ -69,12 +74,19 @@ const FriendProfile = () => {
     return (
       <View>
         <Pressable
-          onPress={handleFriendDropDown}
+          onPress={() => setMenuVisible(true)}
           style={[styles.actionContainer, styles.actionAlreadyFriend]}
         >
           <LText style={styles.actionText}>Friends</LText>
           <Ionicons name="caret-down" size={22} color={Colors.green[800]} style={styles.actionIcon} />
         </Pressable>
+        <PopupMenu
+          menuVisible={menuVisible}
+          setMenuVisible={setMenuVisible}
+          triggerOption={triggerOption}
+          menuOptions={getMenuOptions()}
+        />
+        <View style={styles.menuContainer}></View>
       </View>
     );
   };
@@ -118,9 +130,7 @@ const FriendProfile = () => {
     );
   };
 
-  const handleFriendDropDown = async () => {
-    console.log('pressed');
-  };
+  const handleFriendDropDown = () => {};
 
   const renderFriendButtonBasedOnStatus = () => {
     switch (friendshipStatus) {
@@ -135,6 +145,27 @@ const FriendProfile = () => {
       default:
         return renderSendRequestButton();
     }
+  };
+
+  const triggerOption = (option: EMenuOption) => {
+    switch (option) {
+      case EMenuOption.REMOVE:
+        removeFriend({ friendId });
+        break;
+      default:
+        break;
+    }
+    setMenuVisible(false);
+  };
+
+  const getMenuOptions = () => {
+    return [
+      {
+        label: EMenuOption.REMOVE,
+        value: EMenuOption.REMOVE,
+        icon: <Ionicons name="trash-outline" size={18} color={Colors.red[600]} />,
+      },
+    ];
   };
 
   return (
@@ -321,6 +352,11 @@ const styles = StyleSheet.create({
   actionIncomingRequest: {
     borderColor: Colors.purple[700],
     backgroundColor: Colors.purple[200],
+  },
+  menuContainer: {
+    alignSelf: 'flex-end',
+    paddingHorizontal: 5,
+    paddingBottom: 5,
   },
 });
 export default FriendProfile;

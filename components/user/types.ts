@@ -106,7 +106,7 @@ export type QProfile = {
 
 export type FriendProfile = {
   id: string;
-  name: string | null;
+  username: string | null;
   birthDate: string | null;
   englishLevel: string | null;
   hobbies: string[];

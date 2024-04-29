@@ -8,9 +8,16 @@ import {
   View,
   RefreshControl,
   Pressable,
+  ActionSheetIOS,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { useGetFriendProfileQuery, useRemoveFriendMutation } from '../../userApi';
+import {
+  useAcceptFriendRequestMutation,
+  useGetFriendProfileQuery,
+  useRejectFriendRequestMutation,
+  useRemoveFriendMutation,
+  useSendFriendRequestMutation,
+} from '../../userApi';
 import Colors from '../../../../theme/colors';
 import Divider from '../../../common/Divider';
 import ExperienceBarFromData from '../../../gamification/experience/ExperienceBarFromData';
@@ -20,8 +27,9 @@ import Title from '../../../common/Title';
 import ReadOnlyItemGroup from '../../../common/form/ReadOnlyItemGroup';
 import { Ionicons } from '@expo/vector-icons';
 import { FriendSearchFriendshipStatus } from '../../types';
-import PopupMenu from './FriendshipCardOptionMenu';
-import { EMenuOption } from './types';
+import FriendshipCardOptionMenu from './FriendshipCardOptionMenu';
+import { ECancelMenuOption, EIncomingMenuOption, EMenuOption } from './types';
+import PopupMenu from '../../../common/PopupMenu';
 
 const FriendProfile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
@@ -30,6 +38,9 @@ const FriendProfile = () => {
 
   const [menuVisible, setMenuVisible] = useState(false);
   const [removeFriend] = useRemoveFriendMutation();
+  const [sendRequest] = useSendFriendRequestMutation();
+  const [acceptRequest] = useAcceptFriendRequestMutation();
+  const [rejectRequest] = useRejectFriendRequestMutation();
 
   const {
     data: profileInfo,
@@ -39,8 +50,8 @@ const FriendProfile = () => {
     refetch: profileRefetch,
   } = useGetFriendProfileQuery(friendId); // TODO update this with friend profile
   const [refreshing, setRefreshing] = useState(false);
-  const friendshipStatus = FriendSearchFriendshipStatus.FRIEND;
-  // const friendshipStatus = profileInfo?.friendshipStatus;
+  // const friendshipStatus = FriendSearchFriendshipStatus.FRIEND;
+  const friendshipStatus = profileInfo?.friendshipStatus;
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -80,7 +91,7 @@ const FriendProfile = () => {
           <LText style={styles.actionText}>Friends</LText>
           <Ionicons name="caret-down" size={22} color={Colors.green[800]} style={styles.actionIcon} />
         </Pressable>
-        <PopupMenu
+        <FriendshipCardOptionMenu
           menuVisible={menuVisible}
           setMenuVisible={setMenuVisible}
           triggerOption={triggerOption}
@@ -94,7 +105,10 @@ const FriendProfile = () => {
   const renderSendRequestButton = () => {
     return (
       <View>
-        <Pressable onPress={handleFriendDropDown} style={[styles.actionContainer, styles.actionSendRequest]}>
+        <Pressable
+          onPress={handleSendFriendRequest}
+          style={[styles.actionContainer, styles.actionSendRequest]}
+        >
           <Ionicons name="person-add" size={22} color={Colors.gray[0]} style={styles.actionIcon} />
           <LText style={styles.actionText}>Send Request</LText>
         </Pressable>
@@ -102,16 +116,22 @@ const FriendProfile = () => {
     );
   };
 
-  const renderAcceptRequestButton = () => {
+  const renderIncomingRequestButton = () => {
     return (
       <View>
         <Pressable
-          onPress={handleFriendDropDown}
+          onPress={() => setMenuVisible(true)}
           style={[styles.actionContainer, styles.actionIncomingRequest]}
         >
-          <LText style={styles.actionText}>Accept</LText>
-          <Ionicons name="checkmark-circle" size={24} color={Colors.gray[0]} style={styles.actionIcon} />
+          <LText style={styles.actionText}>Incoming Request</LText>
+          <Ionicons name="caret-down" size={24} color={Colors.gray[0]} style={styles.actionIcon} />
         </Pressable>
+        <PopupMenu
+          menuVisible={menuVisible}
+          setMenuVisible={setMenuVisible}
+          triggerOption={triggerOptionIncomingRequest}
+          menuOptions={getMenuOptionsIncomingRequest()}
+        />
       </View>
     );
   };
@@ -120,18 +140,29 @@ const FriendProfile = () => {
     return (
       <View>
         <Pressable
-          onPress={handleFriendDropDown}
+          onPress={() => setMenuVisible(true)}
           style={[styles.actionContainer, styles.actionPendingRequest]}
         >
           <LText style={styles.actionText}>Pending</LText>
-          <Ionicons name="time" size={20} color={Colors.gray[0]} style={styles.actionIcon} />
+          <Ionicons name="caret-down" size={20} color={Colors.gray[0]} style={styles.actionIcon} />
         </Pressable>
+        <PopupMenu
+          menuVisible={menuVisible}
+          setMenuVisible={setMenuVisible}
+          triggerOption={triggerOptionCancelRequest}
+          menuOptions={getMenuOptionsCancel()}
+        />
       </View>
     );
   };
 
-  const handleFriendDropDown = () => {};
-
+  const handleSendFriendRequest = () => {
+    sendRequest({ friendId });
+  };
+  // TODO
+  // add all Actio
+  // after completing the actions update the UI accordingly
+  // friend search incoming request no icon fix it
   const renderFriendButtonBasedOnStatus = () => {
     switch (friendshipStatus) {
       case FriendSearchFriendshipStatus.FRIEND:
@@ -139,7 +170,7 @@ const FriendProfile = () => {
       case FriendSearchFriendshipStatus.NOT_EXIST:
         return renderSendRequestButton();
       case FriendSearchFriendshipStatus.REQUEST_RECEIVED:
-        return renderAcceptRequestButton();
+        return renderIncomingRequestButton();
       case FriendSearchFriendshipStatus.REQUEST_SENT:
         return renderPendingRequestButton();
       default:
@@ -158,12 +189,62 @@ const FriendProfile = () => {
     setMenuVisible(false);
   };
 
+  const triggerOptionIncomingRequest = (option: EIncomingMenuOption) => {
+    switch (option) {
+      case EIncomingMenuOption.ACCEPT:
+        acceptRequest({ friendId });
+        break;
+      case EIncomingMenuOption.REJECT:
+        rejectRequest({ friendId });
+        break;
+      default:
+        break;
+    }
+    setMenuVisible(false);
+  };
+
+  const triggerOptionCancelRequest = (option: ECancelMenuOption) => {
+    switch (option) {
+      case ECancelMenuOption.CANCEL:
+        rejectRequest({ friendId });
+        break;
+      default:
+        break;
+    }
+    setMenuVisible(false);
+  };
+
   const getMenuOptions = () => {
     return [
       {
         label: EMenuOption.REMOVE,
         value: EMenuOption.REMOVE,
         icon: <Ionicons name="trash-outline" size={18} color={Colors.red[600]} />,
+      },
+    ];
+  };
+
+  const getMenuOptionsCancel = () => {
+    return [
+      {
+        label: ECancelMenuOption.CANCEL,
+        value: ECancelMenuOption.CANCEL,
+        icon: <Ionicons name="close" size={18} color={Colors.red[600]} />,
+      },
+    ];
+  };
+
+  const getMenuOptionsIncomingRequest = () => {
+    return [
+      {
+        label: EIncomingMenuOption.ACCEPT,
+        value: EIncomingMenuOption.ACCEPT,
+        icon: <Ionicons name="checkmark-circle" size={18} color={Colors.green[600]} />,
+      },
+      {
+        label: EIncomingMenuOption.REJECT,
+        value: EIncomingMenuOption.REJECT,
+        icon: <Ionicons name="close-circle" size={18} color={Colors.red[600]} />,
       },
     ];
   };
@@ -183,17 +264,20 @@ const FriendProfile = () => {
             style={styles.profileImage}
           />
         </TouchableWithoutFeedback>
-        <LText style={styles.userName}>{profileInfo?.name}</LText>
+        <LText style={styles.userName}>{profileInfo?.username}</LText>
       </View>
       <View style={styles.friendButtonContainer}>{renderFriendButtonBasedOnStatus()}</View>
       <View style={styles.userInformation}>
         <View style={styles.rankAndStreak}>
           <ChatStreakView currentStreak={profileInfo?.currentStreak} />
-          <LText style={{ fontSize: 25, marginBottom: 0, marginRight: 2, fontWeight: 'bold' }}>
+          <LText style={{ fontSize: 25, marginBottom: 0, marginRight: -2, fontWeight: 'bold' }}>
             {profileInfo?.globalRank}
           </LText>
-          <Ionicons name="trophy" size={30} color={Colors.yellow[600]} style={{ marginBottom: 4 }} />
-          {/* </View> */}
+          {/* <Ionicons name="trophy" size={30} color={Colors.yellow[600]} style={{ marginBottom: 4 }} /> */}
+          <Image
+            source={require('../../../../assets/gifs/icons8-trophy.gif')}
+            style={{ width: 40, height: 40 }}
+          />
         </View>
       </View>
       <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
@@ -230,12 +314,12 @@ const styles = StyleSheet.create({
   },
   topSection: {
     backgroundColor: Colors.primary[200],
-    height: 130,
+    height: 100,
     width: '100%',
   },
   profileImage: {
-    width: 150,
-    height: 150,
+    width: 130,
+    height: 130,
     // marginTop: -130,
     borderRadius: 150 / 2,
     alignSelf: 'center',
@@ -243,14 +327,12 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   profileContainer: {
-    marginTop: -130,
+    marginTop: -100,
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
-    // borderWidth: 2,
-    // borderColor: 'red',
     padding: 20,
-    gap: 25,
+    gap: 14,
   },
   friendButtonContainer: {
     flexDirection: 'row',
@@ -281,13 +363,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   userName: {
-    fontSize: 30,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 40,
+    marginBottom: 55,
     color: 'white',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
+    maxWidth: '90%',
   },
   userDescription: {
     fontSize: 16,

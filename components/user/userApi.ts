@@ -19,7 +19,7 @@ import { RUserQuests } from '../quest/types';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -63,7 +63,10 @@ export const userApi = createApi({
         method: 'DELETE',
         body: friendReq,
       }),
-      invalidatesTags: ['Friend'],
+      invalidatesTags: (result, error, request) => [
+        'Friend',
+        { type: 'FriendProfileInfo', id: request.friendId },
+      ],
     }),
     sendFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
@@ -71,7 +74,10 @@ export const userApi = createApi({
         body: friendReq,
         method: 'POST',
       }),
-      invalidatesTags: ['FriendRequest'],
+      invalidatesTags: (result, error, request) => [
+        'FriendRequest',
+        { type: 'FriendProfileInfo', id: request.friendId },
+      ],
     }),
     acceptFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
@@ -79,7 +85,11 @@ export const userApi = createApi({
         method: 'POST',
         body: friendReq,
       }),
-      invalidatesTags: ['FriendRequest', 'Friend'],
+      invalidatesTags: (result, error, request) => [
+        'FriendRequest',
+        'Friend',
+        { type: 'FriendProfileInfo', id: request.friendId },
+      ],
     }),
     rejectFriendRequest: builder.mutation<void, QFriendRequest>({
       query: (friendReq) => ({
@@ -87,7 +97,10 @@ export const userApi = createApi({
         method: 'POST',
         body: friendReq,
       }),
-      invalidatesTags: ['FriendRequest'],
+      invalidatesTags: (result, error, request) => [
+        'FriendRequest',
+        { type: 'FriendProfileInfo', id: request.friendId },
+      ],
     }),
     getGlobalLeaderboard: builder.query<RLeaderboard, QLeaderboard>({
       query: (paginationParams) => ({
@@ -123,6 +136,7 @@ export const userApi = createApi({
         method: 'GET',
         url: `/profile/${userId}`,
       }),
+      providesTags: (result, error, userId) => [{ type: 'FriendProfileInfo', id: userId }],
     }),
   }),
 });

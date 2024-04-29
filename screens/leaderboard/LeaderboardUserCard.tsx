@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View, Image, ViewStyle } from 'react-native';
+import { StyleSheet, Text, View, Image, ViewStyle, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { RFriendship, RLeaderboardUser } from '../../components/user/types';
 import React from 'react';
 import Card from '../../components/common/Card';
 import Colors from '../../theme/colors';
 import LText from '../../components/common/Text';
+import { useNavigation } from '@react-navigation/native';
 
 interface LeaderboardUserCardProps {
   leaderboardUser: RLeaderboardUser;
@@ -13,6 +14,11 @@ interface LeaderboardUserCardProps {
 
 const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserCardProps) => {
   const { user, experience: xp, ranking } = leaderboardUser;
+  const navigation = useNavigation();
+
+  const onPressFriendProfile = () => {
+    navigation.navigate('FriendProfile', { friendId: user.id });
+  };
 
   const renderRankingImage = () => {
     if (ranking === 1) {
@@ -27,25 +33,27 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
   };
 
   return (
-    <Card
-      style={
-        user.username === loggedInUser
-          ? { ...styles.highlightedCell, ...styles.contentRoot }
-          : styles.contentRoot
-      }
-    >
-      <View>
-        <View style={styles.mainInfoContainer}>
+    <Pressable onPress={onPressFriendProfile}>
+      <Card
+        style={
+          user.username === loggedInUser
+            ? { ...styles.highlightedCell, ...styles.contentRoot }
+            : styles.contentRoot
+        }
+      >
+        <View>
           <View style={styles.mainInfoContainer}>
-            {ranking <= 3 && <Image source={renderRankingImage()} style={styles.rankImage} />}
-            {ranking > 3 && <LText style={styles.rankingInfo}>{ranking}.</LText>}
+            <View style={styles.mainInfoContainer}>
+              {ranking <= 3 && <Image source={renderRankingImage()} style={styles.rankImage} />}
+              {ranking > 3 && <LText style={styles.rankingInfo}>{ranking}.</LText>}
 
-            <LText style={styles.mainInfo}>{user.username}</LText>
+              <LText style={styles.mainInfo}>{user.username}</LText>
+            </View>
+            <LText style={styles.subinfo}>{xp} XP</LText>
           </View>
-          <LText style={styles.subinfo}>{xp} XP</LText>
         </View>
-      </View>
-    </Card>
+      </Card>
+    </Pressable>
   );
 };
 

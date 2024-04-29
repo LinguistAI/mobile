@@ -7,6 +7,7 @@ import QuestsNavigation from './QuestsNavigation';
 import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
 import LeaderboardTabController from '../screens/leaderboard/LeaderBoardTabController';
+import LeaderboardNavigator from './LeaderboardNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,7 +51,7 @@ const BottomNavigation = () => {
       />
       <Tab.Screen
         name="Leaderboard"
-        component={LeaderboardTabController}
+        component={LeaderboardNavigator}
         options={{
           tabBarIcon: ({ color, size }) => <IonIcons name="podium-outline" size={size} color={color} />,
         }}

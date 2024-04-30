@@ -7,11 +7,14 @@ import LText from '../../common/Text';
 
 interface ChatStreakButtonProps {
   currentStreak: number | undefined;
+  showTitle?: boolean;
 }
 
-const ChatStreakView = ({ currentStreak }: ChatStreakButtonProps) => {
+const ChatStreakView = ({ currentStreak, showTitle = false }: ChatStreakButtonProps) => {
   return (
-    <View style={styles.root}>
+    <View style={styles.streakContainer}>
+      <LText style={styles.textStyle}>Streak:</LText>
+      {/* <View style={styles.streakContainer}> */}
       <LText style={styles.textStyle}>{currentStreak}</LText>
       <AnimatedLottieView
         style={styles.lottie}
@@ -19,12 +22,21 @@ const ChatStreakView = ({ currentStreak }: ChatStreakButtonProps) => {
         loop
         source={require('../../../assets/lottie/streak/streakFireAnim.json')}
       />
+      {/* </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    gap: 4,
+    margin: 0,
+    padding: 0,
+  },
+  streakContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'center',
@@ -33,15 +45,15 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   lottie: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     margin: 0,
     marginBottom: 5,
     padding: 0,
   },
   textStyle: {
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 20,
     margin: 0,
     padding: 0,
     marginBottom: 0,

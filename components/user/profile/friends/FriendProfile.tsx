@@ -330,14 +330,17 @@ const FriendProfile = () => {
       <View style={styles.userInformation}>
         <View style={styles.rankAndStreak}>
           <ChatStreakView currentStreak={profileInfo?.currentStreak} />
-          <View style={[styles.rowView, { gap: 8 }]}>
-            <LText style={{ fontSize: 25, marginBottom: 0, marginRight: -2, fontWeight: 'bold' }}>
-              {profileInfo?.globalRank}
-            </LText>
-            <Image
-              source={require('../../../../assets/gifs/icons8-trophy.gif')}
-              style={{ width: 40, height: 40 }}
-            />
+          <View>
+            <View style={[styles.rowView, { gap: 8 }]}>
+              <LText style={{ fontSize: 20, marginBottom: 0, fontWeight: 'bold' }}>Rank:</LText>
+              <LText style={{ fontSize: 20, marginBottom: 0, marginRight: -2, fontWeight: 'bold' }}>
+                {profileInfo?.globalRank}
+              </LText>
+              <Image
+                source={require('../../../../assets/gifs/icons8-trophy.gif')}
+                style={{ width: 35, height: 35 }}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -439,7 +442,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'center',
-    gap: 55,
+    gap: 35,
   },
   hobbyContainer: {
     flex: 1,

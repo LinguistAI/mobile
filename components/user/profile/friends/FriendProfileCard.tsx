@@ -29,27 +29,15 @@ const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
 
   return (
     <Card>
-      <View style={styles.contentRoot}>
-        <View style={styles.infoContainer}>
-          <View style={styles.mainInfoContainer}>
-            <LText style={styles.mainInfo}>{friendUsername}</LText>
-            <Pressable
-              onPress={onPressFriendProfile}
-              style={[styles.actionContainer, styles.removeActionContainer]}
-            >
-              <ActionIcon
-                onPress={onPressFriendProfile}
-                icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
-              />
-              {/* <ActionIcon
-                onPress={() => onRemoveFriend(friendId)}
-                icon={<Ionicons name="close-circle-outline" size={22} color={Colors.red[500]} />}
-              /> */}
-              <LText style={styles.actionText}>Remove</LText>
-            </Pressable>
-          </View>
+      <Pressable onPress={onPressFriendProfile}>
+        <View style={styles.actionContainer}>
+          <LText style={styles.mainInfo}>{friendUsername}</LText>
+          <ActionIcon
+            onPress={onPressFriendProfile}
+            icon={<Ionicons name="caret-forward" size={30} color={Colors.primary[500]} />}
+          />
         </View>
-      </View>
+      </Pressable>
     </Card>
   );
 };
@@ -57,22 +45,10 @@ const FriendProfileCard = ({ friendship }: FriendProfileCardProps) => {
 const styles = StyleSheet.create({
   contentRoot: {
     padding: 10,
-  },
-  infoContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-  },
-  subInfoContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  mainInfoContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
+    gap: 18,
   },
   mainInfo: {
     fontWeight: 'bold',
@@ -87,17 +63,11 @@ const styles = StyleSheet.create({
   actionContainer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 1,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 5,
-    paddingVertical: 4,
-    borderWidth: 1,
-    borderStyle: 'solid',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     borderRadius: 4,
-  },
-  removeActionContainer: {
-    borderColor: Colors.red[600],
-    backgroundColor: Colors.red[0],
   },
   actionText: {
     color: Colors.red[600],

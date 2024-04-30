@@ -56,7 +56,7 @@ const FriendRequestsScreen = () => {
   }
 
   return (
-    <View style={{ paddingTop: 8 }}>
+    <View style={{ paddingTop: 8, flex: 1 }}>
       <Title size={'h4'}>Received</Title>
       <FlatList
         contentContainerStyle={styles.listContentContainer}
@@ -67,12 +67,7 @@ const FriendRequestsScreen = () => {
           <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}
           >
-            <CenteredFeedback
-              message="You don't have any incoming friendship requests, stay tuned for upcoming requests!"
-              size={16}
-            >
-              <Ionicons name="file-tray-sharp" size={30} color={Colors.gray[600]} />
-            </CenteredFeedback>
+            <CenteredFeedback message="Stay tuned for upcoming requests!" size={16} />
           </View>
         }
       />
@@ -87,9 +82,7 @@ const FriendRequestsScreen = () => {
           <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1, height: '100%' }}
           >
-            <CenteredFeedback message="You don't have any pending requests" size={16}>
-              <Ionicons name="file-tray-sharp" size={30} color={Colors.gray[600]} />
-            </CenteredFeedback>
+            <CenteredFeedback message="You don't have any pending requests!" size={16} />
           </View>
         }
       />
@@ -99,6 +92,7 @@ const FriendRequestsScreen = () => {
 
 const styles = StyleSheet.create({
   listContentContainer: {
+    flexGrow: 1,
     gap: 10,
     padding: 10,
   },

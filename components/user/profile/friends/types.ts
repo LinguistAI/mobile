@@ -6,7 +6,7 @@ export enum EMenuOption {
 
 export type EMenuOptionObject = {
   label: string;
-  value: any; // TODO test TODO cannot display myself as friend
+  value: any; //TODO cannot display myself as friend
   icon: React.ReactElement;
 };
 

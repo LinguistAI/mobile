@@ -78,6 +78,15 @@ const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProf
         </View>
       );
     }
+
+    if (friendshipStatus === FriendSearchFriendshipStatus.REQUEST_RECEIVED) {
+      return (
+        <View style={{ display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center' }}>
+          <Ionicons name="stopwatch-outline" color={Colors.green[500]} size={24} />
+          <Text style={styles.requestSent}>Incoming Request</Text>
+        </View>
+      );
+    }
   };
 
   return (
@@ -100,22 +109,16 @@ const styles = StyleSheet.create({
   contentRoot: {
     padding: 10,
     width: '100%',
-    // borderWidth: 2,
-    // borderColor: 'green',
   },
   container: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // borderWidth: 2,
-    // borderColor: 'red',
   },
   infoContainer: {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    // borderWidth: 2,
-    // borderColor: 'green',
   },
   subInfoContainer: {
     display: 'flex',

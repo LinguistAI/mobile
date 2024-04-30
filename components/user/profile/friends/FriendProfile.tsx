@@ -51,9 +51,8 @@ const FriendProfile = () => {
     fulfilledTimeStamp,
     isError,
     refetch: profileRefetch,
-  } = useGetFriendProfileQuery(friendId); // TODO update this with friend profile
+  } = useGetFriendProfileQuery(friendId);
   const [refreshing, setRefreshing] = useState(false);
-  // const friendshipStatus = FriendSearchFriendshipStatus.FRIEND;
   const friendshipStatus = profileInfo?.friendshipStatus;
 
   const pickImage = async () => {

@@ -10,6 +10,7 @@ import { getCurrentLevelTotalExperience, getProgressRatio } from './utils';
 import { BAR_HEIGHT, BAR_WIDTH } from './constants';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import { IUserExperience } from '../types';
+import LText from '../../common/Text';
 
 interface XPBarProps {
   data: IUserExperience | undefined;
@@ -35,14 +36,14 @@ const ExperienceBarFromData = ({ data, isFetching: isExperienceFetching, isError
   };
 
   const renderCurrentLevel = () => {
-    return <Text style={styles.levelText}>{data?.level ? `Level ${data.level}` : 'Level 1'}</Text>;
+    return <LText style={styles.levelText}>{data?.level ? `Level ${data.level}` : 'Level 1'}</LText>;
   };
 
   const renderCurrentExperience = () => {
     return (
-      <Text style={styles.xpText}>
+      <LText style={styles.xpText}>
         {data.currentExperience} / {getCurrentLevelTotalExperience(data.totalExperienceToNextLevel)}
-      </Text>
+      </LText>
     );
   };
 
@@ -74,12 +75,13 @@ const styles = StyleSheet.create({
   },
   levelText: {
     marginBottom: 10,
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: 'bold',
     color: Colors.primary[600],
   },
   xpText: {
-    fontSize: 16,
+    fontSize: 15,
+    fontWeight: '300',
     color: Colors.primary[600],
   },
 });

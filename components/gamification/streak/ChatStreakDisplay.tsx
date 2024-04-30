@@ -3,9 +3,19 @@ import LottieView from 'lottie-react-native';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import Badge from '../../common/Badge';
 import Colors from '../../../theme/colors';
-import { getCurrentDayOfWeek, getDistanceBetweenTodayAndDay, getLastOneWeek } from '../../../utils/date.utils';
+import {
+  getCurrentDayOfWeek,
+  getDistanceBetweenTodayAndDay,
+  getLastOneWeek,
+} from '../../../utils/date.utils';
 
-const StreakDisplay = ({ currentStreak, highestStreak }: { currentStreak: number; highestStreak: number }) => {
+const StreakDisplay = ({
+  currentStreak,
+  highestStreak,
+}: {
+  currentStreak: number;
+  highestStreak: number;
+}) => {
   const lastWeek = getLastOneWeek();
   const currentDay = getCurrentDayOfWeek();
   const streakText =
@@ -55,7 +65,7 @@ const StreakDisplay = ({ currentStreak, highestStreak }: { currentStreak: number
             return (
               <Badge
                 key={day.id}
-                label={day.letter}
+                label={day.short}
                 backgroundColor={backgroundColor}
                 textColor="#000"
                 marked={isStreakDay}
@@ -120,6 +130,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginTop: 20,
     gap: 5,
+    paddingHorizontal: 15,
   },
 });
 

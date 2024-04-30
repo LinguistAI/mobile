@@ -2,6 +2,8 @@ import AnimatedLottieView from 'lottie-react-native';
 import ActionButton from '../../common/ActionButton';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
+import React from 'react';
+import LText from '../../common/Text';
 
 interface ChatStreakButtonProps {
   currentStreak: number;
@@ -11,7 +13,7 @@ interface ChatStreakButtonProps {
 const ChatStreakButton = ({ currentStreak, handleOpenModal }: ChatStreakButtonProps) => {
   return (
     <ActionButton
-      borderColor={Colors.blue[400]}
+      bgColor={Colors.primary[0]}
       icon={
         <AnimatedLottieView
           style={styles.lottie}
@@ -23,7 +25,7 @@ const ChatStreakButton = ({ currentStreak, handleOpenModal }: ChatStreakButtonPr
       onPress={handleOpenModal}
       title={
         <View style={styles.lottieContainer}>
-          <Text style={{ fontWeight: 'bold' }}>Streak: {currentStreak}</Text>
+          <LText style={{ fontWeight: 'bold' }}>Streak: {currentStreak}</LText>
         </View>
       }
     />
@@ -39,8 +41,8 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   lottie: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
   },
 });
 

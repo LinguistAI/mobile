@@ -1,9 +1,9 @@
 import { StyleSheet, View, Image } from 'react-native';
-import Colors from "../../theme/colors";
-import { useGetTransactionQuery } from "./api";
-import FetchError from "../common/feedback/FetchError";
-import CenteredFeedback from "../common/feedback/CenteredFeedback";
-import LText from "../common/Text";
+import Colors from '../../theme/colors';
+import { useGetTransactionQuery } from './api';
+import FetchError from '../common/feedback/FetchError';
+import CenteredFeedback from '../common/feedback/CenteredFeedback';
+import LText from '../common/Text';
 
 const UserGems = () => {
   const { data, isError } = useGetTransactionQuery();
@@ -13,7 +13,7 @@ const UserGems = () => {
   }
 
   if (!data) {
-    return <CenteredFeedback message="Cannot access gems info." />;
+    return <CenteredFeedback message='Cannot access gems info.' />;
   }
 
   return (

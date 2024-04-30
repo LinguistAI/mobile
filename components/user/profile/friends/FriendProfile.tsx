@@ -347,15 +347,21 @@ const FriendProfile = () => {
       <Divider />
       <View style={styles.rowView}>
         <Title size="h4">English Level</Title>
-        <LText style={{ fontSize: 16 }}>
+        <LText size={16}>
           {profileInfo?.englishLevel === null
             ? capitalizeFirstLetter("Doesn't Know")
             : capitalizeFirstLetter(profileInfo?.englishLevel!)}
         </LText>
       </View>
-      <Title size="h4">Hobbies</Title>
-      <View style={styles.hobbyContainer}>
-        <ReadOnlyItemGroup name="hobbies" items={hobbies} />
+      <View style={hobbies.length === 0 ? styles.rowView : null}>
+        <Title size="h4">Hobbies</Title>
+        {hobbies.length === 0 ? (
+          <LText size={16}>No hobbies :(</LText>
+        ) : (
+          <View style={styles.hobbyContainer}>
+            <ReadOnlyItemGroup name="hobbies" items={hobbies} />
+          </View>
+        )}
       </View>
       <View>
         <WordLearningStatusBarChartFromData
@@ -448,18 +454,6 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
     maxWidth: '90%',
-  },
-  userDescription: {
-    fontSize: 16,
-  },
-  activityContainer: {
-    marginVertical: 32,
-    alignItems: 'center',
-    gap: 8,
-  },
-  activityTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
   },
   actionText: {
     color: Colors.gray[0],

@@ -23,6 +23,11 @@ const LeaderboardNavigator = () => {
         component={FriendProfileScreen}
         options={{ headerShown: true, headerTitle: 'Profile' }}
       />
+      <HomeStack.Screen
+        name="ProfileFromLeaderboard"
+        component={ProfileScreen}
+        options={{ headerShown: true, headerTitle: 'Profile' }}
+      />
     </HomeStack.Navigator>
   );
 };

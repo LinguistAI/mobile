@@ -17,7 +17,11 @@ const LeaderboardUserCard = ({ leaderboardUser, loggedInUser }: LeaderboardUserC
   const navigation = useNavigation();
 
   const onPressFriendProfile = () => {
-    navigation.navigate('FriendProfileFromLeaderboard', { friendId: user.id });
+    if (user.username === loggedInUser) {
+      navigation.navigate('ProfileFromLeaderboard');
+    } else {
+      navigation.navigate('FriendProfileFromLeaderboard', { friendId: user.id });
+    }
   };
 
   const renderRankingImage = () => {

@@ -32,6 +32,16 @@ import FriendshipCardOptionMenu from './FriendshipCardOptionMenu';
 import { ECancelMenuOption, EIncomingMenuOption, EMenuOption } from './types';
 import PopupMenu from '../../../common/PopupMenu';
 import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
+import { DEFAULT_DAY_LIMIT, DEFAULT_SORT, STAT_POLLING_INTERVAL } from '../../../stats/constants';
+import {
+  useGetLoggedDatesForUserQuery,
+  useGetLoggedDatesQuery,
+  useGetWordLearningStatsForUserQuery,
+  useGetWordLearningStatsQuery,
+  useLazyGetWordLearningStatsForUserQuery,
+} from '../../../stats/userStatsApi';
+import WordLearningStatusBarChartFromData from '../../../stats/WordLearningStatusBarChartFromData';
+import LoggedDatesCalendarFromData from '../../../stats/LoggedDatesCalendarFromData';
 
 const FriendProfile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
@@ -52,6 +62,34 @@ const FriendProfile = () => {
     isError,
     refetch: profileRefetch,
   } = useGetFriendProfileQuery(friendId);
+  const {
+    data: wordLearningStats,
+    isLoading: isLoadingWordLearningStats,
+    isError: isErrorWordLearningStats,
+    refetch: refetchWordLearningStat,
+    fulfilledTimeStamp: fulfilledTimeStampWordLearningStats,
+  } = useGetWordLearningStatsForUserQuery(friendId, { pollingInterval: STAT_POLLING_INTERVAL });
+
+  const daysLimit = DEFAULT_DAY_LIMIT;
+  const {
+    data: loggedDates,
+    isLoading: isLoadingLoggedDates,
+    isError: isErrorLoggedDates,
+    fulfilledTimeStamp: fulfilledTimeStampLoggedDates,
+    refetch: refetchLoggedDates,
+  } = useGetLoggedDatesForUserQuery(
+    {
+      userId: friendId,
+      statParams: {
+        daysLimit: daysLimit,
+        sort: DEFAULT_SORT,
+      },
+    },
+    {
+      pollingInterval: STAT_POLLING_INTERVAL,
+    }
+  );
+
   const [refreshing, setRefreshing] = useState(false);
   const friendshipStatus = profileInfo?.friendshipStatus;
 
@@ -185,10 +223,6 @@ const FriendProfile = () => {
   const handleSendFriendRequest = () => {
     sendRequest({ friendId });
   };
-  // TODO
-  // add all Actio
-  // after completing the actions update the UI accordingly
-  // friend search incoming request no icon fix it
   const renderFriendButtonBasedOnStatus = () => {
     switch (friendshipStatus) {
       case FriendSearchFriendshipStatus.FRIEND:
@@ -296,14 +330,15 @@ const FriendProfile = () => {
       <View style={styles.userInformation}>
         <View style={styles.rankAndStreak}>
           <ChatStreakView currentStreak={profileInfo?.currentStreak} />
-          <LText style={{ fontSize: 25, marginBottom: 0, marginRight: -2, fontWeight: 'bold' }}>
-            {profileInfo?.globalRank}
-          </LText>
-          {/* <Ionicons name="trophy" size={30} color={Colors.yellow[600]} style={{ marginBottom: 4 }} /> */}
-          <Image
-            source={require('../../../../assets/gifs/icons8-trophy.gif')}
-            style={{ width: 40, height: 40 }}
-          />
+          <View style={[styles.rowView, { gap: 8 }]}>
+            <LText style={{ fontSize: 25, marginBottom: 0, marginRight: -2, fontWeight: 'bold' }}>
+              {profileInfo?.globalRank}
+            </LText>
+            <Image
+              source={require('../../../../assets/gifs/icons8-trophy.gif')}
+              style={{ width: 40, height: 40 }}
+            />
+          </View>
         </View>
       </View>
       <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
@@ -321,6 +356,23 @@ const FriendProfile = () => {
       <Title size="h4">Hobbies</Title>
       <View style={styles.hobbyContainer}>
         <ReadOnlyItemGroup name="hobbies" items={hobbies} />
+      </View>
+      <View>
+        <WordLearningStatusBarChartFromData
+          data={wordLearningStats}
+          isLoading={isLoadingWordLearningStats}
+          isError={isErrorWordLearningStats}
+          fulfilledTimeStamp={fulfilledTimeStamp}
+          refetch={refetchWordLearningStat}
+        />
+        <LoggedDatesCalendarFromData
+          data={loggedDates}
+          isLoading={isLoadingLoggedDates}
+          isError={isErrorLoggedDates}
+          fulfilledTimeStamp={fulfilledTimeStampLoggedDates}
+          refetch={refetchLoggedDates}
+          dayLimit={daysLimit}
+        />
       </View>
     </ScrollView>
   );
@@ -346,7 +398,6 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 130,
     height: 130,
-    // marginTop: -130,
     borderRadius: 150 / 2,
     alignSelf: 'center',
     borderWidth: 6,
@@ -382,7 +433,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'center',
-    gap: 15,
+    gap: 55,
   },
   hobbyContainer: {
     flex: 1,

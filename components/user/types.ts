@@ -32,6 +32,10 @@ export interface QFriendRequest {
   friendId: string;
 }
 
+export interface QFriendStats {
+  userId: string;
+}
+
 export enum FriendshipStatus {
   PENDING,
   ACCEPTED,

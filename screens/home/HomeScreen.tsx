@@ -7,9 +7,16 @@ import BotCarousel from '../../components/chat/bots/BotCarousel';
 import ExperienceBar from '../../components/gamification/experience/ExperienceBar';
 import LoggedDatesCalendar from '../../components/stats/LoggedDatesCalendar';
 import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
+import QuestsList from "../../components/quest/QuestsList";
+import React, { useEffect } from 'react';
+import { LogBox } from 'react-native';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -31,6 +38,9 @@ const HomeScreen = () => {
           <View style={styles.botCarousel}>
             <Title size="h4">Start a conversation!</Title>
             <BotCarousel />
+          </View>
+          <View style={styles.questsSection}>
+            <QuestsList />
           </View>
           <View style={styles.statSection}>
             <WordLearningStatusBarChart />
@@ -71,6 +81,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   statSection: {
+    marginVertical: 8,
+  },
+  questsSection: {
     marginVertical: 8,
   },
 });

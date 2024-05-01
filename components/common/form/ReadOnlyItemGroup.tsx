@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 0, // Add some spacing between the label and the items
   },
   label: {
     fontSize: 16,
@@ -61,11 +60,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   container: {
-    // paddingVertical: 3,
     paddingHorizontal: 3,
-    // borderRadius: 4,
-    // borderWidth: 2,
-    // borderColor: Colors.gray['500'],
   },
   itemGroup: {
     flexDirection: 'row',
@@ -112,7 +107,7 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center', // Vertically align items
+    alignItems: 'center',
   },
 });
 

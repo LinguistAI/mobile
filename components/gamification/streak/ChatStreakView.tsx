@@ -14,7 +14,6 @@ const ChatStreakView = ({ currentStreak, showTitle = false }: ChatStreakButtonPr
   return (
     <View style={styles.streakContainer}>
       <LText style={styles.textStyle}>Streak:</LText>
-      {/* <View style={styles.streakContainer}> */}
       <LText style={styles.textStyle}>{currentStreak}</LText>
       <AnimatedLottieView
         style={styles.lottie}
@@ -22,7 +21,6 @@ const ChatStreakView = ({ currentStreak, showTitle = false }: ChatStreakButtonPr
         loop
         source={require('../../../assets/lottie/streak/streakFireAnim.json')}
       />
-      {/* </View> */}
     </View>
   );
 };

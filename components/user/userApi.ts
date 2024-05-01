@@ -137,6 +137,7 @@ export const userApi = createApi({
         url: `/profile/${userId}`,
       }),
       providesTags: (result, error, userId) => [{ type: 'FriendProfileInfo', id: userId }],
+      keepUnusedDataFor: 0,
     }),
   }),
 });

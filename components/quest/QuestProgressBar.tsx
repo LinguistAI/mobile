@@ -3,7 +3,7 @@ import { useGetQuestsQuery } from './api';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
 import Colors from '../../theme/colors';
-import ExperienceSkeleton from '../gamification/experience/ExperienceSkeleton';
+import ExperienceBarSkeleton from '../gamification/experience/ExperienceBarSkeleton';
 import { BAR_HEIGHT, BAR_WIDTH, EMPTY_BAR_FILL, QUEST_DONE_ICON_SIZE } from './constants';
 import FetchError from '../common/feedback/FetchError';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
@@ -17,7 +17,7 @@ const QuestProgressBar = ({ goalTimes, progressTimes }: QuestProgressBarProps) =
   const { data, isFetching: isQuestsFetching, isError } = useGetQuestsQuery();
 
   if (isQuestsFetching) {
-    return <ExperienceSkeleton />;
+    return <ExperienceBarSkeleton />;
   }
 
   if (isError) {

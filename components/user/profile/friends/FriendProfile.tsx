@@ -8,7 +8,6 @@ import {
   View,
   RefreshControl,
   Pressable,
-  ActionSheetIOS,
   ActivityIndicator,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
@@ -21,7 +20,7 @@ import {
 } from '../../userApi';
 import Colors from '../../../../theme/colors';
 import Divider from '../../../common/Divider';
-import ExperienceBarFromData from '../../../gamification/experience/ExperienceBarFromData';
+import ExperienceBar from '../../../gamification/experience/ExperienceBar';
 import ChatStreakView from '../../../gamification/streak/ChatStreakView';
 import LText from '../../../common/Text';
 import Title from '../../../common/Title';
@@ -31,17 +30,14 @@ import { FriendSearchFriendshipStatus } from '../../types';
 import FriendshipCardOptionMenu from './FriendshipCardOptionMenu';
 import { ECancelMenuOption, EIncomingMenuOption, EMenuOption } from './types';
 import PopupMenu from '../../../common/PopupMenu';
-import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 import { DEFAULT_DAY_LIMIT, DEFAULT_SORT, STAT_POLLING_INTERVAL } from '../../../stats/constants';
 import {
   useGetLoggedDatesForUserQuery,
-  useGetLoggedDatesQuery,
   useGetWordLearningStatsForUserQuery,
-  useGetWordLearningStatsQuery,
-  useLazyGetWordLearningStatsForUserQuery,
 } from '../../../stats/userStatsApi';
 import WordLearningStatusBarChartFromData from '../../../stats/WordLearningStatusBarChartFromData';
 import LoggedDatesCalendarFromData from '../../../stats/LoggedDatesCalendarFromData';
+import FriendExperienceBar from '../../../gamification/experience/FriendExperienceBar';
 
 const FriendProfile = () => {
   const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
@@ -57,7 +53,6 @@ const FriendProfile = () => {
   const {
     data: profileInfo,
     isFetching: isProfileFetching,
-    error: profileError,
     fulfilledTimeStamp,
     isError,
     refetch: profileRefetch,
@@ -67,7 +62,6 @@ const FriendProfile = () => {
     isLoading: isLoadingWordLearningStats,
     isError: isErrorWordLearningStats,
     refetch: refetchWordLearningStat,
-    fulfilledTimeStamp: fulfilledTimeStampWordLearningStats,
   } = useGetWordLearningStatsForUserQuery(friendId, { pollingInterval: STAT_POLLING_INTERVAL });
 
   const daysLimit = DEFAULT_DAY_LIMIT;
@@ -121,7 +115,6 @@ const FriendProfile = () => {
     setRefreshing(false);
   }, [profileRefetch]);
 
-  // TODO SELIM burası kafayı yedi, gondermiyo requestler donuyo falan bazen oluyo
   const renderFriendsButton = () => {
     return (
       <View>
@@ -345,7 +338,7 @@ const FriendProfile = () => {
         </View>
       </View>
       <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
-        <ExperienceBarFromData data={profileInfo?.xp} isFetching={isProfileFetching} isError={isError} />
+        <FriendExperienceBar friendId={friendId} />
       </View>
       <Divider />
       <View style={styles.rowView}>

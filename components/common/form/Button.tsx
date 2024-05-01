@@ -1,6 +1,6 @@
+import { useRef } from 'react';
 import { ActivityIndicator, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
-import { useRef } from 'react';
 
 const OUTLINED_BUTTON_TEXT_COLOR = Colors.secondary[500];
 const OUTLINED_BUTTON_BORDER_COLOR = Colors.secondary[500];
@@ -62,7 +62,7 @@ const Button = (props: PrimaryButtonProps) => {
             borderColor: Colors[color][700],
           },
         ];
-      }
+        }
       if (type === 'outlined') {
         baseButtonStyle = [
           ...baseButtonStyle,

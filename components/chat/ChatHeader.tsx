@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../theme/colors';
 import Avatar from '../common/Avatar';
@@ -13,7 +13,6 @@ import { ChatOption } from './types';
 import useNotifications from '../../hooks/useNotifications';
 import { useClearConversationMutation } from './api';
 import ActiveWordsModal from './ActiveWordsModal';
-import { clearMessages } from '../../redux/chatSlice';
 
 const ChatHeader = () => {
   const [chatMenuVisible, setChatMenuVisible] = useState(false);
@@ -63,7 +62,7 @@ const ChatHeader = () => {
             <ActionIcon icon={<Ionicons size={28} name="arrow-back" />} onPress={handleGoBack} />
             <Avatar src={currentBot?.profileImage} height={40} width={40} />
           </View>
-          <Text style={styles.botName}>{currentBot?.name}</Text>
+          <Text style={styles.botName}>{currentBot?.name?.slice(0, 12).trim()}...</Text>
         </View>
         <View style={styles.rightContainer}>
           <QuizStartButton />
@@ -72,7 +71,9 @@ const ChatHeader = () => {
             setMenuVisible={setChatMenuVisible}
             triggerOption={triggerOption}
           />
-          <ActiveWordsModal setVisible={setActiveWordsVisible} visible={activeWordsVisible} />
+          {activeWordsVisible && (
+            <ActiveWordsModal setVisible={setActiveWordsVisible} visible={activeWordsVisible} />
+          )}
         </View>
       </View>
     </View>

@@ -1,7 +1,7 @@
-import { StyleSheet, View } from 'react-native';
-import { useLazySearchUserQuery } from '../../userApi';
 import { useState } from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import SearchInput from '../../../common/SearchInput';
+import { useLazySearchUserQuery } from '../../userApi';
 import FriendsSearchList from './FriendsSearchList';
 
 const DEFAULT_PAGE = 0;
@@ -23,18 +23,20 @@ const FriendAddScreen = () => {
   };
 
   return (
-    <View style={{ padding: 10 }}>
-      <SearchInput
-        onChangeText={handleSearchTextChange}
-        onClear={handleClearSearchText}
-        onSearch={handleSearch}
-        searchText={searchText}
-        placeholder="Type a username for searching..."
-      />
-      <View style={styles.searchResultsContainer}>
-        <FriendsSearchList isLoading={isFetching} items={data?.content || []} />
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ padding: 10 }}>
+        <SearchInput
+          onChangeText={handleSearchTextChange}
+          onClear={handleClearSearchText}
+          onSearch={handleSearch}
+          searchText={searchText}
+          placeholder="Type a username for searching..."
+        />
+        <View style={styles.searchResultsContainer}>
+          <FriendsSearchList isLoading={isFetching} items={data?.content || []} />
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

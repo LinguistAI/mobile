@@ -1,12 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
-import useUser from '../../../hooks/useUser';
 import useNotifications from '../../../hooks/useNotifications';
+import useUser from '../../../hooks/useUser';
 import { login } from '../../../services/auth';
+import { LoginDto } from '../../../services/auth/Auth.types';
 import Colors from '../../../theme/colors';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 
@@ -74,18 +75,20 @@ const LoginScreen = (props: LoginScreenProps) => {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <FormProvider {...methods}>
-          <EmailTextInput />
-          <PasswordTextInput />
-          <Text style={styles.forgotPassword} onPress={onForgotPassword}>
-            Forgot password?
-          </Text>
-          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-            LOG IN
-          </Button>
-        </FormProvider>
-      </View>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.container}>
+          <FormProvider {...methods}>
+            <EmailTextInput />
+            <PasswordTextInput />
+            <Text style={styles.forgotPassword} onPress={onForgotPassword}>
+              Forgot password?
+            </Text>
+            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+              LOG IN
+            </Button>
+          </FormProvider>
+        </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };

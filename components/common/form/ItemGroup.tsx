@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   noItemsText: {
-    fontSize: 16,
+    fontSize: 14,
     color: Colors.gray[900],
     margin: 6,
   },

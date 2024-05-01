@@ -44,14 +44,9 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
   const [birthdate, setBirthDate] = useState(new Date());
   const messagesListRef = useRef<FlatList>(null);
   const { add: addNotification } = useNotifications();
-  const { user } = useUser();
   const [setUserDetails, { isLoading, isError }] = useSetUserDetailsMutation();
 
   const currentMessage = BOT_MESSAGES.find((step) => step.id === currentStep);
-
-  useEffect(() => {
-    messagesListRef.current?.scrollToEnd({ animated: true });
-  }, [messages]);
 
   const handleSkip = () => {
     if (!currentMessage) return;
@@ -118,13 +113,12 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
       case 'englishLevel':
         shownAnswer = formatAsStr(userAnswer);
         const foundLevel = ENGLISH_LEVELS.find((level) => level.label === shownAnswer);
-        userAnswer = foundLevel ? foundLevel.value : "";
+        userAnswer = foundLevel ? foundLevel.value : '';
         break;
       default:
         shownAnswer = formatAsStr(userAnswer);
         userAnswer = formatAsStr(userAnswer);
     }
-    
 
     const userResponse: ExtendedChatMessage = {
       content: shownAnswer,
@@ -192,7 +186,7 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
             name: option.label,
           }))}
           onSelectionDone={(name) => {
-            handleNext(name)
+            handleNext(name);
           }}
           multiple={currentMessage?.multiple ?? false}
         />
@@ -202,7 +196,7 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
     const isLastStep = currentStep === -1;
     if (isLastStep) {
       return (
-        <View>
+        <View style={{ marginHorizontal: 16, marginBottom: 8 }}>
           <Button
             type="primary"
             onPress={handleFinish}
@@ -287,6 +281,9 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
         renderItem={({ item }) => <ChatMessageComponent onWordPress={() => {}} chatMessage={item} />}
         keyExtractor={(item) => item.id || item.timestamp.toString()}
         ListFooterComponent={getFooter()}
+        onContentSizeChange={() => {
+          messagesListRef.current?.scrollToEnd({ animated: false });
+        }}
       />
     );
   };

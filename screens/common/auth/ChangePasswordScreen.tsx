@@ -1,16 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
-import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FormProvider, useForm } from 'react-hook-form';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import Button from '../../../components/common/form/Button';
-import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
 import PasswordInputWithRequirements from '../../../components/common/form/password/PasswordInputWithRequirements';
 import { Requirement } from '../../../components/common/form/password/Requirement';
 import useNotifications from '../../../hooks/useNotifications';
-import { changePassword, register } from '../../../services/auth/Auth.service';
-import Colors from '../../../theme/colors';
-import { generateErrorResponseMessage } from '../../../utils/httpUtils';
+import { changePassword } from '../../../services/auth/Auth.service';
 import { ChangePasswordDto } from '../../../services/auth/Auth.types';
+import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 
 type ChangePasswordFormValues = {
   oldPassword: string;
@@ -99,34 +97,36 @@ const ChangePasswordScreen = (props: ChangePasswordScreenProps) => {
 
   return (
     <FormProvider {...methods}>
-      <View style={styles.mainSection}>
-        <PasswordTextInput
-          placeholder="Old password"
-          label="Old password"
-          name="oldPassword"
-          rules={{
-            required: 'Old password is required!',
-          }}
-        />
-        <PasswordInputWithRequirements
-          requirements={passwordRequirements}
-          name="password"
-          label="Password"
-          placeholder="Password"
-        />
-        <PasswordTextInput
-          placeholder="Repeat password"
-          label="Repeat password"
-          name="repeatPassword"
-          rules={{
-            required: 'Repeating password is required!',
-            validate: (value: string) => value === methods.getValues('password') || 'Passwords must match!',
-          }}
-        />
-        <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-          CHANGE PASSWORD
-        </Button>
-      </View>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.mainSection}>
+          <PasswordTextInput
+            placeholder="Old password"
+            label="Old password"
+            name="oldPassword"
+            rules={{
+              required: 'Old password is required!',
+            }}
+          />
+          <PasswordInputWithRequirements
+            requirements={passwordRequirements}
+            name="password"
+            label="Password"
+            placeholder="Password"
+          />
+          <PasswordTextInput
+            placeholder="Repeat password"
+            label="Repeat password"
+            name="repeatPassword"
+            rules={{
+              required: 'Repeating password is required!',
+              validate: (value: string) => value === methods.getValues('password') || 'Passwords must match!',
+            }}
+          />
+          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+            CHANGE PASSWORD
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
     </FormProvider>
   );
 };
@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   mainSection: {
-    flex: 1,
     marginVertical: 12,
     padding: 20,
     gap: 15,

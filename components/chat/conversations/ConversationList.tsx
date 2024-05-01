@@ -13,7 +13,7 @@ import { useCallback } from 'react';
 const ConversationList = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { data: conversations, isFetching, isError, refetch } = useGetAllConversationsQuery();
+  const { data: conversations, isLoading, isError, refetch } = useGetAllConversationsQuery();
 
   useFocusEffect(
     useCallback(() => {
@@ -21,7 +21,7 @@ const ConversationList = () => {
     }, [refetch])
   );
 
-  if (isFetching) return <LoadingIndicator subtext="Fetching your conversations..." />;
+  if (isLoading) return <LoadingIndicator subtext="Fetching your conversations..." />;
   if (isError) return <FetchError />;
   if (!conversations || conversations.length === 0)
     return (

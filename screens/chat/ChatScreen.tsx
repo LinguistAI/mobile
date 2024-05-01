@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
+import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 
 interface ChatScreenProps {
   route: any;
@@ -19,18 +29,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);
-
-  useEffect(() => {
-    if (messagesList.current) {
-      messagesList.current.scrollToEnd({ animated: true });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (messagesList.current) {
-      messagesList.current.scrollToEnd({ animated: true });
-    }
-  }, [messages]);
+  useDisableBottomTab();
 
   const isPending = isLoadingMessages || isSendingMessage;
 
@@ -107,6 +106,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         <FlatList
           ref={messagesList}
           data={messages}
+          automaticallyAdjustKeyboardInsets={true}
           renderItem={({ item }) => (
             <ChatMessageComponent
               onWordPress={handleWordPress}
@@ -116,7 +116,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           )}
           ListFooterComponent={renderLastChatMessage()}
           keyExtractor={(item) => item.id || item.timestamp.toString()}
-          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: true })}
+          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: false })}
         />
       </View>
     );
@@ -137,10 +137,17 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.header}>
         <ChatHeader />
       </View>
-      {renderMessages()}
-      <View style={styles.textInputContainer}>
-        <ChatTextInputContainer onSend={onSend} isPending={isPending} />
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.flexContainer}
+      >
+        <View style={styles.flexContainer}>
+          {renderMessages()}
+          <View style={styles.textInputContainer}>
+            <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -159,7 +166,6 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 10,
-    marginTop: 10,
     marginHorizontal: 10,
   },
   centeredView: {
@@ -168,6 +174,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 12,
+  },
+  flexContainer: {
+    flex: 10,
   },
 });
 

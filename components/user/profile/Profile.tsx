@@ -1,27 +1,27 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
-  RefreshControl,
 } from 'react-native';
-import Colors from '../../../theme/colors';
 import useUser from '../../../hooks/useUser';
-import Button from '../../common/form/Button';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import UserInfoForm from '../onboarding/UserInfoForm';
+import Colors from '../../../theme/colors';
 import Divider from '../../common/Divider';
-import { useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
+import Button from '../../common/form/Button';
 import ExperienceBar from '../../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
+import UserInfoForm from '../onboarding/UserInfoForm';
+import { useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
 import ActionIcon from '../../common/ActionIcon';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
-import { useFocusEffect } from '@react-navigation/native';
+import FetchError from '../../common/feedback/FetchError';
 import LText from '../../common/Text';
 
 const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
@@ -33,13 +33,13 @@ const Profile = () => {
 
   const {
     data: userInfo,
-    isFetching: isUserInfoFetching,
+    isLoading: isUserInfoFetching,
     error,
     refetch: userInfoRefetch,
   } = useGetUserDetailsQuery();
   const {
     data: profileInfo,
-    isFetching: isProfileFetching,
+    isLoading: isProfileFetching,
     error: profileError,
     refetch: profileRefetch,
   } = useGetProfileQuery();
@@ -91,11 +91,11 @@ const Profile = () => {
 
   const renderUserInfoForm = () => {
     if (isUserInfoFetching || isProfileFetching) {
-      return <LoadingIndicator />;
+      return <LoadingIndicator subtext="Gathering your info..." />;
     }
 
     if (error || profileError || !userInfo || !profileInfo) {
-      return <Text>Something went wrong</Text>;
+      return <FetchError withNavigation={false} />;
     }
 
     return <UserInfoForm userDetails={userInfo} profileDetails={profileInfo} />;

@@ -17,6 +17,7 @@ export const gamificationApi = createApi({
         url: '/user-xp',
         method: 'GET',
       }),
+      keepUnusedDataFor: 1,
     }),
   }),
 });

@@ -7,6 +7,9 @@ import BotCarousel from '../../components/chat/bots/BotCarousel';
 import UserLoggedDatesCalendar from '../../components/stats/UserLoggedDatesCalendar';
 import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
 import UserExperienceBar from '../../components/gamification/experience/UserExperienceBar';
+import QuestsList from '../../components/quest/QuestsList';
+import React, { useEffect } from 'react';
+import { LogBox } from 'react-native';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
@@ -31,6 +34,9 @@ const HomeScreen = () => {
           <View style={styles.botCarousel}>
             <Title size="h4">Start a conversation!</Title>
             <BotCarousel />
+          </View>
+          <View style={styles.questsSection}>
+            <QuestsList />
           </View>
           <View style={styles.statSection}>
             <WordLearningStatusBarChart />
@@ -71,6 +77,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   statSection: {
+    marginVertical: 8,
+  },
+  questsSection: {
     marginVertical: 8,
   },
 });

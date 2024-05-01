@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
-import {RUserQuests} from './types';
+import { RUserQuests } from './types';
 
 export const questsApi = createApi({
   reducerPath: 'questsApi',
@@ -11,6 +11,7 @@ export const questsApi = createApi({
         url: '/quest',
         method: 'GET',
       }),
+      keepUnusedDataFor: 0,
     }),
   }),
 });

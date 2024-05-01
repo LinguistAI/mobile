@@ -7,19 +7,26 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import React, { useCallback, useState } from 'react';
 import QuestCountdownTimer from './QuestCountdownTimer';
-import { useFocusEffect } from '@react-navigation/native';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
 import FetchError from '../common/feedback/FetchError';
+import Title from '../common/Title';
+import { useFocusEffect } from '@react-navigation/native';
+import { STAT_POLLING_INTERVAL } from '../stats/constants';
+import RefetchButton from '../stats/RefetchButton';
 
 const QuestsList = () => {
-  const { data: quests, isFetching, isError, refetch } = useGetQuestsQuery();
+  const {
+    data: quests,
+    isLoading,
+    isError,
+    refetch,
+    fulfilledTimeStamp,
+  } = useGetQuestsQuery(undefined, { pollingInterval: STAT_POLLING_INTERVAL });
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      refetch();
-    }, [refetch])
-  );
+  const handleRefresh = () => {
+    refetch();
+  };
 
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -30,22 +37,32 @@ const QuestsList = () => {
   const renderSkeletonList = () => {
     return (
       <View style={styles.skeletonContainer}>
-        {Array.from({ length: 6 }).map((_, index) => (
+        <Title size="h4">Daily Quests</Title>
+        {Array.from({ length: 1 }).map((_, index) => (
+          <ShimmerPlaceholder
+            key={index}
+            style={styles.skeletonTitleRectangle}
+            LinearGradient={LinearGradient}
+          />
+        ))}
+        {Array.from({ length: 3 }).map((_, index) => (
           <ShimmerPlaceholder key={index} style={styles.skeletonRectangle} LinearGradient={LinearGradient} />
         ))}
       </View>
     );
   };
 
-  if (isFetching) {
+  if (isLoading) {
     return renderSkeletonList();
   }
+
   if (isError || !quests) {
-    return <FetchError />;
+    return <FetchError withNavigation={false} />;
   }
 
   return (
     <View style={styles.root}>
+      <Title size="h4">Daily Quests</Title>
       {quests.length > 0 && <QuestCountdownTimer assignedDate={quests[0].assignedDate} />}
       <FlatList
         numColumns={1}
@@ -58,6 +75,12 @@ const QuestsList = () => {
           </CenteredFeedback>
         }
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+        nestedScrollEnabled={true}
+      />
+      <RefetchButton
+        style={{ alignSelf: 'flex-end', marginRight: 10, marginTop: -10 }}
+        lastUpdate={new Date(fulfilledTimeStamp)}
+        onPress={handleRefresh}
       />
     </View>
   );
@@ -79,6 +102,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   skeletonRectangle: {
+    borderRadius: 10,
+    width: '90%',
+    height: 100,
+    alignSelf: 'center',
+  },
+  skeletonTitleRectangle: {
     borderRadius: 10,
     width: '90%',
     height: 75,

@@ -37,7 +37,7 @@ export const HOBBIES_LIST = [
 ];
 
 export const ENGLISH_LEVELS = [
-  { value: "DONT_KNOW", label: "I don't know" },
+  { value: 'DONT_KNOW', label: "I don't know" },
   { value: 'BEGINNER', label: 'Beginner' },
   { value: 'INTERMEDIATE', label: 'Intermediate' },
   { value: 'ADVANCED', label: 'Advanced' },
@@ -48,7 +48,7 @@ export const BOT_MESSAGES: ConversationStep[] = [
   {
     id: 0,
     message:
-      "Hi, I'm Luna. Your personal language learning assistant. I'm here to help you learn English. What's your name?",
+      "Hi, I'm Linguist. Your personal language learning assistant. I'm here to help you learn English. What's your name?",
     skippedMsg: "Okay, let's skip that for now. What's your name?",
     skippable: true,
     name: 'name',

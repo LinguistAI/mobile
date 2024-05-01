@@ -35,7 +35,7 @@ export type PasswordResetCodeDto = {
   resetCode: string;
 };
 
-type PasswordResetSaveDto = {
+export type PasswordResetSaveDto = {
   email: string;
   newPassword: string;
   resetCode: string;

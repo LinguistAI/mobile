@@ -1,7 +1,7 @@
 import { FormProvider, set, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../common/form/Button';
-import { IUserDetailedInfo, QProfile } from '../types';
+import { IUserDetailedInfo, QProfile, RProfile } from '../types';
 import PrimaryTextInput from '../../common/form/PrimaryTextInput';
 import { useState } from 'react';
 import useUser from '../../../hooks/useUser';
@@ -66,7 +66,7 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
           likes: data.likes,
           loves: data.loves,
           dislikes: data.dislikes,
-          hates: data.hates
+          hates: data.hates,
         },
       };
 
@@ -137,7 +137,7 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
             name="name"
             label="Name"
           />
-          <PrimaryAutocomplete
+          {/* <PrimaryAutocomplete
             name="englishLevel"
             label="English Level"
             dataSet={ENGLISH_LEVELS.map((level) => ({ id: level.value, title: level.label }))}
@@ -145,7 +145,7 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
             clearOnFocus={true}
             showClear={false}
             showChevron={false}
-          />
+          /> */}
           <ActionButton
             title={
               methods.getValues('birthDate')

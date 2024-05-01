@@ -1,4 +1,3 @@
-import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useGetUserExperienceQuery } from '../api';

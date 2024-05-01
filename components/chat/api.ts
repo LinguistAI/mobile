@@ -14,6 +14,14 @@ export const chatApi = createApi({
         url: '/bots',
       }),
     }),
+    getConversation: builder.query<TConversation, string | undefined>({
+      query: (convoId) => ({
+        method: 'GET',
+        url: `/user/${convoId}`,
+      }),
+      keepUnusedDataFor: 0,
+      providesTags: (result, error, arg) => [{ type: 'Conversation', id: arg }],
+    }),
     getAllConversations: builder.query<TConversation[], void>({
       query: () => ({
         method: 'GET',
@@ -74,4 +82,5 @@ export const {
   useSendChatMessageMutation,
   useGetMessageCountByBotQuery,
   useClearConversationMutation,
+  useGetConversationQuery,
 } = chatApi;

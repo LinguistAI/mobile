@@ -8,8 +8,7 @@ import UserLoggedDatesCalendar from '../../components/stats/UserLoggedDatesCalen
 import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
 import UserExperienceBar from '../../components/gamification/experience/UserExperienceBar';
 import QuestsList from '../../components/quest/QuestsList';
-import React, { useEffect } from 'react';
-import { LogBox } from 'react-native';
+import React from 'react';
 
 const HomeScreen = () => {
   const navigator = useNavigation();

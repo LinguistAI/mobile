@@ -6,7 +6,6 @@ import Colors from '../../theme/colors';
 import ExperienceBarSkeleton from '../gamification/experience/ExperienceBarSkeleton';
 import { BAR_HEIGHT, BAR_WIDTH, EMPTY_BAR_FILL, QUEST_DONE_ICON_SIZE } from './constants';
 import FetchError from '../common/feedback/FetchError';
-import CenteredFeedback from '../common/feedback/CenteredFeedback';
 
 interface QuestProgressBarProps {
   goalTimes: number;
@@ -14,10 +13,10 @@ interface QuestProgressBarProps {
 }
 
 const QuestProgressBar = ({ goalTimes, progressTimes }: QuestProgressBarProps) => {
-  const { data, isLoading: isQuestsLOading, isError } = useGetQuestsQuery();
+  const { data, isLoading: isQuestsLoading, isError } = useGetQuestsQuery();
 
-  if (isQuestsLOading) {
-    return <ExperienceSkeleton />;
+  if (isQuestsLoading) {
+    return <ExperienceBarSkeleton />;
   }
 
   if (isError || !data) {

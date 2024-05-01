@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet, TouchableOpacity } from 'react-nativ
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
 import { IStoreItem, IStoreItemWithQuantity } from '../types';
+import { TYPE_DOUBLE_ANSWER, TYPE_ELIMINATE_WRONG_ANSWER } from '../constants';
 
 interface ItemProps {
   storeItem: IStoreItemWithQuantity;
@@ -13,13 +14,12 @@ const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
   const cardTitle = storeItem.type;
 
   const renderIcon = () => {
-    if (storeItem.type === 'Double Answer') {
+    if (storeItem.type === TYPE_DOUBLE_ANSWER) {
       return <Ionicons name="checkmark-done-sharp" size={60} color={Colors.gray[900]} />;
-    } else if (storeItem.type === 'Eliminate Wrong Answer') {
+    } else if (storeItem.type === TYPE_ELIMINATE_WRONG_ANSWER) {
       return <Ionicons name="trash-bin-outline" size={60} color={Colors.gray[900]} />;
     }
   };
-  
 
   return (
     <Pressable style={styles.card}>
@@ -29,8 +29,9 @@ const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
             <View style={styles.quantityContainer}>
               <Text style={styles.quantity}>{storeItem.quantityOwned}</Text>
             </View>
+            {renderIcon()}
             <View style={styles.details}>
-              {renderIcon()}
+              
               <Text style={styles.title}>{cardTitle}</Text>
               <Text style={styles.description}>{storeItem.description}</Text>
             </View>
@@ -69,8 +70,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   details: {
-    alignItems: 'center',
     marginBottom: 10, 
+    marginTop: 5,
   },
   title: {
     fontSize: 18,
@@ -78,12 +79,16 @@ const styles = StyleSheet.create({
     color: Colors.gray['900'],
     textAlign: 'center',
     marginBottom: 5, 
+    minHeight:50,
+    textAlignVertical: 'center',
   },
   description: {
     fontSize: 14,
     color: Colors.gray['900'],
     textAlign: 'center',
-    marginBottom: 10, 
+    marginBottom: 5, 
+    minHeight:70,
+    textAlignVertical: 'center',
   },
   price: {
     fontSize: 16,
@@ -95,6 +100,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     position: 'relative',
+    alignItems: 'center',
   },
   quantityContainer: {
     position: 'absolute',
@@ -121,6 +127,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 8,
     paddingHorizontal: 20,
+  },
+  typeContainer: {
+    width: 120, // Set a fixed width for the type container
   },
 });
 

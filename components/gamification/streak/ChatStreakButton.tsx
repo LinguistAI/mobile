@@ -13,7 +13,7 @@ interface ChatStreakButtonProps {
 const ChatStreakButton = ({ currentStreak, handleOpenModal }: ChatStreakButtonProps) => {
   return (
     <ActionButton
-      bgColor={Colors.primary[0]}
+      bgColor={Colors.primary[500]}
       icon={
         <AnimatedLottieView
           style={styles.lottie}

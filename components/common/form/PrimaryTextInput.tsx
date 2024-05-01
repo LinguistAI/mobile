@@ -51,16 +51,20 @@ const ControlledInput = (props: PrimaryTextInputProps) => {
         </View>
       </View>
       {props?.subtitle && <Text style={styles.subtitle}>{props?.subtitle}</Text>}
-      <ErrorMessage name={props.name} render={({ message }) => <Text style={styles.errorMessage}>{message}</Text>} />
+      <ErrorMessage
+        name={props.name}
+        render={({ message }) => <Text style={styles.errorMessage}>{message}</Text>}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.gray[900],
     fontWeight: 'bold',
+    marginBottom: 4,
   },
   textInput: {
     flexBasis: '100%',
@@ -70,7 +74,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
     borderRadius: 8,
     width: '100%',
   },
@@ -83,6 +86,7 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     color: Colors.gray[600],
+    backgroundColor: Colors.background[500],
   },
   errorMessage: {
     color: Colors.red[500],

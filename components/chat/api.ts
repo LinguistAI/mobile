@@ -1,12 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
-import { Message, TChatBot, TConversation } from './types';
+import { IMessageCountQuery, Message, MessageCount, QMessages, TChatBot, TConversation } from './types';
+import { Page } from '../../types';
+import { ChatMessage } from '../../screens/chat/types';
 
 export const chatApi = createApi({
   reducerPath: 'chatApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/ml/conversation` }),
-  tagTypes: ['Conversation', 'Message'],
+  tagTypes: ['Conversations', 'Message', 'Stat'],
   endpoints: (builder) => ({
     getAvailableBots: builder.query<TChatBot[], void>({
       query: () => ({
@@ -14,18 +16,38 @@ export const chatApi = createApi({
         url: '/bots',
       }),
     }),
+    getConversation: builder.query<TConversation, string | undefined>({
+      query: (convoId) => ({
+        method: 'GET',
+        url: `/user/${convoId}`,
+      }),
+      keepUnusedDataFor: 0,
+      providesTags: (result, error, arg) => [{ type: 'Conversations', id: arg }],
+    }),
     getAllConversations: builder.query<TConversation[], void>({
       query: () => ({
         method: 'GET',
         url: '/user',
       }),
-      providesTags: ['Conversation'],
+      providesTags: ['Conversations'],
     }),
     getAllChatMessages: builder.query<Message[], string>({
       query: (conversationId: string) => ({
         method: 'GET',
         url: `/chat/all/${conversationId}`,
       }),
+      providesTags: (result, error, conversationId) => [{ type: 'Message', id: conversationId }],
+      keepUnusedDataFor: 0,
+    }),
+    getPaginatedChatMessages: builder.query<Page<Message>, QMessages>({
+      query: (args) => ({
+        method: 'GET',
+        url: `/chat/messages/${args.conversationId}`,
+        params: args.params,
+      }),
+      providesTags: (result, error, args) => [
+        { type: 'Message', id: `${args.conversationId}-${args.params.page}-${args.params.pageSize}}` },
+      ],
     }),
     createNewConversation: builder.mutation<TConversation, string>({
       query: (botId: string) => ({
@@ -33,14 +55,33 @@ export const chatApi = createApi({
         method: 'POST',
         body: { botId },
       }),
-      invalidatesTags: ['Conversation'],
+      invalidatesTags: ['Conversations'],
     }),
-    sendChatMessage: builder.mutation<{ data: string; timestamp: Date }, { conversationId: string; message: string }>({
+    sendChatMessage: builder.mutation<
+      { data: string; timestamp: Date },
+      { conversationId: string; message: string }
+    >({
       query: ({ conversationId, message }) => ({
         url: `/chat/send/${conversationId}`,
         method: 'POST',
         body: { message },
       }),
+      invalidatesTags: ['Stat'],
+    }),
+    getMessageCountByBot: builder.query<MessageCount[], IMessageCountQuery>({
+      query: (messageQuery: IMessageCountQuery) => ({
+        url: `/chat/count`,
+        method: 'GET',
+        params: messageQuery,
+      }),
+      providesTags: ['Stat'],
+    }),
+    clearConversation: builder.mutation<TConversation, string>({
+      query: (convoId) => ({
+        url: `/clear/${convoId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }, { type: 'Conversations' }],
     }),
   }),
 });
@@ -51,4 +92,8 @@ export const {
   useGetAllConversationsQuery,
   useGetAvailableBotsQuery,
   useSendChatMessageMutation,
+  useGetMessageCountByBotQuery,
+  useClearConversationMutation,
+  useGetConversationQuery,
+  useGetPaginatedChatMessagesQuery,
 } = chatApi;

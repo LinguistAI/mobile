@@ -1,30 +1,80 @@
-import { ActivityIndicator, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { CollapsableContainer } from '../../../common/CollapsableContainer';
-import { WordWithConfidence } from '../types';
+import { WordConfidence, WordWithConfidence } from '../types';
 import { useState } from 'react';
 import Colors from '../../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
-import { isDictionaryWordGroup } from '../utils';
+import { displayWordConfidence, isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
 import { useGetWordMeaningsQuery } from '../../api';
-import LoadingIndicator from '../../../common/LoadingIndicator';
+import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 
-interface WordDetailsInterface {
+interface WordDetailsCollapseInterface {
   word: WordWithConfidence;
 }
 
-const WordDetails = ({ word }: WordDetailsInterface) => {
+const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
   const [expanded, setExpanded] = useState(false);
 
-  const { data: wordMeanings, isFetching, isError } = useGetWordMeaningsQuery([word.word]);
+  const { data: wordMeanings, isLoading, isError } = useGetWordMeaningsQuery([word.word]);
 
   const onItemPress = () => {
     setExpanded(!expanded);
   };
 
+  const renderWordConfidence = () => {
+    const confidenceLevels = [
+      WordConfidence.LOWEST,
+      WordConfidence.LOW,
+      WordConfidence.MODERATE,
+      WordConfidence.HIGH,
+      WordConfidence.HIGHEST,
+    ];
+
+    const currentConfidenceIndex = confidenceLevels.indexOf(word.confidence);
+    const confidenceColor = (index: number) => {
+      switch (index) {
+        case 0:
+          return Colors.red[500];
+        case 1:
+          return Colors.orange[500];
+        case 2:
+          return Colors.yellow[500];
+        case 3:
+          return Colors.green[500];
+        case 4:
+          return Colors.blue[500];
+        default:
+          return Colors.gray[400];
+      }
+    };
+
+    return (
+      <View style={styles.confidenceLabelContainer}>
+        <Text style={[styles.confidenceLabelText, { color: confidenceColor(currentConfidenceIndex) }]}>
+          {displayWordConfidence(word.confidence)}
+        </Text>
+        <View style={styles.confidenceContainer}>
+          {confidenceLevels.map((level, index) => (
+            <View
+              key={level}
+              style={[
+                styles.confidenceCircle,
+                {
+                  backgroundColor:
+                    index <= currentConfidenceIndex ? confidenceColor(currentConfidenceIndex) : 'transparent',
+                },
+              ]}
+            />
+          ))}
+        </View>
+      </View>
+    );
+  };
+
   const renderWordDetails = () => {
     let result = null;
-    if (isFetching) {
+    if (isLoading) {
       result = <LoadingIndicator subtext="Get ready to learn!" />;
     } else if (isError) {
       result = <Text>We couldn't fetch the details for this word.</Text>;
@@ -35,7 +85,7 @@ const WordDetails = ({ word }: WordDetailsInterface) => {
       const wordGroupOrNot = dict[word.word];
       if (isDictionaryWordGroup(wordGroupOrNot)) {
         const wordGroupObj = wordGroupOrNot;
-        result = wordGroupObj.wordGroup.map((group) => <WordDetail definition={group} />);
+        result = wordGroupObj.wordGroup.map((group) => <WordDetail key={group.id} definition={group} />);
       } else {
         result = <Text>Unfortunately this word does not exist in our dictionary. Sorry...</Text>;
       }
@@ -54,7 +104,12 @@ const WordDetails = ({ word }: WordDetailsInterface) => {
             ) : (
               <Ionicons name="chevron-forward" size={24} color="white" />
             )}
-            <Text style={styles.word}>{word.word}</Text>
+            <View style={styles.wordInfoContainer}>
+              <View>
+                <Text style={styles.word}>{word.word}</Text>
+              </View>
+              {renderWordConfidence()}
+            </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -69,6 +124,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderColor: Colors.primary['700'],
     borderWidth: 2,
+    borderRadius: 20,
   },
   container: {
     flexDirection: 'row',
@@ -80,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   word: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -103,6 +159,44 @@ const styles = StyleSheet.create({
   example: {
     fontStyle: 'italic',
   },
+  wordInfoContainer: {
+    width: '90%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  confidenceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: 100,
+  },
+  confidenceCircle: {
+    width: 15,
+    height: 15,
+    borderRadius: 7.5,
+    borderColor: Colors.gray[0],
+    borderWidth: 1,
+  },
+  filledCircle: {
+    backgroundColor: Colors.yellow[500],
+  },
+  emptyCircle: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  confidenceLabelContainer: {
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  confidenceLabelText: {
+    color: 'white',
+    fontSize: 14,
+    marginBottom: 3,
+    fontWeight: 'bold',
+  },
 });
 
-export default WordDetails;
+export default WordDetailsCollapse;

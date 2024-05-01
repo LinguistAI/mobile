@@ -8,7 +8,11 @@ const WordBankNavigation = () => {
   return (
     <WordBank.Navigator>
       <WordBank.Screen name="WordLists" component={WordListsScreen} options={{ headerShown: false }} />
-      <WordBank.Screen name="WordListDetails" component={WordListDetailsScreen} />
+      <WordBank.Screen
+        name="WordListDetails"
+        component={WordListDetailsScreen}
+        options={{ headerTitle: 'Word List Details' }}
+      />
     </WordBank.Navigator>
   );
 };

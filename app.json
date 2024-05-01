@@ -2,7 +2,7 @@
   "expo": {
     "name": "LinguistAI",
     "slug": "LinguistAI",
-    "version": "1.0.0",
+    "version": "2.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,21 +11,20 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.linguistai.mobile"
+      "bundleIdentifier": "app.linguistai.mobile",
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "package": "app.linguistai.mobile",
+      "versionCode": "4"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,11 +42,6 @@
           "initialOrientation": "PORTRAIT"
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "3ea1499f-7c91-4e20-be00-73810d71391b"
-      }
-    }
+    ]
   }
 }

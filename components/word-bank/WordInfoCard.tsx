@@ -8,6 +8,8 @@ import Title from '../common/Title';
 import Divider from '../common/Divider';
 import { useGetWordMeaningsQuery } from './api';
 import WordAddContainer from './WordAddContainer';
+import { useSelector } from 'react-redux';
+import { selectCurrentActiveWords, selectCurrentConversation } from '../../redux/chatSelectors';
 
 interface WordInfoCardProps {
   selectedWord: string;
@@ -15,17 +17,25 @@ interface WordInfoCardProps {
 }
 
 const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
-  const { data, isFetching, isError } = useGetWordMeaningsQuery([selectedWord], { refetchOnFocus: false });
+  const activeWords = useSelector(selectCurrentActiveWords);
+  const lowercaseWord = selectedWord.toLowerCase();
+  const { data, isLoading, isError } = useGetWordMeaningsQuery([lowercaseWord], {
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMountOrArgChange: false,
+  });
+
+  const isActiveWord = !!activeWords?.find((a) => a.word.toLowerCase() === lowercaseWord);
 
   const renderWordDetails = () => {
     let result = null;
-    if (isFetching) {
+    if (isLoading) {
       result = <ActivityIndicator />;
     } else if (isError) {
       result = <Text>We couldn't fetch the details for this word.</Text>;
     } else {
       const dict = data?.dict!;
-      const wordGroupOrNot = dict[selectedWord];
+      const wordGroupOrNot = dict[lowercaseWord];
       if (isDictionaryWordGroup(wordGroupOrNot)) {
         const wordGroupObj = wordGroupOrNot;
         result = wordGroupObj.wordGroup.map((group) => <WordDetail key={group.id} definition={group} />);
@@ -42,11 +52,21 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
       <ScrollView contentContainerStyle={styles.cardContainer}>
         <CloseIcon onPress={onDismiss} />
         <View>
-          <Text style={styles.word}>{selectedWord}</Text>
+          <Text style={[styles.word, isActiveWord ? styles.activeWord : null]}>
+            {selectedWord}
+            {isActiveWord ? '*' : ''}
+          </Text>
+          {isActiveWord ? (
+            <Text style={styles.activeWordDescription}>
+              *This word is highlighted because it is being actively taught during this conversation.
+            </Text>
+          ) : null}
           {renderWordDetails()}
         </View>
         <Divider />
-        <Title fontSize="h4">Add to your list</Title>
+        <Title centered size="h4">
+          Add to your list
+        </Title>
         <View style={styles.actionsContainer}>
           <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
         </View>
@@ -76,6 +96,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  activeWord: {
+    color: Colors.yellow[600],
+    marginBottom: 8,
+  },
+  activeWordDescription: {
+    fontSize: 12,
+    color: Colors.yellow[600],
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
   },
   actionsContainer: {
     flexDirection: 'row',

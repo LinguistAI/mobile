@@ -1,6 +1,3 @@
-import * as SecureStore from "expo-secure-store";
-import { LastMessageObject } from "../hooks/useChatMessages";
-
 export const formatAsStr = (input: string | string[]): string => {
   if (Array.isArray(input)) {
     return input.join(', ');
@@ -13,9 +10,18 @@ export const updateArrayAtIndex = (arr: any[], index: number, val: any) => {
   return [...arr.slice(0, index), val, ...arr.slice(index + 1)];
 };
 
-export const getLastMessages = async () => {
-  const lastMessagesStr = await SecureStore.getItemAsync("lastMessages")
-  if (!lastMessagesStr) return {}
-  const lastMessages = JSON.parse(lastMessagesStr) as LastMessageObject
-  return lastMessages
-}
+/**
+ * Converts milliseconds to seconds.
+ *
+ * @param {number} ms - The number of milliseconds.
+ * @param {boolean} [pretty=false] - If true, rounds the result down to the nearest whole number.
+ * @returns {number} The number of seconds equivalent to the input milliseconds.
+ */
+export const msToSeconds = (ms: number, pretty = false) => {
+  let seconds = ms / 1000;
+  if (pretty) {
+    seconds = Math.floor(seconds);
+  }
+
+  return seconds;
+};

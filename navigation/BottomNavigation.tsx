@@ -1,10 +1,11 @@
 import IonIcons from '@expo/vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LeaderboardScreen from '../screens/leaderboard/LeaderboardScreen';
 import HomeStackNavigator from './HomeStackNavigator';
 import Colors from '../theme/colors';
 import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
+import LeaderboardTabController from '../screens/leaderboard/LeaderBoardTabController';
+import LeaderboardNavigator from './LeaderboardNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,12 +36,12 @@ const BottomNavigation = () => {
         component={WordBankNavigation}
         options={{
           tabBarLabel: 'Word Bank',
-          tabBarIcon: ({ color, size }) => <IonIcons name="list-outline" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <IonIcons name="book-outline" size={size} color={color} />,
         }}
       />
       <Tab.Screen
         name="Leaderboard"
-        component={LeaderboardScreen}
+        component={LeaderboardNavigator}
         options={{
           tabBarIcon: ({ color, size }) => <IonIcons name="podium-outline" size={size} color={color} />,
         }}

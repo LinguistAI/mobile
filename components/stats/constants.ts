@@ -1,0 +1,11 @@
+import { SortBy } from '../../types';
+
+export const GRAPH_WIDTH_TO_SCREEN_WIDTH_RATIO = 0.9;
+export const DEFAULT_GRAPH_HEIGHT = 220;
+
+const STAT_POLLING_INTERVAL_SECONDS = 120;
+const MS_TO_SECONDS = 1000;
+export const STAT_POLLING_INTERVAL = STAT_POLLING_INTERVAL_SECONDS * MS_TO_SECONDS;
+
+export const DEFAULT_DAY_LIMIT = 75;
+export const DEFAULT_SORT = SortBy.DESC;

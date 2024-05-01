@@ -1,9 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import Colors from '../../theme/colors';
 import ActionIcon from '../common/ActionIcon';
 import MultilineTextInput from '../common/form/MultilineTextInput';
-import Colors from '../../theme/colors';
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -22,8 +22,15 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
         {text ? (
           <View style={{ flex: 1 }}>
             <ActionIcon
+              loading={props.isPending}
               disabled={props.isPending}
-              icon={<Ionicons name="send" size={24} color={props.isPending ? Colors.gray[300] : Colors.primary[600]} />}
+              icon={
+                <Ionicons
+                  name="send"
+                  size={24}
+                  color={props.isPending ? Colors.gray[300] : Colors.primary[600]}
+                />
+              }
               onPress={() => {
                 props.onSend(text);
                 setText('');
@@ -32,7 +39,12 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
           </View>
         ) : (
           <View>
-            <ActionIcon icon={<Ionicons name="mic" size={32} color={Colors.primary[600]} />} onPress={() => {}} />
+            <ActionIcon
+              icon={<Ionicons name="mic" size={32} color={Colors.primary[600]} />}
+              onPress={() => {}}
+              loading={props.isPending}
+              disabled={props.isPending}
+            />
           </View>
         )}
       </View>
@@ -49,9 +61,8 @@ const styles = StyleSheet.create({
   innerBorder: {
     borderWidth: 2,
     borderColor: Colors.gray[600],
-    borderRadius: 16,
+    borderRadius: 24,
     paddingHorizontal: 16,
-    zIndex: 10,
     backgroundColor: Colors.gray[0],
   },
 });

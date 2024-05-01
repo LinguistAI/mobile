@@ -1,18 +1,20 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import FloatingButton from '../../components/common/FloatingButton';
-import WordDetails from '../../components/word-bank/word-list/words/WordDetailsCollapse';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import Card from '../../components/common/Card';
+import FloatingButton from '../../components/common/FloatingButton';
 import ModalWrapper from '../../components/common/ModalWrapper';
+import CenteredFeedback from '../../components/common/feedback/CenteredFeedback';
+import FetchError from '../../components/common/feedback/FetchError';
+import LoadingIndicator from '../../components/common/feedback/LoadingIndicator';
 import Button from '../../components/common/form/Button';
 import PrimaryTextInput from '../../components/common/form/PrimaryTextInput';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import useNotifications from '../../hooks/useNotifications';
-import { generateErrorResponseMessage } from '../../utils/httpUtils';
 import { objectIsNotEmpty } from '../../components/utils';
 import { useAddWordMutation, useGetWordListByIdQuery } from '../../components/word-bank/api';
-import LoadingIndicator from '../../components/common/LoadingIndicator';
-import FetchError from '../../components/common/FetchError';
+import WordDetailsCollapse from '../../components/word-bank/word-list/words/WordDetailsCollapse';
+import useNotifications from '../../hooks/useNotifications';
+import Colors from '../../theme/colors';
+import { generateErrorResponseMessage } from '../../utils/httpUtils';
 
 interface WordListDetailsScreenProps {
   route: any;
@@ -29,10 +31,11 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
     },
     mode: 'onChange',
   });
-  const { data: selectedList, isFetching: isFetchingList } = useGetWordListByIdQuery(listId);
-  const [addNewWord, { isLoading: isAddingWord, isError: isAddWordError, error: addWordError }] = useAddWordMutation();
+  const { data: selectedList, isLoading: isLoadingList } = useGetWordListByIdQuery(listId);
+  const [addNewWord, { isLoading: isAddingWord, isError: isAddWordError, error: addWordError }] =
+    useAddWordMutation();
 
-  if (isFetchingList) {
+  if (isLoadingList) {
     return <LoadingIndicator subtext="Loading your word list..." />;
   }
 
@@ -64,7 +67,10 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 
   const onError = (error: any) => {
     addNotification({
-      body: generateErrorResponseMessage(error, 'Something went wrong while adding the word to the word list.'),
+      body: generateErrorResponseMessage(
+        error,
+        'Something went wrong while adding the word to the word list.'
+      ),
       type: 'error',
     });
   };
@@ -72,19 +78,24 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
   return (
     <View style={styles.container}>
       {selectedList.words.length === 0 && (
-        <Text style={{ textAlign: 'center', marginTop: 10 }}>
-          It looks like there are no words in this list. Use the add button on the bottom right part of the page to add
-          your first word.
-        </Text>
+        <CenteredFeedback message="It looks like there are no words in this list. Use the add button on the bottom right part of the page to add your first word." />
       )}
       <FlatList
         data={selectedList.words}
-        renderItem={({ item }) => <WordDetails word={item} />}
+        renderItem={({ item }) => <WordDetailsCollapse word={item} />}
         contentContainerStyle={{
           justifyContent: 'center',
           gap: 15,
-          marginHorizontal: 10,
+          marginVertical: 8,
+          marginHorizontal: 8,
         }}
+        ListHeaderComponent={
+          <Card style={styles.listInfo}>
+            <Image source={{ uri: 'https://picsum.photos/200' }} style={styles.image} />
+            <Text style={styles.titleText}>{selectedList.unknownWordList.title}</Text>
+            <Text style={styles.descriptionText}>{selectedList.unknownWordList.description}</Text>
+          </Card>
+        }
       />
       <FloatingButton
         handlePress={() => {
@@ -96,20 +107,22 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
         visible={isAddWordModalVisible}
         title="Add new word"
       >
-        <View style={styles.modalContents}>
-          <FormProvider {...methods}>
-            <PrimaryTextInput
-              label="New word"
-              name="newWord"
-              defaultValue=""
-              rules={{ required: true }}
-              placeholder="Apple"
-            />
-            <Button type="primary" loading={isAddingWord} onPress={methods.handleSubmit(onSubmit, onError)}>
-              ADD
-            </Button>
-          </FormProvider>
-        </View>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
+          <View style={styles.modalContents}>
+            <FormProvider {...methods}>
+              <PrimaryTextInput
+                label="New word"
+                name="newWord"
+                defaultValue=""
+                rules={{ required: true }}
+                placeholder="Apple"
+              />
+              <Button type="primary" loading={isAddingWord} onPress={methods.handleSubmit(onSubmit, onError)}>
+                ADD
+              </Button>
+            </FormProvider>
+          </View>
+        </KeyboardAvoidingView>
       </ModalWrapper>
     </View>
   );
@@ -118,10 +131,40 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 10,
   },
   modalContents: {
     rowGap: 20,
+  },
+  listInfo: {
+    width: '100%',
+    height: 200,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+  },
+  titleText: {
+    position: 'absolute',
+    top: '10%',
+    width: '100%',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.gray[0],
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 10,
+  },
+  descriptionText: {
+    position: 'absolute',
+    bottom: '10%',
+    width: '100%',
+    textAlign: 'center',
+    color: Colors.gray[0],
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 10,
   },
 });
 

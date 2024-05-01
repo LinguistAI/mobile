@@ -13,11 +13,16 @@ interface ChatStreakModalProps {
   handleModalOpen: () => void;
 }
 
-const ChatStreakModal = ({ handleModalClose, handleModalOpen, streakModalVisible, streak }: ChatStreakModalProps) => {
+const ChatStreakModal = ({
+  handleModalClose,
+  handleModalOpen,
+  streakModalVisible,
+  streak,
+}: ChatStreakModalProps) => {
   const { user } = useUser();
 
   useEffect(() => {
-    if (user && isDateToday(user.lastLogin)) {
+    if (user && user.lastLogin && isDateToday(user.lastLogin)) {
       handleModalClose();
     } else {
       handleModalOpen();
@@ -51,7 +56,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    height: '50%',
+    minHeight: '60%',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,

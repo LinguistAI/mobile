@@ -1,21 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
   Modal,
   Platform,
+  RefreshControl,
   SafeAreaView,
   StyleSheet,
   View,
+  ViewToken,
 } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
-import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
+import { useChatMessages } from './useChatMessages';
+import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 
 interface ChatScreenProps {
   route: any;
@@ -23,13 +26,17 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
-  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
-    conversationId,
-  });
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
+  const scrolledToEnd = useRef(false);
   const messagesList = useRef<FlatList>(null);
   useDisableBottomTab();
+  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
+    conversationId,
+    page: currentPage,
+    pageSize: DEFAULT_PAGE_SIZE,
+  });
 
   const isPending = isLoadingMessages || isSendingMessage;
 
@@ -105,7 +112,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.messagesContainer}>
         <FlatList
           ref={messagesList}
-          data={messages}
+          data={messages.filter((m) => m).reverse()}
           automaticallyAdjustKeyboardInsets={true}
           renderItem={({ item }) => (
             <ChatMessageComponent
@@ -116,7 +123,18 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           )}
           ListFooterComponent={renderLastChatMessage()}
           keyExtractor={(item) => item.id || item.timestamp.toString()}
-          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: false })}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoadingMessages}
+              onRefresh={() => setCurrentPage((prev) => prev + 1)}
+            />
+          }
+          onContentSizeChange={() => {
+            if (!scrolledToEnd.current) {
+              messagesList.current?.scrollToEnd({ animated: false });
+              scrolledToEnd.current = true;
+            }
+          }}
         />
       </View>
     );

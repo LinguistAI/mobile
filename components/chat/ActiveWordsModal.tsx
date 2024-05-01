@@ -5,8 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentConversation } from '../../redux/chatSelectors';
 import Divider from '../common/Divider';
 import { useEffect } from 'react';
-import { useGetAllConversationsQuery, useGetConversationQuery } from './api';
-import { isDataResponse } from '../../services';
+import { useGetConversationQuery } from './api';
 import { updateSelectedConversation } from '../../redux/chatSlice';
 import LoadingIndicator from '../common/feedback/LoadingIndicator';
 
@@ -30,10 +29,6 @@ const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
     }
   }, [latestConvoDetails]);
 
-  if (isLoading) {
-    return <LoadingIndicator subtext="Finding your active words..." />;
-  }
-
   const renderDescription = () => {
     const unknownWords = latestConvoDetails?.unknownWords;
     if (!unknownWords || unknownWords.length === 0) {
@@ -52,6 +47,7 @@ const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
   return (
     <ReactNativeModal isVisible={visible} onBackdropPress={() => setVisible(false)}>
       <View style={styles.modalContent}>
+        {isLoading && <LoadingIndicator subtext="Finding your active words..." />}
         <View>
           {renderDescription()}
           <Divider style={{ width: '100%', borderColor: Colors.primary[500] }} />

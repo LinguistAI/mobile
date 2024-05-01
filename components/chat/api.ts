@@ -3,6 +3,7 @@ import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
 import { IMessageCountQuery, Message, MessageCount, QMessages, TChatBot, TConversation } from './types';
 import { Page } from '../../types';
+import { ChatMessage } from '../../screens/chat/types';
 
 export const chatApi = createApi({
   reducerPath: 'chatApi',

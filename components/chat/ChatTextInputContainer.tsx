@@ -42,6 +42,8 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
             <ActionIcon
               icon={<Ionicons name="mic" size={32} color={Colors.primary[600]} />}
               onPress={() => {}}
+              loading={props.isPending}
+              disabled={props.isPending}
             />
           </View>
         )}

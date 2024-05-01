@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ChatMessage, ChatMessageSender } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import { useGetPaginatedChatMessagesQuery, useSendChatMessageMutation } from '../../components/chat/api';
-import { Message } from '../../components/chat/types';
 import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 
 interface UseChatMessagesProps {
@@ -14,19 +13,20 @@ interface UseChatMessagesProps {
 
 export const useChatMessages = (props: UseChatMessagesProps) => {
   const { conversationId, page, pageSize } = props;
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const currentPage = page || INITIAL_PAGE;
   const currentPageSize = pageSize || DEFAULT_PAGE_SIZE;
+  const [previousMessages, setPreviousMessages] = useState<ChatMessage[]>([]);
+  const [addedMessages, setAddedMessages] = useState<ChatMessage[]>([]);
 
-  const [sendMessage, { isLoading: isSendingMessage, isError: responseNotReceived, data }] =
+  const [sendMessage, { isLoading: isSendingMessage, isError: responseNotReceived }] =
     useSendChatMessageMutation();
   const currentResult = useGetPaginatedChatMessagesQuery({
     conversationId,
     params: { page: currentPage, pageSize: currentPageSize },
   });
-  useEffect(() => {
-    if (!currentResult.data) return;
 
+  useMemo(() => {
+    if (!currentResult.data || currentPage > currentResult.data.totalPages) return;
     const chatMessages: ChatMessage[] = currentResult?.data.content
       .map((c) => ({
         content: c.messageText,
@@ -34,13 +34,15 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
         timestamp: c.createdDate,
         id: c.id,
       }))
+      .reverse()
       .filter((c) => c);
-    const merged = [...messages, ...chatMessages];
-    setMessages(merged);
+
+    setPreviousMessages((prev) => [...chatMessages, ...prev]);
+    return chatMessages;
   }, [currentResult.data]);
 
   const addMessage = async (message: ChatMessage) => {
-    setMessages((prev) => [...prev, message]);
+    setAddedMessages((prev) => [...prev, message]);
     const response = await sendMessage({
       conversationId,
       message: message.content,
@@ -52,13 +54,26 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
         timestamp: new Date(),
         id: uuidv4(),
       };
-      setMessages((prev) => [...prev, responseMessage]);
+      setAddedMessages((prev) => [...prev, responseMessage]);
       return 1;
     }
     return -1;
   };
 
-  const isLoadingMessages = currentResult.isLoading;
+  const isLoadingMessages = currentResult.isFetching;
+  const isFirstPage = currentResult.data?.first;
+  const isLastPage = currentResult.data?.last;
+  const hasMoreMessages = useMemo(() => !isLastPage, [isLastPage]);
+  const messages = useMemo(() => [...previousMessages, ...addedMessages], [previousMessages, addedMessages]);
 
-  return { messages, isLoadingMessages, addMessage, isSendingMessage, responseNotReceived };
+  return {
+    messages,
+    isLoadingMessages,
+    addMessage,
+    isSendingMessage,
+    responseNotReceived,
+    hasMoreMessages,
+    isFirstPage,
+    addedMessages: [...addedMessages],
+  };
 };

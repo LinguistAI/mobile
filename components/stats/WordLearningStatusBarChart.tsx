@@ -1,14 +1,7 @@
-import { BarChart } from 'react-native-chart-kit';
 import { WordStatus } from '../word-bank/word-list/types';
-import { StyleSheet, View } from 'react-native';
-import Colors from '../../theme/colors';
 import { useGetWordLearningStatsQuery } from './userStatsApi';
-import Title from '../common/Title';
-import { getGraphDimensions } from './utils';
-import RefetchButton from './RefetchButton';
-import FetchError from '../common/feedback/FetchError';
 import { STAT_POLLING_INTERVAL } from './constants';
-import CardSkeleton from '../common/CardSkeleton';
+import WordLearningStatusBarChartFromData from './WordLearningStatusBarChartFromData';
 
 const LABELS = {
   [WordStatus.LEARNING]: 'Learning',
@@ -17,7 +10,6 @@ const LABELS = {
 };
 
 const WordLearningStatusBarChart = () => {
-  const { width, height } = getGraphDimensions();
   const {
     data: wordLearningStats,
     isLoading,
@@ -26,64 +18,15 @@ const WordLearningStatusBarChart = () => {
     fulfilledTimeStamp,
   } = useGetWordLearningStatsQuery(undefined, { pollingInterval: STAT_POLLING_INTERVAL });
 
-  if (isLoading) return <CardSkeleton count={1} height={height} width={width} />;
-  if (isError || !wordLearningStats) return <FetchError withNavigation={false} />;
-
-  const stats = wordLearningStats.listStats;
-  const data = {
-    labels: Object.values(LABELS),
-    datasets: [
-      {
-        data: [stats[WordStatus.LEARNING], stats[WordStatus.REVIEWING], stats[WordStatus.MASTERED]],
-        colors: [() => Colors.gray[400], () => Colors.yellow[400], () => Colors.green[400]],
-      },
-    ],
-  };
-
-  const handleRefresh = () => {
-    refetch();
-  };
-
   return (
-    <View style={styles.root}>
-      <Title size="h4">Word Learning Progress</Title>
-      <BarChart
-        data={data}
-        width={width}
-        height={height}
-        yAxisLabel=""
-        xAxisLabel=""
-        yAxisSuffix=""
-        chartConfig={{
-          backgroundGradientFrom: Colors.primary[500],
-          backgroundGradientTo: Colors.primary[600],
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        }}
-        showBarTops={false}
-        showValuesOnTopOfBars={true}
-        withCustomBarColorFromData={true}
-        flatColor={true}
-        withInnerLines={false}
-        fromZero={true}
-        style={{
-          borderRadius: 16,
-        }}
-      />
-      <RefetchButton
-        style={{ alignSelf: 'flex-end' }}
-        lastUpdate={new Date(fulfilledTimeStamp)}
-        onPress={handleRefresh}
-      />
-    </View>
+    <WordLearningStatusBarChartFromData
+      data={wordLearningStats}
+      isLoading={isLoading}
+      isError={isError}
+      fulfilledTimeStamp={fulfilledTimeStamp}
+      refetch={refetch}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    alignSelf: 'center',
-  },
-});
 
 export default WordLearningStatusBarChart;

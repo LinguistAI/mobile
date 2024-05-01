@@ -21,6 +21,10 @@ const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress 
     const { fontWeight, ...rest } = style as TextStyle;
     mergedStyle = StyleSheet.compose(styles.titleTextCustomBolder, rest);
   }
+  if (style && (style as TextStyle).fontWeight === '300') {
+    const { fontWeight, ...rest } = style as TextStyle;
+    mergedStyle = StyleSheet.compose(styles.titleTextCustomBold, rest);
+  }
 
   // if size prop is seperetaly set, override other font size values
   if (size) {

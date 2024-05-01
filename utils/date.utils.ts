@@ -6,13 +6,13 @@ type Day = {
 };
 
 export const DaysOfWeek: Day[] = [
-  { id: 0, name: "Monday", short: "Mon", letter: "M" },
-  { id: 1, name: "Tuesday", short: "Tue", letter: "T" },
-  { id: 2, name: "Wednesday", short: "Wed", letter: "W" },
-  { id: 3, name: "Thursday", short: "Thu", letter: "T" },
-  { id: 4, name: "Friday", short: "Fri", letter: "F" },
-  { id: 5, name: "Saturday", short: "Sat", letter: "S" },
-  { id: 6, name: "Sunday", short: "Sun", letter: "S" },
+  { id: 0, name: 'Monday', short: 'Mon', letter: 'M' },
+  { id: 1, name: 'Tuesday', short: 'Tue', letter: 'T' },
+  { id: 2, name: 'Wednesday', short: 'Wed', letter: 'W' },
+  { id: 3, name: 'Thursday', short: 'Thu', letter: 'T' },
+  { id: 4, name: 'Friday', short: 'Fri', letter: 'F' },
+  { id: 5, name: 'Saturday', short: 'Sat', letter: 'S' },
+  { id: 6, name: 'Sunday', short: 'Sun', letter: 'S' },
 ];
 
 export function getCurrentDayOfWeek(): Day {
@@ -24,10 +24,7 @@ export function getLastOneWeek(): Day[] {
   const days = DaysOfWeek;
   const today = getCurrentDayOfWeek();
   const todayIndex = days.findIndex((d) => d.id === today.id);
-  const reorderedDays = [
-    ...days.slice(todayIndex),
-    ...days.slice(0, todayIndex),
-  ];
+  const reorderedDays = [...days.slice(todayIndex), ...days.slice(0, todayIndex)];
   const pastWeek = reorderedDays.slice(0, 7);
   return pastWeek;
 }

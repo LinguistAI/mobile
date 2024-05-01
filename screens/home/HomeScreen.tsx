@@ -4,19 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import ActionIcon from '../../components/common/ActionIcon';
 import Title from '../../components/common/Title';
 import BotCarousel from '../../components/chat/bots/BotCarousel';
-import ExperienceBar from '../../components/gamification/experience/ExperienceBar';
-import LoggedDatesCalendar from '../../components/stats/LoggedDatesCalendar';
+import UserLoggedDatesCalendar from '../../components/stats/UserLoggedDatesCalendar';
 import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
-import QuestsList from "../../components/quest/QuestsList";
-import React, { useEffect } from 'react';
-import { LogBox } from 'react-native';
+import UserExperienceBar from '../../components/gamification/experience/UserExperienceBar';
+import QuestsList from '../../components/quest/QuestsList';
+import React from 'react';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
-
-  useEffect(() => {
-    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -24,7 +19,7 @@ const HomeScreen = () => {
         <View style={styles.container}>
           <View style={styles.topContainer}>
             <View style={styles.xprow}>
-              <ExperienceBar />
+              <UserExperienceBar />
             </View>
             <View style={styles.profileIcon}>
               <ActionIcon
@@ -46,7 +41,7 @@ const HomeScreen = () => {
             <WordLearningStatusBarChart />
           </View>
           <View style={styles.statSection}>
-            <LoggedDatesCalendar />
+            <UserLoggedDatesCalendar />
           </View>
         </View>
       </ScrollView>

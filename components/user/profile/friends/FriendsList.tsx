@@ -1,13 +1,16 @@
 import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useGetFriendsQuery, useRemoveFriendMutation } from '../../userApi';
-import FriendProfileCard from './FriendProfileCard';
+// import FriendProfileCard from './FriendProfileCard';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../../theme/colors';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import CenteredFeedback from '../../../common/feedback/CenteredFeedback';
 import FetchError from '../../../common/feedback/FetchError';
+import Divider from '../../../common/Divider';
+import LText from '../../../common/Text';
+import FriendProfileCard from './FriendProfileCard';
 
 const FriendsList = () => {
   const { data: friends, isLoading, isError, refetch } = useGetFriendsQuery();
@@ -39,6 +42,10 @@ const FriendsList = () => {
 
   return (
     <View style={styles.root}>
+      <LText style={styles.infoText}>
+        You have {friends.length} {friends.length == 1 ? 'friend' : 'friends'}
+      </LText>
+      <Divider style={styles.divider} />
       <FlatList
         numColumns={1}
         contentContainerStyle={styles.friendsListStyle}
@@ -61,7 +68,7 @@ const styles = StyleSheet.create({
   root: {},
   friendsListStyle: {
     gap: 10,
-    padding: 10,
+    paddingHorizontal: 10,
   },
   skeletonContainer: {
     flex: 1,
@@ -74,6 +81,14 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 75,
     alignSelf: 'center',
+  },
+  infoText: {
+    paddingHorizontal: 10,
+    color: Colors.gray[600],
+  },
+  divider: {
+    borderColor: Colors.primary[500],
+    marginTop: 5,
   },
 });
 

@@ -11,6 +11,7 @@ import React from 'react';
 import LText from '../../../common/Text';
 import { formatDistanceToNow } from 'date-fns';
 import useError from '../../../../hooks/useError';
+import { useNavigation } from '@react-navigation/native';
 
 interface FriendRequestCardProps {
   friendship: RFriendRequest;
@@ -25,6 +26,12 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
   const [reject, { isLoading: isRejecting, error: rejectError }] = useRejectFriendRequestMutation();
   useError(acceptError);
   useError(rejectError);
+
+  const navigation = useNavigation();
+
+  const onPressFriendProfile = () => {
+    navigation.navigate('FriendProfile', { friendId: sendUser.id });
+  };
 
   const handleAcceptRequest = async () => {
     await accept({ friendId: sendUser.id });
@@ -90,13 +97,15 @@ const FriendRequestCard = ({ friendship, type }: FriendRequestCardProps) => {
 
   return (
     <Card>
-      <View style={styles.contentRoot}>
-        <View style={styles.infoContainer}>
-          <LText style={styles.mainInfo}>{sendUser.username}</LText>
-          <LText style={styles.subinfo}>{formatDistanceToNow(new Date(date))} ago</LText>
+      <Pressable onPress={onPressFriendProfile}>
+        <View style={styles.contentRoot}>
+          <View style={styles.infoContainer}>
+            <LText style={styles.mainInfo}>{sendUser.username}</LText>
+            <LText style={styles.subinfo}>{formatDistanceToNow(new Date(date))} ago</LText>
+          </View>
+          <View style={styles.actionsRoot}>{renderRequestActions()}</View>
         </View>
-        <View style={styles.actionsRoot}>{renderRequestActions()}</View>
-      </View>
+      </Pressable>
     </Card>
   );
 };

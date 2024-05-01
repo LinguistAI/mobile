@@ -4,6 +4,8 @@ import ActionIcon from '../common/ActionIcon';
 import useNotifications, { NotificationObject } from '../../hooks/useNotifications';
 import Colors from '../../theme/colors';
 import { useSwipe } from '../../hooks/useSwipe';
+import React from 'react';
+import LText from '../common/Text';
 interface NotificationProps {
   notification: NotificationObject;
   handleRemove: (id: string) => void;
@@ -34,11 +36,18 @@ const Notification = (props: NotificationProps) => {
           {notification.title ? (
             <Text style={[styles.title, { color: notification?.titleColor }]}>{notification.title}</Text>
           ) : null}
-          <Text style={[styles.body, { color: notification?.bodyColor }]}>{notification.body}</Text>
+          <Text
+            style={[
+              styles.body,
+              { color: notification?.bodyColor ? notification?.bodyColor : Colors.gray[0] },
+            ]}
+          >
+            {notification.body}
+          </Text>
         </View>
         <View style={styles.closeIcon}>
           <ActionIcon
-            icon={<Ionicons name="close" size={24} color="black" />}
+            icon={<Ionicons name="close" size={24} color={Colors.gray[0]} />}
             onPress={() => handleRemove(notification?.id ?? '')}
           />
         </View>
@@ -54,9 +63,20 @@ const styles = StyleSheet.create({
     zIndex: 9999,
     borderRadius: 10,
     width: '100%',
+    shadowColor: 'black',
+
+    // Shadow properties for iOS
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.9,
+    shadowRadius: 3,
+
+    // Shadow properties for Android
+    elevation: 6,
   },
   notificationCard: {
-    padding: 15,
+    paddingHorizontal: 12,
+    paddingBottom: 3,
+    paddingTop: 10,
     marginBottom: 10,
     flex: 1,
     flexDirection: 'row',
@@ -67,8 +87,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   body: {
+    fontWeight: 'bold',
     fontSize: 16,
+    maxWidth: '98%',
+    lineHeight: 22,
   },
+
   infoBgColor: {
     backgroundColor: Colors.blue[500],
   },
@@ -83,7 +107,7 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     position: 'absolute',
-    right: 10,
-    top: 10,
+    right: 5,
+    top: 5,
   },
 });

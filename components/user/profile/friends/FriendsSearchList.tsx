@@ -21,7 +21,9 @@ const FriendsSearchList = ({ items, isLoading }: FriendsSearchListProps) => {
         numColumns={1}
         data={items}
         contentContainerStyle={styles.listContainer}
-        renderItem={({ item }) => <FriendSearchProfileCard friendActions key={item.username} searchItem={item} />}
+        renderItem={({ item }) => (
+          <FriendSearchProfileCard friendActions key={item.username} searchItem={item} />
+        )}
       />
     </View>
   );

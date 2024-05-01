@@ -75,3 +75,13 @@ export type ChatOptionObject = {
   value: ChatOption;
   icon: React.ReactElement;
 };
+
+interface MessagePaginationParams {
+  page: number;
+  pageSize: number;
+}
+
+export interface QMessages {
+  conversationId: string;
+  params: MessagePaginationParams;
+}

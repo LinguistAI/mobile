@@ -15,7 +15,6 @@ import useUser from '../../../hooks/useUser';
 import Colors from '../../../theme/colors';
 import Divider from '../../common/Divider';
 import Button from '../../common/form/Button';
-import ExperienceBar from '../../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import UserInfoForm from '../onboarding/UserInfoForm';
 import { useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
@@ -23,6 +22,7 @@ import ActionIcon from '../../common/ActionIcon';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import FetchError from '../../common/feedback/FetchError';
 import LText from '../../common/Text';
+import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
 
 const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
 
@@ -130,7 +130,7 @@ const Profile = () => {
       </View>
       <View style={styles.rankAndStreak}>
         <ChatStreakContainer />
-        <ExperienceBar />
+        <UserExperienceBar />
       </View>
       <Divider />
       {renderUserInfoForm()}

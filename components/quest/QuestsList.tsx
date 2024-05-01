@@ -10,9 +10,8 @@ import QuestCountdownTimer from './QuestCountdownTimer';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
 import FetchError from '../common/feedback/FetchError';
 import Title from '../common/Title';
-import { useFocusEffect } from '@react-navigation/native';
-import { STAT_POLLING_INTERVAL } from '../stats/constants';
 import RefetchButton from '../stats/RefetchButton';
+import { QUEST_POLLING_INTERVAL } from './constants';
 
 const QuestsList = () => {
   const {
@@ -21,7 +20,7 @@ const QuestsList = () => {
     isError,
     refetch,
     fulfilledTimeStamp,
-  } = useGetQuestsQuery(undefined, { pollingInterval: STAT_POLLING_INTERVAL });
+  } = useGetQuestsQuery(undefined, { pollingInterval: QUEST_POLLING_INTERVAL });
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = () => {

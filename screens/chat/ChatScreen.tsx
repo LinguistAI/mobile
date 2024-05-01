@@ -1,21 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   KeyboardAvoidingView,
   Modal,
   Platform,
+  RefreshControl,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
+  Text,
   View,
+  ViewToken,
 } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
-import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
+import { useChatMessages } from './useChatMessages';
+import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
+import Colors from '../../theme/colors';
+import { add } from 'date-fns';
+import Card from '../../components/common/Card';
 
 interface ChatScreenProps {
   route: any;
@@ -23,15 +32,41 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
-  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
-    conversationId,
-  });
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const messagesList = useRef<FlatList>(null);
+  const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
+
+  const scrollViewRef = useRef<ScrollView>(null);
   useDisableBottomTab();
 
+  const {
+    addMessage,
+    isLoadingMessages,
+    messages,
+    isSendingMessage,
+    responseNotReceived,
+    hasMoreMessages,
+    addedMessages,
+    isFirstPage,
+  } = useChatMessages({
+    conversationId,
+    page: currentPage,
+    pageSize: DEFAULT_PAGE_SIZE,
+  });
+
   const isPending = isLoadingMessages || isSendingMessage;
+
+  useEffect(() => {
+    if (isFirstPage) {
+      scrollViewRef.current?.scrollToEnd({ animated: false });
+    }
+  }, [isFirstPage]);
+
+  useEffect(() => {
+    if (addedMessages.length > 0) {
+      scrollViewRef.current?.scrollToEnd({ animated: false });
+    }
+  }, [addedMessages.length]);
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -44,7 +79,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       timestamp: new Date(),
     };
 
-    const res = await addMessage(chatMessage);
+    await addMessage(chatMessage);
   };
 
   const onSelectedWordDismiss = () => {
@@ -60,7 +95,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     setModalVisible(true);
   };
 
-  const renderLastChatMessage = () => {
+  const renderPendingMessage = () => {
     if (responseNotReceived) {
       return (
         <ChatMessageComponent
@@ -93,31 +128,54 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   };
 
   const renderMessages = () => {
-    if (isLoadingMessages) {
-      return (
-        <View style={styles.centeredView}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }
-
     return (
       <View style={styles.messagesContainer}>
-        <FlatList
-          ref={messagesList}
-          data={messages}
-          automaticallyAdjustKeyboardInsets={true}
-          renderItem={({ item }) => (
-            <ChatMessageComponent
-              onWordPress={handleWordPress}
-              key={item.id || item.timestamp.toString()}
-              chatMessage={item}
+        <ScrollView
+          ref={scrollViewRef}
+          automaticallyAdjustContentInsets={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoadingMessages}
+              onRefresh={() => {
+                if (hasMoreMessages) {
+                  const newPage = currentPage + Math.floor(addedMessages.length / DEFAULT_PAGE_SIZE) + 1;
+                  setCurrentPage(newPage);
+                }
+              }}
             />
+          }
+        >
+          {!hasMoreMessages && !isLoadingMessages && (
+            <View style={{ marginBottom: 32 }}>
+              <Card
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                }}
+              >
+                <View style={{ padding: 16 }}>
+                  <Text style={{ textAlign: 'center' }}>No more messages...</Text>
+                </View>
+              </Card>
+            </View>
           )}
-          ListFooterComponent={renderLastChatMessage()}
-          keyExtractor={(item) => item.id || item.timestamp.toString()}
-          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: false })}
-        />
+          {isLoadingMessages && (
+            <View>
+              <ActivityIndicator size="large" color={Colors.primary[600]} />
+            </View>
+          )}
+          {messages
+            ?.filter((m) => m)
+            ?.map((item) => (
+              <ChatMessageComponent
+                onWordPress={handleWordPress}
+                key={item.id || item.timestamp.toString()}
+                chatMessage={item}
+              />
+            ))}
+          {renderPendingMessage()}
+        </ScrollView>
       </View>
     );
   };
@@ -144,7 +202,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         <View style={styles.flexContainer}>
           {renderMessages()}
           <View style={styles.textInputContainer}>
-            <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+            <ChatTextInputContainer onSend={onSend} isPending={isPending || isSendingMessage} />
           </View>
         </View>
       </KeyboardAvoidingView>

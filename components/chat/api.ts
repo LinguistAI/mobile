@@ -1,7 +1,17 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
-import { IMessageCountQuery, Message, MessageCount, TChatBot, TConversation } from './types';
+import {
+  IMessageCountQuery,
+  Message,
+  MessageCount,
+  QGetSpeech,
+  QSynthesizeSpeech,
+  RSynthesizeSpeech,
+  TChatBot,
+  TConversation,
+} from './types';
+import axios from 'axios';
 
 export const chatApi = createApi({
   reducerPath: 'chatApi',
@@ -71,6 +81,28 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }, { type: 'Conversation' }],
     }),
+    getSpeech: builder.query<RSynthesizeSpeech, QSynthesizeSpeech>({
+      queryFn: async (args) => {
+        try {
+          const response = await axios.get(
+            'https://fzcdr4nq9b.execute-api.eu-central-1.amazonaws.com/testing/polly',
+            { headers: { 'Content-Type': 'application/json' }, params: args }
+          );
+          const data = response.data;
+          return {
+            data,
+          };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              data: JSON.stringify(error),
+              msg: 'Failed to get speech',
+            },
+          };
+        }
+      },
+    }),
   }),
 });
 
@@ -83,4 +115,5 @@ export const {
   useGetMessageCountByBotQuery,
   useClearConversationMutation,
   useGetConversationQuery,
+  useLazyGetSpeechQuery,
 } = chatApi;

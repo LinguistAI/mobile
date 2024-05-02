@@ -56,8 +56,10 @@ const FriendRequestsScreen = () => {
   }
 
   return (
-    <View style={{ paddingTop: 8, flex: 1 }}>
-      <Title size={'h4'}>Received</Title>
+    <View style={styles.root}>
+      <View style={styles.text}>
+        <Title size="h4">Received</Title>
+      </View>
       <FlatList
         contentContainerStyle={styles.listContentContainer}
         data={receivedRequestsByReceiveDate}
@@ -72,7 +74,9 @@ const FriendRequestsScreen = () => {
         }
       />
       <Divider />
-      <Title size={'h4'}>Sent</Title>
+      <View style={styles.text}>
+        <Title size="h4">Sent</Title>
+      </View>
       <FlatList
         contentContainerStyle={styles.listContentContainer}
         data={sentRequestsByReceiveDate}
@@ -91,14 +95,23 @@ const FriendRequestsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    paddingTop: 8, 
+    flex: 1,
+  },
   listContentContainer: {
     flexGrow: 1,
     gap: 10,
     padding: 10,
+    paddingHorizontal: 20,
   },
   requestTypeCard: {
     borderRadius: 0,
   },
+  text: {
+    marginLeft: 8,
+    marginTop: 5
+  }
 });
 
 export default FriendRequestsScreen;

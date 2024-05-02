@@ -31,7 +31,7 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
   const { add } = useNotifications();
   const defaultValues = {
     name: userDetails.name ?? '',
-    birthDate: new Date(userDetails.birthDate) ?? new Date(),
+    birthDate: new Date(userDetails.birthDate),
     englishLevel: null,
     hobbies: userDetails.hobbies ?? [],
     likes: profileDetails.likes ?? null,
@@ -148,8 +148,8 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
           /> */}
           <ActionButton
             title={
-              methods.getValues('birthDate')
-                ? `Your birth date: ${new Date(methods.getValues('birthDate')).toLocaleDateString()}`
+              userDetails.birthDate 
+                ? `Your birth date: ${new Date(userDetails.birthDate).toLocaleDateString()}`
                 : 'Pick your birthdate'
             }
             icon={<Ionicons name="calendar" size={20} color={Colors.primary[500]} />}

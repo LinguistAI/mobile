@@ -31,7 +31,7 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
   const { add } = useNotifications();
   const defaultValues = {
     name: userDetails.name ?? '',
-    birthDate: new Date(userDetails.birthDate),
+    birthDate: userDetails.birthDate ? new Date(userDetails.birthDate) : new Date(),
     englishLevel: null,
     hobbies: userDetails.hobbies ?? [],
     likes: profileDetails.likes ?? null,

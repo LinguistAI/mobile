@@ -197,11 +197,11 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flexContainer}
+        style={styles.keyboardAvoidingViewContainer}
       >
         <View style={styles.flexContainer}>
           {renderMessages()}
-          <View style={styles.textInputContainer}>
+          <View style={Platform.OS === 'ios' ? styles.textInputContainerIOS : styles.textInputContainerGeneric}>
             <ChatTextInputContainer onSend={onSend} isPending={isPending || isSendingMessage} />
           </View>
         </View>
@@ -217,10 +217,16 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
   },
-  textInputContainer: {
+  textInputContainerGeneric: {
     justifyContent: 'flex-end',
     marginHorizontal: 8,
     paddingBottom: 8,
+  },
+  textInputContainerIOS: {
+    justifyContent: 'flex-end',
+    marginHorizontal: 8,
+    paddingBottom: 60,
+    paddingTop: 4,
   },
   messagesContainer: {
     flex: 10,
@@ -235,6 +241,10 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 10,
+  },
+  keyboardAvoidingViewContainer: {
+    flex: 10,
+    marginTop: 12,
   },
 });
 

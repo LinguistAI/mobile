@@ -148,8 +148,8 @@ const UserInfoForm = ({ userDetails, profileDetails }: UserInfoFormProps) => {
           /> */}
           <ActionButton
             title={
-              userDetails.birthDate 
-                ? `Your birth date: ${new Date(userDetails.birthDate).toLocaleDateString()}`
+              methods.getValues('birthDate')
+                ? `Your birth date: ${new Date(methods.getValues('birthDate')).toLocaleDateString()}`
                 : 'Pick your birthdate'
             }
             icon={<Ionicons name="calendar" size={20} color={Colors.primary[500]} />}

@@ -7,6 +7,7 @@ import * as Speech from 'expo-speech';
 import { Audio } from 'expo-av';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot } from '../../redux/chatSelectors';
+import useError from '../../hooks/useError';
 
 interface TextToSpeechButtonProps {
   text: string;
@@ -20,7 +21,8 @@ const TextToSpeechButton = ({ text, isSentByUser, messageId }: TextToSpeechButto
   const [state, setState] = useState<TextToSpeechState>('idle');
   const currentBot = useSelector(selectCurrentBot);
 
-  const [getSpeech, {}] = useLazyGetSpeechQuery();
+  const [getSpeech, { error }] = useLazyGetSpeechQuery();
+  useError(error);
 
   const handleTextToSpeechLocally = async () => {
     Speech.speak(text);

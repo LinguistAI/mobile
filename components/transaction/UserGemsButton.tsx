@@ -3,8 +3,8 @@ import Colors from '../../theme/colors';
 import { useGetTransactionQuery } from './api';
 import FetchError from '../common/feedback/FetchError';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
-import GemsIndicator from "./GemsIndicator";
 import React from "react";
+import GemsIndicatorButton from "./GemsIndicatorButton";
 
 const UserGems = () => {
   const { data, isError, isLoading } = useGetTransactionQuery();
@@ -26,7 +26,7 @@ const UserGems = () => {
   }
 
   return (
-    <GemsIndicator gemCount={data.gems} />
+    <GemsIndicatorButton gemCount={data.gems} handleOpenModal={() => {}} />
   );
 }
 

@@ -37,7 +37,7 @@ const QuestCountdownTimer = ({ assignedDate }: QuestCountdownTimerProps) => {
 
   return (
     <View style={styles.timerContainer}>
-      <Ionicons name="timer-outline" size={40} color="white" />
+      <Ionicons style={styles.timerIcon} name="timer-outline" size={40} color="white" />
       <Text style={styles.timerText}>{timeLeft}</Text>
     </View>
   );
@@ -62,6 +62,11 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,
     marginLeft: 6,
     marginRight: 5,
+  },
+  timerIcon: {
+    textShadowColor: Colors.gray[800],
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 1,
   }
 });
 

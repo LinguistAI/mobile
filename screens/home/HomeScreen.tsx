@@ -4,9 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import ActionIcon from '../../components/common/ActionIcon';
 import Title from '../../components/common/Title';
 import BotCarousel from '../../components/chat/bots/BotCarousel';
-import ExperienceBar from '../../components/gamification/experience/ExperienceBar';
-import LoggedDatesCalendar from '../../components/stats/LoggedDatesCalendar';
+import UserLoggedDatesCalendar from '../../components/stats/UserLoggedDatesCalendar';
 import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
+import UserExperienceBar from '../../components/gamification/experience/UserExperienceBar';
+import QuestsList from '../../components/quest/QuestsList';
+import React from 'react';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
@@ -17,7 +19,7 @@ const HomeScreen = () => {
         <View style={styles.container}>
           <View style={styles.topContainer}>
             <View style={styles.xprow}>
-              <ExperienceBar />
+              <UserExperienceBar />
             </View>
             <View style={styles.profileIcon}>
               <ActionIcon
@@ -32,11 +34,14 @@ const HomeScreen = () => {
             <Title size="h4">Start a conversation!</Title>
             <BotCarousel />
           </View>
+          <View style={styles.questsSection}>
+            <QuestsList />
+          </View>
           <View style={styles.statSection}>
             <WordLearningStatusBarChart />
           </View>
           <View style={styles.statSection}>
-            <LoggedDatesCalendar />
+            <UserLoggedDatesCalendar />
           </View>
         </View>
       </ScrollView>
@@ -71,6 +76,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   statSection: {
+    marginVertical: 8,
+  },
+  questsSection: {
     marginVertical: 8,
   },
 });

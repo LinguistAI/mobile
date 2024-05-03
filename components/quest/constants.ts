@@ -13,3 +13,4 @@ export const HOURS_IN_MILLIS = MINUTES_IN_MILLIS * 60;
 export const DAYS_IN_MILLIS = HOURS_IN_MILLIS * 24;
 export const QUEST_DONE_TEXT = 'Done';
 export const QUEST_DONE_ICON_SIZE = 25;
+export const QUEST_POLLING_INTERVAL = SECONDS_IN_MILLIS * 30;

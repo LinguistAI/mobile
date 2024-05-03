@@ -1,5 +1,6 @@
 import { ChatMessage } from '../../screens/chat/types';
 import { User } from '../../types';
+import { IUserExperience } from '../gamification/types';
 
 export interface ExtendedChatMessage extends ChatMessage {
   skippable?: boolean;
@@ -29,6 +30,10 @@ export interface IUserDetailedInfo {
 
 export interface QFriendRequest {
   friendId: string;
+}
+
+export interface QFriendStats {
+  userId: string;
 }
 
 export enum FriendshipStatus {
@@ -101,5 +106,16 @@ export type RProfile = {
 
 export type QProfile = {
   profile: RProfile;
-}
+};
 
+export type FriendProfile = {
+  id: string;
+  username: string | null;
+  birthDate: string | null;
+  englishLevel: string | null;
+  hobbies: string[];
+  currentStreak: number;
+  xp: IUserExperience;
+  globalRank: number | null;
+  friendshipStatus: FriendSearchFriendshipStatus;
+};

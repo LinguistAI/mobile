@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { BAR_HEIGHT, BAR_WIDTH } from './constants';
 
-const ExperienceSkeleton = () => {
+const ExperienceBarSkeleton = () => {
   return (
     <View>
       <ShimmerPlaceholder LinearGradient={LinearGradient} style={styles.levelText} />
@@ -27,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ExperienceSkeleton;
+export default ExperienceBarSkeleton;

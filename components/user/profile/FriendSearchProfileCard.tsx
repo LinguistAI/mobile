@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Card from '../../common/Card';
 import Colors from '../../../theme/colors';
 import ActionIcon from '../../common/ActionIcon';
@@ -7,7 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import useNotifications from '../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import { FriendSearchFriendshipStatus, FriendshipStatus, RFriendSearch } from '../types';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { search } from '../../word-bank/word-list/utils';
 
 interface FriendSearchProfileCard {
   searchItem: RFriendSearch;
@@ -18,6 +20,11 @@ const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProf
   const [addFriend, { isError, error }] = useSendFriendRequestMutation();
   const { add } = useNotifications();
   const [updatedSearchItem, setUpdatedSearchItem] = useState(searchItem);
+  const navigation = useNavigation();
+
+  const onPressFriendProfile = () => {
+    navigation.navigate('FriendProfile', { friendId: searchItem.id });
+  };
 
   const handleSendFriendRequest = async () => {
     await addFriend({ friendId: searchItem.id });
@@ -71,18 +78,29 @@ const FriendSearchProfileCard = ({ searchItem, friendActions }: FriendSearchProf
         </View>
       );
     }
+
+    if (friendshipStatus === FriendSearchFriendshipStatus.REQUEST_RECEIVED) {
+      return (
+        <View style={{ display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center' }}>
+          <Ionicons name="stopwatch-outline" color={Colors.green[500]} size={24} />
+          <Text style={styles.requestSent}>Incoming Request</Text>
+        </View>
+      );
+    }
   };
 
   return (
     <Card>
-      <View style={styles.contentRoot}>
-        <View style={styles.container}>
-          <View style={styles.infoContainer}>
-            <Text style={styles.mainInfo}>{searchItem.username}</Text>
+      <Pressable onPress={onPressFriendProfile}>
+        <View style={styles.contentRoot}>
+          <View style={styles.container}>
+            <View style={styles.infoContainer}>
+              <Text style={styles.mainInfo}>{searchItem.username}</Text>
+            </View>
+            <View style={styles.actionsContainer}>{renderFriendActions()}</View>
           </View>
-          <View style={styles.actionsContainer}>{renderFriendActions()}</View>
         </View>
-      </View>
+      </Pressable>
     </Card>
   );
 };

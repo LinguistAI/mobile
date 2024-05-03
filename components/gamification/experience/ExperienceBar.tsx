@@ -4,39 +4,31 @@ import { useGetUserExperienceQuery } from '../api';
 import * as Progress from 'react-native-progress';
 import FetchError from '../../common/feedback/FetchError';
 import Colors from '../../../theme/colors';
-import ExperienceSkeleton from './ExperienceSkeleton';
+import ExperienceBarSkeleton from './ExperienceBarSkeleton';
 import { getCurrentLevelTotalExperience, getProgressRatio } from './utils';
 import { BAR_HEIGHT, BAR_WIDTH } from './constants';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
+import { IUserExperience } from '../types';
+import LText from '../../common/Text';
 
-const ExperienceBar = () => {
-  const { data, isLoading: isXpLoading, isError } = useGetUserExperienceQuery();
+interface ExperienceBarProps {
+  data: IUserExperience;
+}
 
-  if (isXpLoading) {
-    return <ExperienceSkeleton />;
-  }
-
-  if (isError) {
-    return <FetchError withNavigation={false} />;
-  }
-
-  if (!data) {
-    return <CenteredFeedback message="Cannot access level info." />;
-  }
-
+const ExperienceBar = ({ data }: ExperienceBarProps) => {
   const getProgress = () => {
     return getProgressRatio(data.currentExperience, data.totalExperienceToNextLevel);
   };
 
   const renderCurrentLevel = () => {
-    return <Text style={styles.levelText}>{data?.level ? `Level ${data.level}` : 'Level 1'}</Text>;
+    return <LText style={styles.levelText}>{data?.level ? `Level ${data.level}` : 'Level 1'}</LText>;
   };
 
   const renderCurrentExperience = () => {
     return (
-      <Text style={styles.xpText}>
+      <LText style={styles.xpText}>
         {data.currentExperience} / {getCurrentLevelTotalExperience(data.totalExperienceToNextLevel)}
-      </Text>
+      </LText>
     );
   };
 
@@ -68,12 +60,13 @@ const styles = StyleSheet.create({
   },
   levelText: {
     marginBottom: 10,
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: 'bold',
     color: Colors.primary[600],
   },
   xpText: {
-    fontSize: 16,
+    fontSize: 15,
+    fontWeight: '300',
     color: Colors.primary[600],
   },
 });

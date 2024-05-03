@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentConversation } from '../../redux/chatSelectors';
 import Divider from '../common/Divider';
 import { useEffect } from 'react';
-import { useGetAllConversationsQuery } from './api';
-import { isDataResponse } from '../../services';
+import { useGetConversationQuery } from './api';
 import { updateSelectedConversation } from '../../redux/chatSlice';
+import LoadingIndicator from '../common/feedback/LoadingIndicator';
 
 interface ActiveWordsModalProps {
   visible: boolean;
@@ -15,34 +15,45 @@ interface ActiveWordsModalProps {
 }
 
 const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
-  const { refetch } = useGetAllConversationsQuery();
-  const dispatch = useDispatch();
   const conversation = useSelector(selectCurrentConversation);
+  const dispatch = useDispatch();
+  const { data: latestConvoDetails, isLoading } = useGetConversationQuery(conversation?.id, {
+    skip: !conversation,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
-    const updateConvo = async () => {
-      const response = await refetch();
-      const data = response.data;
-      if (!isDataResponse(data)) return;
-      const updatedConvo = data.find((d) => d.id === conversation?.id);
-      dispatch(updateSelectedConversation({ conversation: updatedConvo }));
-    };
-    updateConvo();
-  }, [visible]);
+    if (latestConvoDetails) {
+      dispatch(updateSelectedConversation({ conversation: latestConvoDetails }));
+    }
+  }, [latestConvoDetails]);
+
+  const renderDescription = () => {
+    const unknownWords = latestConvoDetails?.unknownWords;
+    if (!unknownWords || unknownWords.length === 0) {
+      return <Text style={styles.description}>You need to chat more before seeing your active words!</Text>;
+    } else {
+      return (
+        <Text style={styles.description}>
+          We detected that you could use some help learning the words listed below.{' '}
+          <Text style={{ fontWeight: 'bold' }}>{conversation?.bot.name || 'Our chatbot'}</Text> is using these
+          words more frequently.
+        </Text>
+      );
+    }
+  };
 
   return (
     <ReactNativeModal isVisible={visible} onBackdropPress={() => setVisible(false)}>
       <View style={styles.modalContent}>
+        {isLoading && <LoadingIndicator subtext="Finding your active words..." />}
         <View>
-          <Text style={styles.description}>
-            We detected that you could use some help learning the words listed below.{' '}
-            <Text style={{ fontWeight: 'bold' }}>{conversation?.bot.name || 'Our chatbot'}</Text> is using
-            these words more frequently.
-          </Text>
+          {renderDescription()}
           <Divider style={{ width: '100%', borderColor: Colors.primary[500] }} />
           <ScrollView style={{}}>
             <View style={{ flex: 1, padding: 16, rowGap: 8 }}>
-              {conversation?.unknownWords.map((w) => (
+              {latestConvoDetails?.unknownWords.map((w) => (
                 <Text key={w.id} style={styles.word}>
                   {w.word}
                 </Text>
@@ -63,7 +74,7 @@ const styles = StyleSheet.create({
   },
   container: {
     display: 'flex',
-    gap: 16,
+    gap: 8,
   },
   description: {
     color: Colors.gray[700],
@@ -71,6 +82,7 @@ const styles = StyleSheet.create({
   word: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: Colors.yellow[700],
   },
 });
 

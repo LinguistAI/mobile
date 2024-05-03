@@ -8,21 +8,28 @@ import { getGraphDimensions } from './utils';
 import RefetchButton from './RefetchButton';
 import FetchError from '../common/feedback/FetchError';
 import { STAT_POLLING_INTERVAL } from './constants';
+import { RLoggedDate } from './types';
 
 const DEFAULT_DAY_LIMIT = 75;
-const DEFAULT_SORT = SortBy.DESC;
 
-const LoggedDatesCalendar = () => {
+interface LoggedDatesCalendarProps {
+  data: RLoggedDate | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  fulfilledTimeStamp: number | undefined;
+  refetch: any;
+  dayLimit?: number;
+}
+
+const LoggedDatesCalendarFromData = ({
+  data,
+  isLoading,
+  isError,
+  fulfilledTimeStamp,
+  refetch,
+  dayLimit,
+}: LoggedDatesCalendarProps) => {
   const { width, height } = getGraphDimensions();
-  const { data, isLoading, isError, fulfilledTimeStamp, refetch } = useGetLoggedDatesQuery(
-    {
-      daysLimit: DEFAULT_DAY_LIMIT,
-      sort: DEFAULT_SORT,
-    },
-    {
-      pollingInterval: STAT_POLLING_INTERVAL,
-    }
-  );
 
   if (isLoading) return null;
   if (isError || !data) return <FetchError withNavigation={false} />;
@@ -47,7 +54,7 @@ const LoggedDatesCalendar = () => {
       <ContributionGraph
         values={getStats()}
         endDate={new Date()}
-        numDays={DEFAULT_DAY_LIMIT}
+        numDays={dayLimit ? dayLimit : DEFAULT_DAY_LIMIT}
         width={width}
         height={height}
         tooltipDataAttrs={(value) => handleTooltip}
@@ -67,7 +74,7 @@ const LoggedDatesCalendar = () => {
       />
       <RefetchButton
         style={{ alignSelf: 'flex-end' }}
-        lastUpdate={new Date(fulfilledTimeStamp)}
+        lastUpdate={new Date(fulfilledTimeStamp!)}
         onPress={handleRefetch}
       />
     </View>
@@ -80,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoggedDatesCalendar;
+export default LoggedDatesCalendarFromData;

@@ -15,13 +15,14 @@ import useUser from '../../../hooks/useUser';
 import Colors from '../../../theme/colors';
 import Divider from '../../common/Divider';
 import Button from '../../common/form/Button';
-import ExperienceBar from '../../gamification/experience/ExperienceBar';
 import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import UserInfoForm from '../onboarding/UserInfoForm';
 import { useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
 import ActionIcon from '../../common/ActionIcon';
 import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import FetchError from '../../common/feedback/FetchError';
+import LText from '../../common/Text';
+import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
 
 const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
 
@@ -116,21 +117,20 @@ const Profile = () => {
           </View>
         </View>
       </View>
-      <TouchableWithoutFeedback onPress={pickImage}>
-        <Image
-          source={{
-            uri: profileImage,
-          }}
-          defaultSource={avatarPlaceholderImg}
-          style={styles.profileImage}
-        />
-      </TouchableWithoutFeedback>
-      <View style={styles.userInformation}>
-        <Text style={styles.userName}>{user.username}</Text>
+      <View style={styles.profileContainer}>
+        <TouchableWithoutFeedback onPress={pickImage}>
+          <Image
+            source={{
+              uri: profileImage,
+            }}
+            style={styles.profileImage}
+          />
+        </TouchableWithoutFeedback>
+        <LText style={styles.userName}>{user.username}</LText>
       </View>
-      <View style={{ paddingHorizontal: 20, gap: 15, display: 'flex', alignItems: 'center' }}>
-        <ExperienceBar />
+      <View style={styles.rankAndStreak}>
         <ChatStreakContainer />
+        <UserExperienceBar />
       </View>
       <Divider />
       {renderUserInfoForm()}
@@ -168,26 +168,45 @@ const styles = StyleSheet.create({
   },
   topSection: {
     backgroundColor: Colors.primary[200],
-    height: 200,
+    height: 120,
     width: '100%',
   },
   profileImage: {
-    width: 200,
-    height: 200,
-    marginTop: -130,
-    borderRadius: 200 / 2,
+    width: 130,
+    height: 130,
+    borderRadius: 150 / 2,
     alignSelf: 'center',
     borderWidth: 6,
     borderColor: 'white',
+  },
+  profileContainer: {
+    marginTop: -100,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    padding: 20,
+    gap: 14,
   },
   userInformation: {
     marginVertical: 12,
     alignItems: 'center',
     gap: 6,
   },
+  rankAndStreak: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 20,
+  },
   userName: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
+    marginBottom: 55,
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+    maxWidth: '90%',
   },
   userDescription: {
     fontSize: 16,

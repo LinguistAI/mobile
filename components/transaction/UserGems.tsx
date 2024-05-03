@@ -6,7 +6,11 @@ import CenteredFeedback from '../common/feedback/CenteredFeedback';
 import LText from '../common/Text';
 
 const UserGems = () => {
-  const { data, isError } = useGetTransactionQuery();
+  const { data, isError, isLoading } = useGetTransactionQuery();
+
+  if (isLoading) {
+    return <FetchError />;
+  }
 
   if (isError) {
     return <FetchError />;

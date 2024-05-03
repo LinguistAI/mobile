@@ -7,6 +7,7 @@ import {
   Platform,
   SafeAreaView,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
@@ -16,6 +17,10 @@ import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
+import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
+
+const WalkThroughableSafeAreaView = walkthroughable(SafeAreaView);
+const WalkThroughableView = walkthroughable(View);
 
 interface ChatScreenProps {
   route: any;
@@ -29,9 +34,14 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);
+  const { start } = useCopilot();
   useDisableBottomTab();
 
   const isPending = isLoadingMessages || isSendingMessage;
+
+  useEffect(() => {
+    start();
+  }, []);
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -134,9 +144,11 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           <WordInfoCard selectedWord={selectedWord} onDismiss={onSelectedWordDismiss} />
         </View>
       </Modal>
-      <View style={styles.header}>
-        <ChatHeader />
-      </View>
+      <CopilotStep name="chat-screen" order={1} text="This is the chat screen">
+        <WalkThroughableView style={{ flex: 1 }}>
+          <ChatHeader />
+        </WalkThroughableView>
+      </CopilotStep>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.flexContainer}

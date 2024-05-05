@@ -14,6 +14,7 @@ const useError = (error: any, fallback?: () => void) => {
 
   useEffect(() => {
     if (error) {
+      console.log(error.data);
       add({
         type: 'error',
         body: generateErrorResponseMessage(error),

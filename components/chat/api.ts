@@ -84,10 +84,9 @@ export const chatApi = createApi({
     getSpeech: builder.query<RSynthesizeSpeech, QSynthesizeSpeech>({
       queryFn: async (args) => {
         try {
-          const response = await axiosSecure.get(
-            'http://oy0r09kq6c.execute-api.eu-central-1.amazonaws.com/test/polly',
-            { headers: { 'Content-Type': 'application/json' }, params: args }
-          );
+          const response = await axiosSecure.get('/aws/polly', {
+            params: args,
+          });
           const data = response.data;
           return {
             data,

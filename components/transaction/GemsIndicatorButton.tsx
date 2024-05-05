@@ -6,15 +6,15 @@ import ActionButton from "../common/ActionButton";
 
 interface GemsIndicatorProps {
   gemCount: number;
-  handleOpenModal: () => void;
+  onClick: () => void;
 }
 
-const GemsIndicatorButton = ({ gemCount, handleOpenModal }: GemsIndicatorProps) => {
+const GemsIndicatorButton = ({ gemCount, onClick }: GemsIndicatorProps) => {
   return (
     <View style={styles.root}>
       <ActionButton
         bgColor={Colors.primary[500]}
-        onPress={handleOpenModal}
+        onPress={onClick}
         marginTop={-15}
         marginBottom={-15}
         title={

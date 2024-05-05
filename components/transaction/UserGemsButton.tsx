@@ -26,7 +26,7 @@ const UserGems = () => {
   }
 
   return (
-    <GemsIndicatorButton gemCount={data.gems} handleOpenModal={() => {}} />
+    <GemsIndicatorButton gemCount={data.gems} onClick={() => {}} />
   );
 }
 

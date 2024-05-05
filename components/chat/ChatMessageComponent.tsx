@@ -8,6 +8,7 @@ import { ChatMessage, ChatMessageSender } from '../../screens/chat/types';
 import Avatar from '../common/Avatar';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
+import TextToSpeechButton from './TextToSpeechButton';
 import { formatTime } from '../utils';
 
 interface ChatMessageComponentProps {
@@ -81,19 +82,10 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
             </View>
             <View style={styles.bottomRow}>
               <View style={isSentByUser ? styles.micSent : styles.micReceived}>
-                <ActionIcon
-                  icon={
-                    <Ionicons
-                      name="volume-medium"
-                      size={32}
-                      color={isSentByUser ? Colors.gray['100'] : Colors.primary['500']}
-                    />
-                  }
-                  onPress={() => {
-                    Speech.speak(chatMessage.content, {
-                      language: 'en',
-                    });
-                  }}
+                <TextToSpeechButton
+                  text={chatMessage.content}
+                  isSentByUser={isSentByUser}
+                  messageId={chatMessage.id}
                 />
               </View>
               <Text style={styles.timestampReceived}>

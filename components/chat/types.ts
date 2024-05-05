@@ -76,6 +76,7 @@ export type ChatOptionObject = {
   icon: React.ReactElement;
 };
 
+
 export type QSynthesizeSpeech = {
   messageId: string;
   text: string;
@@ -104,3 +105,13 @@ export type PollyVoiceID =
   | 'Matthew'
   | 'Ruth'
   | 'Stephen';
+
+interface MessagePaginationParams {
+  page: number;
+  pageSize: number;
+}
+
+export interface QMessages {
+  conversationId: string;
+  params: MessagePaginationParams;
+}

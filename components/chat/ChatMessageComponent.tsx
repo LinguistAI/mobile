@@ -9,6 +9,7 @@ import Avatar from '../common/Avatar';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
 import TextToSpeechButton from './TextToSpeechButton';
+import { formatTime } from '../utils';
 
 interface ChatMessageComponentProps {
   chatMessage: ChatMessage;
@@ -87,8 +88,8 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
                   messageId={chatMessage.id}
                 />
               </View>
-              <Text style={isSentByUser ? styles.timestampSent : styles.timestampReceived}>
-                {timestamp?.toLocaleTimeString() || ''}
+              <Text style={styles.timestampReceived}>
+                {formatTime(timestamp) || ''}
               </Text>
             </View>
           </View>

@@ -34,6 +34,8 @@ const ControlledDatePicker = (props: DatePickerProps) => {
     defaultValue: props.defaultValue,
   });
 
+  const currentValue = field.value ?? new Date();
+
   return (
     <View>
       {props.label && <Text style={styles.label}>{props.label}</Text>}
@@ -42,7 +44,7 @@ const ControlledDatePicker = (props: DatePickerProps) => {
           field.onChange(selectedDate);
           props.close();
         }}
-        value={field.value}
+        value={currentValue}
         mode="date"
         {...props}
       />

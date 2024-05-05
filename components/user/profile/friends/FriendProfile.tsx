@@ -20,7 +20,6 @@ import {
 } from '../../userApi';
 import Colors from '../../../../theme/colors';
 import Divider from '../../../common/Divider';
-import ExperienceBar from '../../../gamification/experience/ExperienceBar';
 import ChatStreakView from '../../../gamification/streak/ChatStreakView';
 import LText from '../../../common/Text';
 import Title from '../../../common/Title';

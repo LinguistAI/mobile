@@ -4,3 +4,7 @@ export function objectIsNotEmpty<T>(obj: T | {}): obj is T {
   }
   return false;
 }
+
+export function formatTime(timestamp: Date) {
+  return timestamp?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) || '';
+}

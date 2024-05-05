@@ -62,7 +62,7 @@ const ChatHeader = () => {
             <ActionIcon icon={<Ionicons size={28} name="arrow-back" />} onPress={handleGoBack} />
             <Avatar src={currentBot?.profileImage} height={40} width={40} />
           </View>
-          <Text style={styles.botName}>{currentBot?.name?.slice(0, 12).trim()}...</Text>
+          <Text style={styles.botName}>{currentBot?.name?.trim()}</Text>
         </View>
         <View style={styles.rightContainer}>
           <QuizStartButton />

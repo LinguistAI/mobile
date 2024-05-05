@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     flex: 8,
     paddingHorizontal: 20,
     gap: 10,
+    marginTop: 24,
   },
   skeletonRow: {
     flexDirection: 'row',

@@ -25,7 +25,7 @@ const ChatStreakButton = ({ currentStreak, handleOpenModal }: ChatStreakButtonPr
       onPress={handleOpenModal}
       title={
         <View style={styles.lottieContainer}>
-          <LText style={{ fontWeight: 'bold' }}>Streak: {currentStreak}</LText>
+          <LText style={{ fontWeight: 'bold', color: Colors.gray[0] }}>Streak: {currentStreak}</LText>
         </View>
       }
     />

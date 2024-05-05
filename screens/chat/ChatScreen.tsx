@@ -18,8 +18,10 @@ import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
+import { useSelector } from 'react-redux';
+import { selectCurrentBot } from '../../redux/chatSelectors';
+import { getChatWalkthroughStarted, saveChatWalkthroughStarted } from './utils';
 
-const WalkThroughableSafeAreaView = walkthroughable(SafeAreaView);
 const WalkThroughableView = walkthroughable(View);
 
 interface ChatScreenProps {
@@ -28,20 +30,40 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
+  const currentBot = useSelector(selectCurrentBot);
   const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
     conversationId,
   });
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const messagesList = useRef<FlatList>(null);
-  const { start } = useCopilot();
+  const { start, goToNth, currentStepNumber } = useCopilot();
   useDisableBottomTab();
 
+  console.log('currentStepNumber', currentStepNumber);
   const isPending = isLoadingMessages || isSendingMessage;
 
   useEffect(() => {
-    start();
-  }, []);
+    const startChatWalkthrough = async () => {
+      const started = await getChatWalkthroughStarted();
+      if (started) return;
+
+      if (messages.length === 0) {
+        start();
+        saveChatWalkthroughStarted();
+        return;
+      } else {
+        start('chat-message-list');
+      }
+    };
+
+    startChatWalkthrough();
+
+    return () => {
+      setModalVisible(false);
+      setSelectedWord('');
+    };
+  }, [messages]);
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -113,21 +135,32 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 
     return (
       <View style={styles.messagesContainer}>
-        <FlatList
-          ref={messagesList}
-          data={messages}
-          automaticallyAdjustKeyboardInsets={true}
-          renderItem={({ item }) => (
-            <ChatMessageComponent
-              onWordPress={handleWordPress}
-              key={item.id || item.timestamp.toString()}
-              chatMessage={item}
+        <CopilotStep
+          name="chat-message-list"
+          order={6}
+          text="Your messages will apear here. You can click on a word to see the word's definitions."
+          active={messages.length > 0}
+        >
+          <WalkThroughableView>
+            <FlatList
+              ref={messagesList}
+              data={messages}
+              automaticallyAdjustKeyboardInsets={true}
+              renderItem={({ item }) => (
+                <ChatMessageComponent
+                  onWordPress={handleWordPress}
+                  key={item.id || item.timestamp.toString()}
+                  chatMessage={item}
+                />
+              )}
+              ListFooterComponent={renderLastChatMessage()}
+              keyExtractor={(item) => item.id || item.timestamp.toString()}
+              onContentSizeChange={() => {
+                messagesList.current?.scrollToEnd({ animated: false });
+              }}
             />
-          )}
-          ListFooterComponent={renderLastChatMessage()}
-          keyExtractor={(item) => item.id || item.timestamp.toString()}
-          onContentSizeChange={() => messagesList.current?.scrollToEnd({ animated: false })}
-        />
+          </WalkThroughableView>
+        </CopilotStep>
       </View>
     );
   };
@@ -144,7 +177,13 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           <WordInfoCard selectedWord={selectedWord} onDismiss={onSelectedWordDismiss} />
         </View>
       </Modal>
-      <CopilotStep name="chat-screen" order={1} text="This is the chat screen">
+      <CopilotStep
+        name="chat-screen"
+        order={1}
+        text={`This is the chat screen, you are talking with "${
+          currentBot?.name || 'a chatbot'
+        }". You can ask questions or just chat with it.`}
+      >
         <WalkThroughableView style={{ flex: 1 }}>
           <ChatHeader />
         </WalkThroughableView>
@@ -155,9 +194,13 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       >
         <View style={styles.flexContainer}>
           {renderMessages()}
-          <View style={styles.textInputContainer}>
-            <ChatTextInputContainer onSend={onSend} isPending={isPending} />
-          </View>
+          <CopilotStep name="chat-text-input" order={5} text="Type in a message to start chatting!">
+            <WalkThroughableView>
+              <View style={styles.textInputContainer}>
+                <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+              </View>
+            </WalkThroughableView>
+          </CopilotStep>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

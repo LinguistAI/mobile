@@ -9,11 +9,14 @@ import { useGetAllConversationsQuery, useGetConversationQuery } from './api';
 import { isDataResponse } from '../../services';
 import { updateSelectedConversation } from '../../redux/chatSlice';
 import LoadingIndicator from '../common/feedback/LoadingIndicator';
+import { CopilotStep, walkthroughable } from 'react-native-copilot';
 
 interface ActiveWordsModalProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
 }
+
+const WalkThroughableView = walkthroughable(View);
 
 const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
   const conversation = useSelector(selectCurrentConversation);
@@ -52,19 +55,17 @@ const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
   return (
     <ReactNativeModal isVisible={visible} onBackdropPress={() => setVisible(false)}>
       <View style={styles.modalContent}>
-        <View>
-          {renderDescription()}
-          <Divider style={{ width: '100%', borderColor: Colors.primary[500] }} />
-          <ScrollView style={{}}>
-            <View style={{ flex: 1, padding: 16, rowGap: 8 }}>
-              {latestConvoDetails?.unknownWords.map((w) => (
-                <Text key={w.id} style={styles.word}>
-                  {w.word}
-                </Text>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
+        {renderDescription()}
+        <Divider style={{ width: '100%', borderColor: Colors.primary[500] }} />
+        <ScrollView style={{}}>
+          <View style={{ flex: 1, padding: 16, rowGap: 8 }}>
+            {latestConvoDetails?.unknownWords.map((w) => (
+              <Text key={w.id} style={styles.word}>
+                {w.word}
+              </Text>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     </ReactNativeModal>
   );

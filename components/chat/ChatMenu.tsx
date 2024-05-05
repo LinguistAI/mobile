@@ -7,6 +7,10 @@ import { useSelector } from 'react-redux';
 import { selectCurrentConversation } from '../../redux/chatSelectors';
 import { useNavigation } from '@react-navigation/native';
 import useNotifications from '../../hooks/useNotifications';
+import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
+import { useEffect } from 'react';
+
+const WalkThroughableView = walkthroughable(View);
 
 interface ChatMenuProps {
   menuVisible: boolean;
@@ -18,6 +22,7 @@ const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps)
   const conversation = useSelector(selectCurrentConversation);
   const navigation = useNavigation();
   const { add } = useNotifications();
+
   if (!conversation) {
     navigation.navigate('Conversations');
     add({ body: 'Please start a conversation first!', type: 'warning' });
@@ -43,18 +48,29 @@ const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps)
         <Ionicons size={24} name="ellipsis-vertical" color={Colors.primary['900']} />
       </MenuTrigger>
       <MenuOptions>
-        {menuOptions.map((option, index) => (
-          <MenuOption
-            key={option.value}
-            onSelect={() => triggerOption(option.value)}
-            style={[styles.optionContainer, index === menuOptions.length - 1 && styles.lastOptionContainer]}
-          >
-            <View style={styles.optionContent}>
-              {option.icon}
-              <Text style={styles.option}>{option.label}</Text>
-            </View>
-          </MenuOption>
-        ))}
+        <CopilotStep
+          name="chat-menu-options"
+          order={4}
+          text="You can click on 'See Active Words' to see the active words used in this conversation.  Active words will be used by the chatbot more frequently so that you can learn bout them. The words are selected from your wordlists on a daily basis."
+        >
+          <WalkThroughableView>
+            {menuOptions.map((option, index) => (
+              <MenuOption
+                key={option.value}
+                onSelect={() => triggerOption(option.value)}
+                style={[
+                  styles.optionContainer,
+                  index === menuOptions.length - 1 && styles.lastOptionContainer,
+                ]}
+              >
+                <View style={styles.optionContent}>
+                  {option.icon}
+                  <Text style={styles.option}>{option.label}</Text>
+                </View>
+              </MenuOption>
+            ))}
+          </WalkThroughableView>
+        </CopilotStep>
       </MenuOptions>
     </Menu>
   );

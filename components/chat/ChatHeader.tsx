@@ -8,11 +8,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
 import QuizStartButton from './QuizStartButton';
 import ChatMenu from './ChatMenu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChatOption } from './types';
 import useNotifications from '../../hooks/useNotifications';
 import { useClearConversationMutation } from './api';
 import ActiveWordsModal from './ActiveWordsModal';
+import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
+
+const WalkThroughableView = walkthroughable(View);
 
 const ChatHeader = () => {
   const [chatMenuVisible, setChatMenuVisible] = useState(false);
@@ -21,9 +24,16 @@ const ChatHeader = () => {
   const conversation = useSelector(selectCurrentConversation);
   const navigation = useNavigation();
   const { add } = useNotifications();
-
   const [clearConvo, {}] = useClearConversationMutation();
-
+  const { copilotEvents } = useCopilot();
+  copilotEvents.on('stepChange', (step) => {
+    if (step?.order === 3 || step?.order === 4) {
+      setChatMenuVisible(true);
+    }
+    if (step?.order === 5) {
+      setChatMenuVisible(false);
+    }
+  });
   const handleGoBack = () => {
     navigation.navigate('Conversations');
   };
@@ -65,15 +75,25 @@ const ChatHeader = () => {
           <Text style={styles.botName}>{currentBot?.name?.slice(0, 12).trim()}...</Text>
         </View>
         <View style={styles.rightContainer}>
-          <QuizStartButton />
-          <ChatMenu
-            menuVisible={chatMenuVisible}
-            setMenuVisible={setChatMenuVisible}
-            triggerOption={triggerOption}
-          />
-          {activeWordsVisible && (
-            <ActiveWordsModal setVisible={setActiveWordsVisible} visible={activeWordsVisible} />
-          )}
+          <CopilotStep
+            name="chat-quiz-button"
+            order={2}
+            text="The 'Start Quiz' button will be enabled after you chat for a certain amount with the bot. It will send you to a quiz to test your knowledge of the words used in the conversation."
+          >
+            <WalkThroughableView>
+              <QuizStartButton />
+            </WalkThroughableView>
+          </CopilotStep>
+          <CopilotStep name="chat-options-menu" order={3} text="This is the options menu for this chat.">
+            <WalkThroughableView>
+              <ChatMenu
+                menuVisible={chatMenuVisible}
+                setMenuVisible={setChatMenuVisible}
+                triggerOption={triggerOption}
+              />
+            </WalkThroughableView>
+          </CopilotStep>
+          <ActiveWordsModal setVisible={setActiveWordsVisible} visible={activeWordsVisible} />
         </View>
       </View>
     </View>

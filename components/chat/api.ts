@@ -1,7 +1,16 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
-import { IMessageCountQuery, Message, MessageCount, QMessages, TChatBot, TConversation } from './types';
+import {
+  IMessageCountQuery,
+  Message,
+  MessageCount,
+  QMessages,
+  QTranscribe,
+  RTranscribeMsg,
+  TChatBot,
+  TConversation,
+} from './types';
 import { Page } from '../../types';
 import { ChatMessage } from '../../screens/chat/types';
 
@@ -83,6 +92,15 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }, { type: 'Conversations' }],
     }),
+    sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
+      //TODO any degistir
+      query: ({ key, audio }) => ({
+        url: `aws/transcribe`,
+        method: 'POST',
+        body: { audio },
+        params: key,
+      }),
+    }),
   }),
 });
 
@@ -96,4 +114,5 @@ export const {
   useClearConversationMutation,
   useGetConversationQuery,
   useGetPaginatedChatMessagesQuery,
+  useSendTranscriptionRequestMutation,
 } = chatApi;

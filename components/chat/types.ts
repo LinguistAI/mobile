@@ -85,3 +85,11 @@ export interface QMessages {
   conversationId: string;
   params: MessagePaginationParams;
 }
+
+export type RTranscribeMsg = {
+  message: string;
+};
+
+export type QTranscribe = {
+  key: string;
+};

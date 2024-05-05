@@ -6,6 +6,7 @@ import {
   Message,
   MessageCount,
   QGetSpeech,
+  QMessages,
   QSynthesizeSpeech,
   RSynthesizeSpeech,
   TChatBot,

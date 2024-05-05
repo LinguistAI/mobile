@@ -48,6 +48,7 @@ export const chatApi = createApi({
       providesTags: (result, error, args) => [
         { type: 'Message', id: `${args.conversationId}-${args.params.page}-${args.params.pageSize}}` },
       ],
+      keepUnusedDataFor: 0,
     }),
     createNewConversation: builder.mutation<TConversation, string>({
       query: (botId: string) => ({

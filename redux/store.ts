@@ -7,6 +7,7 @@ import { userStatsApi } from '../components/stats/userStatsApi';
 import { userApi } from '../components/user/userApi';
 import { questsApi } from '../components/quest/api';
 import { quizApi } from '../components/quiz/quizApi';
+import { transactionApi } from '../components/transaction/api';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     [userStatsApi.reducerPath]: userStatsApi.reducer,
     [questsApi.reducerPath]: questsApi.reducer,
     [quizApi.reducerPath]: quizApi.reducer,
+    [transactionApi.reducerPath]: transactionApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -27,5 +29,6 @@ export const store = configureStore({
       .concat(userApi.middleware)
       .concat(userStatsApi.middleware)
       .concat(questsApi.middleware)
+      .concat(transactionApi.middleware)
       .concat(quizApi.middleware),
 });

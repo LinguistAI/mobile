@@ -21,8 +21,7 @@ const GemsIndicator = ({ gemCount }: GemsIndicatorProps) => {
 
 const styles = StyleSheet.create({
   root: {
-    marginLeft: 120,
-    marginRight: 120,
+    display: 'flex',
     padding: 5,
     borderRadius: 5,
     margin: 10,

@@ -1,19 +1,24 @@
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import Colors from '../../theme/colors';
 import { useGetTransactionQuery } from './api';
 import FetchError from '../common/feedback/FetchError';
 import CenteredFeedback from '../common/feedback/CenteredFeedback';
-import React from "react";
+import React, { useCallback } from "react";
 import GemsIndicatorButton from "./GemsIndicatorButton";
 
 const UserGems = () => {
-  const { data, isError, isLoading } = useGetTransactionQuery();
+  const { data, isError, isLoading, refetch } = useGetTransactionQuery();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   if (isLoading) {
     return (
-      <View style={styles.root}>
-        <ActivityIndicator size={40} color={Colors.gray[0]} />
-      </View>
+      <GemsIndicatorButton gemCount={<ActivityIndicator size={40} color={Colors.gray[0]} />} onClick={() => {}} />
     );
   }
 
@@ -29,19 +34,5 @@ const UserGems = () => {
     <GemsIndicatorButton gemCount={data.gems} onClick={() => {}} />
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    marginLeft: 120,
-    marginRight: 120,
-    padding: 5,
-    borderRadius: 5,
-    margin: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.primary[500],
-  },
-});
 
 export default UserGems;

@@ -1,4 +1,4 @@
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import Colors from '../../theme/colors';
 import { useGetTransactionQuery } from './api';
 import FetchError from '../common/feedback/FetchError';
@@ -11,9 +11,7 @@ const UserGems = () => {
 
   if (isLoading) {
     return (
-      <View style={styles.root}>
-        <ActivityIndicator size={40} color={Colors.gray[0]} />
-      </View>
+      <GemsIndicator gemCount={<ActivityIndicator size={40} color={Colors.gray[0]} />} onClick={() => {}} />
     );
   }
 
@@ -29,19 +27,5 @@ const UserGems = () => {
     <GemsIndicator gemCount={data.gems} />
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    marginLeft: 120,
-    marginRight: 120,
-    padding: 5,
-    borderRadius: 5,
-    margin: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.primary[500],
-  },
-});
 
 export default UserGems;

@@ -10,6 +10,7 @@ import * as FileSystem from 'expo-file-system';
 import { isRequestOptions } from 'openai/core';
 import { useSendTranscriptionRequestMutation } from './api';
 import useUser from '../../hooks/useUser';
+import { decode as atob, encode as btoa } from 'base-64';
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -70,16 +71,33 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
         });
 
         const fileUri = FileSystem.documentDirectory + 'recordings/' + `${fileName}`;
-        sendAudio({ key: { key: fileName }, audio: fileUri });
+        // sendAudio({ key: { key: fileName }, audio: fileUri });
 
+        const fileInfo = await FileSystem.getInfoAsync(fileUri!);
+        if (fileInfo.exists) {
+          const fileArray = await FileSystem.readAsStringAsync(fileUri!, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          console.log(base64ToByteArray(fileArray));
+
+          // Send the audio file as a byte array
+          sendAudio({ key: { key: fileName }, audio: base64ToByteArray(fileArray) });
+
+          // reset our states to record again
+          setRecording(null);
+          setIsRecording(false);
+        } else {
+          console.error('Recording file does not exist');
+        }
         // This is for simply playing the sound back
         const playbackObject = new Audio.Sound();
         await playbackObject.loadAsync({ uri: FileSystem.documentDirectory + 'recordings/' + `${fileName}` });
         await playbackObject.playAsync();
 
         // resert our states to record again
-        setRecording(null);
-        setIsRecording(false);
+        // setRecording(null);
+        // setIsRecording(false);
       }
     } catch (error) {
       console.error('Failed to stop recording', error);
@@ -89,7 +107,16 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   if (isSendingTransError) {
     console.log('of:', transError);
   }
+  function base64ToByteArray(base64String: string) {
+    var binaryString = atob(base64String);
+    var byteArray = new Uint8Array(binaryString.length);
 
+    for (var i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+
+    return byteArray;
+  }
   const cleanupRecording = async () => {
     try {
       console.log('Cleaning up recording');

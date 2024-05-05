@@ -50,14 +50,14 @@ const StreakDisplay = ({
             const distance = getDistanceBetweenTodayAndDay(day);
             if (distance > currentStreak) {
               isStreakDay = false;
-            } else if (distance > 0) {
+            } else if (distance >= 0) {
               isStreakDay = true;
             }
 
             const markedIcon = isStreakDay ? (
-              <Ionicons name="chatbubbles" size={20} color="white" />
+              <Ionicons name="chatbubbles" size={18} color="white" />
             ) : (
-              <Ionicons name="chatbubbles" size={14} color={Colors.gray['500']} />
+              <Ionicons name="chatbubbles" size={16} color={Colors.gray['500']} />
             );
 
             const backgroundColor = isStreakDay ? Colors.primary['500'] : Colors.gray['500'];
@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
+    width: '90%',
     marginTop: 20,
     gap: 5,
     paddingHorizontal: 15,

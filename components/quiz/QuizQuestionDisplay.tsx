@@ -7,7 +7,7 @@ interface QuestionDisplayProps {
   question: string;
 }
 
-const QuestionDisplay = ({ question, questionNo, totalNumberOfQuestions }: QuestionDisplayProps) => {
+const QuizQuestionDisplay = ({ question, questionNo, totalNumberOfQuestions }: QuestionDisplayProps) => {
   return (
     <View>
       <View style={styles.questionCard}>
@@ -47,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestionDisplay;
+export default QuizQuestionDisplay;

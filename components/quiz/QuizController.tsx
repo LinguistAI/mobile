@@ -3,7 +3,7 @@ import QuizQuestion from './QuizQuestion';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import Button from '../common/form/Button';
 import QuizHeader from './QuizHeader';
-import ChoiceFeedback from './ChoiceFeedback';
+import QuestionChoiceFeedback from './QuestionChoiceFeedback';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { getRandomPositiveFeedback } from './utils';
 import { useNavigation } from '@react-navigation/native';
@@ -224,10 +224,10 @@ const QuizController = () => {
     (phase === 'answered' || phase === 'end') && (
       <View style={styles.feedbackContainer}>
         <Animated.View entering={FadeInDown} exiting={FadeOutDown.duration(300)}>
-          <ChoiceFeedback title={getFeedbackTitle()} type={getFeedbackType()}>
+          <QuestionChoiceFeedback title={getFeedbackTitle()} type={getFeedbackType()}>
             {getAnswerFeedback()}
             <View style={styles.actionBtnContainer}>{renderNextQuestionButton()}</View>
-          </ChoiceFeedback>
+          </QuestionChoiceFeedback>
         </Animated.View>
       </View>
     );

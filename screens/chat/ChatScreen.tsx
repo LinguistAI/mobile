@@ -57,6 +57,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const isPending = isLoadingMessages || isSendingMessage;
 
   useEffect(() => {
+    console.log(isFirstPage);
     if (isFirstPage) {
       scrollViewRef.current?.scrollToEnd({ animated: false });
     }
@@ -135,9 +136,9 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           automaticallyAdjustContentInsets={true}
           refreshControl={
             <RefreshControl
-              refreshing={isLoadingMessages}
+              refreshing={false}
               onRefresh={() => {
-                if (hasMoreMessages) {
+                if (hasMoreMessages && !isLoadingMessages) {
                   const newPage = currentPage + Math.floor(addedMessages.length / DEFAULT_PAGE_SIZE) + 1;
                   setCurrentPage(newPage);
                 }
@@ -155,7 +156,24 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
                 }}
               >
                 <View style={{ padding: 16 }}>
-                  <Text style={{ textAlign: 'center' }}>No more messages...</Text>
+                  <Text style={{ textAlign: 'center' }}>You reached the start of the conversation!</Text>
+                </View>
+              </Card>
+            </View>
+          )}
+          {hasMoreMessages && !isLoadingMessages && (
+            <View style={{ marginBottom: 32 }}>
+              <Card
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                }}
+              >
+                <View style={{ padding: 8 }}>
+                  <Text style={{ textAlign: 'center', fontSize: 13, color: Colors.gray[600] }}>
+                    Pull to load more messages...
+                  </Text>
                 </View>
               </Card>
             </View>

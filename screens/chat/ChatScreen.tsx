@@ -134,34 +134,32 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     }
 
     return (
-      <View style={styles.messagesContainer}>
-        <CopilotStep
-          name="chat-message-list"
-          order={6}
-          text="Your messages will apear here. You can click on a word to see the word's definitions."
-          active={messages.length > 0}
-        >
-          <WalkThroughableView>
-            <FlatList
-              ref={messagesList}
-              data={messages}
-              automaticallyAdjustKeyboardInsets={true}
-              renderItem={({ item }) => (
-                <ChatMessageComponent
-                  onWordPress={handleWordPress}
-                  key={item.id || item.timestamp.toString()}
-                  chatMessage={item}
-                />
-              )}
-              ListFooterComponent={renderLastChatMessage()}
-              keyExtractor={(item) => item.id || item.timestamp.toString()}
-              onContentSizeChange={() => {
-                messagesList.current?.scrollToEnd({ animated: false });
-              }}
-            />
-          </WalkThroughableView>
-        </CopilotStep>
-      </View>
+      <CopilotStep
+        name="chat-message-list"
+        order={6}
+        text="Your messages will apear here. You can click on a word to see the word's definitions."
+        active={messages.length > 0}
+      >
+        <WalkThroughableView style={styles.messagesContainer}>
+          <FlatList
+            ref={messagesList}
+            data={messages}
+            automaticallyAdjustKeyboardInsets={true}
+            renderItem={({ item }) => (
+              <ChatMessageComponent
+                onWordPress={handleWordPress}
+                key={item.id || item.timestamp.toString()}
+                chatMessage={item}
+              />
+            )}
+            ListFooterComponent={renderLastChatMessage()}
+            keyExtractor={(item) => item.id || item.timestamp.toString()}
+            onContentSizeChange={() => {
+              messagesList.current?.scrollToEnd({ animated: false });
+            }}
+          />
+        </WalkThroughableView>
+      </CopilotStep>
     );
   };
 
@@ -184,7 +182,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           currentBot?.name || 'a chatbot'
         }". You can ask questions or just chat with it.`}
       >
-        <WalkThroughableView style={{ flex: 1 }}>
+        <WalkThroughableView>
           <ChatHeader />
         </WalkThroughableView>
       </CopilotStep>
@@ -231,7 +229,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   flexContainer: {
-    flex: 10,
+    flex: 8,
   },
 });
 

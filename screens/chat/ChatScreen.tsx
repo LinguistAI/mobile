@@ -39,6 +39,7 @@ interface ChatScreenProps {
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
   const currentBot = useSelector(selectCurrentBot);
+  const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
   const {
     addMessage,
     isLoadingMessages,
@@ -53,14 +54,12 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     page: currentPage,
     pageSize: DEFAULT_PAGE_SIZE,
   });
-
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
   const scrollViewRef = useRef<ScrollView>(null);
-  const { start, goToNth, currentStepNumber } = useCopilot();
+  const { start } = useCopilot();
   useDisableBottomTab();
-  
+
   useEffect(() => {
     const startChatWalkthrough = async () => {
       const started = await getChatWalkthroughStarted();
@@ -94,8 +93,8 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       scrollViewRef.current?.scrollToEnd({ animated: false });
     }
   }, [addedMessages.length]);
-  
-    const isPending = isLoadingMessages || isSendingMessage;
+
+  const isPending = isLoadingMessages || isSendingMessage;
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -165,79 +164,72 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         active={messages.length > 0}
       >
         <WalkThroughableView style={styles.messagesContainer}>
-        <ScrollView
-          ref={scrollViewRef}
-          automaticallyAdjustContentInsets={true}
-          refreshControl={
-            <RefreshControl
-              refreshing={false}
-              onRefresh={() => {
-                if (hasMoreMessages && !isLoadingMessages) {
-                  const newPage = currentPage + Math.floor(addedMessages.length / DEFAULT_PAGE_SIZE) + 1;
-                  setCurrentPage(newPage);
-                }
-              }}
-            />
-          }
-        >
-          {!hasMoreMessages && !isLoadingMessages && (
-            <View style={{ marginBottom: 32 }}>
-              <Card
-                style={{
-                  width: Dimensions.get('screen').width / 2,
-                  justifyContent: 'center',
-                  alignSelf: 'center',
+          <ScrollView
+            ref={scrollViewRef}
+            automaticallyAdjustContentInsets={true}
+            refreshControl={
+              <RefreshControl
+                refreshing={false}
+                onRefresh={() => {
+                  if (hasMoreMessages && !isLoadingMessages) {
+                    const newPage = currentPage + Math.floor(addedMessages.length / DEFAULT_PAGE_SIZE) + 1;
+                    setCurrentPage(newPage);
+                  }
                 }}
-              >
-                <View style={{ padding: 16 }}>
-                  <Text style={{ textAlign: 'center' }}>You reached the start of the conversation!</Text>
-                </View>
-              </Card>
-            </View>
-          )}
-          {hasMoreMessages && !isLoadingMessages && (
-            <View style={{ marginBottom: 32 }}>
-              <Card
-                style={{
-                  width: Dimensions.get('screen').width / 2,
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                }}
-              >
-                <View style={{ padding: 8 }}>
-                  <Text style={{ textAlign: 'center', fontSize: 13, color: Colors.gray[600] }}>
-                    Pull to load more messages...
-                  </Text>
-                </View>
-              </Card>
-            </View>
-          )}
-          {isLoadingMessages && (
-            <View>
-              <ActivityIndicator size="large" color={Colors.primary[600]} />
-            </View>
-          )}
-          {messages
-            ?.filter((m) => m)
-            ?.map((item) => (
-              <ChatMessageComponent
-                onWordPress={handleWordPress}
-                key={item.id || item.timestamp.toString()}
-                chatMessage={item}
               />
+            }
+          >
+            {!hasMoreMessages && !isLoadingMessages && (
+              <View style={{ marginBottom: 32 }}>
+                <Card
+                  style={{
+                    width: Dimensions.get('screen').width / 2,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                  }}
+                >
+                  <View style={{ padding: 16 }}>
+                    <Text style={{ textAlign: 'center' }}>You reached the start of the conversation!</Text>
+                  </View>
+                </Card>
+              </View>
             )}
-            ListFooterComponent={renderLastChatMessage()}
-            keyExtractor={(item) => item.id || item.timestamp.toString()}
-            onContentSizeChange={() => {
-              messagesList.current?.scrollToEnd({ animated: false });
-            }}
-          />
+            {hasMoreMessages && !isLoadingMessages && (
+              <View style={{ marginBottom: 32 }}>
+                <Card
+                  style={{
+                    width: Dimensions.get('screen').width / 2,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                  }}
+                >
+                  <View style={{ padding: 8 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 13, color: Colors.gray[600] }}>
+                      Pull to load more messages...
+                    </Text>
+                  </View>
+                </Card>
+              </View>
+            )}
+            {isLoadingMessages && (
+              <View>
+                <ActivityIndicator size="large" color={Colors.primary[600]} />
+              </View>
+            )}
+            {messages
+              ?.filter((m) => m)
+              ?.map((item) => (
+                <ChatMessageComponent
+                  onWordPress={handleWordPress}
+                  key={item.id || item.timestamp.toString()}
+                  chatMessage={item}
+                />
+              ))}
+
+            {renderPendingMessage()}
+          </ScrollView>
         </WalkThroughableView>
       </CopilotStep>
-            ))}
-          {renderPendingMessage()}
-        </ScrollView>
-      </View>
     );
   };
 

@@ -157,79 +157,80 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 
   const renderMessages = () => {
     return (
-      <CopilotStep
-        name="chat-message-list"
-        order={6}
-        text="Your messages will apear here. You can click on a word to see the word's definitions."
-        active={messages.length > 0}
-      >
-        <WalkThroughableView style={styles.messagesContainer}>
-          <ScrollView
-            ref={scrollViewRef}
-            automaticallyAdjustContentInsets={true}
-            refreshControl={
-              <RefreshControl
-                refreshing={false}
-                onRefresh={() => {
-                  if (hasMoreMessages && !isLoadingMessages) {
-                    const newPage = currentPage + Math.floor(addedMessages.length / DEFAULT_PAGE_SIZE) + 1;
-                    setCurrentPage(newPage);
-                  }
+      <View style={styles.messagesContainer}>
+        <ScrollView
+          ref={scrollViewRef}
+          automaticallyAdjustContentInsets={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => {
+                if (hasMoreMessages && !isLoadingMessages) {
+                  const newPage = currentPage + Math.floor(addedMessages.length / DEFAULT_PAGE_SIZE) + 1;
+                  setCurrentPage(newPage);
+                }
+              }}
+            />
+          }
+        >
+          {!hasMoreMessages && !isLoadingMessages && (
+            <View style={{ marginBottom: 32 }}>
+              <Card
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
                 }}
-              />
-            }
+              >
+                <View style={{ padding: 16 }}>
+                  <Text style={{ textAlign: 'center' }}>You reached the start of the conversation!</Text>
+                </View>
+              </Card>
+            </View>
+          )}
+          {hasMoreMessages && !isLoadingMessages && (
+            <View style={{ marginBottom: 32 }}>
+              <Card
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                }}
+              >
+                <View style={{ padding: 8 }}>
+                  <Text style={{ textAlign: 'center', fontSize: 13, color: Colors.gray[600] }}>
+                    Pull to load more messages...
+                  </Text>
+                </View>
+              </Card>
+            </View>
+          )}
+          {isLoadingMessages && (
+            <View>
+              <ActivityIndicator size="large" color={Colors.primary[600]} />
+            </View>
+          )}
+          <CopilotStep
+            name="chat-message-list"
+            order={6}
+            text="Your messages will apear here. You can click on a word to see the word's definitions."
+            active={messages.length > 0}
           >
-            {!hasMoreMessages && !isLoadingMessages && (
-              <View style={{ marginBottom: 32 }}>
-                <Card
-                  style={{
-                    width: Dimensions.get('screen').width / 2,
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                  }}
-                >
-                  <View style={{ padding: 16 }}>
-                    <Text style={{ textAlign: 'center' }}>You reached the start of the conversation!</Text>
-                  </View>
-                </Card>
-              </View>
-            )}
-            {hasMoreMessages && !isLoadingMessages && (
-              <View style={{ marginBottom: 32 }}>
-                <Card
-                  style={{
-                    width: Dimensions.get('screen').width / 2,
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                  }}
-                >
-                  <View style={{ padding: 8 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 13, color: Colors.gray[600] }}>
-                      Pull to load more messages...
-                    </Text>
-                  </View>
-                </Card>
-              </View>
-            )}
-            {isLoadingMessages && (
-              <View>
-                <ActivityIndicator size="large" color={Colors.primary[600]} />
-              </View>
-            )}
-            {messages
-              ?.filter((m) => m)
-              ?.map((item) => (
-                <ChatMessageComponent
-                  onWordPress={handleWordPress}
-                  key={item.id || item.timestamp.toString()}
-                  chatMessage={item}
-                />
-              ))}
-
-            {renderPendingMessage()}
-          </ScrollView>
-        </WalkThroughableView>
-      </CopilotStep>
+            <WalkThroughableView>
+              {messages
+                ?.filter((m) => m)
+                ?.map((item) => (
+                  <ChatMessageComponent
+                    onWordPress={handleWordPress}
+                    key={item.id || item.timestamp.toString()}
+                    chatMessage={item}
+                  />
+                ))}
+            </WalkThroughableView>
+          </CopilotStep>
+          {renderPendingMessage()}
+        </ScrollView>
+      </View>
     );
   };
 

@@ -92,14 +92,41 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }, { type: 'Conversations' }],
     }),
+    // sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
+    //   //TODO any degistir
+    //   query: ({ key, audio }) => ({
+    //     url: `aws/transcribe`,
+    //     method: 'POST',
+    //     body: { audio },
+    //     params: key,
+    //   }),
+    // }),
     sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
-      //TODO any degistir
-      query: ({ key, audio }) => ({
-        url: `aws/transcribe`,
-        method: 'POST',
-        body: { audio },
-        params: key,
-      }),
+      queryFn: async (args) => {
+        const headers = {
+          'Content-Type': 'audio/mpeg', // Use 'audio/flac' for FLAC audio files
+          // 'Content-Length': args.audio.length, // Provide the length of the audio data
+        };
+
+        try {
+          const response = await axiosSecure.post('/aws/transcribe', args.audio, {
+            params: args.key,
+            headers: headers,
+          });
+          const data = response.data;
+          return {
+            data,
+          };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              data: JSON.stringify(error),
+              msg: 'Failed to start transcribe request',
+            },
+          };
+        }
+      },
     }),
   }),
 });

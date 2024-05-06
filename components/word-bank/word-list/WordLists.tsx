@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
-import useNotifications from '../../../hooks/useNotifications';
 import FloatingButton from '../../common/FloatingButton';
 import ModalWrapper from '../../common/ModalWrapper';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';

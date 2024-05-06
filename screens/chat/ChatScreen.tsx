@@ -1,19 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   KeyboardAvoidingView,
   Modal,
   Platform,
+  RefreshControl,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
+  ViewToken,
 } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
-import { useChatMessages } from '../../hooks/useChatMessages';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
@@ -21,6 +24,11 @@ import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot } from '../../redux/chatSelectors';
 import { getChatWalkthroughStarted, saveChatWalkthroughStarted } from './utils';
+import { useChatMessages } from './useChatMessages';
+import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
+import Colors from '../../theme/colors';
+import { add } from 'date-fns';
+import Card from '../../components/common/Card';
 
 const WalkThroughableView = walkthroughable(View);
 
@@ -31,18 +39,28 @@ interface ChatScreenProps {
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
   const currentBot = useSelector(selectCurrentBot);
-  const { addMessage, isLoadingMessages, messages, isSendingMessage, responseNotReceived } = useChatMessages({
+  const {
+    addMessage,
+    isLoadingMessages,
+    messages,
+    isSendingMessage,
+    responseNotReceived,
+    hasMoreMessages,
+    addedMessages,
+    isFirstPage,
+  } = useChatMessages({
     conversationId,
+    page: currentPage,
+    pageSize: DEFAULT_PAGE_SIZE,
   });
+
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const messagesList = useRef<FlatList>(null);
+  const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
+  const scrollViewRef = useRef<ScrollView>(null);
   const { start, goToNth, currentStepNumber } = useCopilot();
   useDisableBottomTab();
-
-  console.log('currentStepNumber', currentStepNumber);
-  const isPending = isLoadingMessages || isSendingMessage;
-
+  
   useEffect(() => {
     const startChatWalkthrough = async () => {
       const started = await getChatWalkthroughStarted();
@@ -65,6 +83,20 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     };
   }, [messages]);
 
+  useEffect(() => {
+    if (isFirstPage) {
+      scrollViewRef.current?.scrollToEnd({ animated: false });
+    }
+  }, [isFirstPage]);
+
+  useEffect(() => {
+    if (addedMessages.length > 0) {
+      scrollViewRef.current?.scrollToEnd({ animated: false });
+    }
+  }, [addedMessages.length]);
+  
+    const isPending = isLoadingMessages || isSendingMessage;
+
   const onSend = async (text: string) => {
     if (!text) {
       return;
@@ -76,7 +108,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       timestamp: new Date(),
     };
 
-    const res = await addMessage(chatMessage);
+    await addMessage(chatMessage);
   };
 
   const onSelectedWordDismiss = () => {
@@ -92,7 +124,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     setModalVisible(true);
   };
 
-  const renderLastChatMessage = () => {
+  const renderPendingMessage = () => {
     if (responseNotReceived) {
       return (
         <ChatMessageComponent
@@ -125,14 +157,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   };
 
   const renderMessages = () => {
-    if (isLoadingMessages) {
-      return (
-        <View style={styles.centeredView}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }
-
     return (
       <CopilotStep
         name="chat-message-list"
@@ -141,11 +165,61 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         active={messages.length > 0}
       >
         <WalkThroughableView style={styles.messagesContainer}>
-          <FlatList
-            ref={messagesList}
-            data={messages}
-            automaticallyAdjustKeyboardInsets={true}
-            renderItem={({ item }) => (
+        <ScrollView
+          ref={scrollViewRef}
+          automaticallyAdjustContentInsets={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => {
+                if (hasMoreMessages && !isLoadingMessages) {
+                  const newPage = currentPage + Math.floor(addedMessages.length / DEFAULT_PAGE_SIZE) + 1;
+                  setCurrentPage(newPage);
+                }
+              }}
+            />
+          }
+        >
+          {!hasMoreMessages && !isLoadingMessages && (
+            <View style={{ marginBottom: 32 }}>
+              <Card
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                }}
+              >
+                <View style={{ padding: 16 }}>
+                  <Text style={{ textAlign: 'center' }}>You reached the start of the conversation!</Text>
+                </View>
+              </Card>
+            </View>
+          )}
+          {hasMoreMessages && !isLoadingMessages && (
+            <View style={{ marginBottom: 32 }}>
+              <Card
+                style={{
+                  width: Dimensions.get('screen').width / 2,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                }}
+              >
+                <View style={{ padding: 8 }}>
+                  <Text style={{ textAlign: 'center', fontSize: 13, color: Colors.gray[600] }}>
+                    Pull to load more messages...
+                  </Text>
+                </View>
+              </Card>
+            </View>
+          )}
+          {isLoadingMessages && (
+            <View>
+              <ActivityIndicator size="large" color={Colors.primary[600]} />
+            </View>
+          )}
+          {messages
+            ?.filter((m) => m)
+            ?.map((item) => (
               <ChatMessageComponent
                 onWordPress={handleWordPress}
                 key={item.id || item.timestamp.toString()}
@@ -160,6 +234,10 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           />
         </WalkThroughableView>
       </CopilotStep>
+            ))}
+          {renderPendingMessage()}
+        </ScrollView>
+      </View>
     );
   };
 

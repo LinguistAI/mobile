@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   body: {
     fontWeight: 'bold',
     fontSize: 16,
-    maxWidth: '98%',
+    maxWidth: '100%',
     lineHeight: 22,
   },
 

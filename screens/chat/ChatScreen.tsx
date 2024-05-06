@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   flexContainer: {
-    flex: 8,
+    flex: 10,
   },
 });
 

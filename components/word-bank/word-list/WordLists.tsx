@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import FloatingButton from '../../common/FloatingButton';
@@ -38,6 +38,12 @@ const WordLists = () => {
     isLoading: isLoadingWordLists,
     error: wordListFetchError,
   } = useGetWordListsQuery();
+
+  useEffect(() => {
+    if (wordLists?.lists) {
+      setFilteredWordLists(wordLists.lists);
+    }
+  }, [wordLists]);
 
   if (isLoadingWordLists) {
     return <WordListsSkeleton />;

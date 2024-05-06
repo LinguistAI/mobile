@@ -29,6 +29,7 @@ export const wordBankApi = createApi({
         method: 'GET',
       }),
       providesTags: ['WordLists'],
+      keepUnusedDataFor: 0,
     }),
     getWordListById: builder.query<IWordListWithWordInfo, string>({
       query: (listId) => ({

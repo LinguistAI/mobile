@@ -1,11 +1,11 @@
 import { View, StyleSheet } from 'react-native';
-import StoreItemsList from '../../components/gamification/store/StoreItemsList'
+import StoreWrapper from '../../components/gamification/store/StoreWrapper';
 
 const StoreScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.itemsContainer}>
-        <StoreItemsList />
+        <StoreWrapper />
       </View>
     </View>
   );
@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    gap: 10,
   },
   itemsContainer: {
     flex: 1,

@@ -6,7 +6,11 @@ const Store = createNativeStackNavigator();
 const StoreNavigation = () => {
   return (
     <Store.Navigator>
-      <Store.Screen name="Store" component={StoreScreen} />
+      <Store.Screen 
+        name="Store" 
+        component={StoreScreen}  
+        options={{ headerShown: false }}
+        />
     </Store.Navigator>
   );
 };

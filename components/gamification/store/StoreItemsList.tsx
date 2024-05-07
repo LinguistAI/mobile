@@ -4,7 +4,6 @@ import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import StoreItemCard from './StoreItemCard';
 import {
   useGetStoreItemsQuery,
-  useGetTransactionQuery,
   useGetUserItemsQuery,
   usePurchaseItemMutation,
 } from '../api';
@@ -13,8 +12,8 @@ import FetchError from '../../common/feedback/FetchError';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
 import useNotifications from '../../../hooks/useNotifications';
-import GemsIndicatorButton from '../transaction/GemsIndicatorButton';
 import useError from '../../../hooks/useError';
+import { isDataResponse } from '../../../services';
 
 const StoreItemsList = () => {
   const {
@@ -29,12 +28,7 @@ const StoreItemsList = () => {
     isError: isUserItemsError,
     refetch: userItemsRefetch,
   } = useGetUserItemsQuery();
-  const {
-    data: userGemsData,
-    isLoading: isUserGemsLoading,
-    isError: isUserGemsError,
-    refetch: userGemsRefetch,
-  } = useGetTransactionQuery();
+  
   const [purchase, { isError: isPurchaseError, error: purchaseError }] = usePurchaseItemMutation();
   useError(purchaseError);
 
@@ -45,9 +39,8 @@ const StoreItemsList = () => {
     setIsRefreshing(true);
     await storeItemsRefetch();
     await userItemsRefetch();
-    await userGemsRefetch();
     setIsRefreshing(false);
-  }, [storeItemsRefetch, userItemsRefetch, userGemsRefetch]);
+  }, [storeItemsRefetch, userItemsRefetch]);
 
   const renderSkeletonList = () => {
     return (
@@ -59,15 +52,13 @@ const StoreItemsList = () => {
     );
   };
 
-  if (isStoreItemsLoading || isUserItemsLoading || isUserGemsLoading) return renderSkeletonList();
+  if (isStoreItemsLoading || isUserItemsLoading) return renderSkeletonList();
 
   if (
     isStoreItemsError ||
     isUserItemsError ||
-    isUserGemsError ||
     !storeItemsPage ||
-    !userItemsPage ||
-    !userGemsData
+    !userItemsPage 
   ) {
     return <FetchError />;
   }
@@ -77,16 +68,12 @@ const StoreItemsList = () => {
   }
 
   const handleGemsPress = async (item: IStoreItemWithQuantity) => {
-    await purchase({ itemId: item.id });
-    if (purchaseError || isPurchaseError) {
+    const purchaseResponse = await purchase({ itemId: item.id });
+    if (purchaseError || isPurchaseError || !isDataResponse(purchaseResponse)) {
       return;
     }
     add({ type: 'success', body: 'Item bought successfully.' });
     onRefresh();
-  };
-
-  const handleUserGemsPress = () => {
-    // TODO purchasing gems
   };
 
   const renderItems = () => {
@@ -103,11 +90,6 @@ const StoreItemsList = () => {
 
     return (
       <View style={styles.container}>
-        <GemsIndicatorButton
-          gemCount={userGemsData.gems}
-          onClick={handleUserGemsPress}
-          style={styles.gemsButton}
-        />
         <FlatList
           data={mergedItems}
           renderItem={({ item }) => (
@@ -129,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   storeItemsContainer: {
     flex: 1,
@@ -148,10 +130,6 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 10,
     borderRadius: 10,
-  },
-  gemsButton: {
-    justifyContent: 'flex-end',
-    marginHorizontal: -15,
   },
 });
 

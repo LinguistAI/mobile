@@ -7,11 +7,8 @@ import MultilineTextInput from '../common/form/MultilineTextInput';
 import LText from '../common/Text';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
-import { isRequestOptions } from 'openai/core';
 import useUser from '../../hooks/useUser';
-import { decode as atob, encode as btoa } from 'base-64';
 import { useSendTranscriptionRequestMutation } from './api';
-import { Buffer } from 'buffer';
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -63,8 +60,6 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
       const newRecording = new Audio.Recording();
       setIsRecording(true);
       console.log('Starting Recording');
-      // await newRecording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
-
       await newRecording.prepareToRecordAsync();
       await newRecording.startAsync();
       setRecording(newRecording);
@@ -82,51 +77,22 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
     try {
       console.log('Stopping Recording??');
       if (isRecording && recording) {
-        console.log('Stopping Recording');
         cleanInterval();
 
-        await recording!.stopAndUnloadAsync();
-        const recordingUri = recording!.getURI();
+        await recording.stopAndUnloadAsync();
+        const recordingUri = recording.getURI();
+        let base64 = await FileSystem.readAsStringAsync(recordingUri!, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        base64 = 'data:audio/mpeg;base64,' + base64;
 
-        // reset our states to record again
         setRecording(null);
         setIsRecording(false);
-
-        console.log('uri', recordingUri);
         const fileName = `${user.username}-${Date.now()}-recording.mp3`;
-
-        // Read the recording data as base64
-        const recordingData = await FileSystem.readAsStringAsync(
-          recordingUri!
-          //   ,
-          //   {
-          //   encoding: FileSystem.EncodingType.Base64,
-          //   position: 0,
-          // }
-        );
-        const base64Image = new Buffer(recordingData, 'binary').toString('base64');
-
-        console.log('record data', base64Image);
-
-        // Create a file name for the recording
-
-        // Create the directory for recordings if it doesn't exist
-        const directory = FileSystem.documentDirectory + 'recordings/';
-        await FileSystem.makeDirectoryAsync(directory, { intermediates: true });
-
-        // Write the recording data to the file
-        const fileUri = directory + fileName;
-        await FileSystem.writeAsStringAsync(
-          fileUri,
-          recordingData
-          //   {
-          //   encoding: FileSystem.EncodingType.Base64,
-
-          // }
-        );
+        console.log('Base64 Audio:', base64);
 
         try {
-          mutate({ key: { key: fileName }, audio: base64Image });
+          mutate({ key: { key: fileName }, audio: base64 });
         } catch (error) {
           console.log('alo eror var:', error);
         }
@@ -199,7 +165,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
     return () => {
       if (isRecording) {
         cleanupRecording();
-        clearInterval();
+        clearInterval(intervalRef?.current!);
       }
     };
   }, []);

@@ -103,15 +103,13 @@ export const chatApi = createApi({
     // }),
     sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
       queryFn: async (args) => {
-        const headers = {
-          'Content-Type': 'audio/mpeg',
-          // 'Content-Length': args.audio.length, // Provide the length of the audio data
-        };
-
         try {
           const response = await axiosSecure.post('/aws/transcribe', args.audio, {
             params: args.key,
-            headers: headers,
+            headers: {
+              'Content-Encoding': 'base64',
+              'Content-Type': 'audio/mpeg',
+            },
           });
           const data = response.data;
           return {

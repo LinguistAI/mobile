@@ -12,7 +12,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ViewToken,
 } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
@@ -23,7 +22,6 @@ import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { useChatMessages } from './useChatMessages';
 import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import Colors from '../../theme/colors';
-import { add } from 'date-fns';
 import Card from '../../components/common/Card';
 
 interface ChatScreenProps {

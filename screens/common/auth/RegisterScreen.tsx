@@ -97,7 +97,10 @@ const RegisterScreen = (props: RegisterScreenProps) => {
 
   return (
     <ScrollView style={styles.scrollContainer}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={100}
+      >
         <View style={styles.container}>
           <FormProvider {...methods}>
             <PrimaryTextInput

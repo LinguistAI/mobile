@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
-  FlatList,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -12,19 +11,17 @@ import {
   StyleSheet,
   Text,
   View,
-  ViewToken,
 } from 'react-native';
+import ChatHeader from '../../components/chat/ChatHeader';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
-import WordInfoCard from '../../components/word-bank/WordInfoCard';
-import { ChatMessage, ChatMessageSender } from './types';
-import ChatHeader from '../../components/chat/ChatHeader';
-import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
-import { useChatMessages } from './useChatMessages';
-import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
-import Colors from '../../theme/colors';
-import { add } from 'date-fns';
 import Card from '../../components/common/Card';
+import WordInfoCard from '../../components/word-bank/WordInfoCard';
+import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
+import Colors from '../../theme/colors';
+import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from './constants';
+import { ChatMessage, ChatMessageSender } from './types';
+import { useChatMessages } from './useChatMessages';
 
 interface ChatScreenProps {
   route: any;
@@ -35,6 +32,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
+  const screenHeight = Dimensions.get('window').height;
 
   const scrollViewRef = useRef<ScrollView>(null);
   useDisableBottomTab();
@@ -215,6 +213,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? screenHeight * 0.05 : 0}
         style={styles.flexContainer}
       >
         <View style={styles.flexContainer}>

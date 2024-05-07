@@ -108,6 +108,10 @@ export type QProfile = {
   profile: RProfile;
 };
 
+export type QProfilePicture = {
+  body: string;
+};
+
 export type FriendProfile = {
   id: string;
   username: string | null;
@@ -119,3 +123,7 @@ export type FriendProfile = {
   globalRank: number | null;
   friendshipStatus: FriendSearchFriendshipStatus;
 };
+
+export type RProfilePicture = {
+  url: string;
+}

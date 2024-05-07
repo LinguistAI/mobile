@@ -23,12 +23,12 @@ import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import FetchError from '../../common/feedback/FetchError';
 import LText from '../../common/Text';
 import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
-
-const avatarPlaceholderImg = require('../../../assets/profile-default.jpg');
+import { AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT } from "../../../utils/aws";
+import ProfilePicture from "../ProfilePicture";
 
 const Profile = () => {
   const navigation = useNavigation();
-  const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
+
   const { clearUserDetails, user } = useUser();
 
   const {
@@ -60,6 +60,24 @@ const Profile = () => {
     }, [userInfoRefetch, profileRefetch])
   );
 
+  const uploadImage = async (base64) => {
+    try {
+      const response = await fetch(`${AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT}?key=${user.username}.png`, {
+        method: 'POST',
+        body: JSON.stringify({
+          body: base64
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const jsonResponse = await response.json();
+      console.log('Upload successful:', jsonResponse);
+    } catch (error) {
+      console.error('Upload failed:', error);
+    }
+  };
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -67,10 +85,12 @@ const Profile = () => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
+      // setProfileImage(result.assets[0].uri);
+      await uploadImage(result.assets[0].base64); // Assuming result.assets[0].base64 contains the Base64 string
     }
   };
 
@@ -118,14 +138,7 @@ const Profile = () => {
         </View>
       </View>
       <View style={styles.profileContainer}>
-        <TouchableWithoutFeedback onPress={pickImage}>
-          <Image
-            source={{
-              uri: profileImage,
-            }}
-            style={styles.profileImage}
-          />
-        </TouchableWithoutFeedback>
+        <ProfilePicture username={user.username} />
         <LText style={styles.userName}>{user.username}</LText>
       </View>
       <View style={styles.rankAndStreak}>

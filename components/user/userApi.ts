@@ -11,7 +11,7 @@ import {
   RLeaderboard,
   QProfile,
   RProfile,
-  FriendProfile,
+  FriendProfile, RProfilePicture, QProfilePicture,
 } from './types';
 import { Page, User } from '../../types';
 import { RUserQuests } from '../quest/types';
@@ -19,7 +19,7 @@ import { RUserQuests } from '../quest/types';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo', 'ProfilePicture'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -139,6 +139,22 @@ export const userApi = createApi({
       providesTags: (result, error, userId) => [{ type: 'FriendProfileInfo', id: userId }],
       keepUnusedDataFor: 0,
     }),
+    getProfilePicture: builder.query<RProfilePicture, string>({
+      query: (username: string) => ({
+        method: 'GET',
+        url: `/aws/picture?key=${username}.png`,
+      }),
+      keepUnusedDataFor: 0,
+      providesTags: ['ProfilePicture'],
+    }),
+    setProfilePicture: builder.mutation<void, QProfilePicture>({
+      query: (username: string, picture) => ({
+        url: `/aws/picture?key=${username}.png`,
+        method: 'POST',
+        body: picture,
+      }),
+      invalidatesTags: ['ProfilePicture'],
+    }),
   }),
 });
 
@@ -157,4 +173,6 @@ export const {
   useGetProfileQuery,
   useSetProfileMutation,
   useGetFriendProfileQuery,
+  useGetProfilePictureQuery,
+  useSetProfilePictureMutation,
 } = userApi;

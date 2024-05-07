@@ -1,33 +1,17 @@
+import React from 'react';
 import { RefreshControl, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
-import { useGetTransactionQuery } from '../api';
-import { useCallback, useState } from 'react';
 import GemsIndicatorButton from '../transaction/GemsIndicatorButton';
-import FetchError from '../../common/feedback/FetchError';
+import { RUserGems } from '../types';
 
-const StoreHeader = () => {
+interface StoreHeaderProps {
+  userGemsData: RUserGems;
+  isUserGemsLoading: boolean;
+  isRefreshing: boolean;
+  onRefresh:  () => Promise<void>;
+}
 
-    const {
-        data: userGemsData,
-        isLoading: isUserGemsLoading,
-        isError: isUserGemsError,
-        refetch: userGemsRefetch,
-    } = useGetTransactionQuery();
-    
-    const [isRefreshing, setIsRefreshing] = useState(false);
-
-    const onRefresh = useCallback(async () => {
-        setIsRefreshing(true);
-        await userGemsRefetch();
-        setIsRefreshing(false);
-    }, [userGemsRefetch]);
-
-    if (
-      isUserGemsError ||
-      !userGemsData
-    ) {
-    return <FetchError />;
-    }
+const StoreHeader = ({ userGemsData, isUserGemsLoading, isRefreshing, onRefresh }: StoreHeaderProps) => {
 
     const handleUserGemsPress = () => {
       // TODO purchasing gems
@@ -49,6 +33,10 @@ const StoreHeader = () => {
                   </View>
               </View>
           </View>
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+          />
         </View>
     );
 };

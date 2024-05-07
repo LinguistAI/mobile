@@ -1,71 +1,25 @@
-import { useCallback, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
-import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import StoreItemCard from './StoreItemCard';
 import {
-  useGetStoreItemsQuery,
-  useGetUserItemsQuery,
   usePurchaseItemMutation,
 } from '../api';
-import { IStoreItemWithQuantity } from '../types';
-import FetchError from '../../common/feedback/FetchError';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import { LinearGradient } from 'expo-linear-gradient';
+import { IStoreItemWithQuantity, RStoreItemsPage, RUserItemsPage } from '../types';
 import useNotifications from '../../../hooks/useNotifications';
 import useError from '../../../hooks/useError';
 import { isDataResponse } from '../../../services';
 
-const StoreItemsList = () => {
-  const {
-    data: storeItemsPage,
-    isLoading: isStoreItemsLoading,
-    isError: isStoreItemsError,
-    refetch: storeItemsRefetch,
-  } = useGetStoreItemsQuery();
-  const {
-    data: userItemsPage,
-    isLoading: isUserItemsLoading,
-    isError: isUserItemsError,
-    refetch: userItemsRefetch,
-  } = useGetUserItemsQuery();
-  
+interface StoreItemsListProps {
+  storeItemsPage: RStoreItemsPage;
+  userItemsPage: RUserItemsPage; 
+  isRefreshing: boolean;
+  onRefresh:  () => Promise<void>;
+}
+
+const StoreItemsList  = ({ storeItemsPage, userItemsPage, isRefreshing, onRefresh }: StoreItemsListProps) => {
   const [purchase, { isError: isPurchaseError, error: purchaseError }] = usePurchaseItemMutation();
   useError(purchaseError);
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const { add } = useNotifications();
-
-  const onRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    await storeItemsRefetch();
-    await userItemsRefetch();
-    setIsRefreshing(false);
-  }, [storeItemsRefetch, userItemsRefetch]);
-
-  const renderSkeletonList = () => {
-    return (
-      <View style={styles.skeletonContainer}>
-        {Array.from({ length: 6 }).map((_, index) => (
-          <ShimmerPlaceholder key={index} style={styles.skeletonRectangle} LinearGradient={LinearGradient} />
-        ))}
-      </View>
-    );
-  };
-
-  if (isStoreItemsLoading || isUserItemsLoading) return renderSkeletonList();
-
-  if (
-    isStoreItemsError ||
-    isUserItemsError ||
-    !storeItemsPage ||
-    !userItemsPage 
-  ) {
-    return <FetchError />;
-  }
-
-  if (!storeItemsPage?.storeItems || storeItemsPage?.storeItems?.length === 0) {
-    return <CenteredFeedback message="There are no items in the store" />;
-  }
 
   const handleGemsPress = async (item: IStoreItemWithQuantity) => {
     const purchaseResponse = await purchase({ itemId: item.id });
@@ -116,20 +70,6 @@ const styles = StyleSheet.create({
   storeItemsContainer: {
     flex: 1,
     paddingHorizontal: 10,
-  },
-  itemContentContainer: {
-    flexGrow: 1,
-  },
-  skeletonContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  skeletonRectangle: {
-    width: '48%',
-    height: 200,
-    marginBottom: 10,
-    borderRadius: 10,
   },
 });
 

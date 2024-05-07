@@ -43,9 +43,7 @@ const ProfilePicture = ({ username }: ProfilePictureProps) => {
 
       const response = await mutateProfilePicture(
         username,
-        JSON.stringify({
-          body: base64
-        })
+        base64
       );
 
       console.log(response);

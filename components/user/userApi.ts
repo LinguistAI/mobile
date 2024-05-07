@@ -148,7 +148,7 @@ export const userApi = createApi({
       providesTags: ['ProfilePicture'],
     }),
     setProfilePicture: builder.mutation<void, QProfilePicture>({
-      query: (username: string, picture) => ({
+      query: (username: string, picture: string) => ({
         url: `/aws/picture?key=${username}.png`,
         method: 'POST',
         body: picture,

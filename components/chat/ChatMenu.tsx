@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../theme/colors';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { selectCurrentConversation } from '../../redux/chatSelectors';
+import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
 import { useNavigation } from '@react-navigation/native';
 import useNotifications from '../../hooks/useNotifications';
 import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
@@ -20,6 +20,7 @@ interface ChatMenuProps {
 
 const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps) => {
   const conversation = useSelector(selectCurrentConversation);
+  const currentBot = useSelector(selectCurrentBot);
   const navigation = useNavigation();
   const { add } = useNotifications();
 
@@ -51,7 +52,9 @@ const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps)
         <CopilotStep
           name="chat-menu-options"
           order={4}
-          text="You can click on 'See Active Words' to see the active words used in this conversation.  Active words will be used by the chatbot more frequently so that you can learn bout them. The words are selected from your wordlists on a daily basis."
+          text={`You can click on 'See Active Words' to see the words that are actively being taught in this conversation. Active words will be used by ${
+            currentBot?.name || 'the chatbot'
+          } more frequently so that you can learn about them. The words are selected from your unknown word lists on a daily basis.`}
         >
           <WalkThroughableView>
             {menuOptions.map((option, index) => (

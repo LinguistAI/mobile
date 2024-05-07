@@ -78,7 +78,7 @@ const ChatHeader = () => {
           <CopilotStep
             name="chat-quiz-button"
             order={2}
-            text="The 'Start Quiz' button will be enabled after you chat for a certain amount with the bot. It will send you to a quiz to test your knowledge of the words used in the conversation."
+            text="After chatting for some time, the 'Start Quiz' button will become active. You can then take a quiz to periodically test your understanding of the words used in this conversation."
           >
             <WalkThroughableView>
               <QuizStartButton />

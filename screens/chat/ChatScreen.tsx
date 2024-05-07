@@ -213,7 +213,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           <CopilotStep
             name="chat-message-list"
             order={6}
-            text="Your messages will apear here. You can click on a word to see the word's definitions."
+            text="Your messages will appear here. You can click on a word to see the word's definition(s)."
             active={messages.length > 0}
           >
             <WalkThroughableView>
@@ -251,7 +251,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         order={1}
         text={`This is the chat screen, you are talking with "${
           currentBot?.name || 'a chatbot'
-        }". You can ask questions or just chat with it.`}
+        }". You can ask questions or just chat about anything.`}
       >
         <WalkThroughableView>
           <ChatHeader />

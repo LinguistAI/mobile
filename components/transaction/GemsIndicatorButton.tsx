@@ -1,4 +1,4 @@
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, ViewStyle} from 'react-native';
 import Colors from '../../theme/colors';
 import LText from '../common/Text';
 import React from "react";
@@ -7,11 +7,12 @@ import ActionButton from "../common/ActionButton";
 interface GemsIndicatorProps {
   gemCount: number;
   onClick: () => void;
+  style?: ViewStyle;
 }
 
-const GemsIndicatorButton = ({ gemCount, onClick }: GemsIndicatorProps) => {
+const GemsIndicatorButton = ({ gemCount, onClick, style }: GemsIndicatorProps) => {
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, style]}>
       <ActionButton
         bgColor={Colors.primary[500]}
         onPress={onClick}
@@ -38,7 +39,6 @@ const styles = StyleSheet.create({
   root: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
     flexDirection: 'row',

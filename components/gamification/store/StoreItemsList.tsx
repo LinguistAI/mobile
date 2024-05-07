@@ -10,13 +10,15 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import useNotifications from '../../../hooks/useNotifications';
+import GemsIndicatorButton from '../../transaction/GemsIndicatorButton';
+import { isDataResponse } from '../../../services';
 
 
 const StoreItemsList = () => {
   const { data: storeItemsPage, isLoading: isStoreItemsLoading, isError: isStoreItemsError, refetch: storeItemsRefetch } = useGetStoreItemsQuery();
   const { data: userItemsPage, isLoading: isUserItemsLoading, isError: isUserItemsError, refetch: userItemsRefetch } = useGetUserItemsQuery();
   const { data: userGemsData, isLoading: isUserGemsLoading, isError: isUserGemsError, refetch: userGemsRefetch } = useGetTransactionQuery();
-  const [purchase, { isError: isPurchaseError, error }] = usePurchaseItemMutation();
+  const [purchase, { isError: isPurchaseError, error: purchaseError }] = usePurchaseItemMutation();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { add } = useNotifications();
 
@@ -51,38 +53,36 @@ const StoreItemsList = () => {
   }
 
   const handleGemsPress = async (item: IStoreItemWithQuantity) => {
-    console.log(`Gems button pressed for item: ${item.id}`);
-    await purchase({ itemId: item.id});
-    if (error || isPurchaseError) {
+    const purchaseResponse  = await purchase({ itemId: item.id});
+    if (purchaseError || isPurchaseError) {
       add({
-        body: generateErrorResponseMessage(error),
+        body: generateErrorResponseMessage(purchaseError),
         type: 'error',
       });
       return;
     }
-    else{onRefresh();}
+    if (!isDataResponse(purchaseResponse)) return;
+    add({ type: 'success', body: 'Item bought successfully.' });
+    onRefresh();
+  };
+
+  const handleUserGemsPress = () => {
+    // TODO purchasing gems
   };
 
   const renderItems = () => {
     // Merge store items with user items based on item id
-    const mergedItems: IStoreItemWithQuantity[] = storeItemsPage.storeItems.map(storeItem => {
+    const mergedItems = storeItemsPage.storeItems.map(storeItem => {
       const userItem = userItemsPage.userItems.find(userItem => userItem.userItem.storeItem.id === storeItem.storeItem.id);
       return {
-        ...storeItem.storeItem, // Adjusted to access the storeItem object
+        ...storeItem.storeItem,
         quantityOwned: userItem ? userItem.userItem.quantity : 0
       };
     });
   
-     // Render user gems on top of the FlatList
-    const renderUserGems = () => (
-      <View style={styles.userGemsContainer}>
-        <Text style={styles.userGemsText}>{`User Gems: ${userGemsData.gems}`}</Text>
-      </View>
-    );
-
     return (
-      <View style={styles.storeItemsContainer}>
-        {renderUserGems()}
+      <View style={styles.container}>
+        <GemsIndicatorButton gemCount={userGemsData.gems} onClick={handleUserGemsPress} style={styles.gemsButton}/>
         <FlatList
           data={mergedItems}
           renderItem={({ item }) => (
@@ -90,7 +90,7 @@ const StoreItemsList = () => {
           )}
           numColumns={2}
           keyExtractor={(item) => item.id}
-          style={styles.itemContentContainer}
+          style={styles.storeItemsContainer}
           refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
         />
       </View>
@@ -107,12 +107,12 @@ const StoreItemsList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
+    paddingTop: 20, 
   },
   storeItemsContainer: {
-    flex: 8,
-    paddingHorizontal: 10, // Add horizontal padding
-    paddingBottom: 20, 
+    flex: 1,
+    paddingHorizontal: 10,
   },
   itemContentContainer: {
     flexGrow: 1,
@@ -128,17 +128,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 10,
   },
-  userGemsContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#ffffff', // Background color for the user gems container
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0', // Border color for the user gems container
-  },
-  userGemsText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333333', // Text color for the user gems
+  gemsButton: {
+    justifyContent: 'flex-end',
+    marginHorizontal: -15,
   },
 });
 

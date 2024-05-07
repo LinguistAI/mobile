@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
-import { IStoreItem, IStoreItemWithQuantity } from '../types';
+import { IStoreItemWithQuantity } from '../types';
 import { TYPE_DOUBLE_ANSWER, TYPE_ELIMINATE_WRONG_ANSWER } from '../constants';
+import GemsIndicatorButton from '../../transaction/GemsIndicatorButton';
 
 interface ItemProps {
   storeItem: IStoreItemWithQuantity;
@@ -31,17 +32,14 @@ const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
             </View>
             {renderIcon()}
             <View style={styles.details}>
-              
               <Text style={styles.title}>{cardTitle}</Text>
               <Text style={styles.description}>{storeItem.description}</Text>
             </View>
-            <TouchableOpacity
+            <GemsIndicatorButton
+              gemCount={storeItem.price}
+              onClick={onGemsPress}
               style={styles.gemsButton}
-              onPress={onGemsPress}
-              activeOpacity={0.8} // To reduce the opacity when pressed
-            >
-              <Text style={styles.price}>{`${storeItem.price} gems`}</Text>
-            </TouchableOpacity>
+            />
           </View>
         </View>
       </View>
@@ -51,7 +49,7 @@ const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: 20, // Increased margin for better separation
+    marginBottom: 20, 
     width: '48%',
     position: 'relative',
     marginRight: 8,
@@ -60,13 +58,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     marginTop: 20,
   },
   details: {
@@ -89,11 +80,6 @@ const styles = StyleSheet.create({
     marginBottom: 5, 
     minHeight:70,
     textAlignVertical: 'center',
-  },
-  price: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.gray[0],
   },
   overlay: {
     backgroundColor: Colors.gray['0'],
@@ -121,15 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   gemsButton: {
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.primary[500],
-    borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-  },
-  typeContainer: {
-    width: 120, // Set a fixed width for the type container
   },
 });
 

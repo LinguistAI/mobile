@@ -92,25 +92,19 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }, { type: 'Conversations' }],
     }),
-    // sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
-    //   //TODO any degistir
-    //   query: ({ key, audio }) => ({
-    //     url: `aws/transcribe`,
-    //     method: 'POST',
-    //     body: { audio },
-    //     params: key,
-    //   }),
-    // }),
     sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
       queryFn: async (args) => {
         try {
-          const response = await axiosSecure.post('/aws/transcribe', args.audio, {
-            params: args.key,
-            headers: {
-              'Content-Encoding': 'base64',
-              'Content-Type': 'audio/mpeg',
-            },
-          });
+          const response = await axiosSecure.post(
+            '/aws/transcribe',
+            { audio: args.audio },
+            {
+              params: args.key,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
           const data = response.data;
           return {
             data,

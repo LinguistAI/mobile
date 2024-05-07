@@ -81,18 +81,22 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
 
         await recording.stopAndUnloadAsync();
         const recordingUri = recording.getURI();
-        let base64 = await FileSystem.readAsStringAsync(recordingUri!, {
+        const audioBase64 = await FileSystem.readAsStringAsync(recordingUri!, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        base64 = 'data:audio/mpeg;base64,' + base64;
+
+        const fileName = `${user.username}-${Date.now()}-recording.3gp`;
 
         setRecording(null);
         setIsRecording(false);
-        const fileName = `${user.username}-${Date.now()}-recording.mp3`;
-        console.log('Base64 Audio:', base64);
 
         try {
-          mutate({ key: { key: fileName }, audio: base64 });
+          mutate({
+            audio: audioBase64,
+            key: {
+              key: fileName,
+            },
+          });
         } catch (error) {
           console.log('alo eror var:', error);
         }
@@ -105,22 +109,6 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
       console.error('Failed to stop recording', error);
     }
   };
-
-  // does not work
-  // if (isSendingTransError) {
-  //   console.log('of:', transError);
-  // }
-
-  function base64ToByteArray(base64String: string) {
-    var binaryString = atob(base64String);
-    var byteArray = new Uint8Array(binaryString.length);
-
-    for (var i = 0; i < binaryString.length; i++) {
-      byteArray[i] = binaryString.charCodeAt(i);
-    }
-
-    return byteArray;
-  }
 
   const cleanupRecording = async () => {
     try {

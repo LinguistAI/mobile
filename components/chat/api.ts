@@ -104,7 +104,7 @@ export const chatApi = createApi({
     sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
       queryFn: async (args) => {
         const headers = {
-          'Content-Type': 'audio/mpeg', // Use 'audio/flac' for FLAC audio files
+          'Content-Type': 'audio/mpeg',
           // 'Content-Length': args.audio.length, // Provide the length of the audio data
         };
 

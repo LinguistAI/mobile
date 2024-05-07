@@ -11,6 +11,7 @@ import { isRequestOptions } from 'openai/core';
 import useUser from '../../hooks/useUser';
 import { decode as atob, encode as btoa } from 'base-64';
 import { useSendTranscriptionRequestMutation } from './api';
+import { Buffer } from 'buffer';
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -26,6 +27,28 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   const { user } = useUser();
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const recordingOptions = {
+    android: {
+      extension: '.mp3',
+      sampleRate: 44100,
+      numberOfChannels: 2,
+      bitRate: 128000,
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
+    },
+    ios: {
+      extension: '.wav',
+      sampleRate: 44100,
+      numberOfChannels: 1,
+      bitRate: 128000,
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
+    },
+    web: {},
+  };
 
   const startRecording = async () => {
     try {
@@ -69,60 +92,48 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
         setRecording(null);
         setIsRecording(false);
 
-        // Create a file name for the recording
+        console.log('uri', recordingUri);
         const fileName = `${user.username}-${Date.now()}-recording.mp3`;
 
-        // Move the recording to the new directory with the new file name
-        await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'recordings/', {
-          intermediates: true,
-        });
-        const fileUri = FileSystem.documentDirectory + 'recordings/' + `${fileName}`;
+        // Read the recording data as base64
+        const recordingData = await FileSystem.readAsStringAsync(
+          recordingUri!
+          //   ,
+          //   {
+          //   encoding: FileSystem.EncodingType.Base64,
+          //   position: 0,
+          // }
+        );
+        const base64Image = new Buffer(recordingData, 'binary').toString('base64');
 
-        await FileSystem.moveAsync({
-          from: recordingUri!,
-          to: fileUri,
-        });
+        console.log('record data', base64Image);
 
-        const recordingData = await FileSystem.readAsStringAsync(fileUri!, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
+        // Create a file name for the recording
 
-        console.log('sending data:', recordingData);
+        // Create the directory for recordings if it doesn't exist
+        const directory = FileSystem.documentDirectory + 'recordings/';
+        await FileSystem.makeDirectoryAsync(directory, { intermediates: true });
 
-        // const response = await FileSystem.uploadAsync(
-        //   `https://oy0r09kq6c.execute-api.eu-central-1.amazonaws.com/test/transcribe?key=${fileName}`,
-        //   fileUri
-        // );
+        // Write the recording data to the file
+        const fileUri = directory + fileName;
+        await FileSystem.writeAsStringAsync(
+          fileUri,
+          recordingData
+          //   {
+          //   encoding: FileSystem.EncodingType.Base64,
 
-        // console.log('ressponse:', response);
+          // }
+        );
 
         try {
-          mutate({ key: { key: fileName }, audio: recordingData });
+          mutate({ key: { key: fileName }, audio: base64Image });
         } catch (error) {
           console.log('alo eror var:', error);
         }
 
-        // const fileInfo = await FileSystem.getInfoAsync(fileUri!);
-        // if (fileInfo.exists) {
-        //   const fileArray = await FileSystem.readAsStringAsync(fileUri!, {
-        //     encoding: FileSystem.EncodingType.Base64,
-        //   });
-
-        // console.log(base64ToByteArray(fileArray));
-
-        // Send the audio file as a byte array
-        // sendAudio({ key: { key: fileName }, audio: base64ToByteArray(fileArray) });
-        // } else {
-        //   console.error('Recording file does not exist');
-        // }
-        // This is for simply playing the sound back
         const playbackObject = new Audio.Sound();
-        await playbackObject.loadAsync({ uri: fileUri });
+        await playbackObject.loadAsync({ uri: recordingUri! });
         await playbackObject.playAsync();
-
-        // resert our states to record again
-        // setRecording(null);
-        // setIsRecording(false);
       }
     } catch (error) {
       console.error('Failed to stop recording', error);

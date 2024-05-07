@@ -7,7 +7,7 @@ import { userStatsApi } from '../components/stats/userStatsApi';
 import { userApi } from '../components/user/userApi';
 import { questsApi } from '../components/quest/api';
 import { quizApi } from '../components/quiz/quizApi';
-import { transactionApi } from '../components/transaction/api';
+import { transactionApi } from '../components/gamification/transaction/api';
 
 export const store = configureStore({
   reducer: {

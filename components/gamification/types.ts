@@ -1,3 +1,5 @@
+import { User } from '../../types';
+
 export interface IUserStreak {
   userId: string;
   user: User;
@@ -13,15 +15,15 @@ export interface IUserExperience {
   username: string;
 }
 
-export interface IStoreItem {
+interface StoreItem {
   id: string;
   type: string;
   description: string;
   price: number;
-};
+}
 
 export interface RStoreItemsPage {
-  storeItems: { storeItem: IStoreItem }[]; 
+  storeItems: { storeItem: StoreItem }[];
   totalPages: number;
   currentPage: number;
   pageSize: number;
@@ -29,7 +31,7 @@ export interface RStoreItemsPage {
 
 export interface IUserItem {
   userItem: {
-    storeItem: IStoreItem;
+    storeItem: StoreItem;
     quantity: number;
   };
 }
@@ -41,7 +43,7 @@ export interface RUserItemsPage {
   pageSize: number;
 }
 
-export interface IStoreItemWithQuantity extends IStoreItem {
+export interface IStoreItemWithQuantity extends StoreItem {
   quantityOwned: number;
 }
 
@@ -51,4 +53,4 @@ export interface QPurchaseItem {
 
 export type RUserGems = {
   gems: number;
-}
+};

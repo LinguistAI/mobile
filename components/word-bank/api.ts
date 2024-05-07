@@ -29,13 +29,15 @@ export const wordBankApi = createApi({
         method: 'GET',
       }),
       providesTags: ['WordLists'],
+      keepUnusedDataFor: 0,
     }),
     getWordListById: builder.query<IWordListWithWordInfo, string>({
       query: (listId) => ({
         url: `wordbank/list/${listId}`,
         method: 'GET',
       }),
-      providesTags: ['WordList'],
+      providesTags: (result, error, listId) => [{ type: 'WordList', id: listId }],
+      keepUnusedDataFor: 30,
     }),
     editList: builder.mutation<void, IEditWordList>({
       query: (editedList) => ({

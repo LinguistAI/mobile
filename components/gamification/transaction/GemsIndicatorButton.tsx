@@ -22,7 +22,7 @@ const GemsIndicatorButton = ({ gemCount, onClick, style }: GemsIndicatorButtonPr
         title={
           <View style={styles.root}>
             <LText style={styles.gems}>{gemCount ?? 0}</LText>
-            <Image source={require('../../assets/gem1.png')} style={styles.image} />
+            <Image source={require('../../../assets/gem1.png')} style={styles.image} />
           </View>
         }
         icon={<></>}

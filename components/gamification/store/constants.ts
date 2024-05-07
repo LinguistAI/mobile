@@ -1,2 +1,2 @@
-export const ELIMINATE_WRONG_ANSWER_ITEM = 'Eliminate Wrong Answer';
-export const DOUBLE_ANSWER_ITEM = 'Double Answer';
+export const TYPE_ELIMINATE_WRONG_ANSWER = 'Eliminate Wrong Answer';
+export const TYPE_DOUBLE_ANSWER = 'Double Answer';

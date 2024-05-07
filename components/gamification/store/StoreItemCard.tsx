@@ -3,7 +3,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
 import { IStoreItemWithQuantity } from '../types';
-import { DOUBLE_ANSWER_ITEM, ELIMINATE_WRONG_ANSWER_ITEM } from './constants';
+import { TYPE_DOUBLE_ANSWER, TYPE_ELIMINATE_WRONG_ANSWER } from './constants';
 import GemsIndicatorButton from '../transaction/GemsIndicatorButton';
 
 interface ItemProps {
@@ -15,9 +15,9 @@ const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
   const cardTitle = storeItem.type;
 
   const renderIcon = () => {
-    if (storeItem.type === DOUBLE_ANSWER_ITEM) {
+    if (storeItem.type === TYPE_DOUBLE_ANSWER) {
       return <Ionicons name="checkmark-done-sharp" size={60} color={Colors.gray[900]} />;
-    } else if (storeItem.type === ELIMINATE_WRONG_ANSWER_ITEM) {
+    } else if (storeItem.type === TYPE_ELIMINATE_WRONG_ANSWER) {
       return <Ionicons name="trash-bin-outline" size={60} color={Colors.gray[900]} />;
     }
   };

@@ -64,7 +64,7 @@ const Button = (props: PrimaryButtonProps) => {
             borderLeftColor: Colors[color][300],
           },
         ];
-        }
+      }
       if (type === 'outlined') {
         baseButtonStyle = [
           ...baseButtonStyle,

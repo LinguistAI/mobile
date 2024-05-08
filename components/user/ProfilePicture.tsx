@@ -1,9 +1,7 @@
 import { useGetProfilePictureQuery, useSetProfilePictureMutation } from "./userApi";
-import { Image, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import React, { useState } from 'react';
-import { AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT } from "../../utils/aws";
+import {ActivityIndicator, Image, StyleSheet, TouchableWithoutFeedback} from "react-native";
+import React, { useState, useEffect } from 'react';
 import * as ImagePicker from "expo-image-picker";
-import { useFocusEffect } from "@react-navigation/native";
 import Colors from "../../theme/colors";
 import useNotifications from "../../hooks/useNotifications";
 
@@ -11,12 +9,10 @@ interface ProfilePictureProps {
   username: string;
 }
 
-const avatarPlaceholderImg = require('../../assets/profile-default.jpg');
-
 const ProfilePicture = ({ username }: ProfilePictureProps) => {
   const {
     data: profileImageData,
-    isLoading: isProfilePictureLoading,
+    isFetching: isProfilePictureFetching,
     refetch: profilePictureRefetch,
   } = useGetProfilePictureQuery(username);
 
@@ -25,15 +21,15 @@ const ProfilePicture = ({ username }: ProfilePictureProps) => {
 
   const [profileImage, setProfileImage] = useState(profileImageData);
 
+  useEffect(() => {
+    if (profileImageData) {
+      setProfileImage(profileImageData);
+    }
+  }, [profileImageData]);
+
   const { add, remove } = useNotifications();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      profilePictureRefetch();
-    }, [profilePictureRefetch])
-  );
-
-  const uploadImage2 = async (base64) => {
+  const uploadImage = async (base64) => {
     try {
       const uploadNotificationId = add({
         type: 'info',
@@ -42,11 +38,13 @@ const ProfilePicture = ({ username }: ProfilePictureProps) => {
       });
 
       const response = await mutateProfilePicture(
-        username,
-        base64
+        {
+          username: username,
+          picture: {
+            body: base64
+          }
+        }
       );
-
-      console.log(response);
 
       remove(uploadNotificationId);
       add({
@@ -54,28 +52,13 @@ const ProfilePicture = ({ username }: ProfilePictureProps) => {
         body: 'Uploaded profile picture.',
         time: 2500,
       });
-    } catch (error) {
+    }
+    catch (error) {
       add({
         type: 'error',
         body: 'Could not upload profile picture.',
         time: 3000,
       });
-    }
-  };
-
-  const uploadImage = async (base64) => {
-    try {
-      const response = await fetch(`${AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT}?key=${username}.png`, {
-        method: 'POST',
-        body: JSON.stringify({
-          body: base64
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const jsonResponse = await response.json();
-    } catch (error) {
     }
   };
 
@@ -92,26 +75,22 @@ const ProfilePicture = ({ username }: ProfilePictureProps) => {
     if (!result.canceled) {
       // Update profile picture locally
       setProfileImage(result.assets[0].uri);
-      await uploadImage2(result.assets[0].base64);
+      await uploadImage(result.assets[0].base64);
     }
   };
 
-  if (isProfilePictureLoading) {
+  if (isProfilePictureFetching) {
     return (
-      <Image
-        source={avatarPlaceholderImg}
-        style={styles.profileImage}
-      />
+      <ActivityIndicator size={90} style={styles.profileImage} color={Colors.gray[900]} />
     );
   }
 
   return (
     <TouchableWithoutFeedback onPress={pickImage}>
       <Image
-        source={{
-          uri: profileImage,
-        }}
+        source={{ uri: profileImage }}
         style={styles.profileImage}
+        resizeMode="cover"
       />
     </TouchableWithoutFeedback>
   );

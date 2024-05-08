@@ -109,7 +109,10 @@ export type QProfile = {
 };
 
 export type QProfilePicture = {
-  body: string;
+  username: string;
+  picture: {
+    body: string;
+  };
 };
 
 export type FriendProfile = {

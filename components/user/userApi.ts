@@ -19,7 +19,7 @@ import { RUserQuests } from '../quest/types';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo', 'ProfilePicture'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -142,18 +142,16 @@ export const userApi = createApi({
     getProfilePicture: builder.query<RProfilePicture, string>({
       query: (username: string) => ({
         method: 'GET',
-        url: `/aws/picture?key=${username}.png`,
+        url: `/aws/picture?key=${username}.jpeg`,
       }),
       keepUnusedDataFor: 0,
-      providesTags: ['ProfilePicture'],
     }),
     setProfilePicture: builder.mutation<void, QProfilePicture>({
-      query: (username: string, picture: string) => ({
-        url: `/aws/picture?key=${username}.png`,
+      query: ({ username, picture }) => ({
+        url: `/aws/picture?key=${username}.jpeg`,
         method: 'POST',
         body: picture,
       }),
-      invalidatesTags: ['ProfilePicture'],
     }),
   }),
 });

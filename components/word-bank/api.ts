@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 import {
-  IAddWord,
+  IWord,
   ICreateWordList,
   IDictionaryResponse,
   IEditWordList,
@@ -54,7 +54,7 @@ export const wordBankApi = createApi({
       }),
       invalidatesTags: ['WordLists'],
     }),
-    addWord: builder.mutation<void, IAddWord>({
+    addWord: builder.mutation<void, IWord>({
       query: (addWord) => ({
         url: 'wordbank/add-word',
         method: 'POST',
@@ -101,6 +101,14 @@ export const wordBankApi = createApi({
         body: { wordList: words },
       }),
     }),
+    deleteWord: builder.mutation<void, IWord>({
+      query: (deleteWordParams) => ({
+        url: `wordbank/word`,
+        method: 'DELETE',
+        params: deleteWordParams,
+      }),
+      invalidatesTags: ['WordLists', 'WordList'],
+    }),
   }),
 });
 
@@ -116,4 +124,5 @@ export const {
   useGetWordMeaningsQuery,
   usePinWordListMutation,
   useUnpinWordListMutation,
+  useDeleteWordMutation,
 } = wordBankApi;

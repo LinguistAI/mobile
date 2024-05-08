@@ -92,7 +92,7 @@ export interface IEditWordList {
   editedList: Partial<ICreateWordList>;
 }
 
-export interface IAddWord {
+export interface IWord {
   listId: string;
   word: string;
 }

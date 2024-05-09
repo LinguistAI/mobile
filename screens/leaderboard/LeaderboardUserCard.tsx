@@ -92,11 +92,13 @@ const styles = StyleSheet.create({
     color: Colors.purple[500],
     marginLeft: 10,
     marginRight: 15,
+    alignSelf: 'center',
   },
   mainInfo: {
     fontWeight: 'bold',
     fontSize: 16,
     color: Colors.gray[700],
+    alignSelf: 'center',
   },
   subinfo: {
     fontWeight: 'bold',

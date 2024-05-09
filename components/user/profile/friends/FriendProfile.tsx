@@ -1,10 +1,8 @@
-import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useCallback } from 'react';
 import {
   Image,
   ScrollView,
   StyleSheet,
-  TouchableWithoutFeedback,
   View,
   RefreshControl,
   Pressable,
@@ -40,9 +38,9 @@ import FriendExperienceBar from '../../../gamification/experience/FriendExperien
 import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
+import FriendProfilePicture from "./FriendProfilePicture";
 
 const FriendProfile = () => {
-  const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
   const route = useRoute();
   const { friendId } = route.params;
 
@@ -89,20 +87,6 @@ const FriendProfile = () => {
 
   const [refreshing, setRefreshing] = useState(false);
   const friendshipStatus = profileInfo?.friendshipStatus;
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
-    }
-  };
 
   const hobbies =
     profileInfo?.hobbies.map((h) => {
@@ -323,14 +307,7 @@ const FriendProfile = () => {
     >
       <View style={styles.topSection}></View>
       <View style={styles.profileContainer}>
-        <TouchableWithoutFeedback onPress={pickImage}>
-          <Image
-            source={{
-              uri: profileImage,
-            }}
-            style={styles.profileImage}
-          />
-        </TouchableWithoutFeedback>
+        <FriendProfilePicture username={profileInfo?.username} />
         <LText style={styles.userName}>{profileInfo?.username}</LText>
       </View>
       <View style={styles.friendButtonContainer}>{renderFriendButtonBasedOnStatus()}</View>

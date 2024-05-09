@@ -6,6 +6,7 @@ import {
   View,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Pressable,
 } from 'react-native';
 import useLatestConversationDetails from '../../../hooks/useLatestConversationDetails';
 import { useSelector } from 'react-redux';
@@ -25,7 +26,11 @@ const isAwayFromLeft = ({ contentOffset }: NativeScrollEvent) => {
   return contentOffset.x > 10;
 };
 
-const ActiveWordsRow: React.FC = () => {
+interface ActiveWordsRowProps {
+  onRowPress: () => void;
+}
+
+const ActiveWordsRow = ({ onRowPress }: ActiveWordsRowProps) => {
   const conversation = useSelector(selectCurrentConversation);
   const { latestConvoDetails } = useLatestConversationDetails(conversation);
   const [viewWidth, setViewWidth] = useState<number>(0);
@@ -94,9 +99,13 @@ const ActiveWordsRow: React.FC = () => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <ScrollView onScroll={handleScroll} horizontal showsHorizontalScrollIndicator={false}>
-        <View onLayout={handleLayout} style={styles.cardContainer}>
-          {latestConvoDetails?.unknownWords.map((word) => <ActiveWordCard key={word.id} word={word.word} />)}
-        </View>
+        <Pressable onPress={onRowPress}>
+          <View onLayout={handleLayout} style={styles.cardContainer}>
+            {latestConvoDetails?.unknownWords.map((word) => (
+              <ActiveWordCard key={word.id} word={word.word} />
+            ))}
+          </View>
+        </Pressable>
       </ScrollView>
       {renderLeftScroll()}
       {renderRightScroll()}

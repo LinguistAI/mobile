@@ -55,7 +55,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const isPending = isLoadingMessages || isSendingMessage;
 
   useEffect(() => {
-    console.log(isFirstPage);
     if (isFirstPage) {
       scrollViewRef.current?.scrollToEnd({ animated: false });
     }
@@ -147,6 +146,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           {!hasMoreMessages && !isLoadingMessages && (
             <View style={{ marginBottom: 32 }}>
               <Card
+                noShadow
                 style={{
                   width: Dimensions.get('screen').width / 2,
                   justifyContent: 'center',

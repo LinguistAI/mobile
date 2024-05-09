@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
 import Avatar from '../../common/Avatar';
 import { useNavigation } from '@react-navigation/native';
@@ -86,13 +86,16 @@ const ChatHeader = () => {
               triggerOption={triggerOption}
             />
             {activeWordsVisible && (
-              <ActiveWordsModal setVisible={setActiveWordsVisible} visible={activeWordsVisible} />
+              <ActiveWordsModal
+                onBackdropPress={() => setActiveWordsVisible(false)}
+                visible={activeWordsVisible}
+              />
             )}
           </View>
         </View>
       </View>
       <View style={styles.activeWordsRow}>
-        <ActiveWordsRow />
+        <ActiveWordsRow onRowPress={() => setActiveWordsVisible(true)} />
       </View>
     </View>
   );

@@ -37,7 +37,7 @@ export const wordBankApi = createApi({
         method: 'GET',
       }),
       providesTags: (result, error, listId) => [{ type: 'WordList', id: listId }],
-      keepUnusedDataFor: 30,
+      keepUnusedDataFor: 0,
     }),
     editList: builder.mutation<void, IEditWordList>({
       query: (editedList) => ({

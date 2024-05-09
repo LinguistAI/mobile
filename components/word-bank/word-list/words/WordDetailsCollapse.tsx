@@ -109,7 +109,7 @@ const WordDetailsCollapse = ({ word, listId }: WordDetailsCollapseInterface) => 
     if (deleteWordError || isDeleteWordError || !isDataResponse(deleteResponse)) {
       return;
     }
-    
+    add({ type: 'success', body: 'Word deleted successfully.' });
   }
 
   return (

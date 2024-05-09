@@ -98,6 +98,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
         }
       />
       <FloatingButton
+        text="Add Word"
         handlePress={() => {
           setIsAddWordModalVisible(true);
         }}

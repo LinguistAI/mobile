@@ -1,17 +1,19 @@
-import {StyleSheet, View, Image} from 'react-native';
-import Colors from '../../theme/colors';
-import LText from '../common/Text';
-import React from "react";
-import ActionButton from "../common/ActionButton";
+import { StyleSheet, View, Image, ViewStyle, StyleProp } from 'react-native';
+import Colors from '../../../theme/colors';
+import LText from '../../common/Text';
+import React from 'react';
+import ActionButton from '../../common/ActionButton';
 
-interface GemsIndicatorProps {
-  gemCount: number;
+interface GemsIndicatorButtonProps {
+  gemCount: number | null;
   onClick: () => void;
+  loading?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
-const GemsIndicatorButton = ({ gemCount, onClick }: GemsIndicatorProps) => {
+const GemsIndicatorButton = ({ gemCount, onClick, style }: GemsIndicatorButtonProps) => {
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, style]}>
       <ActionButton
         bgColor={Colors.primary[500]}
         onPress={onClick}
@@ -19,26 +21,20 @@ const GemsIndicatorButton = ({ gemCount, onClick }: GemsIndicatorProps) => {
         marginBottom={-15}
         title={
           <View style={styles.root}>
-            <LText style={styles.gems}>{gemCount}</LText>
-            <Image
-              source={require('../../assets/gem1.png')}
-              style={styles.image}
-            />
+            <LText style={styles.gems}>{gemCount ?? 0}</LText>
+            <Image source={require('../../../assets/gem1.png')} style={styles.image} />
           </View>
         }
-        icon={
-          <></>
-        }
+        icon={<></>}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   root: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
     flexDirection: 'row',
@@ -60,7 +56,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0.5, height: 2 },
     textShadowRadius: 1,
     marginRight: 2,
-  }
+  },
 });
 
 export default GemsIndicatorButton;

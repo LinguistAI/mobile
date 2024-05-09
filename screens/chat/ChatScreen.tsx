@@ -19,10 +19,16 @@ import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/header/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
+import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
+import { useSelector } from 'react-redux';
+import { selectCurrentBot } from '../../redux/chatSelectors';
+import { getChatWalkthroughStarted, saveChatWalkthroughStarted } from './utils';
 import { useChatMessages } from './useChatMessages';
 import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import Colors from '../../theme/colors';
 import Card from '../../components/common/Card';
+
+const WalkThroughableView = walkthroughable(View);
 
 interface ChatScreenProps {
   route: any;
@@ -30,13 +36,8 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
-  const [selectedWord, setSelectedWord] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const currentBot = useSelector(selectCurrentBot);
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
-
-  const scrollViewRef = useRef<ScrollView>(null);
-  useDisableBottomTab();
-
   const {
     addMessage,
     isLoadingMessages,
@@ -51,8 +52,33 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
     page: currentPage,
     pageSize: DEFAULT_PAGE_SIZE,
   });
+  const [selectedWord, setSelectedWord] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const { start } = useCopilot();
+  useDisableBottomTab();
 
-  const isPending = isLoadingMessages || isSendingMessage;
+  useEffect(() => {
+    const startChatWalkthrough = async () => {
+      const started = await getChatWalkthroughStarted();
+      if (started) return;
+
+      if (messages.length === 0) {
+        start();
+        saveChatWalkthroughStarted();
+        return;
+      } else {
+        start('chat-message-list');
+      }
+    };
+
+    startChatWalkthrough();
+
+    return () => {
+      setModalVisible(false);
+      setSelectedWord('');
+    };
+  }, [messages]);
 
   useEffect(() => {
     if (isFirstPage) {
@@ -65,6 +91,8 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       scrollViewRef.current?.scrollToEnd({ animated: false });
     }
   }, [addedMessages.length]);
+
+  const isPending = isLoadingMessages || isSendingMessage;
 
   const onSend = async (text: string) => {
     if (!text) {
@@ -181,15 +209,24 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
               <ActivityIndicator size="large" color={Colors.primary[600]} />
             </View>
           )}
-          {messages
-            ?.filter((m) => m)
-            ?.map((item) => (
-              <ChatMessageComponent
-                onWordPress={handleWordPress}
-                key={item.id || item.timestamp.toString()}
-                chatMessage={item}
-              />
-            ))}
+          <CopilotStep
+            name="chat-message-list"
+            order={6}
+            text="Your messages will appear here. You can click on a word to see the word's definition(s)."
+            active={messages.length > 0}
+          >
+            <WalkThroughableView>
+              {messages
+                ?.filter((m) => m)
+                ?.map((item) => (
+                  <ChatMessageComponent
+                    onWordPress={handleWordPress}
+                    key={item.id || item.timestamp.toString()}
+                    chatMessage={item}
+                  />
+                ))}
+            </WalkThroughableView>
+          </CopilotStep>
           {renderPendingMessage()}
         </ScrollView>
       </View>
@@ -208,18 +245,30 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           <WordInfoCard selectedWord={selectedWord} onDismiss={onSelectedWordDismiss} />
         </View>
       </Modal>
-      <View style={styles.header}>
-        <ChatHeader />
-      </View>
+      <CopilotStep
+        name="chat-screen"
+        order={1}
+        text={`This is the chat screen, you are talking with "${
+          currentBot?.name || 'a chatbot'
+        }". You can ask questions or just chat about anything.`}
+      >
+        <WalkThroughableView>
+          <ChatHeader />
+        </WalkThroughableView>
+      </CopilotStep>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.flexContainer}
       >
         <View style={styles.flexContainer}>
           {renderMessages()}
-          <View style={styles.textInputContainer}>
-            <ChatTextInputContainer onSend={onSend} isPending={isPending || isSendingMessage} />
-          </View>
+          <CopilotStep name="chat-text-input" order={5} text="Type in a message to start chatting!">
+            <WalkThroughableView>
+              <View style={styles.textInputContainer}>
+                <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+              </View>
+            </WalkThroughableView>
+          </CopilotStep>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   noItemsText: {
     fontSize: 14,
-    color: Colors.gray[900],
+    color: Colors.gray[600],
     margin: 6,
   },
   btnContainer: {

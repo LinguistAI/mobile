@@ -12,6 +12,7 @@ import FetchError from '../common/feedback/FetchError';
 import Title from '../common/Title';
 import RefetchButton from '../stats/RefetchButton';
 import { QUEST_POLLING_INTERVAL } from './constants';
+import { useFocusEffect } from '@react-navigation/native';
 
 const QuestsList = () => {
   const {
@@ -21,17 +22,16 @@ const QuestsList = () => {
     refetch,
     fulfilledTimeStamp,
   } = useGetQuestsQuery(undefined, { pollingInterval: QUEST_POLLING_INTERVAL });
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = () => {
     refetch();
   };
 
-  const onRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    await refetch();
-    setIsRefreshing(false);
-  }, [refetch]);
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   const renderSkeletonList = () => {
     return (
@@ -73,7 +73,6 @@ const QuestsList = () => {
             <Ionicons name="file-tray-sharp" size={40} color={Colors.gray[600]} />
           </CenteredFeedback>
         }
-        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
         nestedScrollEnabled={true}
       />
       <RefetchButton

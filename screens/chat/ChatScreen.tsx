@@ -22,7 +22,12 @@ import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot } from '../../redux/chatSelectors';
-import { getChatWalkthroughStarted, saveChatWalkthroughStarted } from './utils';
+import {
+  getFirstChatWalthroughStarted,
+  getSecondChatWalkthroughStarted,
+  saveFirstChatWalkthroughStarted,
+  saveSecondChatWalkthroughStarted,
+} from './utils';
 import { useChatMessages } from './useChatMessages';
 import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import Colors from '../../theme/colors';
@@ -60,15 +65,16 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 
   useEffect(() => {
     const startChatWalkthrough = async () => {
-      const started = await getChatWalkthroughStarted();
-      if (started) return;
+      const firstStarted = await getFirstChatWalthroughStarted();
+      const secondStarted = await getSecondChatWalkthroughStarted();
+      if (firstStarted && secondStarted) return;
 
-      if (messages.length === 0) {
+      if (messages.length === 0 && !firstStarted) {
         start();
-        saveChatWalkthroughStarted();
-        return;
-      } else {
+        saveFirstChatWalkthroughStarted();
+      } else if (messages.length > 0 && !secondStarted) {
         start('chat-message-list');
+        saveSecondChatWalkthroughStarted();
       }
     };
 
@@ -211,7 +217,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           )}
           <CopilotStep
             name="chat-message-list"
-            order={6}
+            order={5}
             text="Your messages will appear here. You can click on a word to see the word's definition(s)."
             active={messages.length > 0}
           >
@@ -248,9 +254,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <CopilotStep
         name="chat-screen"
         order={1}
-        text={`This is the chat screen, you are talking with "${
-          currentBot?.name || 'a chatbot'
-        }". You can ask questions or just chat about anything.`}
+        text={`You are talking with "${currentBot?.name || 'a chatbot'}".`}
       >
         <WalkThroughableView>
           <ChatHeader />
@@ -262,7 +266,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       >
         <View style={styles.flexContainer}>
           {renderMessages()}
-          <CopilotStep name="chat-text-input" order={5} text="Type in a message to start chatting!">
+          <CopilotStep name="chat-text-input" order={4} text="Type in anything to start chatting!">
             <WalkThroughableView>
               <View style={styles.textInputContainer}>
                 <ChatTextInputContainer onSend={onSend} isPending={isPending} />

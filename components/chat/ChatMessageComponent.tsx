@@ -1,9 +1,6 @@
 import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 import WritingAnimation from './WritingAnimation';
 import Colors from '../../theme/colors';
-import ActionIcon from '../common/ActionIcon';
-import { Ionicons } from '@expo/vector-icons';
-import * as Speech from 'expo-speech';
 import { ChatMessage, ChatMessageSender } from '../../screens/chat/types';
 import Avatar from '../common/Avatar';
 import { useSelector } from 'react-redux';
@@ -39,7 +36,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
     const activeWords = currentConversation?.unknownWords;
     if (!activeWords || activeWords.length === 0) return;
 
-    return !!activeWords.find((a) => a.word === word);
+    return !!activeWords.find((a) => a.word.toLowerCase() === word.toLowerCase());
   };
 
   return (
@@ -57,7 +54,6 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
             <View style={styles.messageLineContainer}>
               {lines.map((line, index) => {
                 const words = line?.split(' ');
-
                 return (
                   <View key={`line-${index}`} style={styles.messageLine}>
                     {words.map((word, index) => {
@@ -88,9 +84,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
                   messageId={chatMessage.id}
                 />
               </View>
-              <Text style={styles.timestampReceived}>
-                {formatTime(timestamp) || ''}
-              </Text>
+              <Text style={styles.timestampReceived}>{formatTime(timestamp) || ''}</Text>
             </View>
           </View>
         )}

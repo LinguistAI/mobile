@@ -25,6 +25,7 @@ const ChatButton = ({ focused }) => {
         size={28}
         color={focused ? Colors.primary['500'] : Colors.gray['600']}
       />
+      <Text style={{ color: focused ? Colors.primary[600] : Colors.gray[600], fontSize: 10 }}>Chat</Text>
     </TouchableOpacity>
   );
 };
@@ -39,7 +40,7 @@ const BottomNavigation = () => {
         <View style={styles.tabBar}>
           {state.routes.map((route, index) => {
             const { options } = descriptors[route.key];
-            const isFocused = state.index === index;
+            const focused = state.index === index;
 
             const onPress = () => {
               const event = navigation.emit({
@@ -48,7 +49,7 @@ const BottomNavigation = () => {
                 canPreventDefault: true,
               });
 
-              if (!isFocused && !event.defaultPrevented) {
+              if (!focused && !event.defaultPrevented) {
                 navigation.navigate(route.name);
               }
             };
@@ -66,12 +67,12 @@ const BottomNavigation = () => {
                 activeOpacity={route.name !== 'Chat' ? 0.98 : 1}
               >
                 {options.tabBarIcon({
-                  focused: isFocused,
-                  color: isFocused ? Colors.primary[600] : Colors.gray[600],
+                  focused: focused,
+                  color: focused ? Colors.primary[600] : Colors.gray[600],
                   size: 24,
                 })}
-                {route.name === 'Chat' && <ChatButton focused={isFocused} />}
-                <Text style={{ color: isFocused ? Colors.primary[600] : Colors.gray[600], fontSize: 10 }}>
+                {route.name === 'Chat' && <ChatButton focused={focused} />}
+                <Text style={{ color: focused ? Colors.primary[600] : Colors.gray[600], fontSize: 10 }}>
                   {options.tabBarLabel ?? route.name}
                 </Text>
               </TouchableOpacity>

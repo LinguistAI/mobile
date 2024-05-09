@@ -23,8 +23,8 @@ import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import FetchError from '../../common/feedback/FetchError';
 import LText from '../../common/Text';
 import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
-import { AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT } from "../../../utils/aws";
-import ProfilePicture from "../ProfilePicture";
+import { AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT } from '../../../utils/aws';
+import ProfilePicture from '../ProfilePicture';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -59,40 +59,6 @@ const Profile = () => {
       profileRefetch();
     }, [userInfoRefetch, profileRefetch])
   );
-
-  const uploadImage = async (base64) => {
-    try {
-      const response = await fetch(`${AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT}?key=${user.username}.png`, {
-        method: 'POST',
-        body: JSON.stringify({
-          body: base64
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const jsonResponse = await response.json();
-      console.log('Upload successful:', jsonResponse);
-    } catch (error) {
-      console.error('Upload failed:', error);
-    }
-  };
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-
-    if (!result.canceled) {
-      // setProfileImage(result.assets[0].uri);
-      await uploadImage(result.assets[0].base64); // Assuming result.assets[0].base64 contains the Base64 string
-    }
-  };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

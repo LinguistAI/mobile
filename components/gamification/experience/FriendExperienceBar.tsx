@@ -16,6 +16,12 @@ const FriendExperienceBar = ({ friendId }: FriendExperienceBarProps) => {
     refetch: profileRefetch,
   } = useGetFriendProfileQuery(friendId);
 
+  useFocusEffect(
+    useCallback(() => {
+      profileRefetch();
+    }, [profileRefetch])
+  );
+
   if (isLoading) {
     return <ExperienceBarSkeleton />;
   }

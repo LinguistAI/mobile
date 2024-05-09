@@ -5,6 +5,7 @@ import Colors from '../theme/colors';
 import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
 import LeaderboardNavigator from './LeaderboardNavigator';
+import StoreNavigation from './StoreNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,14 @@ const BottomNavigation = () => {
         component={HomeStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => <IonIcons name="home-outline" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="StoreTab"
+        component={StoreNavigation}
+        options={{
+          tabBarLabel: 'Store',
+          tabBarIcon: ({ color, size }) => <IonIcons name="pricetags-outline" size={size} color={color} />,
         }}
       />
       <Tab.Screen

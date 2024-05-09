@@ -14,17 +14,9 @@ import { selectCurrentConversation } from '../../../redux/chatSelectors';
 import ActiveWordCard from './ActiveWordCard';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
+import { isCloseToRight, isAwayFromLeft } from '../../layout.utils';
 
 type LayoutEvent = NativeSyntheticEvent<{ layout: { width: number; height: number } }>;
-
-const isCloseToRight = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
-  const paddingToRight = 30;
-  return layoutMeasurement.width + contentOffset.x >= contentSize.width - paddingToRight;
-};
-
-const isAwayFromLeft = ({ contentOffset }: NativeScrollEvent) => {
-  return contentOffset.x > 10;
-};
 
 interface ActiveWordsRowProps {
   onRowPress: () => void;

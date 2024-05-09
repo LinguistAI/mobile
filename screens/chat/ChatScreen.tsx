@@ -12,13 +12,12 @@ import {
   StyleSheet,
   Text,
   View,
-  ViewToken,
 } from 'react-native';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { ChatMessage, ChatMessageSender } from './types';
-import ChatHeader from '../../components/chat/ChatHeader';
+import ChatHeader from '../../components/chat/header/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
 import { useSelector } from 'react-redux';
@@ -27,7 +26,6 @@ import { getChatWalkthroughStarted, saveChatWalkthroughStarted } from './utils';
 import { useChatMessages } from './useChatMessages';
 import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import Colors from '../../theme/colors';
-import { add } from 'date-fns';
 import Card from '../../components/common/Card';
 
 const WalkThroughableView = walkthroughable(View);
@@ -176,6 +174,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           {!hasMoreMessages && !isLoadingMessages && (
             <View style={{ marginBottom: 32 }}>
               <Card
+                noShadow
                 style={{
                   width: Dimensions.get('screen').width / 2,
                   justifyContent: 'center',
@@ -300,7 +299,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   flexContainer: {
-    flex: 10,
+    flex: 5,
   },
 });
 

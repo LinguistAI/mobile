@@ -1,16 +1,12 @@
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import { ChatOption, ChatOptionObject } from './types';
+import { ChatOption, ChatOptionObject } from '../types';
 import { Ionicons } from '@expo/vector-icons';
-import Colors from '../../theme/colors';
+import Colors from '../../../theme/colors';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
+import { selectCurrentConversation } from '../../../redux/chatSelectors';
 import { useNavigation } from '@react-navigation/native';
-import useNotifications from '../../hooks/useNotifications';
-import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
-import { useEffect } from 'react';
-
-const WalkThroughableView = walkthroughable(View);
+import useNotifications from '../../../hooks/useNotifications';
 
 interface ChatMenuProps {
   menuVisible: boolean;
@@ -20,10 +16,8 @@ interface ChatMenuProps {
 
 const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps) => {
   const conversation = useSelector(selectCurrentConversation);
-  const currentBot = useSelector(selectCurrentBot);
   const navigation = useNavigation();
   const { add } = useNotifications();
-
   if (!conversation) {
     navigation.navigate('Conversations');
     add({ body: 'Please start a conversation first!', type: 'warning' });
@@ -49,31 +43,18 @@ const ChatMenu = ({ menuVisible, setMenuVisible, triggerOption }: ChatMenuProps)
         <Ionicons size={24} name="ellipsis-vertical" color={Colors.primary['900']} />
       </MenuTrigger>
       <MenuOptions>
-        <CopilotStep
-          name="chat-menu-options"
-          order={4}
-          text={`You can click on 'See Active Words' to see the words that are actively being taught in this conversation. Active words will be used by ${
-            currentBot?.name || 'the chatbot'
-          } more frequently so that you can learn about them. The words are selected from your unknown word lists on a daily basis.`}
-        >
-          <WalkThroughableView>
-            {menuOptions.map((option, index) => (
-              <MenuOption
-                key={option.value}
-                onSelect={() => triggerOption(option.value)}
-                style={[
-                  styles.optionContainer,
-                  index === menuOptions.length - 1 && styles.lastOptionContainer,
-                ]}
-              >
-                <View style={styles.optionContent}>
-                  {option.icon}
-                  <Text style={styles.option}>{option.label}</Text>
-                </View>
-              </MenuOption>
-            ))}
-          </WalkThroughableView>
-        </CopilotStep>
+        {menuOptions.map((option, index) => (
+          <MenuOption
+            key={option.value}
+            onSelect={() => triggerOption(option.value)}
+            style={[styles.optionContainer, index === menuOptions.length - 1 && styles.lastOptionContainer]}
+          >
+            <View style={styles.optionContent}>
+              {option.icon}
+              <Text style={styles.option}>{option.label}</Text>
+            </View>
+          </MenuOption>
+        ))}
       </MenuOptions>
     </Menu>
   );

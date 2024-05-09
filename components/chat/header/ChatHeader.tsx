@@ -15,6 +15,9 @@ import { useClearConversationMutation, useGetConversationQuery } from '../api';
 import ActiveWordsModal from '../ActiveWordsModal';
 import { updateSelectedConversation } from '../../../redux/chatSlice';
 import ActiveWordsRow from './ActiveWordsRow';
+import { CopilotStep, walkthroughable } from 'react-native-copilot';
+
+const WalkThroughableView = walkthroughable(View);
 
 const ChatHeader = () => {
   const dispatch = useDispatch();
@@ -78,25 +81,43 @@ const ChatHeader = () => {
             </View>
             <Text style={styles.botName}>{currentBot?.name?.trim().slice(0, 13)}...</Text>
           </View>
-          <View style={styles.rightContainer}>
-            <QuizStartButton />
-            <ChatMenu
-              menuVisible={chatMenuVisible}
-              setMenuVisible={setChatMenuVisible}
-              triggerOption={triggerOption}
-            />
-            {activeWordsVisible && (
-              <ActiveWordsModal
-                onBackdropPress={() => setActiveWordsVisible(false)}
-                visible={activeWordsVisible}
-              />
-            )}
-          </View>
+          <CopilotStep
+            name="chat-header-quiz-button"
+            order={2}
+            text={`Quiz button will be enabled after you chat with the bot for some time.`}
+          >
+            <WalkThroughableView>
+              <View style={styles.rightContainer}>
+                <QuizStartButton />
+                <ChatMenu
+                  menuVisible={chatMenuVisible}
+                  setMenuVisible={setChatMenuVisible}
+                  triggerOption={triggerOption}
+                />
+                {activeWordsVisible && (
+                  <ActiveWordsModal
+                    onBackdropPress={() => setActiveWordsVisible(false)}
+                    visible={activeWordsVisible}
+                  />
+                )}
+              </View>
+            </WalkThroughableView>
+          </CopilotStep>
         </View>
       </View>
-      <View style={styles.activeWordsRow}>
-        <ActiveWordsRow onRowPress={() => setActiveWordsVisible(true)} />
-      </View>
+      <CopilotStep
+        name="chat-header-active-words"
+        order={3}
+        text={`These are the words ${
+          currentBot?.name ?? 'the chatbot'
+        } is going to use more frequently during this conversation.`}
+      >
+        <WalkThroughableView>
+          <View style={styles.activeWordsRow}>
+            <ActiveWordsRow onRowPress={() => setActiveWordsVisible(true)} />
+          </View>
+        </WalkThroughableView>
+      </CopilotStep>
     </View>
   );
 };

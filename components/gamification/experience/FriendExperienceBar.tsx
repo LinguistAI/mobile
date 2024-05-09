@@ -1,8 +1,10 @@
+import { useFocusEffect } from '@react-navigation/native';
 import FetchError from '../../common/feedback/FetchError';
 import { useGetFriendProfileQuery } from '../../user/userApi';
 import { IUserExperience } from '../types';
 import ExperienceBar from './ExperienceBar';
 import ExperienceBarSkeleton from './ExperienceBarSkeleton';
+import { useCallback } from 'react';
 
 interface FriendExperienceBarProps {
   friendId: string;

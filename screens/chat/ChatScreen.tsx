@@ -17,7 +17,7 @@ import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { ChatMessage, ChatMessageSender } from './types';
-import ChatHeader from '../../components/chat/ChatHeader';
+import ChatHeader from '../../components/chat/header/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { useChatMessages } from './useChatMessages';
 import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   flexContainer: {
-    flex: 10,
+    flex: 5,
   },
 });
 

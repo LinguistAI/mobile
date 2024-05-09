@@ -1,12 +1,12 @@
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import { ChatOption, ChatOptionObject } from './types';
+import { ChatOption, ChatOptionObject } from '../types';
 import { Ionicons } from '@expo/vector-icons';
-import Colors from '../../theme/colors';
+import Colors from '../../../theme/colors';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { selectCurrentConversation } from '../../redux/chatSelectors';
+import { selectCurrentConversation } from '../../../redux/chatSelectors';
 import { useNavigation } from '@react-navigation/native';
-import useNotifications from '../../hooks/useNotifications';
+import useNotifications from '../../../hooks/useNotifications';
 
 interface ChatMenuProps {
   menuVisible: boolean;

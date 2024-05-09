@@ -1,19 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
-import Colors from '../../theme/colors';
-import Avatar from '../common/Avatar';
+import Colors from '../../../theme/colors';
+import Avatar from '../../common/Avatar';
 import { useNavigation } from '@react-navigation/native';
-import ActionIcon from '../common/ActionIcon';
+import ActionIcon from '../../common/ActionIcon';
 import { Ionicons } from '@expo/vector-icons';
-import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
-import QuizStartButton from './QuizStartButton';
+import { selectCurrentBot, selectCurrentConversation } from '../../../redux/chatSelectors';
+import QuizStartButton from '../QuizStartButton';
 import ChatMenu from './ChatMenu';
 import { useEffect, useState } from 'react';
-import { ChatOption } from './types';
-import useNotifications from '../../hooks/useNotifications';
-import { useClearConversationMutation, useGetConversationQuery } from './api';
-import ActiveWordsModal from './ActiveWordsModal';
-import { updateSelectedConversation } from '../../redux/chatSlice';
+import { ChatOption } from '../types';
+import useNotifications from '../../../hooks/useNotifications';
+import { useClearConversationMutation, useGetConversationQuery } from '../api';
+import ActiveWordsModal from '../ActiveWordsModal';
+import { updateSelectedConversation } from '../../../redux/chatSlice';
+import ActiveWordsRow from './ActiveWordsRow';
 
 const ChatHeader = () => {
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ const ChatHeader = () => {
   };
 
   return (
-    <View>
+    <View style={styles.root}>
       <View style={styles.headerRowRoot}>
         <View style={styles.container}>
           <View style={styles.leftContainer}>
@@ -90,20 +91,25 @@ const ChatHeader = () => {
           </View>
         </View>
       </View>
-      <View style={styles.activeWordsRow}></View>
+      <View style={styles.activeWordsRow}>
+        <ActiveWordsRow />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  headerRowRoot: {
-    display: 'flex',
-    justifyContent: 'center',
-    height: 60,
+  root: {
     borderBottomColor: Colors.primary[600],
     borderBottomWidth: 2,
-    zIndex: 9999,
     backgroundColor: Colors.gray[0],
+    zIndex: 9999,
+    minHeight: 80,
+  },
+  headerRowRoot: {
+    marginVertical: 8,
+    display: 'flex',
+    justifyContent: 'center',
   },
   avatarContainer: {
     display: 'flex',
@@ -135,7 +141,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  activeWordsRow: {},
+  activeWordsRow: {
+    marginVertical: 8,
+  },
 });
 
 export default ChatHeader;

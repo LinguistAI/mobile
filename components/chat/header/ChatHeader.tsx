@@ -24,7 +24,7 @@ const ChatHeader = () => {
   const conversation = useSelector(selectCurrentConversation);
   const navigation = useNavigation();
   const { add } = useNotifications();
-  const { data: latestConvoDetails, isLoading } = useGetConversationQuery(conversation?.id, {
+  const { data: latestConvoDetails } = useGetConversationQuery(conversation?.id, {
     skip: !conversation,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
@@ -76,7 +76,7 @@ const ChatHeader = () => {
               <ActionIcon icon={<Ionicons size={28} name="arrow-back" />} onPress={handleGoBack} />
               <Avatar src={currentBot?.profileImage} height={40} width={40} />
             </View>
-            <Text style={styles.botName}>{currentBot?.name?.trim()}</Text>
+            <Text style={styles.botName}>{currentBot?.name?.trim().slice(0, 13)}...</Text>
           </View>
           <View style={styles.rightContainer}>
             <QuizStartButton />

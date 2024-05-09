@@ -13,9 +13,9 @@ import { usePushNotifications } from '../../hooks/usePushNotifications';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
-  const { expoPushToken, notification } = usePushNotifications();
-  console.log('expoPushToken', expoPushToken);
-  console.log('notification', notification);
+  // const { expoPushToken, notification } = usePushNotifications();
+  // console.log('expoPushToken', expoPushToken);
+  // console.log('notification', notification);
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);

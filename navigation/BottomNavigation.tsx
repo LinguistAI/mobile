@@ -6,7 +6,7 @@ import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
 import LeaderboardNavigator from './LeaderboardNavigator';
 import StoreNavigation from './StoreNavigation';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
@@ -71,6 +71,9 @@ const BottomNavigation = () => {
                   size: 24,
                 })}
                 {route.name === 'Chat' && <ChatButton focused={isFocused} />}
+                <Text style={{ color: isFocused ? Colors.primary[600] : Colors.gray[600], fontSize: 10 }}>
+                  {options.tabBarLabel ?? route.name}
+                </Text>
               </TouchableOpacity>
             );
           })}

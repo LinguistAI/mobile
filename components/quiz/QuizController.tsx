@@ -21,7 +21,6 @@ import FetchError from '../common/feedback/FetchError';
 import useCustomBackHandler from '../../hooks/useCustomBackHandler';
 
 const QuizController = () => {
-  useDisableBottomTab();
   useCustomBackHandler(() => {
     Alert.alert('Hold on!', "Are you sure you want to quit the quiz? You won't be able to come back to it!", [
       {
@@ -33,7 +32,6 @@ const QuizController = () => {
     ]);
     return true;
   });
-
   const timer = useRef(Date.now());
   const [isQuizLoading, setIsQuizLoading] = useState(true);
   const [quiz, setQuiz] = useState<RCreateMCQ>();
@@ -233,7 +231,7 @@ const QuizController = () => {
     );
 
   return (
-    <View style={styles.root}>
+    <View>
       <QuizHeader questionNo={currentQuestion + 1} totalQuestions={questions.length} />
       {renderCurrentQuestion()}
       {renderAnswerFeedback()}
@@ -242,16 +240,12 @@ const QuizController = () => {
 };
 
 const styles = StyleSheet.create({
-  root: {
-    marginTop: 30,
-  },
   actionBtnContainer: {
     width: '90%',
     alignSelf: 'center',
     marginTop: 5,
   },
   feedbackContainer: {
-    alignSelf: 'flex-end',
     width: '100%',
   },
   bold: {

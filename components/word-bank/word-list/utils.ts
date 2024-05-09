@@ -24,15 +24,15 @@ export const isDictionaryWordGroup = (
 export const displayWordConfidence = (confidence: WordConfidence) => {
   switch (confidence) {
     case WordConfidence.LOWEST:
-      return 'Lowest';
+      return 'Amateur';
     case WordConfidence.LOW:
-      return 'Low';
+      return 'Beginner';
     case WordConfidence.MODERATE:
-      return 'Moderate';
+      return 'Intermediate';
     case WordConfidence.HIGH:
-      return 'High';
+      return 'Skilled';
     case WordConfidence.HIGHEST:
-      return 'Highest';
+      return 'Expert';
     default:
       return 'Unknown';
   }

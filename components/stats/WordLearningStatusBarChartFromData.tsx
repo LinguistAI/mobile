@@ -12,8 +12,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const LABELS = {
   [WordStatus.LEARNING]: 'Learning',
-  [WordStatus.REVIEWING]: 'Reviewing',
-  [WordStatus.MASTERED]: 'Mastered',
+  [WordStatus.REVIEWING]: 'Practicing',
+  [WordStatus.MASTERED]: 'Proficient',
 };
 
 interface WordLearningChartProps {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     marginBottom: 5,
-  }
+  },
 });
 
 export default WordLearningStatusBarChartFromData;

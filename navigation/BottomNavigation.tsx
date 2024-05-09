@@ -8,6 +8,7 @@ import LeaderboardNavigator from './LeaderboardNavigator';
 import StoreNavigation from './StoreNavigation';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,50 +37,64 @@ const BottomNavigation = () => {
         headerShown: false,
         tabBarActiveTintColor: Colors.primary['600'],
       }}
-      tabBar={({ state, descriptors, navigation }) => (
-        <View style={styles.tabBar}>
-          {state.routes.map((route, index) => {
-            const { options } = descriptors[route.key];
-            const focused = state.index === index;
+      tabBar={({ state, descriptors, navigation }) => {
+        const routes = state.routes;
+        let hideTabBar = false;
+        routes.forEach((route, index) => {
+          if (route.name === 'Chat' && state.index === index) {
+            hideTabBar = true;
+          }
+        });
 
-            const onPress = () => {
-              const event = navigation.emit({
-                type: 'tabPress',
-                target: route.key,
-                canPreventDefault: true,
-              });
+        if (hideTabBar) {
+          return null;
+        }
 
-              if (!focused && !event.defaultPrevented) {
-                navigation.navigate(route.name);
-              }
-            };
+        return (
+          <View style={styles.tabBar}>
+            {state.routes.map((route, index) => {
+              const { options } = descriptors[route.key];
+              const focused = state.index === index;
 
-            return (
-              <TouchableOpacity
-                key={route.key}
-                onPress={onPress}
-                style={[
-                  styles.tabItem,
-                  {
-                    backgroundColor: Colors.gray['0'],
-                  },
-                ]}
-                activeOpacity={route.name !== 'Chat' ? 0.98 : 1}
-              >
-                {options.tabBarIcon({
-                  focused: focused,
-                  color: focused ? Colors.primary[600] : Colors.gray[600],
-                  size: 24,
-                })}
-                {route.name === 'Chat' && <ChatButton focused={focused} />}
-                <Text style={{ color: focused ? Colors.primary[600] : Colors.gray[600], fontSize: 10 }}>
-                  {options.tabBarLabel ?? route.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      )}
+              const onPress = () => {
+                const event = navigation.emit({
+                  type: 'tabPress',
+                  target: route.key,
+                  canPreventDefault: true,
+                });
+
+                if (!focused && !event.defaultPrevented) {
+                  navigation.navigate(route.name);
+                }
+              };
+
+              return (
+                <TouchableOpacity
+                  key={route.key}
+                  onPress={onPress}
+                  style={[
+                    styles.tabItem,
+                    {
+                      backgroundColor: Colors.gray['0'],
+                    },
+                  ]}
+                  activeOpacity={route.name !== 'Chat' ? 0.98 : 1}
+                >
+                  {options.tabBarIcon({
+                    focused: focused,
+                    color: focused ? Colors.primary[600] : Colors.gray[600],
+                    size: 24,
+                  })}
+                  {route.name === 'Chat' && <ChatButton focused={focused} />}
+                  <Text style={{ color: focused ? Colors.primary[600] : Colors.gray[600], fontSize: 10 }}>
+                    {options.tabBarLabel ?? route.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        );
+      }}
     >
       <Tab.Screen
         name="Home"
@@ -103,6 +118,7 @@ const BottomNavigation = () => {
           tabBarIcon: ({ color, size }) => (
             <IonIcons style={{ display: 'none' }} name="chatbox-outline" size={size} color={color} />
           ),
+          tabBarStyle: { display: 'none' },
         }}
       />
       <Tab.Screen

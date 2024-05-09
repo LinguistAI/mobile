@@ -22,7 +22,12 @@ import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot } from '../../redux/chatSelectors';
-import { getChatWalkthroughStarted, saveChatWalkthroughStarted } from './utils';
+import {
+  getFirstChatWalthroughStarted,
+  getSecondChatWalkthroughStarted,
+  saveFirstChatWalkthroughStarted,
+  saveSecondChatWalkthroughStarted,
+} from './utils';
 import { useChatMessages } from './useChatMessages';
 import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import Colors from '../../theme/colors';
@@ -60,15 +65,16 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
 
   useEffect(() => {
     const startChatWalkthrough = async () => {
-      const started = await getChatWalkthroughStarted();
-      if (started) return;
+      const firstStarted = await getFirstChatWalthroughStarted();
+      const secondStarted = await getSecondChatWalkthroughStarted();
+      if (firstStarted && secondStarted) return;
 
-      if (messages.length === 0) {
+      if (messages.length === 0 && !firstStarted) {
         start();
-        saveChatWalkthroughStarted();
-        return;
-      } else {
+        saveFirstChatWalkthroughStarted();
+      } else if (messages.length > 0 && !secondStarted) {
         start('chat-message-list');
+        saveSecondChatWalkthroughStarted();
       }
     };
 

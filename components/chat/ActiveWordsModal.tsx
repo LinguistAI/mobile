@@ -8,11 +8,14 @@ import { useEffect } from 'react';
 import { useGetConversationQuery } from './api';
 import { updateSelectedConversation } from '../../redux/chatSlice';
 import LoadingIndicator from '../common/feedback/LoadingIndicator';
+import { CopilotStep, walkthroughable } from 'react-native-copilot';
 
 interface ActiveWordsModalProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
 }
+
+const WalkThroughableView = walkthroughable(View);
 
 const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
   const conversation = useSelector(selectCurrentConversation);

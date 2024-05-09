@@ -4,7 +4,6 @@ import HomeStackNavigator from './HomeStackNavigator';
 import Colors from '../theme/colors';
 import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
-import LeaderboardTabController from '../screens/leaderboard/LeaderBoardTabController';
 import LeaderboardNavigator from './LeaderboardNavigator';
 
 const Tab = createBottomTabNavigator();

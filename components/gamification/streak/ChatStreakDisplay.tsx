@@ -18,10 +18,11 @@ const StreakDisplay = ({
 }) => {
   const lastWeek = getLastOneWeek();
   const currentDay = getCurrentDayOfWeek();
+  const streakNumber = currentStreak;
   const streakText =
     currentStreak === highestStreak
       ? 'You have just beaten your highest streak, keep going!'
-      : `You have been chatting for ${currentStreak} days! `;
+      : `day streak! `;
   const streakSubtext = `Your highest streak is ${highestStreak} days!`;
   if (currentStreak === 0) {
     return (
@@ -34,12 +35,15 @@ const StreakDisplay = ({
   return (
     <View>
       <View style={styles.lottieContainer}>
-        <LottieView
-          style={styles.lottie}
-          autoPlay
-          loop
-          source={require('../../../assets/lottie/streak/streakFireAnim.json')}
-        />
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.streakNumber}>{streakNumber}</Text>
+          <LottieView
+            style={styles.lottie}
+            autoPlay
+            loop
+            source={require('../../../assets/lottie/streak/streakFireAnim.json')}
+          />
+        </View>
         <View style={styles.streakTextContainer}>
           <Text style={styles.streakText}>{streakText}</Text>
           <Text style={styles.streakSubtext}>{streakSubtext}</Text>
@@ -48,19 +52,25 @@ const StreakDisplay = ({
           {lastWeek.map((day) => {
             let isStreakDay = false;
             const distance = getDistanceBetweenTodayAndDay(day);
-            if (distance > currentStreak) {
+            if (distance >= currentStreak) {
               isStreakDay = false;
-            } else if (distance > 0) {
+            } else if (distance >= 0) {
               isStreakDay = true;
             }
 
             const markedIcon = isStreakDay ? (
-              <Ionicons name="chatbubbles" size={20} color="white" />
+              <Ionicons name="chatbubbles" size={14} color="white" />
             ) : (
-              <Ionicons name="chatbubbles" size={14} color={Colors.gray['500']} />
+              <Ionicons name="chatbubbles" size={12} color={Colors.gray['500']} />
             );
 
-            const backgroundColor = isStreakDay ? Colors.primary['500'] : Colors.gray['500'];
+            let backgroundColor = Colors.gray['500'];
+            if (isStreakDay) {
+              backgroundColor = Colors.primary['600'];
+            }
+            if (distance === 0) {
+              backgroundColor = Colors.yellow['800'];
+            }
 
             return (
               <Badge
@@ -70,6 +80,7 @@ const StreakDisplay = ({
                 textColor="#000"
                 marked={isStreakDay}
                 markedIcon={markedIcon}
+                subtitle={distance === 0 ? 'Today' : undefined}
               />
             );
           })}
@@ -105,32 +116,41 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   lottie: {
-    width: 50,
-    height: 50,
+    width: 75,
+    height: 75,
   },
   streakTextContainer: {
     maxWidth: 250,
     textAlign: 'center',
-    rowGap: 10,
   },
   streakText: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: Colors.yellow[700],
   },
   streakSubtext: {
     fontSize: 14,
     fontWeight: 'normal',
     textAlign: 'center',
+    marginTop: 24,
+    color: Colors.gray['600'],
+  },
+  streakNumber: {
+    fontSize: 64,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: Colors.yellow[900],
   },
   streakDayBadgesContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    flexWrap: 'wrap',
-    marginTop: 20,
+    flexWrap: 'nowrap',
+    width: '100%',
+    marginTop: 24,
     gap: 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 24,
   },
 });
 

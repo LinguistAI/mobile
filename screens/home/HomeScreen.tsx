@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { SafeAreaView, ScrollView, LogBox, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ActionIcon from '../../components/common/ActionIcon';
@@ -8,10 +8,14 @@ import UserLoggedDatesCalendar from '../../components/stats/UserLoggedDatesCalen
 import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
 import UserExperienceBar from '../../components/gamification/experience/UserExperienceBar';
 import QuestsList from '../../components/quest/QuestsList';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

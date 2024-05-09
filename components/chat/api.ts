@@ -1,7 +1,17 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
-import { IMessageCountQuery, Message, MessageCount, QMessages, TChatBot, TConversation } from './types';
+import {
+  IMessageCountQuery,
+  Message,
+  MessageCount,
+  QGetSpeech,
+  QMessages,
+  QSynthesizeSpeech,
+  RSynthesizeSpeech,
+  TChatBot,
+  TConversation,
+} from './types';
 import { Page } from '../../types';
 import { ChatMessage } from '../../screens/chat/types';
 
@@ -48,6 +58,7 @@ export const chatApi = createApi({
       providesTags: (result, error, args) => [
         { type: 'Message', id: `${args.conversationId}-${args.params.page}-${args.params.pageSize}}` },
       ],
+      keepUnusedDataFor: 0,
     }),
     createNewConversation: builder.mutation<TConversation, string>({
       query: (botId: string) => ({
@@ -83,6 +94,27 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, _, convoId) => [{ type: 'Message', id: convoId }, { type: 'Conversations' }],
     }),
+    getSpeech: builder.query<RSynthesizeSpeech, QSynthesizeSpeech>({
+      queryFn: async (args) => {
+        try {
+          const response = await axiosSecure.get('/aws/polly', {
+            params: args,
+          });
+          const data = response.data;
+          return {
+            data,
+          };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              data: JSON.stringify(error),
+              msg: 'Failed to get speech',
+            },
+          };
+        }
+      },
+    }),
   }),
 });
 
@@ -95,5 +127,6 @@ export const {
   useGetMessageCountByBotQuery,
   useClearConversationMutation,
   useGetConversationQuery,
+  useLazyGetSpeechQuery,
   useGetPaginatedChatMessagesQuery,
 } = chatApi;

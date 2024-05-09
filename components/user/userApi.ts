@@ -11,7 +11,7 @@ import {
   RLeaderboard,
   QProfile,
   RProfile,
-  FriendProfile,
+  FriendProfile, RProfilePicture, QProfilePicture,
 } from './types';
 import { Page, User } from '../../types';
 import { RUserQuests } from '../quest/types';
@@ -139,6 +139,20 @@ export const userApi = createApi({
       providesTags: (result, error, userId) => [{ type: 'FriendProfileInfo', id: userId }],
       keepUnusedDataFor: 0,
     }),
+    getProfilePicture: builder.query<RProfilePicture, string>({
+      query: (username: string) => ({
+        method: 'GET',
+        url: `/aws/picture?key=${username}.jpeg`,
+      }),
+      keepUnusedDataFor: 0,
+    }),
+    setProfilePicture: builder.mutation<void, QProfilePicture>({
+      query: ({ username, picture }) => ({
+        url: `/aws/picture?key=${username}.jpeg`,
+        method: 'POST',
+        body: picture,
+      }),
+    }),
   }),
 });
 
@@ -157,4 +171,6 @@ export const {
   useGetProfileQuery,
   useSetProfileMutation,
   useGetFriendProfileQuery,
+  useGetProfilePictureQuery,
+  useSetProfilePictureMutation,
 } = userApi;

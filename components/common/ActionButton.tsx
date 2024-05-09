@@ -13,6 +13,8 @@ interface ActionButtonProps {
   selected?: boolean;
   maxWidth?: number;
   fontSize?: number;
+  marginTop?: number;
+  marginBottom?: number;
 }
 
 const ActionButton = ({
@@ -26,6 +28,8 @@ const ActionButton = ({
   selected,
   maxWidth,
   borderColor,
+  marginTop,
+  marginBottom,
 }: ActionButtonProps) => {
   return (
     <View>
@@ -42,7 +46,11 @@ const ActionButton = ({
           ];
         }}
       >
-        <View style={styles.contentContainer}>
+        <View style={[
+          styles.contentContainer,
+          marginTop != null && { marginTop: marginTop },
+          marginBottom != null && { marginBottom: marginBottom },
+        ]}>
           <View style={styles.mainContentContainer}>
             {icon}
             <Text style={styles.title}>{title}</Text>

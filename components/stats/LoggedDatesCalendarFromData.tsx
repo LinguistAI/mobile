@@ -9,6 +9,8 @@ import RefetchButton from './RefetchButton';
 import FetchError from '../common/feedback/FetchError';
 import { STAT_POLLING_INTERVAL } from './constants';
 import { RLoggedDate } from './types';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const DEFAULT_DAY_LIMIT = 75;
 
@@ -31,7 +33,14 @@ const LoggedDatesCalendarFromData = ({
 }: LoggedDatesCalendarProps) => {
   const { width, height } = getGraphDimensions();
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return (
+      <ShimmerPlaceholder
+        LinearGradient={LinearGradient}
+        style={[styles.skeletonRectangle, { width, height }]}
+      />
+    );
+  }
   if (isError || !data) return <FetchError withNavigation={false} />;
 
   const getStats = () => {
@@ -84,7 +93,13 @@ const LoggedDatesCalendarFromData = ({
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
+    marginBottom: 5,
   },
+  skeletonRectangle: {
+    borderRadius: 10,
+    alignSelf: 'center',
+    marginBottom: 5,
+  }
 });
 
 export default LoggedDatesCalendarFromData;

@@ -233,7 +233,7 @@ const QuizController = () => {
     );
 
   return (
-    <View style={styles.root}>
+    <View>
       <QuizHeader questionNo={currentQuestion + 1} totalQuestions={questions.length} />
       {renderCurrentQuestion()}
       {renderAnswerFeedback()}
@@ -242,9 +242,6 @@ const QuizController = () => {
 };
 
 const styles = StyleSheet.create({
-  root: {
-    marginTop: 30,
-  },
   actionBtnContainer: {
     width: '90%',
     alignSelf: 'center',

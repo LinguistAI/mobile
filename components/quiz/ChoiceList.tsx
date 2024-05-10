@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ChoiceItem from './ChoiceItem';
+import { QuestionOption } from './types';
 
 interface ChoiceListProps {
-  items: string[];
+  items: QuestionOption[];
   selectedChoice: string;
   handleChoice: (answer: string) => void;
   allowAnswer: boolean;
@@ -18,11 +18,11 @@ const ChoiceList = ({ items, selectedChoice, handleChoice, allowAnswer, correctA
   const renderChoiceItems = () => {
     return items.map((i) => (
       <ChoiceItem
-        key={i}
-        choice={i}
+        key={i.label}
+        choice={i.label}
         handleSelectChoice={handleSelectChoice}
         disable={!allowAnswer}
-        status={selectedChoice === i ? 'selected' : 'default'}
+        status={selectedChoice === i.label ? 'selected' : 'default'}
         correctChoice={correctAnswer === selectedChoice}
       />
     ));

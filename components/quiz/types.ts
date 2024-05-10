@@ -29,11 +29,16 @@ export interface QCreateMCQ {
   conversationId: string;
 }
 
+export type QuestionOption = {
+  label: string;
+  isEliminated: boolean;
+};
+
 export type Question = {
   id: string;
   word: string;
   question: string;
-  options: string[];
+  options: QuestionOption[];
 };
 export interface RCreateMCQ {
   id: string;

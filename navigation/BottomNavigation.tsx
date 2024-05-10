@@ -7,7 +7,7 @@ import ChatStackNavigator from './ChatStackNavigator';
 import LeaderboardNavigator from './LeaderboardNavigator';
 import StoreNavigation from './StoreNavigation';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();

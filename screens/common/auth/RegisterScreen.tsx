@@ -1,6 +1,8 @@
+import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, Text } from 'react-native';
+import CheckBox from 'expo-checkbox';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
@@ -13,12 +15,15 @@ import { register } from '../../../services/auth';
 import { RegisterDto } from '../../../services/auth/Auth.types';
 import { StoredUserInfoWithTokens } from '../../../types';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
+import PrivacyPolicyModal from '../../../components/user/PrivacyPolicyModal';
+import Colors from '../../../theme/colors';
 
 type RegisterFormValues = {
   userName: string;
   password: string;
   email: string;
   repeatPassword: string;
+  privacyPolicyAccepted: boolean; 
 };
 
 interface RegisterScreenProps {
@@ -33,10 +38,12 @@ const RegisterScreen = (props: RegisterScreenProps) => {
       email: '',
       password: '',
       repeatPassword: '',
+      privacyPolicyAccepted: false, 
     },
     mode: 'onSubmit',
   });
   const { storeUserDetails } = useUser();
+  const [privacyModalVisible, setPrivacyModalVisible] = useState(false); 
 
   const { mutate: registerMutate, isPending } = useMutation({
     mutationKey: ['register'],
@@ -95,6 +102,10 @@ const RegisterScreen = (props: RegisterScreenProps) => {
     },
   ];
 
+  const togglePrivacyModal = () => {
+    setPrivacyModalVisible(!privacyModalVisible);
+  };
+
   return (
     <ScrollView style={styles.scrollContainer}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -131,12 +142,29 @@ const RegisterScreen = (props: RegisterScreenProps) => {
                   value === methods.getValues('password') || 'Passwords must match!',
               }}
             />
-            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+
+            <View style={styles.privacyPolicyContainer}>
+              <CheckBox
+                color={Colors.primary[500]}
+                value={methods.watch('privacyPolicyAccepted')}
+                onValueChange={(newValue) => methods.setValue('privacyPolicyAccepted', newValue)}
+              />
+              <Text style={styles.privacyPolicyText} onPress={togglePrivacyModal}>I have read and agree to Linguist's privacy policy.</Text>
+            </View>
+
+            <Button
+              type="primary"
+              loading={isPending}
+              onPress={methods.handleSubmit(onSubmit, onError)}
+              disabled={!methods.watch('privacyPolicyAccepted')}
+            >
               REGISTER
             </Button>
           </FormProvider>
         </View>
       </KeyboardAvoidingView>
+
+      <PrivacyPolicyModal visible={privacyModalVisible} onClose={togglePrivacyModal} />
     </ScrollView>
   );
 };
@@ -154,6 +182,16 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: 'red',
   },
+  privacyPolicyContainer:{
+    flexDirection: 'row', 
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  privacyPolicyText: {
+    color: Colors.gray[700],
+    textDecorationLine: 'underline',
+    marginLeft: 5,
+  }
 });
 
 export default RegisterScreen;

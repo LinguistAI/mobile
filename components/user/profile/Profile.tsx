@@ -25,11 +25,13 @@ import LText from '../../common/Text';
 import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
 import { AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT } from '../../../utils/aws';
 import ProfilePicture from '../ProfilePicture';
+import PrivacyPolicyModal from '../PrivacyPolicyModal';
 
 const Profile = () => {
   const navigation = useNavigation();
 
   const { clearUserDetails, user } = useUser();
+  const [privacyPolicyVisible, setPrivacyPolicyVisible] = useState(false);
 
   const {
     data: userInfo,
@@ -51,6 +53,10 @@ const Profile = () => {
 
   const onPressFriends = () => {
     navigation.navigate('Friends');
+  };
+
+  const togglePrivacyPolicyModal = () => {
+    setPrivacyPolicyVisible(!privacyPolicyVisible);
   };
 
   useFocusEffect(
@@ -129,13 +135,18 @@ const Profile = () => {
           Change Password
         </Button>
       </View>
-
       {user.lastLogin && (
         <View style={styles.activityContainer}>
           <Text style={styles.activityTitle}>Activity</Text>
           <Text style={styles.lastLogin}>Last login: {user.lastLogin.toLocaleString()}</Text>
         </View>
       )}
+      <View style={styles.changePasswordView}>
+        <Text style={styles.privacyPolicyText} onPress={togglePrivacyPolicyModal}>
+          View Privacy Policy
+        </Text>
+      </View>
+      <PrivacyPolicyModal visible={privacyPolicyVisible} onClose={togglePrivacyPolicyModal} />
     </ScrollView>
   );
 };
@@ -191,7 +202,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   activityContainer: {
-    marginVertical: 32,
+    marginTop: 20,
+    marginBottom: 10,
     alignItems: 'center',
     gap: 8,
   },
@@ -206,6 +218,12 @@ const styles = StyleSheet.create({
   changePasswordView: {
     width: 250,
     height: 80,
+    alignSelf: 'center',
+  },
+  privacyPolicyText: {
+    color: Colors.gray[600],
+    fontSize: 16,
+    textDecorationLine: 'underline',
     alignSelf: 'center',
   },
 });

@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
-import ChoiceList from './ChoiceList';
-import QuestionDisplay from './QuestionDisplay';
+import QuestionChoiceList from './QuestionChoiceList';
+import QuizQuestionDisplay from './QuizQuestionDisplay';
 import { Question } from './types';
 
 interface QuestionProps {
@@ -23,22 +23,23 @@ const QuizQuestion = ({
   correctAnswer,
 }: QuestionProps) => {
   const height = Dimensions.get('screen').height * 0.65;
+  console.log(question);
 
   return (
     <View style={[styles.root, { height }]}>
       <View style={styles.questionDisplayContainer}>
-        <QuestionDisplay
+        <QuizQuestionDisplay
           questionNo={questionNo}
           totalNumberOfQuestions={totalNumberOfQuestions}
           question={question.question}
         />
       </View>
       <View style={styles.choiceListContainer}>
-        <ChoiceList
+        <QuestionChoiceList
           handleChoice={handleChoice}
           selectedChoice={selectedChoice}
           correctAnswer={correctAnswer}
-          items={question.options}
+          choices={question.options}
           allowAnswer={allowAnswer}
         />
       </View>

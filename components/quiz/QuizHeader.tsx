@@ -3,7 +3,7 @@ import Colors from '../../theme/colors';
 import ActionIcon from '../common/ActionIcon';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import ProgressBar from './ProgressBar';
+import ProgressBar from './QuizProgressBar';
 
 interface QuizHeaderProps {
   questionNo: number;

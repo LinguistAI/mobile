@@ -98,10 +98,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   skeletonRectangle: {
-    width: '48%',
-    height: 200,
-    marginBottom: 10,
-    borderRadius: 10,
+    width: '40%',
+    height: 250,
+    borderRadius: 20,
+    marginHorizontal: 15,
+    marginVertical: 15,
   },
 });
 

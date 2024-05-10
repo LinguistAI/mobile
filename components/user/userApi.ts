@@ -108,6 +108,7 @@ export const userApi = createApi({
         method: 'GET',
         params: paginationParams,
       }),
+      keepUnusedDataFor: 0,
     }),
     getFriendLeaderboard: builder.query<RLeaderboard, QLeaderboard>({
       query: (paginationParams) => ({
@@ -115,6 +116,7 @@ export const userApi = createApi({
         method: 'GET',
         params: paginationParams,
       }),
+      keepUnusedDataFor: 0,
     }),
     getProfile: builder.query<RProfile, void>({
       query: () => ({

@@ -1,13 +1,11 @@
 import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 import WritingAnimation from './WritingAnimation';
 import Colors from '../../theme/colors';
-import ActionIcon from '../common/ActionIcon';
-import { Ionicons } from '@expo/vector-icons';
-import * as Speech from 'expo-speech';
 import { ChatMessage, ChatMessageSender } from '../../screens/chat/types';
 import Avatar from '../common/Avatar';
 import { useSelector } from 'react-redux';
 import { selectCurrentBot, selectCurrentConversation } from '../../redux/chatSelectors';
+import TextToSpeechButton from './TextToSpeechButton';
 import { formatTime } from '../utils';
 
 interface ChatMessageComponentProps {
@@ -38,7 +36,7 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
     const activeWords = currentConversation?.unknownWords;
     if (!activeWords || activeWords.length === 0) return;
 
-    return !!activeWords.find((a) => a.word === word);
+    return !!activeWords.find((a) => a.word.toLowerCase() === word.toLowerCase());
   };
 
   return (
@@ -56,7 +54,6 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
             <View style={styles.messageLineContainer}>
               {lines.map((line, index) => {
                 const words = line?.split(' ');
-
                 return (
                   <View key={`line-${index}`} style={styles.messageLine}>
                     {words.map((word, index) => {
@@ -81,24 +78,13 @@ const ChatMessageComponent = (props: ChatMessageComponentProps) => {
             </View>
             <View style={styles.bottomRow}>
               <View style={isSentByUser ? styles.micSent : styles.micReceived}>
-                <ActionIcon
-                  icon={
-                    <Ionicons
-                      name="volume-medium"
-                      size={32}
-                      color={isSentByUser ? Colors.gray['100'] : Colors.primary['500']}
-                    />
-                  }
-                  onPress={() => {
-                    Speech.speak(chatMessage.content, {
-                      language: 'en',
-                    });
-                  }}
+                <TextToSpeechButton
+                  text={chatMessage.content}
+                  isSentByUser={isSentByUser}
+                  messageId={chatMessage.id}
                 />
               </View>
-              <Text style={styles.timestampReceived}>
-                {formatTime(timestamp) || ''}
-              </Text>
+              <Text style={styles.timestampReceived}>{formatTime(timestamp) || ''}</Text>
             </View>
           </View>
         )}

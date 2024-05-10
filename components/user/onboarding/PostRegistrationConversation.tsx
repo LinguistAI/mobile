@@ -278,7 +278,9 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
       <FlatList
         ref={messagesListRef}
         data={messages}
-        renderItem={({ item }) => <ChatMessageComponent onWordPress={() => {}} chatMessage={item} />}
+        renderItem={({ item }) => (
+          <ChatMessageComponent onWordPress={() => {}} chatMessage={item} messageId={uuidv4()} />
+        )}
         keyExtractor={(item) => item.id || item.timestamp.toString()}
         ListFooterComponent={getFooter()}
         onContentSizeChange={() => {

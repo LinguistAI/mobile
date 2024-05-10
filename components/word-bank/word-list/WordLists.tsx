@@ -175,7 +175,9 @@ const WordLists = () => {
       </View>
       {renderLists()}
       <View>
-        <FloatingButton handlePress={handleOpenAddListModal} />
+        <FloatingButton 
+          text='Add List'
+          handlePress={handleOpenAddListModal} />
       </View>
       {renderAddListModal()}
     </View>

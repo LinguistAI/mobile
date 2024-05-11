@@ -1,24 +1,62 @@
-import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import {View, Text, Pressable, StyleSheet, Animated, Easing} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
 import { IStoreItemWithQuantity } from '../types';
 import { TYPE_DOUBLE_ANSWER, TYPE_ELIMINATE_WRONG_ANSWER } from './constants';
 import GemsIndicatorButton from '../transaction/GemsIndicatorButton';
+import LText from "../../common/Text";
 
 interface ItemProps {
+  gemDisplay: any,
   storeItem: IStoreItemWithQuantity;
   onGemsPress: () => void;
+  purchasing: boolean;
 }
 
-const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
+const StoreItemCard = ({ gemDisplay, storeItem, onGemsPress, purchasing = false }: ItemProps) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const triggerAnimation = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 0.8,
+        duration: 100,
+        easing: Easing.linear,
+        useNativeDriver: true
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1.5,
+        duration: 200,
+        easing: Easing.linear,
+        useNativeDriver: true
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 0.8,
+        duration: 200,
+        easing: Easing.linear,
+        useNativeDriver: true
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1.0,
+        duration: 100,
+        easing: Easing.linear,
+        useNativeDriver: true
+      }),
+    ]).start();
+  };
+
+  useEffect(() => {
+    if (storeItem.quantityOwned !== null && triggerAnimation) triggerAnimation();
+  }, [storeItem.quantityOwned]);
+
   const cardTitle = storeItem.type;
 
   const renderIcon = () => {
     if (storeItem.type === TYPE_DOUBLE_ANSWER) {
-      return <Ionicons name="checkmark-done-sharp" size={60} color={Colors.gray[900]} />;
+      return <Ionicons style={styles.icon} name="checkmark-done-sharp" size={60} color={Colors.gray[900]} />;
     } else if (storeItem.type === TYPE_ELIMINATE_WRONG_ANSWER) {
-      return <Ionicons name="trash-bin-outline" size={60} color={Colors.gray[900]} />;
+      return <Ionicons style={styles.icon} name="trash-bin-outline" size={60} color={Colors.gray[900]} />;
     }
   };
 
@@ -28,14 +66,14 @@ const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
         <View>
           <View style={styles.overlay}>
             <View style={styles.quantityContainer}>
-              <Text style={styles.quantity}>{storeItem.quantityOwned}</Text>
+              <LText style={styles.quantity} isAnimated={true} animationTrigger={storeItem.quantityOwned} animationSequence={triggerAnimation} scaleAnimation={scaleAnim}>{storeItem.quantityOwned ?? 0}</LText>
             </View>
             {renderIcon()}
             <View style={styles.details}>
-              <Text style={styles.title}>{cardTitle}</Text>
+              <LText centered={true} style={styles.title}>{cardTitle}</LText>
               <Text style={styles.description}>{storeItem.description}</Text>
             </View>
-            <GemsIndicatorButton gemCount={storeItem.price} onClick={onGemsPress} style={styles.gemsButton} />
+            <GemsIndicatorButton gemCount={gemDisplay} onClick={onGemsPress} style={styles.gemsButton} loading={purchasing} />
           </View>
         </View>
       </View>
@@ -45,6 +83,8 @@ const StoreItemCard = ({ storeItem, onGemsPress }: ItemProps) => {
 
 const styles = StyleSheet.create({
   card: {
+    flex: 1,
+    justifyContent: 'space-between',
     marginBottom: 20,
     width: '48%',
     position: 'relative',
@@ -60,8 +100,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 5,
   },
+  icon: {
+    marginTop: 0,
+  },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: Colors.gray['900'],
     textAlign: 'center',
@@ -70,6 +113,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   description: {
+    marginTop: -15,
     fontSize: 14,
     color: Colors.gray['900'],
     textAlign: 'center',
@@ -78,6 +122,8 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   overlay: {
+    flex: 1,
+    justifyContent: 'space-between',
     backgroundColor: Colors.gray['0'],
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
@@ -88,10 +134,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -15,
     right: -15,
-    backgroundColor: Colors.grape['900'],
+    backgroundColor: Colors.primary[500],
+    borderTopColor: Colors.primary[600],
+    borderBottomColor: Colors.primary[600],
+    borderRightColor: Colors.primary[600],
+    borderLeftColor: Colors.primary[600],
     borderRadius: 50, // A circle
-    width: 30,
-    height: 30,
+    width: 35,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
@@ -101,6 +151,9 @@ const styles = StyleSheet.create({
   quantity: {
     color: Colors.gray['0'],
     fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 0.5, height: 2 },
+    textShadowRadius: 1,
   },
   gemsButton: {
     justifyContent: 'center',

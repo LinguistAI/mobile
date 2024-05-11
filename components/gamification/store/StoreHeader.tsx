@@ -1,8 +1,11 @@
 import React from 'react';
-import { RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 import Colors from '../../../theme/colors';
 import GemsIndicatorButton from '../transaction/GemsIndicatorButton';
+import useNotifications from '../../../hooks/useNotifications';
 import { RUserGems } from '../types';
+import GemsIndicator from "../transaction/GemsIndicator";
+
 
 interface StoreHeaderProps {
   userGemsData: RUserGems;
@@ -12,58 +15,52 @@ interface StoreHeaderProps {
 }
 
 const StoreHeader = ({ userGemsData, isUserGemsLoading, isRefreshing, onRefresh }: StoreHeaderProps) => {
+  const { add } = useNotifications();
 
-    const handleUserGemsPress = () => {
-      // TODO purchasing gems
-      onRefresh();
-    };
+  const handleUserGemsPress = () => {
+    // TODO purchasing gems
+    add({ type: 'info', body: 'In development...', time: 2500 });
+    onRefresh();
+  };
 
-    return (
-        <View style={styles.root}>
-          <View style={styles.container}>
-              <Text style={styles.storeLabel}>Store</Text>
-              <View style={styles.rightContainer}>
-                  <Text style={styles.youHaveLabel}>You have </Text>
-                  <View style={styles.gemsButtonContainer}>
-                      <GemsIndicatorButton
-                          gemCount={userGemsData.gems}
-                          onClick={handleUserGemsPress}
-                          loading={isUserGemsLoading}
-                      />
-                  </View>
-              </View>
-          </View>
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
+  return (
+    <View style={styles.root}>
+      <Text style={styles.storeLabel}>Store</Text>
+      <View style={styles.rightContainer}>
+        <Text style={styles.youHaveLabel}>You have </Text>
+        <View style={styles.gemsButtonContainer}>
+          <GemsIndicatorButton
+            gemCount={userGemsData.gems}
+            onClick={handleUserGemsPress}
+            loading={isUserGemsLoading}
           />
         </View>
-    );
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   root: {
-    height: 60,
+    maxHeight: 60,
     borderBottomColor: Colors.primary[500],
     borderBottomWidth: 2,
     zIndex: 9999,
     backgroundColor: Colors.gray[0],
-  },
-  container: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between', 
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    marginLeft: 15,
-    marginRight: 15,
   },
   storeLabel: {
+    marginLeft: 15,
     fontSize: 20,
     fontWeight: 'bold',
   },
   gemsButtonContainer: {
-    marginLeft: 'auto', 
+    marginLeft: 'auto',
+    marginRight: 10,
   },
   rightContainer: {
     flexDirection: 'row',

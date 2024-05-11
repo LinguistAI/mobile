@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import StoreItemCard from './StoreItemCard';
 import {
   usePurchaseItemMutation,
@@ -7,10 +7,12 @@ import { IStoreItemWithQuantity, RStoreItemsPage, RUserItemsPage } from '../type
 import useNotifications from '../../../hooks/useNotifications';
 import useError from '../../../hooks/useError';
 import { isDataResponse } from '../../../services';
+import Colors from "../../../theme/colors";
+import { useEffect, useState } from 'react';
 
 interface StoreItemsListProps {
   storeItemsPage: RStoreItemsPage;
-  userItemsPage: RUserItemsPage; 
+  userItemsPage: RUserItemsPage;
   isRefreshing: boolean;
   onRefresh:  () => Promise<void>;
 }
@@ -19,15 +21,26 @@ const StoreItemsList  = ({ storeItemsPage, userItemsPage, isRefreshing, onRefres
   const [purchase, { isError: isPurchaseError, error: purchaseError }] = usePurchaseItemMutation();
   useError(purchaseError);
 
-  const { add } = useNotifications();
+  const [purchasingItemId, setPurchasingItemId] = useState('');
+
+  const { add, remove, clear } = useNotifications();
 
   const handleGemsPress = async (item: IStoreItemWithQuantity) => {
+    clear();
+
+    const purchasingNotificationId = add({ type: 'info', body: 'Purchasing...', time: 5000 });
+    setPurchasingItemId(item.id);
+
     const purchaseResponse = await purchase({ itemId: item.id });
     if (purchaseError || isPurchaseError || !isDataResponse(purchaseResponse)) {
+      setPurchasingItemId('');
       return;
     }
-    add({ type: 'success', body: 'Item bought successfully.' });
-    onRefresh();
+
+    remove(purchasingNotificationId);
+    setPurchasingItemId('');
+    add({ type: 'success', body: `Purchased '${item.type}'.`, time: 2500 });
+    await onRefresh();
   };
 
   const renderItems = () => {
@@ -43,18 +56,26 @@ const StoreItemsList  = ({ storeItemsPage, userItemsPage, isRefreshing, onRefres
     });
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <FlatList
           data={mergedItems}
-          renderItem={({ item }) => (
-            <StoreItemCard storeItem={item} onGemsPress={() => handleGemsPress(item)} />
-          )}
+          renderItem={({ item }) => {
+            if ( item.id !== purchasingItemId ) {
+              return (
+                <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={false} />
+              );
+            }
+
+            // if the item is being purchased
+            return (
+              <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={true} />
+            )
+          }}
           numColumns={2}
           keyExtractor={(item) => item.id}
           style={styles.storeItemsContainer}
-          refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
         />
-      </View>
+      </ScrollView>
     );
   };
 

@@ -1,7 +1,7 @@
 import StoreItemsList from './StoreItemsList';
 import StoreHeader from './StoreHeader';
 import { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import {
   useGetStoreItemsQuery,
@@ -20,7 +20,7 @@ const StoreWrapper = () => {
     isError: isStoreItemsError,
     refetch: storeItemsRefetch,
   } = useGetStoreItemsQuery();
-  
+
   const {
     data: userItemsPage,
     isLoading: isUserItemsLoading,
@@ -34,13 +34,11 @@ const StoreWrapper = () => {
     isError: isUserGemsError,
     refetch: userGemsRefetch,
   } = useGetTransactionQuery();
-      
+
   const onRefresh = useCallback(async () => {
-    setIsRefreshing(true);
     await storeItemsRefetch();
     await userItemsRefetch();
     await userGemsRefetch();
-    setIsRefreshing(false);
   }, [storeItemsRefetch, userItemsRefetch, userGemsRefetch]);
 
   const renderSkeletonList = () => {
@@ -69,22 +67,22 @@ const StoreWrapper = () => {
   if (!storeItemsPage?.storeItems || storeItemsPage?.storeItems?.length === 0) {
     return <CenteredFeedback message="There are no items in the store" />;
   }
-  
+
   return (
-      <View style={styles.root}>
-        <StoreHeader 
-            userGemsData={userGemsData} 
-            isUserGemsLoading={isUserGemsLoading}
-            isRefreshing={isRefreshing} 
-            onRefresh={onRefresh} 
-        />
-        <StoreItemsList 
-            storeItemsPage={storeItemsPage} 
-            userItemsPage={userItemsPage} 
-            isRefreshing={isRefreshing} 
-            onRefresh={onRefresh}
-        />
-      </View> 
+    <View style={styles.root}>
+      <StoreHeader
+        userGemsData={userGemsData}
+        isUserGemsLoading={isUserGemsLoading}
+        isRefreshing={isRefreshing}
+        onRefresh={onRefresh}
+      />
+      <StoreItemsList
+        storeItemsPage={storeItemsPage}
+        userItemsPage={userItemsPage}
+        isRefreshing={isRefreshing}
+        onRefresh={onRefresh}
+      />
+    </View>
   );
 };
 

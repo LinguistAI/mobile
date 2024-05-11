@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity } from 'react-native';
+import {Animated, Easing, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity} from 'react-native';
+import React, { useEffect, useRef } from 'react';
 
 interface TextProps {
   children: React.ReactNode;
@@ -8,9 +8,13 @@ interface TextProps {
   onPress?: () => void;
   centered?: boolean;
   marginHorizontal?: number;
+  isAnimated?: boolean;
+  animationTrigger?: any;
+  animationSequence?: () => void;
+  scaleAnimation?: any;
 }
 
-const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress }: TextProps) => {
+const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress, isAnimated = false, animationTrigger, animationSequence, scaleAnimation }: TextProps) => {
   const textAlign = centered ? 'center' : 'left';
 
   let currentStyle = styles.titleTextCustom;
@@ -29,6 +33,21 @@ const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress 
   // if size prop is seperetaly set, override other font size values
   if (size) {
     mergedStyle = StyleSheet.compose(mergedStyle, { fontSize: size });
+  }
+
+  const scaleAnim = scaleAnimation;
+  const triggerAnimation = animationSequence;
+
+  useEffect(() => {
+    if (animationTrigger !== null && triggerAnimation) triggerAnimation();
+  }, [animationTrigger]);
+
+  if (isAnimated) {
+    return (
+      <Animated.Text onPress={onPress} style={[mergedStyle, { textAlign, marginHorizontal: marginHorizontal, transform: [{ scale: scaleAnim }] }]}>
+        {children}
+      </Animated.Text>
+    );
   }
 
   return (

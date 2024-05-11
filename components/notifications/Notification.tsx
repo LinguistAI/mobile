@@ -67,11 +67,13 @@ const styles = StyleSheet.create({
 
     // Shadow properties for iOS
     shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.9,
+    shadowOpacity: 0.5,
     shadowRadius: 3,
 
     // Shadow properties for Android
     elevation: 6,
+
+    marginBottom: 7,
   },
   notificationCard: {
     paddingHorizontal: 12,
@@ -87,6 +89,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   body: {
+    marginRight: 20,
     fontWeight: 'bold',
     fontSize: 16,
     maxWidth: '100%',

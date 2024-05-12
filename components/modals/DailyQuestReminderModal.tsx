@@ -30,9 +30,9 @@ const DailyQuestReminderModal = () => {
   return (
     <ReactNativeModal isVisible={isDailyQuestReminderModalVisible} onBackdropPress={handleCancel}>
       <View style={styles.container}>
-        <View>
-          <Ionicons style={{ alignSelf: 'center' }} name="gift" size={36} color={Colors.primary[600]} />
-          <Text style={styles.reminderText}>Don't forget to complete your daily quest!</Text>
+        <View style={{ gap: 16 }}>
+          <Ionicons style={{ alignSelf: 'center' }} name="gift" size={48} color={Colors.primary[600]} />
+          <Text style={styles.reminderText}>Hey there! Don't forget to complete your daily quest!</Text>
         </View>
         <Divider />
         <View style={{ display: 'flex', flexDirection: 'row', gap: 24, alignSelf: 'flex-end' }}>
@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
   },
   reminderText: {
     fontSize: 18,
+    textAlign: 'center',
+    paddingHorizontal: 16,
   },
 });
 

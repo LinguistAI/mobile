@@ -3,7 +3,12 @@ import {View, Text, Pressable, StyleSheet, Animated, Easing} from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../theme/colors';
 import { IStoreItemWithQuantity } from '../types';
-import { TYPE_DOUBLE_ANSWER, TYPE_ELIMINATE_WRONG_ANSWER } from './constants';
+import {
+  TYPE_DOUBLE_ANSWER,
+  TYPE_DOUBLE_ANSWER_OLD,
+  TYPE_ELIMINATE_WRONG_ANSWER,
+  TYPE_ELIMINATE_WRONG_ANSWER_OLD,
+} from './constants';
 import GemsIndicatorButton from '../transaction/GemsIndicatorButton';
 import LText from "../../common/Text";
 
@@ -26,7 +31,7 @@ const StoreItemCard = ({ gemDisplay, storeItem, onGemsPress, purchasing = false 
         useNativeDriver: true
       }),
       Animated.timing(scaleAnim, {
-        toValue: 1.5,
+        toValue: 1.8,
         duration: 200,
         easing: Easing.linear,
         useNativeDriver: true
@@ -53,9 +58,9 @@ const StoreItemCard = ({ gemDisplay, storeItem, onGemsPress, purchasing = false 
   const cardTitle = storeItem.type;
 
   const renderIcon = () => {
-    if (storeItem.type === TYPE_DOUBLE_ANSWER) {
+    if (storeItem.type === TYPE_DOUBLE_ANSWER || storeItem.type === TYPE_DOUBLE_ANSWER_OLD) {
       return <Ionicons style={styles.icon} name="checkmark-done-sharp" size={60} color={Colors.gray[900]} />;
-    } else if (storeItem.type === TYPE_ELIMINATE_WRONG_ANSWER) {
+    } else if (storeItem.type === TYPE_ELIMINATE_WRONG_ANSWER || storeItem.type === TYPE_ELIMINATE_WRONG_ANSWER_OLD) {
       return <Ionicons style={styles.icon} name="trash-bin-outline" size={60} color={Colors.gray[900]} />;
     }
   };

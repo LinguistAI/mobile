@@ -56,30 +56,28 @@ const StoreItemsList  = ({ storeItemsPage, userItemsPage, isRefreshing, onRefres
     });
 
     return (
-      <ScrollView style={styles.container}>
-        <FlatList
-          data={mergedItems}
-          renderItem={({ item }) => {
-            if ( item.id !== purchasingItemId ) {
-              return (
-                <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={false} />
-              );
-            }
-
-            // if the item is being purchased
+      <FlatList
+        data={mergedItems}
+        renderItem={({ item }) => {
+          if ( item.id !== purchasingItemId ) {
             return (
-              <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={true} />
-            )
-          }}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          style={styles.storeItemsContainer}
-        />
-      </ScrollView>
+              <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={false} />
+            );
+          }
+
+          // if the item is being purchased
+          return (
+            <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={true} />
+          )
+        }}
+        numColumns={2}
+        keyExtractor={(item) => item.id}
+        style={styles.storeItemsContainer}
+      />
     );
   };
 
-  return <View style={{ flex: 1 }}>{renderItems()}</View>;
+  return <ScrollView style={styles.container}>{renderItems()}</ScrollView>;
 };
 
 const styles = StyleSheet.create({

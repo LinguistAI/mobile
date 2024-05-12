@@ -42,7 +42,7 @@ const StoreHeader = ({ userGemsData, isUserGemsLoading, isRefreshing, onRefresh 
 
 const styles = StyleSheet.create({
   root: {
-    maxHeight: 60,
+    minHeight: 60,
     borderBottomColor: Colors.primary[500],
     borderBottomWidth: 2,
     zIndex: 9999,

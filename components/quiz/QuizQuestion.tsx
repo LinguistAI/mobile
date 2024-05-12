@@ -23,7 +23,6 @@ const QuizQuestion = ({
   correctAnswer,
 }: QuestionProps) => {
   const height = Dimensions.get('screen').height * 0.65;
-  console.log(question);
 
   return (
     <View style={[styles.root, { height }]}>

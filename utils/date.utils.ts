@@ -6,13 +6,13 @@ type Day = {
 };
 
 export const DaysOfWeek: Day[] = [
-  { id: 0, name: 'Monday', short: 'Mon', letter: 'M' },
-  { id: 1, name: 'Tuesday', short: 'Tue', letter: 'T' },
-  { id: 2, name: 'Wednesday', short: 'Wed', letter: 'W' },
-  { id: 3, name: 'Thursday', short: 'Thu', letter: 'T' },
-  { id: 4, name: 'Friday', short: 'Fri', letter: 'F' },
-  { id: 5, name: 'Saturday', short: 'Sat', letter: 'S' },
-  { id: 6, name: 'Sunday', short: 'Sun', letter: 'S' },
+  { id: 0, name: 'Sunday', short: 'Sun', letter: 'S' },
+  { id: 1, name: 'Monday', short: 'Mon', letter: 'M' },
+  { id: 2, name: 'Tuesday', short: 'Tue', letter: 'T' },
+  { id: 3, name: 'Wednesday', short: 'Wed', letter: 'W' },
+  { id: 4, name: 'Thursday', short: 'Thu', letter: 'T' },
+  { id: 5, name: 'Friday', short: 'Fri', letter: 'F' },
+  { id: 6, name: 'Saturday', short: 'Sat', letter: 'S' },
 ];
 
 export function getCurrentDayOfWeek(): Day {

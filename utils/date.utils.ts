@@ -17,7 +17,7 @@ export const DaysOfWeek: Day[] = [
 
 export function getCurrentDayOfWeek(): Day {
   const today = new Date();
-  return DaysOfWeek[today.getDay() - 1];
+  return DaysOfWeek[today.getDay()];
 }
 
 export function getLastOneWeek(): Day[] {

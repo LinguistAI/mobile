@@ -1,12 +1,18 @@
-import messaging from '@react-native-firebase/messaging';
 import { useNavigation } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
-import useUser from './useUser';
+import useUser from '../hooks/useUser';
+import { useDispatch } from 'react-redux';
+import { setQuestReminderModalOpen } from '../redux/chatSlice';
 
-const usePushNotifications = () => {
-  const navigation = useNavigation();
+interface PushNotificationWrapperProps {
+  children: React.ReactNode;
+}
+
+const PushNotificationWrapper = ({ children }: PushNotificationWrapperProps) => {
   const { user } = useUser();
+  const dispatch = useDispatch();
 
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
@@ -32,10 +38,10 @@ const usePushNotifications = () => {
     requestUserPermission();
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-      if (remoteMessage.data.default.type === 'DailyQuestNotification') {
+      const defaultData = JSON.parse(remoteMessage.data.default);
+      if (defaultData.type === 'DailyQuestNotification') {
         if (user) {
-          navigation.navigate('HomeTab');
+          dispatch(setQuestReminderModalOpen(true));
         }
       }
     });
@@ -50,9 +56,7 @@ const usePushNotifications = () => {
     };
   }, []);
 
-  requestUserPermission();
-
-  return null;
+  return children;
 };
 
-export default usePushNotifications;
+export default PushNotificationWrapper;

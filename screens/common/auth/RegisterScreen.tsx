@@ -13,6 +13,7 @@ import { register } from '../../../services/auth';
 import { RegisterDto } from '../../../services/auth/Auth.types';
 import { StoredUserInfoWithTokens } from '../../../types';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
+import useDeviceToken from '../../../hooks/useDeviceToken';
 
 type RegisterFormValues = {
   userName: string;
@@ -27,6 +28,7 @@ interface RegisterScreenProps {
 
 const RegisterScreen = (props: RegisterScreenProps) => {
   const { add } = useNotifications();
+  const token = useDeviceToken();
   const methods = useForm<RegisterFormValues>({
     defaultValues: {
       userName: '',
@@ -45,9 +47,11 @@ const RegisterScreen = (props: RegisterScreenProps) => {
         email: registerDto.email,
         password: registerDto.password,
         username: registerDto.username,
+        fcmToken: token!,
       }),
     onSuccess: (res) => {
-      storeUserDetails(res.data.data as StoredUserInfoWithTokens);
+      const storedUserInfo = res.data.data as StoredUserInfoWithTokens;
+      storeUserDetails(storedUserInfo);
       props.navigation.navigate('Welcome Conversation');
     },
     onError: (error: any) => {
@@ -66,6 +70,7 @@ const RegisterScreen = (props: RegisterScreenProps) => {
       email: values.email,
       password: values.password,
       username: values.userName,
+      fcmToken: token!,
     };
     registerMutate(registerDto);
   };

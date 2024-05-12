@@ -162,6 +162,9 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         <ScrollView
           ref={scrollViewRef}
           automaticallyAdjustContentInsets={true}
+          onContentSizeChange={() => {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+          }}
           refreshControl={
             <RefreshControl
               refreshing={false}

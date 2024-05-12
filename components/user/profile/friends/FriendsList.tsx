@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   root: {},
   friendsListStyle: {
     gap: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   skeletonContainer: {
     flex: 1,
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   infoText: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     color: Colors.gray[600],
   },
   divider: {

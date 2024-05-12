@@ -17,16 +17,16 @@ export const DaysOfWeek: Day[] = [
 
 export function getCurrentDayOfWeek(): Day {
   const today = new Date();
-  return DaysOfWeek[today.getDay()];
+  return DaysOfWeek[today.getDay() - 1];
 }
 
 export function getLastOneWeek(): Day[] {
   const days = DaysOfWeek;
   const today = getCurrentDayOfWeek();
-  const todayIndex = days.findIndex((d) => d.id === today.id);
-  const reorderedDays = [...days.slice(todayIndex), ...days.slice(0, todayIndex)];
-  const pastWeek = reorderedDays.slice(0, 7);
-  return pastWeek;
+
+  const daysWithoutToday = [...days.slice(today.id + 1), ...days.slice(0, today.id)];
+  const reorderedDays = [...daysWithoutToday, today];
+  return reorderedDays;
 }
 
 export function getDistanceBetweenTodayAndDay(day: Day): number {

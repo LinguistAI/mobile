@@ -59,10 +59,12 @@ const Button = (props: PrimaryButtonProps) => {
           ...baseButtonStyle,
           {
             backgroundColor: Colors[color][500],
-            borderColor: Colors[color][700],
+            borderBottomColor: Colors[color][700],
+            borderRightColor: Colors[color][700],
+            borderLeftColor: Colors[color][300],
           },
         ];
-        }
+      }
       if (type === 'outlined') {
         baseButtonStyle = [
           ...baseButtonStyle,

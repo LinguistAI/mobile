@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import useError from '../../../hooks/useError';
@@ -38,6 +38,12 @@ const WordLists = () => {
     isLoading: isLoadingWordLists,
     error: wordListFetchError,
   } = useGetWordListsQuery();
+
+  useEffect(() => {
+    if (wordLists?.lists) {
+      setFilteredWordLists(wordLists.lists);
+    }
+  }, [wordLists]);
 
   if (isLoadingWordLists) {
     return <WordListsSkeleton />;
@@ -167,7 +173,9 @@ const WordLists = () => {
       </View>
       {renderLists()}
       <View>
-        <FloatingButton handlePress={handleOpenAddListModal} />
+        <FloatingButton 
+          text='Add List'
+          handlePress={handleOpenAddListModal} />
       </View>
       {renderAddListModal()}
     </View>

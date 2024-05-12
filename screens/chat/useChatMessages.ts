@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChatMessage, ChatMessageSender } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
@@ -24,6 +24,11 @@ export const useChatMessages = (props: UseChatMessagesProps) => {
     conversationId,
     params: { page: currentPage, pageSize: currentPageSize },
   });
+
+  useEffect(() => {
+    setPreviousMessages([]);
+    setAddedMessages([]);
+  }, [conversationId]);
 
   useMemo(() => {
     if (!currentResult.data || currentPage > currentResult.data.totalPages) return;

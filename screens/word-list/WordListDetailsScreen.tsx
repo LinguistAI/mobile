@@ -82,7 +82,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
       )}
       <FlatList
         data={selectedList.words}
-        renderItem={({ item }) => <WordDetailsCollapse word={item} />}
+        renderItem={({ item }) => <WordDetailsCollapse word={item} listId={listId}/>}
         contentContainerStyle={{
           justifyContent: 'center',
           gap: 15,
@@ -98,6 +98,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
         }
       />
       <FloatingButton
+        text="Add Word"
         handlePress={() => {
           setIsAddWordModalVisible(true);
         }}

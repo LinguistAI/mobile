@@ -3,13 +3,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
 import useUser from '../../../hooks/useUser';
 import Avatar from '../../common/Avatar';
+import ActionIcon from '../../common/ActionIcon';
+import { Ionicons } from '@expo/vector-icons';
 
 const ConversationsHeader = () => {
   const navigation = useNavigation();
   const { user } = useUser();
 
   const handleGoBack = () => {
-    navigation.goBack();
+    navigation.navigate('Home');
   };
 
   return (
@@ -17,6 +19,9 @@ const ConversationsHeader = () => {
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
           <Avatar src={''} height={40} width={40} />
+        </View>
+        <View style={styles.avatarContainer}>
+          <ActionIcon icon={<Ionicons size={28} name="arrow-back" />} onPress={handleGoBack} />
         </View>
         <Text style={styles.name}>{user.username}</Text>
       </View>

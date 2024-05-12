@@ -13,7 +13,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "app.linguistai.mobile",
       "buildNumber": "4"
     },
@@ -24,7 +24,8 @@
       },
       "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "app.linguistai.mobile",
-      "versionCode": "4"
+      "versionCode": "4",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"

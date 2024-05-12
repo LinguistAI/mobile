@@ -1,14 +1,18 @@
+export type QuestionOption = {
+  label: string;
+  isEliminated: boolean;
+};
+
 export interface TQuestion {
   id: string;
   word: string;
   question: string;
-  options: string[];
+  options: QuestionOption[];
 }
 
-// TODO: Instead of answered make correct-answer || wrong-answer
 export type QuizPhase = 'waiting-answer' | 'answered' | 'end' | 'checking-answer' | 'waiting-results';
 
-export type ChoiceStatus = 'default' | 'selected';
+export type ChoiceStatus = 'default' | 'selected' | 'eliminated' | 'disabled';
 
 export interface QCheckMCQAnswer {
   questionId: string;
@@ -18,7 +22,7 @@ export interface QCheckMCQAnswer {
 export interface RCheckMCQAnswer {
   word: string;
   answer: string;
-  options: string[];
+  options: QuestionOption[];
   createdAt: string;
   updatedAt: string;
   isUserCorrect: boolean;
@@ -33,7 +37,7 @@ export type Question = {
   id: string;
   word: string;
   question: string;
-  options: string[];
+  options: QuestionOption[];
 };
 export interface RCreateMCQ {
   id: string;
@@ -46,7 +50,7 @@ export interface QFinishMCQ {
 
 export interface ResultQuestion extends Question {
   answer: string;
-  userAnswer: string;
+  userAnswer: string[];
   isUserCorrect: boolean;
 }
 

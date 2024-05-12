@@ -1,10 +1,8 @@
-import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useCallback } from 'react';
 import {
   Image,
   ScrollView,
   StyleSheet,
-  TouchableWithoutFeedback,
   View,
   RefreshControl,
   Pressable,
@@ -37,9 +35,12 @@ import {
 import WordLearningStatusBarChartFromData from '../../../stats/WordLearningStatusBarChartFromData';
 import LoggedDatesCalendarFromData from '../../../stats/LoggedDatesCalendarFromData';
 import FriendExperienceBar from '../../../gamification/experience/FriendExperienceBar';
+import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import { LinearGradient } from 'expo-linear-gradient';
+import FriendProfilePicture from "./FriendProfilePicture";
 
 const FriendProfile = () => {
-  const [profileImage, setProfileImage] = useState('https://thispersondoesnotexist.com');
   const route = useRoute();
   const { friendId } = route.params;
 
@@ -51,6 +52,7 @@ const FriendProfile = () => {
 
   const {
     data: profileInfo,
+    isLoading: isProfileLoading,
     isFetching: isProfileFetching,
     fulfilledTimeStamp,
     isError,
@@ -85,20 +87,6 @@ const FriendProfile = () => {
 
   const [refreshing, setRefreshing] = useState(false);
   const friendshipStatus = profileInfo?.friendshipStatus;
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
-    }
-  };
 
   const hobbies =
     profileInfo?.hobbies.map((h) => {
@@ -212,10 +200,21 @@ const FriendProfile = () => {
     );
   };
 
+  const renderShimmeringFriendButton = () => {
+    return (
+      <View>
+        <ShimmerPlaceholder style={styles.skeletonRectangle} LinearGradient={LinearGradient} />
+      </View>
+    );
+  }
+
   const handleSendFriendRequest = () => {
     sendRequest({ friendId });
   };
   const renderFriendButtonBasedOnStatus = () => {
+    if (isProfileLoading) {
+      return renderShimmeringFriendButton();
+    }
     switch (friendshipStatus) {
       case FriendSearchFriendshipStatus.FRIEND:
         return renderFriendsButton();
@@ -308,14 +307,7 @@ const FriendProfile = () => {
     >
       <View style={styles.topSection}></View>
       <View style={styles.profileContainer}>
-        <TouchableWithoutFeedback onPress={pickImage}>
-          <Image
-            source={{
-              uri: profileImage,
-            }}
-            style={styles.profileImage}
-          />
-        </TouchableWithoutFeedback>
+        <FriendProfilePicture username={profileInfo?.username} />
         <LText style={styles.userName}>{profileInfo?.username}</LText>
       </View>
       <View style={styles.friendButtonContainer}>{renderFriendButtonBasedOnStatus()}</View>
@@ -340,24 +332,34 @@ const FriendProfile = () => {
         <FriendExperienceBar friendId={friendId} />
       </View>
       <Divider />
-      <View style={styles.rowView}>
-        <Title size="h4">English Level</Title>
-        <LText size={16}>
-          {profileInfo?.englishLevel === null
-            ? capitalizeFirstLetter("Doesn't Know")
-            : capitalizeFirstLetter(profileInfo?.englishLevel!)}
-        </LText>
-      </View>
-      <View style={hobbies.length === 0 ? styles.rowView : null}>
-        <Title size="h4">Hobbies</Title>
-        {hobbies.length === 0 ? (
-          <LText size={16}>No hobbies :(</LText>
-        ) : (
-          <View style={styles.hobbyContainer}>
-            <ReadOnlyItemGroup name="hobbies" items={hobbies} />
+      {isProfileLoading ? (
+        <View style={[styles.rowView, { justifyContent: 'center', marginBottom: 20 }]}>
+        <LoadingIndicator subtext="Loading English Level and Hobbies..." />
+        </View>
+      ) : (
+        <>
+          <View style={styles.levelAndHobbiesView}>
+            <View style={styles.rowView}>
+              <Title size="h4">English Level</Title>
+              <LText size={16}>
+                {profileInfo?.englishLevel === null
+                  ? capitalizeFirstLetter("Doesn't Know")
+                  : capitalizeFirstLetter(profileInfo?.englishLevel!)}
+              </LText>
+            </View>
+            <View style={hobbies.length === 0 ? styles.rowView : null}>
+              <Title size="h4">Hobbies</Title>
+              {hobbies.length === 0 ? (
+                <LText size={16}>No hobbies :(</LText>
+              ) : (
+                <View style={styles.hobbyContainer}>
+                  <ReadOnlyItemGroup name="hobbies" items={hobbies} />
+                </View>
+              )}
+            </View>
           </View>
-        )}
-      </View>
+        </>
+      )}
       <View>
         <WordLearningStatusBarChartFromData
           data={wordLearningStats}
@@ -430,6 +432,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  levelAndHobbiesView: {
+    marginLeft: 10,
+    margin: 5
+  },
   rankAndStreak: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -438,7 +444,7 @@ const styles = StyleSheet.create({
   },
   hobbyContainer: {
     flex: 1,
-    marginHorizontal: 0,
+    marginHorizontal: 5,
   },
   userName: {
     fontSize: 22,
@@ -477,6 +483,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     maxWidth: 250,
     shadowColor: 'black',
+    height: 40,
 
     // Shadow properties for iOS
     shadowOffset: { width: -2, height: 4 },
@@ -506,6 +513,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingHorizontal: 5,
     paddingBottom: 5,
+  },
+  skeletonRectangle: {
+    borderRadius: 10,
+    height: 40,
+    width: 250,
+    alignSelf: 'center',
   },
 });
 export default FriendProfile;

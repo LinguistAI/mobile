@@ -1,26 +1,30 @@
-import {StyleSheet, View, Image} from 'react-native';
-import Colors from '../../theme/colors';
-import LText from '../common/Text';
-import React from "react";
+import { StyleSheet, View, Image, ActivityIndicator } from 'react-native';
+import React from 'react';
+import LText from '../../common/Text';
+import Colors from '../../../theme/colors';
 
 interface GemsIndicatorProps {
-  gemCount: number;
+  gemCount: number | null;
+  loading?: boolean;
 }
 
-const GemsIndicator = ({ gemCount }: GemsIndicatorProps) => {
+const GemsIndicator = ({ gemCount, loading }: GemsIndicatorProps) => {
   return (
     <View style={styles.root}>
-      <LText style={styles.gems}>{gemCount}</LText>
-      <Image
-        source={require('../../assets/gem1.png')}
-        style={styles.image}
-      />
+      {loading ? (
+        <ActivityIndicator style={styles.gems} size={16} color={Colors.gray[0]} />
+      ) : (
+        <LText style={styles.gems}>{gemCount ?? 0}</LText>
+      )}
+      <Image source={require('../../../assets/gem1.png')} style={styles.image} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   root: {
+    minWidth: 120,
+    maxHeight: 40,
     display: 'flex',
     padding: 5,
     borderRadius: 5,
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0.5, height: 2 },
     textShadowRadius: 1,
     marginRight: 2,
-  }
+  },
 });
 
 export default GemsIndicator;

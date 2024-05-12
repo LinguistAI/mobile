@@ -162,9 +162,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
+
+    // Shadow properties for Android
     elevation: 4,
     alignSelf: 'center',
     zIndex: 1,
+
+    // Shadow properties for iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.6,
+    shadowRadius: 5,
   },
 });
 

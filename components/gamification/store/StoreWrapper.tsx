@@ -1,7 +1,7 @@
 import StoreItemsList from './StoreItemsList';
 import StoreHeader from './StoreHeader';
-import { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import {
   useGetStoreItemsQuery,
@@ -11,6 +11,9 @@ import {
 import FetchError from '../../common/feedback/FetchError';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
+import LText from '../../common/Text';
+import Title from '../../common/Title';
+import Divider from '../../common/Divider';
 
 const StoreWrapper = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -20,7 +23,7 @@ const StoreWrapper = () => {
     isError: isStoreItemsError,
     refetch: storeItemsRefetch,
   } = useGetStoreItemsQuery();
-  
+
   const {
     data: userItemsPage,
     isLoading: isUserItemsLoading,
@@ -34,13 +37,11 @@ const StoreWrapper = () => {
     isError: isUserGemsError,
     refetch: userGemsRefetch,
   } = useGetTransactionQuery();
-      
+
   const onRefresh = useCallback(async () => {
-    setIsRefreshing(true);
     await storeItemsRefetch();
     await userItemsRefetch();
     await userGemsRefetch();
-    setIsRefreshing(false);
   }, [storeItemsRefetch, userItemsRefetch, userGemsRefetch]);
 
   const renderSkeletonList = () => {
@@ -69,28 +70,50 @@ const StoreWrapper = () => {
   if (!storeItemsPage?.storeItems || storeItemsPage?.storeItems?.length === 0) {
     return <CenteredFeedback message="There are no items in the store" />;
   }
-  
+
   return (
-      <View style={styles.root}>
-        <StoreHeader 
-            userGemsData={userGemsData} 
-            isUserGemsLoading={isUserGemsLoading}
-            isRefreshing={isRefreshing} 
-            onRefresh={onRefresh} 
+    <View style={styles.root}>
+      <StoreHeader
+        userGemsData={userGemsData}
+        isUserGemsLoading={isUserGemsLoading}
+        isRefreshing={isRefreshing}
+        onRefresh={onRefresh}
+      />
+      <ScrollView>
+        <Title style={styles.subtitle} size="h4">Consumables</Title>
+        <StoreItemsList
+          storeItemsPage={storeItemsPage}
+          userItemsPage={userItemsPage}
+          isRefreshing={isRefreshing}
+          onRefresh={onRefresh}
         />
-        <StoreItemsList 
-            storeItemsPage={storeItemsPage} 
-            userItemsPage={userItemsPage} 
-            isRefreshing={isRefreshing} 
-            onRefresh={onRefresh}
-        />
-      </View> 
+        <Divider />
+        <Title style={styles.subtitle} size="h4">Cosmetics</Title>
+        <LText style={styles.comingSoon} size={20} centered={true}>Coming soon...</LText>
+        <Divider />
+        <Title style={styles.subtitle} size="h4">Themes</Title>
+        <LText style={styles.comingSoon} size={20} centered={true}>Coming soon...</LText>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  subtitle: {
+    marginTop: 10,
+    fontSize: 24,
+    fontFamily: 'Bold',
+    paddingHorizontal: 16,
+    marginVertical: 4,
+  },
+  comingSoon: {
+    marginBottom: 30,
+    fontSize: 24,
+    paddingHorizontal: 16,
+    marginVertical: 4,
   },
   skeletonContainer: {
     flexDirection: 'row',

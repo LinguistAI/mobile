@@ -12,7 +12,7 @@ const GemsIndicator = ({ gemCount, loading }: GemsIndicatorProps) => {
   return (
     <View style={styles.root}>
       {loading ? (
-        <ActivityIndicator size={40} color={Colors.gray[0]} />
+        <ActivityIndicator style={styles.gems} size={16} color={Colors.gray[0]} />
       ) : (
         <LText style={styles.gems}>{gemCount ?? 0}</LText>
       )}
@@ -23,6 +23,8 @@ const GemsIndicator = ({ gemCount, loading }: GemsIndicatorProps) => {
 
 const styles = StyleSheet.create({
   root: {
+    minWidth: 120,
+    maxHeight: 40,
     display: 'flex',
     padding: 5,
     borderRadius: 5,

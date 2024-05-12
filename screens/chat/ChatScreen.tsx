@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
+  Keyboard,
   Modal,
   RefreshControl,
   SafeAreaView,
@@ -56,9 +57,32 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   });
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+
   const scrollViewRef = useRef<ScrollView>(null);
   const { start } = useCopilot();
   useDisableBottomTab();
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true); // or some other action
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false); // or some other action
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isKeyboardVisible) {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }
+  }, [isKeyboardVisible]);
 
   useEffect(() => {
     const startChatWalkthrough = async () => {

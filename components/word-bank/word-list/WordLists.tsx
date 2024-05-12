@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import useError from '../../../hooks/useError';
 import FloatingButton from '../../common/FloatingButton';
 import ModalWrapper from '../../common/ModalWrapper';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
@@ -15,7 +16,6 @@ import WordListCard from './WordListCard';
 import WordListFilter from './WordListFilter';
 import WordListsSkeleton from './WordListsSkeleton';
 import { ICreateWordList, TWordList } from './types';
-import useError from '../../../hooks/useError';
 
 const WordLists = () => {
   const [addListModalVisible, setAddListModalVisible] = useState(false);
@@ -109,35 +109,33 @@ const WordLists = () => {
   const renderAddListModal = () => {
     return (
       <ModalWrapper visible={addListModalVisible} onRequestClose={handleCancelAddList} title="Add a new list">
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
-          <View style={styles.formContent}>
-            <FormProvider {...methods}>
-              <PrimaryTextInput
-                name="listName"
-                label="List Name"
-                defaultValue=""
-                placeholder="Enter list name"
-                rules={{ required: 'List name is required', minLength: 3 }}
+        <View style={styles.formContent}>
+          <FormProvider {...methods}>
+            <PrimaryTextInput
+              name="listName"
+              label="List Name"
+              defaultValue=""
+              placeholder="Enter list name"
+              rules={{ required: 'List name is required', minLength: 3 }}
+            />
+            <PrimaryTextInput
+              name="listDescription"
+              label="List Description"
+              defaultValue=""
+              placeholder="Enter list description"
+              rules={{ required: 'List description is required' }}
+            />
+            <PrimarySwitch name="pinned" label="Pin this list" defaultValue={false} />
+            <PrimarySwitch name="isActive" label="Set as active list" defaultValue={true} />
+            <View style={styles.formControls}>
+              <ModalControlButtons
+                onCancel={handleCancelAddList}
+                onSubmit={methods.handleSubmit(onSubmit, onError)}
+                okText="Add"
               />
-              <PrimaryTextInput
-                name="listDescription"
-                label="List Description"
-                defaultValue=""
-                placeholder="Enter list description"
-                rules={{ required: 'List description is required' }}
-              />
-              <PrimarySwitch name="pinned" label="Pin this list" defaultValue={false} />
-              <PrimarySwitch name="isActive" label="Set as active list" defaultValue={true} />
-              <View style={styles.formControls}>
-                <ModalControlButtons
-                  onCancel={handleCancelAddList}
-                  onSubmit={methods.handleSubmit(onSubmit, onError)}
-                  okText="Add"
-                />
-              </View>
-            </FormProvider>
-          </View>
-        </KeyboardAvoidingView>
+            </View>
+          </FormProvider>
+        </View>
       </ModalWrapper>
     );
   };

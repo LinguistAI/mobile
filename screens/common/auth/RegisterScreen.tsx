@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, Text } from 'react-native';
+import { Dimensions, Platform, ScrollView, StyleSheet, View, Text } from 'react-native';
 import CheckBox from 'expo-checkbox';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
@@ -102,29 +102,29 @@ const RegisterScreen = (props: RegisterScreenProps) => {
     },
   ];
 
+  const { height } = Dimensions.get('window');
+  const keyboardPadding = Platform.OS === 'ios' ? height * 0.1 : 0;
   const togglePrivacyModal = () => {
     setPrivacyModalVisible(!privacyModalVisible);
   };
 
   return (
     <ScrollView style={styles.scrollContainer}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={styles.container}>
-          <FormProvider {...methods}>
-            <PrimaryTextInput
-              defaultValue=""
-              name="userName"
-              rules={{
-                required: 'Username is required!',
-                pattern: {
-                  value: /^.{3,}$/,
-                  message: 'Username must be at least 3 characters long!',
-                },
-              }}
-              label="Username"
-              placeholder="Username"
-            />
-
+      <View style={styles.container}>
+        <FormProvider {...methods}>
+          <PrimaryTextInput
+            defaultValue=""
+            name="userName"
+            rules={{
+              required: 'Username is required!',
+              pattern: {
+                value: /^.{3,}$/,
+                message: 'Username must be at least 3 characters long!',
+              },
+            }}
+            label="Username"
+            placeholder="Username"
+          />
             <EmailTextInput name="email" />
             <PasswordInputWithRequirements
               requirements={passwordRequirements}

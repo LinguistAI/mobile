@@ -1,25 +1,24 @@
-import { ChatMessageSender } from '../../../screens/chat/types';
-import { useEffect, useRef, useState } from 'react';
-import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
+import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useRef, useState } from 'react';
+import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
 import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+import useNotifications from '../../../hooks/useNotifications';
+import { ChatMessageSender } from '../../../screens/chat/types';
+import Colors from '../../../theme/colors';
+import { formatAsStr } from '../../../utils';
 import ChatMessageComponent from '../../chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../chat/ChatTextInputContainer';
-import { ExtendedChatMessage, IUserDetailedInfo } from '../types';
 import ActionButton from '../../common/ActionButton';
-import { Ionicons } from '@expo/vector-icons';
-import Colors from '../../../theme/colors';
-import Button from '../../common/form/Button';
-import OptionGroup from '../../common/form/OptionGroup';
-import { formatAsStr } from '../../../utils';
 import CloseIcon from '../../common/CloseIcon';
 import Divider from '../../common/Divider';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { ENGLISH_LEVELS, BOT_MESSAGES } from '../constants';
-import { useSetUserDetailsMutation } from '../userApi';
-import useNotifications from '../../../hooks/useNotifications';
+import Button from '../../common/form/Button';
+import OptionGroup from '../../common/form/OptionGroup';
 import { objectIsNotEmpty } from '../../utils';
-import useUser from '../../../hooks/useUser';
+import { BOT_MESSAGES, ENGLISH_LEVELS } from '../constants';
+import { ExtendedChatMessage, IUserDetailedInfo } from '../types';
+import { useSetUserDetailsMutation } from '../userApi';
 import { dateObjToISODate } from '../utils';
 
 interface PostRegistrationConversationProps {
@@ -211,9 +210,7 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
 
     // Answer by text
     return (
-      <View style={styles.textInputContainer}>
-        <ChatTextInputContainer onSend={handleNext} isPending={isBotWriting} />
-      </View>
+      <ChatTextInputContainer onSend={handleNext} isPending={isBotWriting} />
     );
   };
 

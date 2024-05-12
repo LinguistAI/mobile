@@ -1,11 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
-  FlatList,
-  KeyboardAvoidingView,
   Modal,
-  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -13,8 +10,10 @@ import {
   Text,
   View,
 } from 'react-native';
+import ChatHeader from '../../components/chat/ChatHeader';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
+import Card from '../../components/common/Card';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { ChatMessage, ChatMessageSender } from './types';
 import ChatHeader from '../../components/chat/header/ChatHeader';
@@ -43,6 +42,10 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
   const currentBot = useSelector(selectCurrentBot);
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
+  const screenHeight = Dimensions.get('window').height;
+
+  const scrollViewRef = useRef<ScrollView>(null);
+
   const {
     addMessage,
     isLoadingMessages,
@@ -274,7 +277,7 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
             </WalkThroughableView>
           </CopilotStep>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };

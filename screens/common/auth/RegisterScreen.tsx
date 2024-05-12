@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
@@ -95,51 +95,48 @@ const RegisterScreen = (props: RegisterScreenProps) => {
     },
   ];
 
+  const { height } = Dimensions.get('window');
+  const keyboardPadding = Platform.OS === 'ios' ? height * 0.1 : 0;
+
   return (
     <ScrollView style={styles.scrollContainer}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={100}
-      >
-        <View style={styles.container}>
-          <FormProvider {...methods}>
-            <PrimaryTextInput
-              defaultValue=""
-              name="userName"
-              rules={{
-                required: 'Username is required!',
-                pattern: {
-                  value: /^.{3,}$/,
-                  message: 'Username must be at least 3 characters long!',
-                },
-              }}
-              label="Username"
-              placeholder="Username"
-            />
+      <View style={styles.container}>
+        <FormProvider {...methods}>
+          <PrimaryTextInput
+            defaultValue=""
+            name="userName"
+            rules={{
+              required: 'Username is required!',
+              pattern: {
+                value: /^.{3,}$/,
+                message: 'Username must be at least 3 characters long!',
+              },
+            }}
+            label="Username"
+            placeholder="Username"
+          />
 
-            <EmailTextInput name="email" />
-            <PasswordInputWithRequirements
-              requirements={passwordRequirements}
-              name="password"
-              label="Password"
-              placeholder="Password"
-            />
-            <PasswordTextInput
-              placeholder="Repeat password"
-              label="Repeat password"
-              name="repeatPassword"
-              rules={{
-                required: 'Repeating password is required!',
-                validate: (value: string) =>
-                  value === methods.getValues('password') || 'Passwords must match!',
-              }}
-            />
-            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-              REGISTER
-            </Button>
-          </FormProvider>
-        </View>
-      </KeyboardAvoidingView>
+          <EmailTextInput name="email" />
+          <PasswordInputWithRequirements
+            requirements={passwordRequirements}
+            name="password"
+            label="Password"
+            placeholder="Password"
+          />
+          <PasswordTextInput
+            placeholder="Repeat password"
+            label="Repeat password"
+            name="repeatPassword"
+            rules={{
+              required: 'Repeating password is required!',
+              validate: (value: string) => value === methods.getValues('password') || 'Passwords must match!',
+            }}
+          />
+          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+            REGISTER
+          </Button>
+        </FormProvider>
+      </View>
     </ScrollView>
   );
 };

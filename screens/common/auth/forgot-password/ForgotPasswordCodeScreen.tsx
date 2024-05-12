@@ -2,7 +2,7 @@
 Concept: https://dribbble.com/shots/5476562-Forgot-Password-Verification/attachments
 */
 import React, { useState } from 'react';
-import { Animated, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Animated, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -169,30 +169,28 @@ const ForgotPasswordCodeScreen = ({ navigation, route }: ForgotPasswordCodeScree
 
   return (
     <SafeAreaView>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={styles.root}>
-          <FormProvider {...methods}>
-            <Text style={styles.subTitle}>
-              Please enter the verification code{'\n'}
-              we have sent to <Text style={styles.emailText}>{email}</Text>
-            </Text>
-            <CodeField
-              ref={ref}
-              {...props}
-              value={value}
-              onChangeText={setValue}
-              cellCount={CELL_COUNT}
-              rootStyle={styles.codeFiledRoot}
-              keyboardType="default"
-              textContentType="oneTimeCode"
-              renderCell={renderCell}
-            />
-            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-              VERIFY
-            </Button>
-          </FormProvider>
-        </View>
-      </KeyboardAvoidingView>
+      <View style={styles.root}>
+        <FormProvider {...methods}>
+          <Text style={styles.subTitle}>
+            Please enter the verification code{'\n'}
+            we have sent to <Text style={styles.emailText}>{email}</Text>
+          </Text>
+          <CodeField
+            ref={ref}
+            {...props}
+            value={value}
+            onChangeText={setValue}
+            cellCount={CELL_COUNT}
+            rootStyle={styles.codeFiledRoot}
+            keyboardType="default"
+            textContentType="oneTimeCode"
+            renderCell={renderCell}
+          />
+          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+            VERIFY
+          </Button>
+        </FormProvider>
+      </View>
     </SafeAreaView>
   );
 };

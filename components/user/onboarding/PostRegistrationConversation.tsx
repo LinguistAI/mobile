@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, View } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import useNotifications from '../../../hooks/useNotifications';
@@ -210,13 +210,7 @@ const PostRegistrationConversation = ({ navigation }: PostRegistrationConversati
 
     // Answer by text
     return (
-      <KeyboardAvoidingView
-        style={styles.textInputContainer}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
-      >
-        <ChatTextInputContainer onSend={handleNext} isPending={isBotWriting} />
-      </KeyboardAvoidingView>
+      <ChatTextInputContainer onSend={handleNext} isPending={isBotWriting} />
     );
   };
 

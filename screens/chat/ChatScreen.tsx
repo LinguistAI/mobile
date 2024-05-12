@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
-  KeyboardAvoidingView,
   Modal,
-  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -211,18 +209,12 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
       <View style={styles.header}>
         <ChatHeader />
       </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? screenHeight * 0.05 : 0}
-        style={styles.flexContainer}
-      >
-        <View style={styles.flexContainer}>
-          {renderMessages()}
-          <View style={styles.textInputContainer}>
-            <ChatTextInputContainer onSend={onSend} isPending={isPending || isSendingMessage} />
-          </View>
+      <View style={styles.flexContainer}>
+        {renderMessages()}
+        <View style={styles.textInputContainer}>
+          <ChatTextInputContainer onSend={onSend} isPending={isPending || isSendingMessage} />
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };

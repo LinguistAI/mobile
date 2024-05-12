@@ -23,7 +23,14 @@ import ForgotPasswordNewPasswordScreen from './screens/common/auth/forgot-passwo
 import ForgotPasswordScreen from './screens/common/auth/forgot-password/ForgotPasswordScreen';
 import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import Colors from './theme/colors';
+import messaging from '@react-native-firebase/messaging';
 import { CopilotProvider } from 'react-native-copilot';
+import usePushNotifications from './hooks/usePushNotifications';
+import useDeviceToken from './hooks/useDeviceToken';
+
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log('Message handled in the background!', remoteMessage);
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +41,10 @@ const queryClient = new QueryClient({
 export const FontLoadedContext = createContext<boolean>(false);
 
 export default function App() {
+  usePushNotifications();
+  const token = useDeviceToken();
+  console.log('token', token);
+
   const Stack = createNativeStackNavigator();
   ScreenOrientation.lockPlatformAsync({
     screenOrientationArrayIOS: [ScreenOrientation.Orientation.PORTRAIT_UP],

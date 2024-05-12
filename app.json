@@ -18,14 +18,14 @@
       "buildNumber": "4"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "app.linguistai.mobile",
-      "versionCode": "4",
-      "googleServicesFile": "./android/app/google-services.json"
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,7 +42,10 @@
         {
           "initialOrientation": "PORTRAIT"
         }
-      ]
+      ],
+      "expo-build-properties",
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging"
     ]
   }
 }

@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
 import { useSelector } from 'react-redux';
-import ChatHeader from '../../components/chat/ChatHeader';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
+import ChatHeader from '../../components/chat/header/ChatHeader';
 import Card from '../../components/common/Card';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
@@ -40,10 +40,6 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   const conversationId = route.params.conversationId as string;
   const currentBot = useSelector(selectCurrentBot);
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
-  const screenHeight = Dimensions.get('window').height;
-
-  const scrollViewRef = useRef<ScrollView>(null);
-
   const {
     addMessage,
     isLoadingMessages,

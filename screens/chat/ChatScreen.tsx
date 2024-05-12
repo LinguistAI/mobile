@@ -10,27 +10,25 @@ import {
   Text,
   View,
 } from 'react-native';
+import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
+import { useSelector } from 'react-redux';
 import ChatHeader from '../../components/chat/ChatHeader';
 import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
 import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
 import Card from '../../components/common/Card';
 import WordInfoCard from '../../components/word-bank/WordInfoCard';
-import { ChatMessage, ChatMessageSender } from './types';
-import ChatHeader from '../../components/chat/header/ChatHeader';
 import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
-import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
-import { useSelector } from 'react-redux';
 import { selectCurrentBot } from '../../redux/chatSelectors';
+import Colors from '../../theme/colors';
+import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from './constants';
+import { ChatMessage, ChatMessageSender } from './types';
+import { useChatMessages } from './useChatMessages';
 import {
   getFirstChatWalthroughStarted,
   getSecondChatWalkthroughStarted,
   saveFirstChatWalkthroughStarted,
   saveSecondChatWalkthroughStarted,
 } from './utils';
-import { useChatMessages } from './useChatMessages';
-import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
-import Colors from '../../theme/colors';
-import Card from '../../components/common/Card';
 
 const WalkThroughableView = walkthroughable(View);
 
@@ -263,20 +261,15 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           <ChatHeader />
         </WalkThroughableView>
       </CopilotStep>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flexContainer}
-      >
-        <View style={styles.flexContainer}>
-          {renderMessages()}
-          <CopilotStep name="chat-text-input" order={4} text="Type in anything to start chatting!">
-            <WalkThroughableView>
-              <View style={styles.textInputContainer}>
-                <ChatTextInputContainer onSend={onSend} isPending={isPending} />
-              </View>
-            </WalkThroughableView>
-          </CopilotStep>
-        </View>
+      <View style={styles.flexContainer}>
+        {renderMessages()}
+        <CopilotStep name="chat-text-input" order={4} text="Type in anything to start chatting!">
+          <WalkThroughableView>
+            <View style={styles.textInputContainer}>
+              <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+            </View>
+          </WalkThroughableView>
+        </CopilotStep>
       </View>
     </SafeAreaView>
   );

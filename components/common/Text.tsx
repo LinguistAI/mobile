@@ -8,13 +8,25 @@ interface TextProps {
   onPress?: () => void;
   centered?: boolean;
   marginHorizontal?: number;
-  isAnimated?: boolean;
-  animationTrigger?: any;
-  animationSequence?: () => void;
-  scaleAnimation?: any;
+  animation?: {
+    isAnimated: boolean;
+    animationTrigger: any;
+    animationSequence: () => void;
+    scaleAnimation: any;
+  };
 }
 
-const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress, isAnimated = false, animationTrigger, animationSequence, scaleAnimation }: TextProps) => {
+const LText = (
+  {
+    children,
+    style,
+    centered,
+    marginHorizontal = 0,
+    size,
+    onPress,
+    animation = { isAnimated: false, animationTrigger: null, animationSequence: () => {}, scaleAnimation: null }
+  }: TextProps
+) => {
   const textAlign = centered ? 'center' : 'left';
 
   let currentStyle = styles.titleTextCustom;
@@ -35,14 +47,14 @@ const LText = ({ children, style, centered, marginHorizontal = 0, size, onPress,
     mergedStyle = StyleSheet.compose(mergedStyle, { fontSize: size });
   }
 
-  const scaleAnim = scaleAnimation;
-  const triggerAnimation = animationSequence;
+  const scaleAnim = animation?.scaleAnimation;
+  const triggerAnimation = animation?.animationSequence;
 
   useEffect(() => {
-    if (animationTrigger !== null && triggerAnimation) triggerAnimation();
-  }, [animationTrigger]);
+    if (animation?.animationTrigger !== null && triggerAnimation) triggerAnimation();
+  }, [animation?.animationTrigger]);
 
-  if (isAnimated) {
+  if (animation?.isAnimated) {
     return (
       <Animated.Text onPress={onPress} style={[mergedStyle, { textAlign, marginHorizontal: marginHorizontal, transform: [{ scale: scaleAnim }] }]}>
         {children}

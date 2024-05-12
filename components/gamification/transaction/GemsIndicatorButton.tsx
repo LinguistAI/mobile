@@ -54,7 +54,14 @@ const GemsIndicatorButton = ({ gemCount, onClick, style, loading = false }: Gems
         marginBottom={-15}
         title={
           <View style={styles.root}>
-            <LText style={styles.gems} isAnimated={true} animationTrigger={gemCount} animationSequence={triggerAnimation} scaleAnimation={scaleAnim}>{trueGemCount ?? 0}</LText>
+            <LText style={styles.gems} animation={
+              {
+                isAnimated: true,
+                animationTrigger: gemCount,
+                animationSequence: triggerAnimation,
+                scaleAnimation: scaleAnim,
+              }
+            }>{trueGemCount ?? 0}</LText>
             <Image source={require('../../../assets/gem1.png')} style={styles.image} />
           </View>
         }

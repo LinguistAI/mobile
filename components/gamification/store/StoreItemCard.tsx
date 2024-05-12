@@ -71,7 +71,14 @@ const StoreItemCard = ({ gemDisplay, storeItem, onGemsPress, purchasing = false 
         <View>
           <View style={styles.overlay}>
             <View style={styles.quantityContainer}>
-              <LText style={styles.quantity} isAnimated={true} animationTrigger={storeItem.quantityOwned} animationSequence={triggerAnimation} scaleAnimation={scaleAnim}>{storeItem.quantityOwned ?? 0}</LText>
+              <LText style={styles.quantity} animation={
+                {
+                  isAnimated: true,
+                  animationTrigger: storeItem.quantityOwned,
+                  animationSequence: triggerAnimation,
+                  scaleAnimation: scaleAnim,
+                }
+              }>{storeItem.quantityOwned ?? 0}</LText>
             </View>
             {renderIcon()}
             <View style={styles.details}>

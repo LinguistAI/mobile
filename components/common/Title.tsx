@@ -1,4 +1,4 @@
-import { StyleProp, StyleSheet, Text, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import TitleSizes from '../../theme/fontSizes';
 import Colors from '../../theme/colors';
 
@@ -8,7 +8,7 @@ interface TitleProps {
   children: React.ReactNode;
   size?: FontSizeKeys;
   centered?: boolean;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
 }
 
 const Title = ({ children, size: fontSize = 'h1', centered, style }: TitleProps) => {

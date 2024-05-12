@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { FormProvider, useForm } from 'react-hook-form';
-import { Dimensions, Platform, ScrollView, StyleSheet, View, Text } from 'react-native';
 import CheckBox from 'expo-checkbox';
+import React, { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Dimensions, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
 import PrimaryTextInput from '../../../components/common/form/PrimaryTextInput';
 import PasswordInputWithRequirements from '../../../components/common/form/password/PasswordInputWithRequirements';
 import { Requirement } from '../../../components/common/form/password/Requirement';
+import PrivacyPolicyModal from '../../../components/user/PrivacyPolicyModal';
 import useNotifications from '../../../hooks/useNotifications';
 import useUser from '../../../hooks/useUser';
 import { register } from '../../../services/auth';
 import { RegisterDto } from '../../../services/auth/Auth.types';
+import Colors from '../../../theme/colors';
 import { StoredUserInfoWithTokens } from '../../../types';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
-import PrivacyPolicyModal from '../../../components/user/PrivacyPolicyModal';
-import Colors from '../../../theme/colors';
 
 type RegisterFormValues = {
   userName: string;
   password: string;
   email: string;
   repeatPassword: string;
-  privacyPolicyAccepted: boolean; 
+  privacyPolicyAccepted: boolean;
 };
 
 interface RegisterScreenProps {
@@ -38,12 +38,12 @@ const RegisterScreen = (props: RegisterScreenProps) => {
       email: '',
       password: '',
       repeatPassword: '',
-      privacyPolicyAccepted: false, 
+      privacyPolicyAccepted: false,
     },
     mode: 'onSubmit',
   });
   const { storeUserDetails } = useUser();
-  const [privacyModalVisible, setPrivacyModalVisible] = useState(false); 
+  const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
 
   const { mutate: registerMutate, isPending } = useMutation({
     mutationKey: ['register'],
@@ -125,44 +125,44 @@ const RegisterScreen = (props: RegisterScreenProps) => {
             label="Username"
             placeholder="Username"
           />
-            <EmailTextInput name="email" />
-            <PasswordInputWithRequirements
-              requirements={passwordRequirements}
-              name="password"
-              label="Password"
-              placeholder="Password"
-            />
-            <PasswordTextInput
-              placeholder="Repeat password"
-              label="Repeat password"
-              name="repeatPassword"
-              rules={{
-                required: 'Repeating password is required!',
-                validate: (value: string) =>
-                  value === methods.getValues('password') || 'Passwords must match!',
-              }}
-            />
+          <EmailTextInput name="email" />
+          <PasswordInputWithRequirements
+            requirements={passwordRequirements}
+            name="password"
+            label="Password"
+            placeholder="Password"
+          />
+          <PasswordTextInput
+            placeholder="Repeat password"
+            label="Repeat password"
+            name="repeatPassword"
+            rules={{
+              required: 'Repeating password is required!',
+              validate: (value: string) => value === methods.getValues('password') || 'Passwords must match!',
+            }}
+          />
 
-            <View style={styles.privacyPolicyContainer}>
-              <CheckBox
-                color={Colors.primary[500]}
-                value={methods.watch('privacyPolicyAccepted')}
-                onValueChange={(newValue) => methods.setValue('privacyPolicyAccepted', newValue)}
-              />
-              <Text style={styles.privacyPolicyText} onPress={togglePrivacyModal}>I have read and agree to Linguist's privacy policy.</Text>
-            </View>
+          <View style={styles.privacyPolicyContainer}>
+            <CheckBox
+              color={Colors.primary[500]}
+              value={methods.watch('privacyPolicyAccepted')}
+              onValueChange={(newValue) => methods.setValue('privacyPolicyAccepted', newValue)}
+            />
+            <Text style={styles.privacyPolicyText} onPress={togglePrivacyModal}>
+              I have read and agree to Linguist's privacy policy.
+            </Text>
+          </View>
 
-            <Button
-              type="primary"
-              loading={isPending}
-              onPress={methods.handleSubmit(onSubmit, onError)}
-              disabled={!methods.watch('privacyPolicyAccepted')}
-            >
-              REGISTER
-            </Button>
-          </FormProvider>
-        </View>
-      </KeyboardAvoidingView>
+          <Button
+            type="primary"
+            loading={isPending}
+            onPress={methods.handleSubmit(onSubmit, onError)}
+            disabled={!methods.watch('privacyPolicyAccepted')}
+          >
+            REGISTER
+          </Button>
+        </FormProvider>
+      </View>
 
       <PrivacyPolicyModal visible={privacyModalVisible} onClose={togglePrivacyModal} />
     </ScrollView>
@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: 'red',
   },
-  privacyPolicyContainer:{
-    flexDirection: 'row', 
+  privacyPolicyContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 5,
   },
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     color: Colors.gray[700],
     textDecorationLine: 'underline',
     marginLeft: 5,
-  }
+  },
 });
 
 export default RegisterScreen;

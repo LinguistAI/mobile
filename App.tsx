@@ -25,15 +25,12 @@ import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import Colors from './theme/colors';
 import messaging from '@react-native-firebase/messaging';
 import { CopilotProvider } from 'react-native-copilot';
-import usePushNotifications from './hooks/usePushNotifications';
 import useDeviceToken from './hooks/useDeviceToken';
-import useUser from './hooks/useUser';
 import PushNotificationWrapper from './components/PushNotificationWrapper';
 import Modals from './components/modals/Modals';
+import { onDisplayNotification } from './utils';
 
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log('Message handled in the background!', remoteMessage);
-});
+messaging().setBackgroundMessageHandler(onDisplayNotification);
 
 const queryClient = new QueryClient({
   defaultOptions: {

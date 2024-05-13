@@ -34,7 +34,6 @@ const LoginScreen = (props: LoginScreenProps) => {
     mutationKey: ['login'],
     mutationFn: (loginDto: LoginDto) => login({ email: loginDto.email, password: loginDto.password }),
     onSuccess: (res) => {
-      console.log(res);
       if (!res.data.data) {
         add({
           body: 'Something went wrong!',

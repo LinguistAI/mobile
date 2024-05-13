@@ -16,7 +16,7 @@ const FriendsScreen = () => {
 const styles = StyleSheet.create({
   friendAddBtnContainer: {
     alignSelf: 'center',
-    marginVertical: 10,
+    marginVertical: 15,
   },
 });
 

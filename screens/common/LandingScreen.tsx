@@ -50,7 +50,7 @@ const LandingScreen = (props: LandingScreenProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>Linguist AI</Text>
+        <Text style={styles.logoText}>Linguist</Text>
       </View>
       <View style={styles.landingSection}>
         <View>

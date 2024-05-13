@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-na
 import { useLazyGetGlobalLeaderboardQuery } from '../../components/user/userApi';
 import LeaderboardList from './LeaderboardList';
 import LText from '../../components/common/Text';
+import { useFocusEffect } from '@react-navigation/native';
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 10;
@@ -32,6 +33,12 @@ const GlobalLeaderboardScreen = () => {
     await trigger({ size: DEFAULT_PAGE_SIZE, page: currentPage });
     setIsRefreshing(false);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      onRefresh();
+    }, [onRefresh])
+  );
 
   useEffect(() => {
     trigger({ size: DEFAULT_PAGE_SIZE });

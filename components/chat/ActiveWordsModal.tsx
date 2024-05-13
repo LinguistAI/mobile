@@ -8,13 +8,16 @@ import { useEffect } from 'react';
 import { useGetConversationQuery } from './api';
 import { updateSelectedConversation } from '../../redux/chatSlice';
 import LoadingIndicator from '../common/feedback/LoadingIndicator';
+import { CopilotStep, walkthroughable } from 'react-native-copilot';
 
 interface ActiveWordsModalProps {
   visible: boolean;
-  setVisible: (visible: boolean) => void;
+  onBackdropPress: () => void;
 }
 
-const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
+const WalkThroughableView = walkthroughable(View);
+
+const ActiveWordsModal = ({ visible, onBackdropPress }: ActiveWordsModalProps) => {
   const conversation = useSelector(selectCurrentConversation);
   const dispatch = useDispatch();
   const { data: latestConvoDetails, isLoading } = useGetConversationQuery(conversation?.id, {
@@ -45,7 +48,7 @@ const ActiveWordsModal = ({ visible, setVisible }: ActiveWordsModalProps) => {
   };
 
   return (
-    <ReactNativeModal isVisible={visible} onBackdropPress={() => setVisible(false)}>
+    <ReactNativeModal isVisible={visible} onBackdropPress={onBackdropPress}>
       <View style={styles.modalContent}>
         {isLoading && <LoadingIndicator subtext="Finding your active words..." />}
         <View>

@@ -5,10 +5,15 @@ import Colors from '../../theme/colors';
 interface CardProps {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
+  noShadow?: boolean;
 }
 
-const Card = ({ children, style }: CardProps) => {
-  return <View style={[styles.card, style]}>{children}</View>;
+const Card = ({ children, style, noShadow }: CardProps) => {
+  return (
+    <View style={[styles.card, style, noShadow ? { shadowColor: 'transparent', elevation: 0 } : {}]}>
+      {children}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -22,7 +27,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    elevation: 4,
+    elevation: 12,
   },
 });
 

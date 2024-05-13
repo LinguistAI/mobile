@@ -176,6 +176,11 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
     return `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
   };
 
+  const handleSend = () => {
+    props.onSend(text);
+    setText('');
+  };
+
   return (
     <View style={styles.innerBorder}>
       <View style={styles.innerContainer}>
@@ -196,10 +201,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
                   color={props.isPending ? Colors.gray[300] : Colors.primary[600]}
                 />
               }
-              onPress={() => {
-                props.onSend(text);
-                setText('');
-              }}
+              onPress={handleSend}
             />
           </View>
         ) : (

@@ -18,7 +18,7 @@ const ChatStackNavigator = () => {
       <ChatStack.Screen
         name="ChatBotsListScreen"
         component={ChatBotsScreen}
-        options={{ headerShown: true, headerTitle: 'Chat Bots' }}
+        options={{ headerShown: true, headerTitle: 'Chatbots' }}
       />
       <ChatStack.Screen name="ChatScreen" component={ChatScreen} options={{ headerShown: false }} />
       <ChatStack.Screen name="ChatMCQ" component={QuizController} options={{ headerShown: false }} />

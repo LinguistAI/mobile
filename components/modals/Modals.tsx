@@ -4,7 +4,7 @@ import { selectIsQuestReminderModalOpen } from '../../redux/chatSelectors';
 
 const Modals = () => {
   const isDailyQuestReminderModalVisible = useSelector(selectIsQuestReminderModalOpen);
-  return isDailyQuestReminderModalVisible && <DailyQuestReminderModal />;
+  return isDailyQuestReminderModalVisible ? <DailyQuestReminderModal /> : null;
 };
 
 export default Modals;

@@ -16,29 +16,34 @@ const LandingScreen = (props: LandingScreenProps) => {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   const { updateLoginTime } = useUser();
-  const { mutate: checkAuthMutate } = useMutation({
-    mutationKey: ['checkAuth'],
-    mutationFn: () => checkAuth(),
-    onSuccess: (res) => {
-      updateLoginTime();
-      props.navigation.reset({
-        index: 0,
-        routes: [{ name: 'Main', screen: 'Profile' }],
-      });
-      setCheckingAuth(false);
-    },
-    onError: (error: any) => {
-      setCheckingAuth(false);
-    },
-  });
+  // const { mutate: checkAuthMutate } = useMutation({
+  //   mutationKey: ['checkAuth'],
+  //   mutationFn: () => checkAuth(),
+  //   onSuccess: (res) => {
+  //     console.log('Success auth');
 
-  useEffect(() => {
-    checkAuthMutate();
-  }, []);
+  //     updateLoginTime();
+  //     setCheckingAuth(false);
+  //     props.navigation.reset({
+  //       index: 0,
+  //       routes: [{ name: 'Main', screen: 'Profile' }],
+  //     });
+  //   },
+  //   onError: (error: any) => {
+  //     console.log('Fail auth');
 
-  if (checkingAuth) {
-    return <Splash />;
-  }
+  //     setCheckingAuth(false);
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   console.log('Checking auth');
+  //   checkAuthMutate();
+  // }, []);
+
+  // if (checkingAuth) {
+  //   return <Splash />;
+  // }
 
   const navigateLogin = () => {
     props.navigation.navigate('Login');

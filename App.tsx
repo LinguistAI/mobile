@@ -61,11 +61,14 @@ export default function App() {
     });
 
     if (!fontsLoaded) {
+      console.log('Loading fonts');
       return <Splash />;
     }
   } catch (error) {
     console.log('Could not load fonts', error);
   }
+
+  console.log('Fonts loaded');
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

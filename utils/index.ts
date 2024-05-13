@@ -46,7 +46,6 @@ export async function onDisplayNotification(message: FirebaseMessagingTypes.Remo
     body: message.notification?.body ?? 'Main body content of the notification',
     android: {
       channelId,
-      smallIcon: 'name-of-a-small-icon',
       pressAction: {
         id: 'default',
       },

@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 import { Alert } from 'react-native';
 import useUser from '../hooks/useUser';
 import { useDispatch } from 'react-redux';
-import { setQuestReminderModalOpen } from '../redux/chatSlice';
-import { Notifications } from 'react-native-notifications';
+import { setLevelUpModalConfig, setQuestReminderModalOpen } from '../redux/chatSlice';
 import { onDisplayNotification } from '../utils';
 
 interface PushNotificationWrapperProps {
@@ -40,13 +39,26 @@ const PushNotificationWrapper = ({ children }: PushNotificationWrapperProps) => 
     requestUserPermission();
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      onDisplayNotification(remoteMessage);
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      await onDisplayNotification(remoteMessage);
 
-      const defaultData = JSON.parse(remoteMessage?.data?.default);
+      if (!user) {
+        return;
+      }
+
+      const defaultData = remoteMessage?.data?.default;
       if (defaultData?.type === 'DailyQuestNotification') {
-        if (user) {
-          dispatch(setQuestReminderModalOpen(true));
-        }
+        console.log('Daily quest notification received');
+        dispatch(setQuestReminderModalOpen(true));
+      } else if (remoteMessage?.data?.type === 'LevelUp') {
+        console.log('Level up notification received');
+        dispatch(
+          setLevelUpModalConfig({
+            previousLevel: parseInt(remoteMessage?.data?.previousLevel) || 0,
+            newLevel: parseInt(remoteMessage?.data?.currentLevel) || 0,
+            visible: true,
+          })
+        );
       }
     });
 

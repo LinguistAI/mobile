@@ -1,10 +1,19 @@
 import { useSelector } from 'react-redux';
 import DailyQuestReminderModal from './DailyQuestReminderModal';
-import { selectIsQuestReminderModalOpen } from '../../redux/chatSelectors';
+import { selectIsLevelUpModalOpen, selectIsQuestReminderModalOpen } from '../../redux/chatSelectors';
+import { View } from 'react-native';
+import LevelUpModal from './LevelUpModal';
 
 const Modals = () => {
   const isDailyQuestReminderModalVisible = useSelector(selectIsQuestReminderModalOpen);
-  return isDailyQuestReminderModalVisible ? <DailyQuestReminderModal /> : null;
+  const isLevelUpModalVisible = useSelector(selectIsLevelUpModalOpen);
+
+  return (
+    <View>
+      {isDailyQuestReminderModalVisible ? <DailyQuestReminderModal /> : null}
+      {isLevelUpModalVisible ? <LevelUpModal /> : null}
+    </View>
+  );
 };
 
 export default Modals;

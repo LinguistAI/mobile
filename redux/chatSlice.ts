@@ -5,12 +5,16 @@ import { TChatBot, TConversation } from '../components/chat/types';
 import { gamificationApi } from '../components/gamification/api';
 import { userApi } from '../components/user/userApi';
 import { wordBankApi } from '../components/word-bank/api';
-import { set } from 'date-fns';
 
 export interface ChatState {
   selectedBot: TChatBot | null;
   currentConversation: TConversation | null;
   isQuestReminderModalOpen: boolean;
+  levelUpModalConfig: {
+    previousLevel: number;
+    newLevel: number;
+    visible: boolean;
+  };
 }
 
 const chatSlice = createSlice({
@@ -19,6 +23,11 @@ const chatSlice = createSlice({
     selectedBot: null,
     currentConversation: null,
     isQuestReminderModalOpen: false,
+    levelUpModalConfig: {
+      previousLevel: 0,
+      newLevel: 0,
+      visible: false,
+    },
   } as ChatState,
   reducers: {
     startConversation: (state, action) => {
@@ -40,6 +49,9 @@ const chatSlice = createSlice({
     setQuestReminderModalOpen: (state, action) => {
       state.isQuestReminderModalOpen = action.payload;
     },
+    setLevelUpModalConfig: (state, action) => {
+      state.levelUpModalConfig = action.payload;
+    },
   },
 });
 
@@ -49,5 +61,6 @@ export const {
   clearMessages,
   updateSelectedConversation,
   setQuestReminderModalOpen,
+  setLevelUpModalConfig,
 } = chatSlice.actions;
 export default chatSlice.reducer;

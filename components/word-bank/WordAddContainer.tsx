@@ -55,7 +55,7 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
   };
 
   return (
-    <>
+    <View style={styles.root}>
       <View style={styles.picker}>
         <Picker
           itemStyle={styles.pickerItem}
@@ -81,11 +81,16 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
           loading={isAddingWord}
         />
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   pickerItem: {
     height: 60,
     fontSize: 16,
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.gray[700],
     borderRadius: 4,
-    marginBottom: 20,
+    marginRight: 15,
     textAlign: 'center',
   },
   addIconContainer: {

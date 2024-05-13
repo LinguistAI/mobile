@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 0, // necessary for semi transparent background
   },
   flexContainer: {
     flex: 5,

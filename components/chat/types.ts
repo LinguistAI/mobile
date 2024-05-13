@@ -87,7 +87,16 @@ export interface QMessages {
 }
 
 export type RTranscribeMsg = {
-  message: string;
+  msg: string;
+  jobName: string;
+};
+
+export type RTranscribeResult = {
+  result: RTranscribeTranscriptResult[];
+};
+
+export type RTranscribeTranscriptResult = {
+  transcript: string;
 };
 
 export type QTranscribe = {

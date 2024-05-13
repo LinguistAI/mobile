@@ -8,6 +8,7 @@ import {
   QMessages,
   QTranscribe,
   RTranscribeMsg,
+  RTranscribeResult,
   TChatBot,
   TConversation,
 } from './types';
@@ -120,6 +121,27 @@ export const chatApi = createApi({
         }
       },
     }),
+    getTranscriptionResult: builder.query<RTranscribeResult, { jobName: string }>({
+      queryFn: async (args) => {
+        try {
+          const response = await axiosSecure.get('/aws/transcribe', {
+            params: args,
+          });
+          const data = response.data;
+          return {
+            data,
+          };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              data: JSON.stringify(error),
+              msg: 'Failed to retrieve transcribe result',
+            },
+          };
+        }
+      },
+    }),
   }),
 });
 
@@ -134,4 +156,5 @@ export const {
   useGetConversationQuery,
   useGetPaginatedChatMessagesQuery,
   useSendTranscriptionRequestMutation,
+  useLazyGetTranscriptionResultQuery,
 } = chatApi;

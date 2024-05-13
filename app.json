@@ -24,8 +24,7 @@
       },
       "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "app.linguistai.mobile",
-      "versionCode": "4",
-      "googleServicesFile": "./android/app/google-services.json"
+      "versionCode": "4"
     },
     "web": {
       "favicon": "./assets/favicon.png"

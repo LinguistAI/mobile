@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CloseIcon from '../common/CloseIcon';
 import Colors from '../../theme/colors';
 import WordDetail from './word-list/words/WordDetail';
@@ -49,8 +49,17 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
 
   return (
     <View>
+      {/* <View style={styles.container}> */}
+      {/* <TouchableOpacity style={styles.overlay} onPress={onDismiss} activeOpacity={1} /> */}
       <ScrollView contentContainerStyle={styles.cardContainer}>
         <CloseIcon onPress={onDismiss} />
+        <Title centered size="h4">
+          Add to your list
+        </Title>
+        <View style={styles.actionsContainer}>
+          <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
+        </View>
+        <Divider />
         <View>
           <Text style={[styles.word, isActiveWord ? styles.activeWord : null]}>
             {selectedWord}
@@ -63,19 +72,21 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
           ) : null}
           {renderWordDetails()}
         </View>
-        <Divider />
-        <Title centered size="h4">
-          Add to your list
-        </Title>
-        <View style={styles.actionsContainer}>
-          <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
-        </View>
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderWidth: 2,
+    borderColor: 'red',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
   cardContainer: {
     margin: 20,
     backgroundColor: Colors.primary[500],
@@ -109,6 +120,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   actionsContainer: {
+    marginTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

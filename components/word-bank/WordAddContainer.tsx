@@ -75,7 +75,7 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
       </View>
       <View style={styles.addIconContainer}>
         <ActionIcon
-          icon={<Ionicons name="add-circle" size={36} color={Colors.gray[0]} />}
+          icon={<Ionicons name="add-circle" size={36} color={Colors.primary[500]} />}
           onPress={handleAddNewWord}
           disabled={!selectedWordList}
           loading={isAddingWord}
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: 'white',
     borderWidth: 2,
-    borderColor: Colors.gray[700],
+    borderColor: Colors.primary[500],
     borderRadius: 4,
     marginRight: 15,
     textAlign: 'center',

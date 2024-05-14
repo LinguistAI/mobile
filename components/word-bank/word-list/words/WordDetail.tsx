@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   wordType: {
     fontStyle: 'italic',
     fontSize: 20,
-    borderBottomColor: Colors.gray[0],
+    borderBottomColor: Colors.gray[600],
     borderBottomWidth: 2,
     fontWeight: 'bold',
   },
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   meaning: {
     fontSize: 16,
-    color: Colors.gray[0],
+    color: Colors.gray[800],
     fontWeight: 'bold',
   },
   meaningContainer: {

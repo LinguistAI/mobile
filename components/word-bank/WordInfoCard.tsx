@@ -10,6 +10,7 @@ import { useGetWordMeaningsQuery } from './api';
 import WordAddContainer from './WordAddContainer';
 import { useSelector } from 'react-redux';
 import { selectCurrentActiveWords, selectCurrentConversation } from '../../redux/chatSelectors';
+import LText from '../common/Text';
 
 interface WordInfoCardProps {
   selectedWord: string;
@@ -48,9 +49,8 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
   };
 
   return (
-    <View>
-      {/* <View style={styles.container}> */}
-      {/* <TouchableOpacity style={styles.overlay} onPress={onDismiss} activeOpacity={1} /> */}
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.overlay} onPress={onDismiss} activeOpacity={1} />
       <ScrollView contentContainerStyle={styles.cardContainer}>
         <CloseIcon onPress={onDismiss} />
         <Title centered size="h4">
@@ -61,10 +61,10 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
         </View>
         <Divider />
         <View>
-          <Text style={[styles.word, isActiveWord ? styles.activeWord : null]}>
+          <LText centered={true} style={[styles.word, isActiveWord ? styles.activeWord : null]}>
             {selectedWord}
             {isActiveWord ? '*' : ''}
-          </Text>
+          </LText>
           {isActiveWord ? (
             <Text style={styles.activeWordDescription}>
               *This word is highlighted because it is being actively taught during this conversation.
@@ -81,16 +81,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    borderWidth: 2,
-    borderColor: 'red',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
   },
   cardContainer: {
     margin: 20,
-    backgroundColor: Colors.primary[500],
+    backgroundColor: Colors.gray[100],
     borderRadius: 10,
+    borderColor: Colors.primary[500],
+    borderWidth: 2,
     padding: 35,
     alignItems: 'center',
     shadowColor: '#000',
@@ -104,13 +104,14 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   word: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    textAlign: 'center',
+    elevation: 2,
   },
   activeWord: {
     color: Colors.yellow[600],
-    marginBottom: 8,
+    marginBottom: 18,
+    fontWeight: 'bold',
   },
   activeWordDescription: {
     fontSize: 12,

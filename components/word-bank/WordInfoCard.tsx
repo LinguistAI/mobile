@@ -53,18 +53,18 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
       <TouchableOpacity style={styles.overlay} onPress={onDismiss} activeOpacity={1} />
       <ScrollView contentContainerStyle={styles.cardContainer}>
         <CloseIcon onPress={onDismiss} />
-        <Title centered size="h4">
-          Add to your list
-        </Title>
-        <View style={styles.actionsContainer}>
-          <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
-        </View>
-        <Divider />
         <View>
           <LText centered={true} style={[styles.word, isActiveWord ? styles.activeWord : null]}>
             {selectedWord}
             {isActiveWord ? '*' : ''}
           </LText>
+          <Title centered size="h4">
+            Add to your list
+          </Title>
+          <View style={styles.actionsContainer}>
+            <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
+          </View>
+          <Divider />
           {isActiveWord ? (
             <Text style={styles.activeWordDescription}>
               *This word is highlighted because it is being actively taught during this conversation.
@@ -107,6 +107,11 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     elevation: 2,
+    marginBottom: 15,
+    textShadowColor: 'rgba(34, 184, 207, 0.4)',
+    // textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0.5, height: 2 },
+    textShadowRadius: 1,
   },
   activeWord: {
     color: Colors.yellow[600],

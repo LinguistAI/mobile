@@ -9,7 +9,6 @@ import WordLearningStatusBarChart from '../../components/stats/WordLearningStatu
 import UserExperienceBar from '../../components/gamification/experience/UserExperienceBar';
 import QuestsList from '../../components/quest/QuestsList';
 import React, { useEffect } from 'react';
-import usePushNotifications from '../../hooks/usePushNotifications';
 
 const HomeScreen = () => {
   const navigator = useNavigation();

@@ -106,7 +106,7 @@ const ChangeLanguage = () => {
                 <Button loading={isUserLanguageLoading} type='primary' color={'primary'} onPress={handleConfirm}>Confirm</Button>
               </View>
               <View style={styles.button}>
-                <Button loading={isUserLanguageLoading} type='outlined' color={'primary'} onPress={() => setModalVisible(false)}>Cancel</Button>
+                <Button loading={isUserLanguageLoading} loadingColor={Colors.primary[500]} type='outlined' color={'primary'} onPress={() => setModalVisible(false)}>Cancel</Button>
               </View>
             </View>
           </View>

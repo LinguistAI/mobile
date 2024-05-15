@@ -121,7 +121,7 @@ const Button = (props: PrimaryButtonProps) => {
       >
         <View style={styles.btnContent}>
           {loading ? (
-            <ActivityIndicator color={"white"} />
+            <ActivityIndicator color={props?.loadingColor || "white"} />
           ) : (
             <>
               <Text style={getTextStyle()}>{children}</Text>

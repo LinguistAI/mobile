@@ -19,7 +19,7 @@ import { RUserQuests } from '../quest/types';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo', 'UserLanguage'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -160,12 +160,14 @@ export const userApi = createApi({
         url: `/auth/language/${language}`,
         method: 'POST',
       }),
+      invalidatesTags: ['UserLanguage'],
     }),
     getUserLanguage: builder.query<void, QUserLanguage>({
       query: () => ({
         url: '/auth/language',
         method: 'GET',
       }),
+      providesTags: ['UserLanguage'],
     }),
   }),
 });

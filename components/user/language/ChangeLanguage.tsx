@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,7 +10,7 @@ import Button from '../../../components/common/form/Button';
 import Colors from '../../../theme/colors';
 import LText from '../../common/Text';
 import LanguageSelection from './LanguageSelection';
-import { useSetUserLanguageMutation } from '../userApi';
+import { useGetUserLanguageQuery, useSetUserLanguageMutation } from '../userApi';
 import useNotifications from "../../../hooks/useNotifications";
 
 const languages = [
@@ -27,11 +27,28 @@ const ChangeLanguage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [selectedVisibleLanguage, setSelectedVisibleLanguage] = useState('ENG');
-  const [selectedVisibleLanguageFlag, setSelectedVisibleLanguageFlag] = useState(require('../../../assets/lang/eng.png'));
+  const [selectedVisibleLanguageFlag, setSelectedVisibleLanguageFlag] = useState(require('../../../assets/lang/emp.png'));
   const { add, remove } = useNotifications();
 
   const [mutateUserLanguage, { isError: isUserLanguageError, error: userLanguageError, isLoading: isUserLanguageLoading }] =
     useSetUserLanguageMutation();
+
+  const {
+    data: userLanguageData,
+    isFetching: isUserLanguageDataFetching,
+    refetch: userLanguageRefetch,
+  } = useGetUserLanguageQuery();
+
+  useEffect(() => {
+    if (userLanguageData) {
+      const userLang = languages.find(language => language.code === userLanguageData.language.toUpperCase());
+      if (userLang) {
+        setSelectedLanguage(userLang.name);
+        setSelectedVisibleLanguage(userLang.code);
+        setSelectedVisibleLanguageFlag(userLang.flag);
+      }
+    }
+  }, [userLanguageData]);
 
   const handleLanguageSelect = (language) => {
     setSelectedLanguage(language.name);
@@ -45,6 +62,8 @@ const ChangeLanguage = () => {
         language: selectedLanguageObj.code.toUpperCase(),
       }
     );
+
+    userLanguageRefetch();
 
     if (response && response.data && response.data.language) {
       const responseLanguageObj = languages.find(language => language.code === response.data.language.toUpperCase());

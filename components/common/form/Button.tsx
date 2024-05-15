@@ -24,6 +24,7 @@ interface PrimaryButtonProps {
   onPress?: () => void;
   rightIcon?: React.ReactNode;
   color?: ButtonColor;
+  loadingColor?: string;
 }
 
 const Button = (props: PrimaryButtonProps) => {
@@ -120,7 +121,7 @@ const Button = (props: PrimaryButtonProps) => {
       >
         <View style={styles.btnContent}>
           {loading ? (
-            <ActivityIndicator color="white" />
+            <ActivityIndicator color={"white"} />
           ) : (
             <>
               <Text style={getTextStyle()}>{children}</Text>

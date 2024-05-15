@@ -3,7 +3,7 @@ import QuizQuestion from './QuizQuestion';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import Button from '../common/form/Button';
 import QuizHeader from './QuizHeader';
-import ChoiceFeedback from './ChoiceFeedback';
+import QuestionChoiceFeedback from './QuestionChoiceFeedback';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { getRandomPositiveFeedback } from './utils';
 import { useNavigation } from '@react-navigation/native';
@@ -139,16 +139,21 @@ const QuizController = () => {
   const handleNextQuestion = () => {
     const newQuestionNumber = currentQuestion + 1;
 
+    setQuestionCheck(undefined);
+
     setPhase('waiting-answer');
     if (newQuestionNumber >= questions.length) {
       setPhase('end');
     } else {
       setCurrentQuestion(newQuestionNumber);
+      setSelectedChoice('');
     }
-    setSelectedChoice('');
   };
 
   const handleAnswer = async (choice: string) => {
+    if (phase !== 'waiting-answer' || questionCheck?.hasUserAnswered) {
+      return;
+    }
     setPhase('checking-answer');
     const question = questions[currentQuestion];
     const response = await checkAnswer({ answer: choice, questionId: question.id });
@@ -222,10 +227,10 @@ const QuizController = () => {
     (phase === 'answered' || phase === 'end') && (
       <View style={styles.feedbackContainer}>
         <Animated.View entering={FadeInDown} exiting={FadeOutDown.duration(300)}>
-          <ChoiceFeedback title={getFeedbackTitle()} type={getFeedbackType()}>
+          <QuestionChoiceFeedback title={getFeedbackTitle()} type={getFeedbackType()}>
             {getAnswerFeedback()}
             <View style={styles.actionBtnContainer}>{renderNextQuestionButton()}</View>
-          </ChoiceFeedback>
+          </QuestionChoiceFeedback>
         </Animated.View>
       </View>
     );

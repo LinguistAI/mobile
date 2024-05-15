@@ -6,17 +6,25 @@ import Colors from '../../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { displayWordConfidence, isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
-import { useGetWordMeaningsQuery } from '../../api';
+import { useDeleteWordMutation, useGetWordMeaningsQuery } from '../../api';
 import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
+import useError from '../../../../hooks/useError';
+import { isDataResponse } from '../../../../services';
+import useNotifications from '../../../../hooks/useNotifications';
 
 interface WordDetailsCollapseInterface {
   word: WordWithConfidence;
+  listId: string;
 }
 
-const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
+const WordDetailsCollapse = ({ word, listId }: WordDetailsCollapseInterface) => {
   const [expanded, setExpanded] = useState(false);
 
   const { data: wordMeanings, isLoading, isError } = useGetWordMeaningsQuery([word.word]);
+  const [deleteWord, { isError: isDeleteWordError, error: deleteWordError }] = useDeleteWordMutation();
+  useError(deleteWordError);
+
+  const { add } = useNotifications();
 
   const onItemPress = () => {
     setExpanded(!expanded);
@@ -51,7 +59,17 @@ const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
 
     return (
       <View style={styles.confidenceLabelContainer}>
-        <Text style={[styles.confidenceLabelText, { color: confidenceColor(currentConfidenceIndex) }]}>
+        <Text
+          style={[
+            styles.confidenceLabelText,
+            {
+              color: confidenceColor(currentConfidenceIndex),
+              textShadowColor: '#000', // You can use a lighter color if needed
+              textShadowOffset: { width: 0.5, height: 0.5 }, // Smaller offset
+              textShadowRadius: 1,
+            },
+          ]}
+        >
           {displayWordConfidence(word.confidence)}
         </Text>
         <View style={styles.confidenceContainer}>
@@ -94,21 +112,36 @@ const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
     return <CollapsableContainer expanded={expanded}>{result}</CollapsableContainer>;
   };
 
+  const onDelete = async () => {
+    console.log(listId, word.word);
+    const deleteResponse = await deleteWord({ listId: listId, word: word.word });
+    console.log(deleteResponse);
+    if (deleteWordError || isDeleteWordError || !isDataResponse(deleteResponse)) {
+      return;
+    }
+    add({ type: 'success', body: 'Word deleted successfully.' });
+  };
+
   return (
     <View style={styles.wrap}>
       <TouchableWithoutFeedback onPress={onItemPress}>
         <View style={styles.container}>
           <View style={styles.headerContainer}>
             {expanded ? (
-              <Ionicons name="chevron-down" size={24} color="white" />
+              <Ionicons name="chevron-down" size={24} color={Colors.primary[500]} />
             ) : (
-              <Ionicons name="chevron-forward" size={24} color="white" />
+              <Ionicons name="chevron-forward" size={24} color={Colors.primary[500]} />
             )}
             <View style={styles.wordInfoContainer}>
               <View>
                 <Text style={styles.word}>{word.word}</Text>
               </View>
-              {renderWordConfidence()}
+              <View style={styles.actionsContainer}>
+                {renderWordConfidence()}
+                <TouchableWithoutFeedback onPress={onDelete}>
+                  <Ionicons name="trash" size={24} color={Colors.primary[100]} />
+                </TouchableWithoutFeedback>
+              </View>
             </View>
           </View>
         </View>
@@ -120,9 +153,9 @@ const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
 
 const styles = StyleSheet.create({
   wrap: {
-    backgroundColor: Colors.primary['300'],
+    backgroundColor: Colors.gray['0'],
     padding: 12,
-    borderColor: Colors.primary['700'],
+    borderColor: Colors.primary['500'],
     borderWidth: 2,
     borderRadius: 20,
   },
@@ -138,7 +171,7 @@ const styles = StyleSheet.create({
   word: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: Colors.gray[800],
   },
   details: {
     marginTop: 10,
@@ -166,6 +199,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  actionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+  },
   confidenceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -176,7 +214,7 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
     borderRadius: 7.5,
-    borderColor: Colors.gray[0],
+    borderColor: Colors.gray[800],
     borderWidth: 1,
   },
   filledCircle: {
@@ -192,7 +230,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   confidenceLabelText: {
-    color: 'white',
+    color: 'black',
     fontSize: 14,
     marginBottom: 3,
     fontWeight: 'bold',

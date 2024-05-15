@@ -5,23 +5,31 @@ import ActionIcon from '../../components/common/ActionIcon';
 import Title from '../../components/common/Title';
 import BotCarousel from '../../components/chat/bots/BotCarousel';
 import UserLoggedDatesCalendar from '../../components/stats/UserLoggedDatesCalendar';
+import ChangeLanguage from '../../components/user/language/ChangeLanguage';
 import WordLearningStatusBarChart from '../../components/stats/WordLearningStatusBarChart';
 import UserExperienceBar from '../../components/gamification/experience/UserExperienceBar';
 import QuestsList from '../../components/quest/QuestsList';
 import React, { useEffect } from 'react';
+import { usePushNotifications } from '../../hooks/usePushNotifications';
 
 const HomeScreen = () => {
   const navigator = useNavigation();
+  // const { expoPushToken, notification } = usePushNotifications();
+  // console.log('expoPushToken', expoPushToken);
+  // console.log('notification', notification);
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-  }, [])
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.topContainer}>
+            <View style={styles.xprow}>
+              <ChangeLanguage />
+            </View>
             <View style={styles.xprow}>
               <UserExperienceBar />
             </View>

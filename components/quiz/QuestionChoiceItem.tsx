@@ -7,10 +7,9 @@ interface ChoiceItemProps {
   handleSelectChoice: (answer: string) => void;
   status: ChoiceStatus;
   correctChoice?: boolean;
-  disable?: boolean;
 }
 
-const ChoiceItem = ({ choice, correctChoice, handleSelectChoice, disable, status }: ChoiceItemProps) => {
+const QuestionChoiceItem = ({ choice, correctChoice, handleSelectChoice, status }: ChoiceItemProps) => {
   const getChoiceContainerStyle = () => {
     const style = [];
     style.push(styles.questionContainer);
@@ -34,7 +33,7 @@ const ChoiceItem = ({ choice, correctChoice, handleSelectChoice, disable, status
   };
 
   const handleSelect = () => {
-    if (disable) return;
+    if (status === 'disabled' || status === 'eliminated') return;
     handleSelectChoice(choice);
   };
 
@@ -74,6 +73,12 @@ const styles = StyleSheet.create({
   selectedChoiceText: {
     color: Colors.gray[100],
   },
+  eliminatedChoiceText: {
+    color: Colors.gray[500],
+    textDecorationLine: 'line-through',
+    textDecorationColor: Colors.gray[700],
+    textDecorationStyle: 'solid',
+  },
 });
 
-export default ChoiceItem;
+export default QuestionChoiceItem;

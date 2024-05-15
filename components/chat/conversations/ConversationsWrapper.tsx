@@ -18,6 +18,7 @@ const ConversationsWrapper = () => {
       <ConversationsHeader />
       <ConversationList />
       <FloatingButton
+        text="Chatbots"
         icon={<Ionicons name="chatbubble-ellipses" size={30} color={Colors.gray[100]} />}
         handlePress={handleCreateNewConversation}
       />

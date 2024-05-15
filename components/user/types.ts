@@ -115,6 +115,13 @@ export type QProfilePicture = {
   };
 };
 
+export type QUserLanguage = {
+  userId: string;
+  username: string;
+  email: string;
+  language: string;
+};
+
 export type FriendProfile = {
   id: string;
   username: string | null;

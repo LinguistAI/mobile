@@ -11,7 +11,7 @@ const ConversationsHeader = () => {
   const { user } = useUser();
 
   const handleGoBack = () => {
-    navigation.goBack();
+    navigation.navigate('Home');
   };
 
   return (

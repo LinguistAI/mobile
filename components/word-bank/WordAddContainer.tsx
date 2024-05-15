@@ -55,7 +55,7 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
   };
 
   return (
-    <>
+    <View style={styles.root}>
       <View style={styles.picker}>
         <Picker
           itemStyle={styles.pickerItem}
@@ -75,17 +75,22 @@ const WordAddContainer = ({ selectedWord, onDismiss }: WordAddContainerProps) =>
       </View>
       <View style={styles.addIconContainer}>
         <ActionIcon
-          icon={<Ionicons name="add-circle" size={36} color={Colors.gray[0]} />}
+          icon={<Ionicons name="add-circle" size={36} color={Colors.primary[500]} />}
           onPress={handleAddNewWord}
           disabled={!selectedWordList}
           loading={isAddingWord}
         />
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   pickerItem: {
     height: 60,
     fontSize: 16,
@@ -98,9 +103,9 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: 'white',
     borderWidth: 2,
-    borderColor: Colors.gray[700],
+    borderColor: Colors.primary[500],
     borderRadius: 4,
-    marginBottom: 20,
+    marginRight: 15,
     textAlign: 'center',
   },
   addIconContainer: {

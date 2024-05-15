@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../../../components/common/form/Button';
 import EmailTextInput from '../../../../components/common/form/EmailTextInput';
 import useNotifications from '../../../../hooks/useNotifications';
@@ -74,18 +74,16 @@ const ForgotPasswordScreen = (props: ForgotPasswordScreenProps) => {
 
   return (
     <ScrollView>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={styles.container}>
-          <FormProvider {...methods}>
-            <View style={styles.mainSection}>
-              <EmailTextInput />
-              <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-                REQUEST PASSWORD
-              </Button>
-            </View>
-          </FormProvider>
-        </View>
-      </KeyboardAvoidingView>
+      <View style={styles.container}>
+        <FormProvider {...methods}>
+          <View style={styles.mainSection}>
+            <EmailTextInput />
+            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+              REQUEST PASSWORD
+            </Button>
+          </View>
+        </FormProvider>
+      </View>
     </ScrollView>
   );
 };

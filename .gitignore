@@ -38,6 +38,7 @@ yarn-error.*
 *.tsbuildinfo
 
 service-account*.json*
-.vscode
-.idea
 google-services.json
+.idea
+android
+.vscode

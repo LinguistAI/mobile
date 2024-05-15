@@ -139,16 +139,21 @@ const QuizController = () => {
   const handleNextQuestion = () => {
     const newQuestionNumber = currentQuestion + 1;
 
+    setQuestionCheck(undefined);
+
     setPhase('waiting-answer');
     if (newQuestionNumber >= questions.length) {
       setPhase('end');
     } else {
       setCurrentQuestion(newQuestionNumber);
+      setSelectedChoice('');
     }
-    setSelectedChoice('');
   };
 
   const handleAnswer = async (choice: string) => {
+    if (phase !== 'waiting-answer' || questionCheck?.hasUserAnswered) {
+      return;
+    }
     setPhase('checking-answer');
     const question = questions[currentQuestion];
     const response = await checkAnswer({ answer: choice, questionId: question.id });

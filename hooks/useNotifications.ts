@@ -14,7 +14,7 @@ export type NotificationObject = {
 
 const notificationsAtom = atom<NotificationObject[]>([]);
 
-const defaultTime = 1500;
+const defaultTime = 2000;
 const defaultType = 'info';
 
 const useNotifications = () => {

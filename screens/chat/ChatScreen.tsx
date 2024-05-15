@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
-  FlatList,
-  KeyboardAvoidingView,
+  Keyboard,
   Modal,
-  Platform,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -13,25 +11,25 @@ import {
   Text,
   View,
 } from 'react-native';
-import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
-import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
-import WordInfoCard from '../../components/word-bank/WordInfoCard';
-import { ChatMessage, ChatMessageSender } from './types';
-import ChatHeader from '../../components/chat/header/ChatHeader';
-import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
 import { useSelector } from 'react-redux';
+import ChatMessageComponent from '../../components/chat/ChatMessageComponent';
+import ChatTextInputContainer from '../../components/chat/ChatTextInputContainer';
+import ChatHeader from '../../components/chat/header/ChatHeader';
+import Card from '../../components/common/Card';
+import WordInfoCard from '../../components/word-bank/WordInfoCard';
+import { useDisableBottomTab } from '../../hooks/useDisableBottomTab';
 import { selectCurrentBot } from '../../redux/chatSelectors';
+import Colors from '../../theme/colors';
+import { DEFAULT_PAGE_SIZE, INITIAL_PAGE } from './constants';
+import { ChatMessage, ChatMessageSender } from './types';
+import { useChatMessages } from './useChatMessages';
 import {
   getFirstChatWalthroughStarted,
   getSecondChatWalkthroughStarted,
   saveFirstChatWalkthroughStarted,
   saveSecondChatWalkthroughStarted,
 } from './utils';
-import { useChatMessages } from './useChatMessages';
-import { INITIAL_PAGE, DEFAULT_PAGE_SIZE } from './constants';
-import Colors from '../../theme/colors';
-import Card from '../../components/common/Card';
 
 const WalkThroughableView = walkthroughable(View);
 
@@ -59,9 +57,32 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
   });
   const [selectedWord, setSelectedWord] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+
   const scrollViewRef = useRef<ScrollView>(null);
   const { start } = useCopilot();
   useDisableBottomTab();
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true); // or some other action
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false); // or some other action
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isKeyboardVisible) {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }
+  }, [isKeyboardVisible]);
 
   useEffect(() => {
     const startChatWalkthrough = async () => {
@@ -165,6 +186,9 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         <ScrollView
           ref={scrollViewRef}
           automaticallyAdjustContentInsets={true}
+          onContentSizeChange={() => {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+          }}
           refreshControl={
             <RefreshControl
               refreshing={false}
@@ -260,21 +284,16 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
           <ChatHeader />
         </WalkThroughableView>
       </CopilotStep>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flexContainer}
-      >
-        <View style={styles.flexContainer}>
-          {renderMessages()}
-          <CopilotStep name="chat-text-input" order={4} text="Type in anything to start chatting!">
-            <WalkThroughableView>
-              <View style={styles.textInputContainer}>
-                <ChatTextInputContainer onSend={onSend} isPending={isPending} />
-              </View>
-            </WalkThroughableView>
-          </CopilotStep>
-        </View>
-      </KeyboardAvoidingView>
+      <View style={styles.flexContainer}>
+        {renderMessages()}
+        <CopilotStep name="chat-text-input" order={4} text="Type in anything to start chatting!">
+          <WalkThroughableView>
+            <View style={styles.textInputContainer}>
+              <ChatTextInputContainer onSend={onSend} isPending={isPending} />
+            </View>
+          </WalkThroughableView>
+        </CopilotStep>
+      </View>
     </SafeAreaView>
   );
 };
@@ -300,7 +319,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 0, // necessary for semi transparent background
   },
   flexContainer: {
     flex: 5,

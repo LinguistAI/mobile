@@ -1,16 +1,20 @@
 import { useMutation } from '@tanstack/react-query';
+import CheckBox from 'expo-checkbox';
+import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
 import PrimaryTextInput from '../../../components/common/form/PrimaryTextInput';
 import PasswordInputWithRequirements from '../../../components/common/form/password/PasswordInputWithRequirements';
 import { Requirement } from '../../../components/common/form/password/Requirement';
+import PrivacyPolicyModal from '../../../components/user/PrivacyPolicyModal';
 import useNotifications from '../../../hooks/useNotifications';
 import useUser from '../../../hooks/useUser';
 import { register } from '../../../services/auth';
 import { RegisterDto } from '../../../services/auth/Auth.types';
+import Colors from '../../../theme/colors';
 import { StoredUserInfoWithTokens } from '../../../types';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
 import useDeviceToken from '../../../hooks/useDeviceToken';
@@ -20,6 +24,7 @@ type RegisterFormValues = {
   password: string;
   email: string;
   repeatPassword: string;
+  privacyPolicyAccepted: boolean;
 };
 
 interface RegisterScreenProps {
@@ -35,10 +40,12 @@ const RegisterScreen = (props: RegisterScreenProps) => {
       email: '',
       password: '',
       repeatPassword: '',
+      privacyPolicyAccepted: false,
     },
     mode: 'onSubmit',
   });
   const { storeUserDetails } = useUser();
+  const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
 
   const { mutate: registerMutate, isPending } = useMutation({
     mutationKey: ['register'],
@@ -100,48 +107,69 @@ const RegisterScreen = (props: RegisterScreenProps) => {
     },
   ];
 
+  const { height } = Dimensions.get('window');
+  const keyboardPadding = Platform.OS === 'ios' ? height * 0.1 : 0;
+  const togglePrivacyModal = () => {
+    setPrivacyModalVisible(!privacyModalVisible);
+  };
+
   return (
     <ScrollView style={styles.scrollContainer}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={styles.container}>
-          <FormProvider {...methods}>
-            <PrimaryTextInput
-              defaultValue=""
-              name="userName"
-              rules={{
-                required: 'Username is required!',
-                pattern: {
-                  value: /^.{3,}$/,
-                  message: 'Username must be at least 3 characters long!',
-                },
-              }}
-              label="Username"
-              placeholder="Username"
-            />
+      <View style={styles.container}>
+        <FormProvider {...methods}>
+          <PrimaryTextInput
+            defaultValue=""
+            name="userName"
+            rules={{
+              required: 'Username is required!',
+              pattern: {
+                value: /^.{3,}$/,
+                message: 'Username must be at least 3 characters long!',
+              },
+            }}
+            label="Username"
+            placeholder="Username"
+          />
+          <EmailTextInput name="email" />
+          <PasswordInputWithRequirements
+            requirements={passwordRequirements}
+            name="password"
+            label="Password"
+            placeholder="Password"
+          />
+          <PasswordTextInput
+            placeholder="Repeat password"
+            label="Repeat password"
+            name="repeatPassword"
+            rules={{
+              required: 'Repeating password is required!',
+              validate: (value: string) => value === methods.getValues('password') || 'Passwords must match!',
+            }}
+          />
 
-            <EmailTextInput name="email" />
-            <PasswordInputWithRequirements
-              requirements={passwordRequirements}
-              name="password"
-              label="Password"
-              placeholder="Password"
+          <View style={styles.privacyPolicyContainer}>
+            <CheckBox
+              color={Colors.primary[500]}
+              value={methods.watch('privacyPolicyAccepted')}
+              onValueChange={(newValue) => methods.setValue('privacyPolicyAccepted', newValue)}
             />
-            <PasswordTextInput
-              placeholder="Repeat password"
-              label="Repeat password"
-              name="repeatPassword"
-              rules={{
-                required: 'Repeating password is required!',
-                validate: (value: string) =>
-                  value === methods.getValues('password') || 'Passwords must match!',
-              }}
-            />
-            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-              REGISTER
-            </Button>
-          </FormProvider>
-        </View>
-      </KeyboardAvoidingView>
+            <Text style={styles.privacyPolicyText} onPress={togglePrivacyModal}>
+              I have read and agree to Linguist's privacy policy.
+            </Text>
+          </View>
+
+          <Button
+            type="primary"
+            loading={isPending}
+            onPress={methods.handleSubmit(onSubmit, onError)}
+            disabled={!methods.watch('privacyPolicyAccepted')}
+          >
+            REGISTER
+          </Button>
+        </FormProvider>
+      </View>
+
+      <PrivacyPolicyModal visible={privacyModalVisible} onClose={togglePrivacyModal} />
     </ScrollView>
   );
 };
@@ -158,6 +186,16 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
+  },
+  privacyPolicyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  privacyPolicyText: {
+    color: Colors.gray[700],
+    textDecorationLine: 'underline',
+    marginLeft: 5,
   },
 });
 

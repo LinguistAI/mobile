@@ -115,3 +115,20 @@ export interface QMessages {
   conversationId: string;
   params: MessagePaginationParams;
 }
+
+export type RTranscribeMsg = {
+  msg: string;
+  jobName: string;
+};
+
+export type RTranscribeResult = {
+  result: RTranscribeTranscriptResult[];
+};
+
+export type RTranscribeTranscriptResult = {
+  transcript: string;
+};
+
+export type QTranscribe = {
+  key: string;
+};

@@ -7,7 +7,7 @@ import ChatStackNavigator from './ChatStackNavigator';
 import LeaderboardNavigator from './LeaderboardNavigator';
 import StoreNavigation from './StoreNavigation';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
@@ -162,9 +162,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
+
+    // Shadow properties for Android
     elevation: 4,
     alignSelf: 'center',
     zIndex: 1,
+
+    // Shadow properties for iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.6,
+    shadowRadius: 5,
   },
 });
 

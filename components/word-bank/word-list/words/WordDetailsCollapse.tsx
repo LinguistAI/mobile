@@ -6,17 +6,25 @@ import Colors from '../../../../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { displayWordConfidence, isDictionaryWordGroup } from '../utils';
 import WordDetail from './WordDetail';
-import { useGetWordMeaningsQuery } from '../../api';
+import { useDeleteWordMutation, useGetWordMeaningsQuery } from '../../api';
 import LoadingIndicator from '../../../common/feedback/LoadingIndicator';
+import useError from '../../../../hooks/useError';
+import { isDataResponse } from '../../../../services';
+import useNotifications from '../../../../hooks/useNotifications';
 
 interface WordDetailsCollapseInterface {
   word: WordWithConfidence;
+  listId: string;
 }
 
-const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
+const WordDetailsCollapse = ({ word, listId }: WordDetailsCollapseInterface) => {
   const [expanded, setExpanded] = useState(false);
 
   const { data: wordMeanings, isLoading, isError } = useGetWordMeaningsQuery([word.word]);
+  const [deleteWord, { isError: isDeleteWordError, error: deleteWordError }] = useDeleteWordMutation();
+  useError(deleteWordError);
+
+  const { add } = useNotifications();
 
   const onItemPress = () => {
     setExpanded(!expanded);
@@ -94,6 +102,16 @@ const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
     return <CollapsableContainer expanded={expanded}>{result}</CollapsableContainer>;
   };
 
+  const onDelete = async () => {
+    console.log(listId, word.word);
+    const deleteResponse = await deleteWord({ listId: listId, word: word.word });
+    console.log(deleteResponse);
+    if (deleteWordError || isDeleteWordError || !isDataResponse(deleteResponse)) {
+      return;
+    }
+    add({ type: 'success', body: 'Word deleted successfully.' });
+  }
+
   return (
     <View style={styles.wrap}>
       <TouchableWithoutFeedback onPress={onItemPress}>
@@ -108,7 +126,12 @@ const WordDetailsCollapse = ({ word }: WordDetailsCollapseInterface) => {
               <View>
                 <Text style={styles.word}>{word.word}</Text>
               </View>
-              {renderWordConfidence()}
+              <View style={styles.actionsContainer}>
+                {renderWordConfidence()}
+                <TouchableWithoutFeedback onPress={onDelete}>
+                  <Ionicons name="trash" size={24} color="white" />
+                </TouchableWithoutFeedback>
+              </View>
             </View>
           </View>
         </View>
@@ -165,6 +188,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
   },
   confidenceContainer: {
     flexDirection: 'row',

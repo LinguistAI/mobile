@@ -3,8 +3,8 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { createContext, useEffect } from 'react';
-import { Alert, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import { createContext } from 'react';
+import { KeyboardAvoidingView, Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -70,37 +70,43 @@ export default function App() {
                     <SafeAreaView style={styles.root}>
                       <PushNotificationWrapper>
                         <Modals />
-                        <StatusBar />
-                        <Stack.Navigator
-                          screenOptions={{
-                            contentStyle: {
-                              backgroundColor: 'white',
-                            },
-                          }}
-                          initialRouteName="Landing"
+                        <KeyboardAvoidingView
+                          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                          style={styles.root}
+                          contentContainerStyle={styles.root}
                         >
-                          <Stack.Screen
-                            name="Landing"
-                            component={LandingScreen}
-                            options={{ headerShown: false }}
-                          />
-                          <Stack.Screen name="Login" component={LoginScreen} />
-                          <Stack.Screen name="Register" component={RegisterScreen} />
-                          <Stack.Screen
-                            name="Welcome Conversation"
-                            component={PostRegistrationConversation}
-                            options={{ headerShown: false }}
-                          />
-                          <Stack.Screen
-                            name="Main"
-                            component={BottomNavigation}
-                            options={{ headerShown: false }}
-                          />
-                          <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
-                          <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
-                          <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
-                          <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
-                        </Stack.Navigator>
+                          <StatusBar />
+                          <Stack.Navigator
+                            screenOptions={{
+                              contentStyle: {
+                                backgroundColor: 'white',
+                              },
+                            }}
+                            initialRouteName="Landing"
+                          >
+                            <Stack.Screen
+                              name="Landing"
+                              component={LandingScreen}
+                              options={{ headerShown: false }}
+                            />
+                            <Stack.Screen name="Login" component={LoginScreen} />
+                            <Stack.Screen name="Register" component={RegisterScreen} />
+                            <Stack.Screen
+                              name="Welcome Conversation"
+                              component={PostRegistrationConversation}
+                              options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                              name="Main"
+                              component={BottomNavigation}
+                              options={{ headerShown: false }}
+                            />
+                            <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
+                            <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
+                            <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
+                            <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
+                          </Stack.Navigator>
+                        </KeyboardAvoidingView>
                       </PushNotificationWrapper>
                     </SafeAreaView>
                   </NavigationContainer>

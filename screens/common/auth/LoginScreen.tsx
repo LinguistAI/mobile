@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../components/common/form/Button';
 import EmailTextInput from '../../../components/common/form/EmailTextInput';
 import PasswordTextInput from '../../../components/common/form/PasswordTextInput';
@@ -76,20 +76,18 @@ const LoginScreen = (props: LoginScreenProps) => {
 
   return (
     <ScrollView>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={styles.container}>
-          <FormProvider {...methods}>
-            <EmailTextInput />
-            <PasswordTextInput />
-            <Text style={styles.forgotPassword} onPress={onForgotPassword}>
-              Forgot password?
-            </Text>
-            <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
-              LOG IN
-            </Button>
-          </FormProvider>
-        </View>
-      </KeyboardAvoidingView>
+      <View style={styles.container}>
+        <FormProvider {...methods}>
+          <EmailTextInput />
+          <PasswordTextInput />
+          <Text style={styles.forgotPassword} onPress={onForgotPassword}>
+            Forgot password?
+          </Text>
+          <Button type="primary" loading={isPending} onPress={methods.handleSubmit(onSubmit, onError)}>
+            LOG IN
+          </Button>
+        </FormProvider>
+      </View>
     </ScrollView>
   );
 };

@@ -161,6 +161,12 @@ export const userApi = createApi({
         method: 'POST',
       }),
     }),
+    getUserLanguage: builder.query<void, QUserLanguage>({
+      query: () => ({
+        url: '/auth/language',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -182,4 +188,5 @@ export const {
   useGetProfilePictureQuery,
   useSetProfilePictureMutation,
   useSetUserLanguageMutation,
+  useGetUserLanguageQuery,
 } = userApi;

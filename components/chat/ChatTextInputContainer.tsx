@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import Colors from '../../theme/colors';
 import ActionIcon from '../common/ActionIcon';
 import MultilineTextInput from '../common/form/MultilineTextInput';
@@ -8,7 +8,9 @@ import LText from '../common/Text';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import useUser from '../../hooks/useUser';
-import { useSendTranscriptionRequestMutation } from './api';
+import { useLazyGetTranscriptionResultQuery, useSendTranscriptionRequestMutation } from './api';
+import { isDataResponse } from '../../services';
+import useNotifications from '../../hooks/useNotifications';
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -20,36 +22,23 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioPermission, setAudioPermission] = useState(false);
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
-  const [mutate, { isLoading, isError }] = useSendTranscriptionRequestMutation();
+  const [
+    mutate,
+    { isLoading: isLoadingTransRequest, isError: isErrorTransRequest, error: errorTransRequest },
+  ] = useSendTranscriptionRequestMutation();
+  const [
+    trigger,
+    { data: transData, isError: isErrorTransResult, isFetching: isLoadingTransResult, error: errorTransData },
+  ] = useLazyGetTranscriptionResultQuery();
+  const { add: addNotification } = useNotifications();
+
   const { user } = useUser();
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const recordingOptions = {
-    android: {
-      extension: '.mp3',
-      sampleRate: 44100,
-      numberOfChannels: 2,
-      bitRate: 128000,
-      linearPCMBitDepth: 16,
-      linearPCMIsBigEndian: false,
-      linearPCMIsFloat: false,
-    },
-    ios: {
-      extension: '.wav',
-      sampleRate: 44100,
-      numberOfChannels: 1,
-      bitRate: 128000,
-      linearPCMBitDepth: 16,
-      linearPCMIsBigEndian: false,
-      linearPCMIsFloat: false,
-    },
-    web: {},
-  };
-
   const startRecording = async () => {
     try {
-      // needed for IoS
+      // Needed for IoS
       if (audioPermission) {
         await Audio.setAudioModeAsync({
           allowsRecordingIOS: true,
@@ -59,7 +48,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
 
       const newRecording = new Audio.Recording();
       setIsRecording(true);
-      console.log('Starting Recording');
+
       await newRecording.prepareToRecordAsync();
       await newRecording.startAsync();
       setRecording(newRecording);
@@ -75,7 +64,6 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
 
   const stopRecording = async () => {
     try {
-      console.log('Stopping Recording??');
       if (isRecording && recording) {
         cleanInterval();
 
@@ -89,21 +77,45 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
 
         setRecording(null);
         setIsRecording(false);
+        let currentJobName = '';
 
         try {
-          mutate({
+          const transRequestData = await mutate({
             audio: audioBase64,
             key: {
               key: fileName,
             },
           });
+
+          currentJobName = transRequestData?.data.jobName;
         } catch (error) {
-          console.log('alo eror var:', error);
+          addNotification({
+            time: 800,
+            body: 'There was an error recording your voice. You can try again later on.',
+            type: 'error',
+          });
+          console.log('Error in sending audio recording:', error);
+          return;
         }
 
-        const playbackObject = new Audio.Sound();
-        await playbackObject.loadAsync({ uri: recordingUri! });
-        await playbackObject.playAsync();
+        try {
+          // After request is sent successfully, retrieve the transcription
+          const transResult = await trigger({ jobName: currentJobName });
+
+          setText(transResult?.data?.result[0].transcript || '');
+        } catch (error) {
+          console.log('Error in retrieving transcription:', error);
+          addNotification({
+            time: 800,
+            body: 'There was an error recording your voice. You can try again later on.',
+            type: 'error',
+          });
+        }
+
+        // Since this part is really fun I couldn't delete it :)
+        // const playbackObject = new Audio.Sound();
+        // await playbackObject.loadAsync({ uri: recordingUri! });
+        // await playbackObject.playAsync();
       }
     } catch (error) {
       console.error('Failed to stop recording', error);
@@ -112,7 +124,6 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
 
   const cleanupRecording = async () => {
     try {
-      console.log('Cleaning up recording');
       if (isRecording && recording) {
         await recording.stopAndUnloadAsync();
         setRecording(null);
@@ -149,6 +160,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
 
     // Call function to get permission
     getPermission();
+
     // Cleanup upon first render
     return () => {
       if (isRecording) {
@@ -162,6 +174,11 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  };
+
+  const handleSend = () => {
+    props.onSend(text);
+    setText('');
   };
 
   return (
@@ -184,10 +201,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
                   color={props.isPending ? Colors.gray[300] : Colors.primary[600]}
                 />
               }
-              onPress={() => {
-                props.onSend(text);
-                setText('');
-              }}
+              onPress={handleSend}
             />
           </View>
         ) : (
@@ -208,6 +222,8 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
                   disabled={props.isPending}
                 />
               </View>
+            ) : isLoadingTransRequest || isLoadingTransResult ? (
+              <ActivityIndicator size={24} color={Colors.primary[100]} />
             ) : (
               <ActionIcon
                 icon={<Ionicons name="mic" size={32} color={Colors.primary[600]} />}
@@ -239,7 +255,7 @@ const styles = StyleSheet.create({
   recordingContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between', // Adjust this as needed
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 8,
   },

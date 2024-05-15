@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 export const useDisableBottomTab = () => {
   const navigation = useNavigation();
   useEffect(() => {
-    navigation.getParent()?.setOptions({
+    navigation.setOptions({
       tabBarStyle: {
         display: 'none',
       },

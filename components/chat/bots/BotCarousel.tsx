@@ -80,27 +80,25 @@ const BotCarousel = () => {
       }
 
       // Couldn't create conversation
-      const response = await createConvo(bot.id);
-      if (!isDataResponse(response)) {
+      try {
+        const response = await createConvo(bot.id);
+        const data = response.data;
+        convoId = data.id;
+        if (!convoId) {
+          return;
+        }
+        dispatch(startConversation({ bot, conversation: data }));
+        navigation.navigate('Chat', {
+          params: { conversationId: convoId },
+          screen: 'ChatScreen',
+          initial: false,
+        });
+      } catch (error) {
         notify({
-          body: generateErrorResponseMessage(createConversationError, 'Error creating conversation'),
+          body: generateErrorResponseMessage(error),
           type: 'error',
         });
-        return;
       }
-
-      // Start new conversation
-      const data = response.data;
-      convoId = data.id;
-      if (!convoId) {
-        return;
-      }
-      dispatch(startConversation({ bot, conversation: data }));
-      navigation.navigate('Chat', {
-        params: { conversationId: convoId },
-        screen: 'ChatScreen',
-        initial: false,
-      });
     }
   };
 

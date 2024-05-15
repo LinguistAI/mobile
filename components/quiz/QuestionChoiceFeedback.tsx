@@ -9,7 +9,7 @@ interface ChoiceFeedbackProps {
   title?: string | null;
 }
 
-const ChoiceFeedback = ({ type, title, children }: ChoiceFeedbackProps) => {
+const QuestionChoiceFeedback = ({ type, title, children }: ChoiceFeedbackProps) => {
   const getTitle = () => {
     if (title) return title;
 
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChoiceFeedback;
+export default QuestionChoiceFeedback;

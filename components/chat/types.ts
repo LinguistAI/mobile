@@ -11,7 +11,7 @@ export type TChatBot = {
   name: string;
   description: string;
   profileImage: string;
-  voiceCharacteristics: string;
+  voiceCharacteristics: PollyVoiceID;
   difficultyLevel: number;
 };
 
@@ -76,6 +76,36 @@ export type ChatOptionObject = {
   icon: React.ReactElement;
 };
 
+
+export type QSynthesizeSpeech = {
+  messageId: string;
+  text: string;
+  pollyVoiceId?: PollyVoiceID;
+};
+
+export type RSynthesizeSpeech = {
+  audio: string;
+};
+
+export type QGetSpeech = {
+  messageId: string;
+};
+
+export type PollyVoiceID =
+  | 'Danielle'
+  | 'Gregory'
+  | 'Ivy'
+  | 'Joanna'
+  | 'Kendra'
+  | 'Kimberly'
+  | 'Salli'
+  | 'Joey'
+  | 'Justin'
+  | 'Kevin'
+  | 'Matthew'
+  | 'Ruth'
+  | 'Stephen';
+
 interface MessagePaginationParams {
   page: number;
   pageSize: number;
@@ -87,7 +117,16 @@ export interface QMessages {
 }
 
 export type RTranscribeMsg = {
-  message: string;
+  msg: string;
+  jobName: string;
+};
+
+export type RTranscribeResult = {
+  result: RTranscribeTranscriptResult[];
+};
+
+export type RTranscribeTranscriptResult = {
+  transcript: string;
 };
 
 export type QTranscribe = {

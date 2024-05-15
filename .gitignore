@@ -37,3 +37,6 @@ yarn-error.*
 *.tsbuildinfo
 
 service-account*.json*
+.idea
+android
+.vscode

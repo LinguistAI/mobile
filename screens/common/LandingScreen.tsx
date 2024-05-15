@@ -20,8 +20,6 @@ const LandingScreen = (props: LandingScreenProps) => {
     mutationKey: ['checkAuth'],
     mutationFn: () => checkAuth(),
     onSuccess: (res) => {
-      console.log('Success auth');
-
       updateLoginTime();
       setCheckingAuth(false);
       props.navigation.reset({
@@ -30,14 +28,11 @@ const LandingScreen = (props: LandingScreenProps) => {
       });
     },
     onError: (error: any) => {
-      console.log('Fail auth');
-
       setCheckingAuth(false);
     },
   });
 
   useEffect(() => {
-    console.log('Checking auth');
     checkAuthMutate();
   }, []);
 

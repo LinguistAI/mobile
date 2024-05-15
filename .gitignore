@@ -40,3 +40,4 @@ yarn-error.*
 service-account*.json*
 .vscode
 .idea
+google-services.json

@@ -25,7 +25,6 @@ import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import Colors from './theme/colors';
 import messaging from '@react-native-firebase/messaging';
 import { CopilotProvider } from 'react-native-copilot';
-import useDeviceToken from './hooks/useDeviceToken';
 import PushNotificationWrapper from './components/PushNotificationWrapper';
 import Modals from './components/modals/Modals';
 import { onDisplayNotification } from './utils';
@@ -41,9 +40,6 @@ const queryClient = new QueryClient({
 export const FontLoadedContext = createContext<boolean>(false);
 
 export default function App() {
-  const token = useDeviceToken();
-  console.log('token', token);
-
   const Stack = createNativeStackNavigator();
   ScreenOrientation.lockPlatformAsync({
     screenOrientationArrayIOS: [ScreenOrientation.Orientation.PORTRAIT_UP],
@@ -58,14 +54,9 @@ export default function App() {
     });
 
     if (!fontsLoaded) {
-      console.log('Loading fonts');
       return <Splash />;
     }
-  } catch (error) {
-    console.log('Could not load fonts', error);
-  }
-
-  console.log('Fonts loaded');
+  } catch (error) {}
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

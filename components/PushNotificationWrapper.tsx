@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 import { useEffect } from 'react';
-import { Alert } from 'react-native';
 import useUser from '../hooks/useUser';
 import { useDispatch } from 'react-redux';
 import { setLevelUpModalConfig, setQuestReminderModalOpen } from '../redux/chatSlice';
@@ -20,10 +19,6 @@ const PushNotificationWrapper = ({ children }: PushNotificationWrapperProps) => 
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
     return enabled;
   }
 
@@ -35,11 +30,14 @@ const PushNotificationWrapper = ({ children }: PushNotificationWrapperProps) => 
       }
     };
 
+    const unsubscribeFromNotificationOpenedApp = messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log('Notification caused app to open from background state:', remoteMessage);
+    });
+
     handleInitialNotification();
     requestUserPermission();
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
       await onDisplayNotification(remoteMessage);
 
       if (!user) {
@@ -60,10 +58,6 @@ const PushNotificationWrapper = ({ children }: PushNotificationWrapperProps) => 
           })
         );
       }
-    });
-
-    const unsubscribeFromNotificationOpenedApp = messaging().onNotificationOpenedApp((remoteMessage) => {
-      console.log('Notification caused app to open from background state:', remoteMessage);
     });
 
     return () => {

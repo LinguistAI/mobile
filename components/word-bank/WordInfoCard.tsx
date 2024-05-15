@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CloseIcon from '../common/CloseIcon';
 import Colors from '../../theme/colors';
 import WordDetail from './word-list/words/WordDetail';
@@ -10,6 +10,7 @@ import { useGetWordMeaningsQuery } from './api';
 import WordAddContainer from './WordAddContainer';
 import { useSelector } from 'react-redux';
 import { selectCurrentActiveWords, selectCurrentConversation } from '../../redux/chatSelectors';
+import LText from '../common/Text';
 
 interface WordInfoCardProps {
   selectedWord: string;
@@ -48,14 +49,22 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.overlay} onPress={onDismiss} activeOpacity={1} />
       <ScrollView contentContainerStyle={styles.cardContainer}>
         <CloseIcon onPress={onDismiss} />
         <View>
-          <Text style={[styles.word, isActiveWord ? styles.activeWord : null]}>
+          <LText centered={true} style={[styles.word, isActiveWord ? styles.activeWord : null]}>
             {selectedWord}
             {isActiveWord ? '*' : ''}
-          </Text>
+          </LText>
+          <Title centered size="h4">
+            Add to your list
+          </Title>
+          <View style={styles.actionsContainer}>
+            <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
+          </View>
+          <Divider />
           {isActiveWord ? (
             <Text style={styles.activeWordDescription}>
               *This word is highlighted because it is being actively taught during this conversation.
@@ -63,23 +72,25 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
           ) : null}
           {renderWordDetails()}
         </View>
-        <Divider />
-        <Title centered size="h4">
-          Add to your list
-        </Title>
-        <View style={styles.actionsContainer}>
-          <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
-        </View>
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
   cardContainer: {
     margin: 20,
-    backgroundColor: Colors.primary[500],
+    backgroundColor: Colors.gray[100],
     borderRadius: 10,
+    borderColor: Colors.primary[500],
+    borderWidth: 2,
     padding: 35,
     alignItems: 'center',
     shadowColor: '#000',
@@ -93,13 +104,19 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   word: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    textAlign: 'center',
+    elevation: 2,
+    marginBottom: 15,
+    textShadowColor: 'rgba(34, 184, 207, 0.4)',
+    // textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0.5, height: 2 },
+    textShadowRadius: 1,
   },
   activeWord: {
     color: Colors.yellow[600],
-    marginBottom: 8,
+    marginBottom: 18,
+    fontWeight: 'bold',
   },
   activeWordDescription: {
     fontSize: 12,
@@ -109,6 +126,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   actionsContainer: {
+    marginTop: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

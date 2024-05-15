@@ -53,12 +53,6 @@ const WordLists = () => {
     return <FetchError />;
   }
 
-  if (!wordLists?.lists || wordLists?.lists?.length === 0) {
-    return (
-      <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />
-    );
-  }
-
   const validateSubmit = (data: any) => {
     wordLists?.lists?.forEach((list) => {
       if (list.title === data.listName) {
@@ -165,6 +159,18 @@ const WordLists = () => {
       </View>
     );
   };
+
+  if (!wordLists?.lists || wordLists?.lists?.length === 0) {
+    return (
+      <View style={{ flex: 1 }}>
+        <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />
+        <View>
+          <FloatingButton text='Add List' handlePress={handleOpenAddListModal} />
+        </View>
+        {renderAddListModal()}
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>

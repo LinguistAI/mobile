@@ -82,7 +82,7 @@ const WordListDetailsScreen = ({ route }: WordListDetailsScreenProps) => {
       )}
       <FlatList
         data={selectedList.words}
-        renderItem={({ item }) => <WordDetailsCollapse word={item} listId={listId}/>}
+        renderItem={({ item }) => <WordDetailsCollapse word={item} listId={listId} />}
         contentContainerStyle={{
           justifyContent: 'center',
           gap: 15,

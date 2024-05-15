@@ -5,6 +5,9 @@ import {
   IMessageCountQuery,
   Message,
   MessageCount,
+  QTranscribe,
+  RTranscribeMsg,
+  RTranscribeResult,
   QGetSpeech,
   QMessages,
   QSynthesizeSpeech,
@@ -115,6 +118,55 @@ export const chatApi = createApi({
         }
       },
     }),
+    sendTranscriptionRequest: builder.mutation<RTranscribeMsg, { key: QTranscribe; audio: any }>({
+      queryFn: async (args) => {
+        try {
+          const response = await axiosSecure.post(
+            '/aws/transcribe',
+            { audio: args.audio },
+            {
+              params: args.key,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          const data = response.data;
+          return {
+            data,
+          };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              data: JSON.stringify(error),
+              msg: 'Failed to start transcribe request',
+            },
+          };
+        }
+      },
+    }),
+    getTranscriptionResult: builder.query<RTranscribeResult, { jobName: string }>({
+      queryFn: async (args) => {
+        try {
+          const response = await axiosSecure.get('/aws/transcribe', {
+            params: args,
+          });
+          const data = response.data;
+          return {
+            data,
+          };
+        } catch (error) {
+          return {
+            error: {
+              status: 500,
+              data: JSON.stringify(error),
+              msg: 'Failed to retrieve transcribe result',
+            },
+          };
+        }
+      },
+    }),
   }),
 });
 
@@ -129,4 +181,6 @@ export const {
   useGetConversationQuery,
   useLazyGetSpeechQuery,
   useGetPaginatedChatMessagesQuery,
+  useSendTranscriptionRequestMutation,
+  useLazyGetTranscriptionResultQuery,
 } = chatApi;

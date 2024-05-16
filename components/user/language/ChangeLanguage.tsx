@@ -16,13 +16,13 @@ import useNotifications from "../../../hooks/useNotifications";
 import { changeLanguage } from '../../../redux/chatSlice';
 
 const languages = [
-  { name: 'English', code: 'ENG', flag: require('../../../assets/lang/eng.png'), isBeta: false },
-  { name: 'Turkish', code: 'TUR', flag: require('../../../assets/lang/tur.png'), isBeta: true },
-  { name: 'Spanish', code: 'ESP', flag: require('../../../assets/lang/esp.png'), isBeta: true },
-  { name: 'Italian', code: 'ITA', flag: require('../../../assets/lang/ita.png'), isBeta: true },
-  { name: 'German', code: 'GER', flag: require('../../../assets/lang/ger.png'), isBeta: true },
-  { name: 'French', code: 'FRA', flag: require('../../../assets/lang/fra.png'), isBeta: true },
-  { name: 'Korean', code: 'KOR', flag: require('../../../assets/lang/kor.png'), isBeta: true },
+  { name: 'English', code: 'ENG', flag: require('../../../assets/lang/eng.png'), isBeta: false, isComingSoon: false },
+  { name: 'Turkish', code: 'TUR', flag: require('../../../assets/lang/tur.png'), isBeta: true, isComingSoon: false },
+  { name: 'Spanish', code: 'ESP', flag: require('../../../assets/lang/esp.png'), isBeta: true, isComingSoon: false },
+  { name: 'Italian', code: 'ITA', flag: require('../../../assets/lang/ita.png'), isBeta: true, isComingSoon: false },
+  { name: 'French', code: 'FRA', flag: require('../../../assets/lang/fra.png'), isBeta: true, isComingSoon: false },
+  { name: 'German', code: 'GER', flag: require('../../../assets/lang/ger.png'), isBeta: false, isComingSoon: true },
+  { name: 'Korean', code: 'KOR', flag: require('../../../assets/lang/kor.png'), isBeta: false, isComingSoon: true },
 ];
 
 const ChangeLanguage = () => {
@@ -54,6 +54,10 @@ const ChangeLanguage = () => {
   }, [userLanguageData]);
 
   const handleLanguageSelect = (language) => {
+    if (language.code === 'GER' || language.code === 'KOR') {
+      return;
+    }
+
     setSelectedLanguage(language.name);
   };
 
@@ -118,6 +122,7 @@ const ChangeLanguage = () => {
                   <LanguageSelection
                     flag={item.flag}
                     isBeta={item.isBeta}
+                    isComingSoon={item.isComingSoon}
                     languageName={item.name}
                     languageCode={item.code}
                     isSelected={selectedLanguage === item.name}
@@ -125,6 +130,7 @@ const ChangeLanguage = () => {
                 </TouchableOpacity>
               )}
             />
+            <LText style={styles.modalSubtitle} centered={true}>BETA languages only support tailored conversation</LText>
             <View style={styles.bottomButtons}>
               <View style={styles.button}>
                 <Button loading={isUserLanguageLoading} type='primary' color={'primary'} onPress={handleConfirm}>Confirm</Button>
@@ -181,7 +187,6 @@ const styles = StyleSheet.create({
   },
   modalSubtitle: {
     fontSize: 14,
-    marginBottom: 20,
   },
   languageItem: {
     padding: 10,

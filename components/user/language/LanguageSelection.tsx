@@ -7,13 +7,14 @@ import {
 import Colors from "../../../theme/colors";
 import LText from "../../common/Text";
 
-const LanguageSelection = ({ flag, isBeta, languageName, languageCode, isSelected }) => {
+const LanguageSelection = ({ flag, isBeta, isComingSoon, languageName, languageCode, isSelected }) => {
   return (
     <View style={[styles.container, isSelected && styles.selectedContainer]}>
       <Image source={flag} style={styles.flag} />
       <LText style={styles.languageName}>{languageName}</LText>
       {isBeta && <View style={styles.betaTextContainer}><LText style={styles.betaText}>BETA</LText></View>}
-      {!isBeta && <View style={styles.releaseTextContainer}><LText style={styles.betaText}>VERSION 2</LText></View>}
+      {isComingSoon && <View style={styles.betaTextContainer}><LText style={styles.betaText}>COMING SOON</LText></View>}
+      {(!isBeta && !isComingSoon) && <View style={styles.releaseTextContainer}><LText style={styles.betaText}>VERSION 2</LText></View>}
     </View>
   );
 };

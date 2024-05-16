@@ -2,18 +2,18 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
 import {
-  type IMessageCountQuery,
-  type Message,
-  type MessageCount,
-  type QTranscribe,
-  type RTranscribeMsg,
-  type RTranscribeResult,
+  IMessageCountQuery,
+  Message,
+  MessageCount,
+  QTranscribe,
+  RTranscribeMsg,
+  RTranscribeResult,
   QGetSpeech,
-  type QMessages,
-  type QSynthesizeSpeech,
-  type RSynthesizeSpeech,
-  type TChatBot,
-  type TConversation,
+  QMessages,
+  QSynthesizeSpeech,
+  RSynthesizeSpeech,
+  TChatBot,
+  TConversation,
 } from './types';
 import { type Page } from '../../types';
 import { ChatMessage } from '../../screens/chat/types';

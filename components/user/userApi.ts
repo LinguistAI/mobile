@@ -169,6 +169,13 @@ export const userApi = createApi({
       }),
       providesTags: ['UserLanguage'],
     }),
+    deleteAccount: builder.mutation<void, void>({
+      query: (arg: void) => ({
+        url: '/auth/delete',
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 });
 
@@ -191,4 +198,5 @@ export const {
   useSetProfilePictureMutation,
   useSetUserLanguageMutation,
   useGetUserLanguageQuery,
+  useDeleteAccountMutation,
 } = userApi;

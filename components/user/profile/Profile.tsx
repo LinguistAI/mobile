@@ -1,37 +1,31 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useState } from 'react';
-import {
-  Image,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import useUser from '../../../hooks/useUser';
 import Colors from '../../../theme/colors';
-import Divider from '../../common/Divider';
-import Button from '../../common/form/Button';
-import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
-import UserInfoForm from '../onboarding/UserInfoForm';
-import { useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
 import ActionIcon from '../../common/ActionIcon';
-import LoadingIndicator from '../../common/feedback/LoadingIndicator';
-import FetchError from '../../common/feedback/FetchError';
+import Divider from '../../common/Divider';
 import LText from '../../common/Text';
+import FetchError from '../../common/feedback/FetchError';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
+import Button from '../../common/form/Button';
 import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
-import { AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT } from '../../../utils/aws';
-import ProfilePicture from '../ProfilePicture';
+import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import PrivacyPolicyModal from '../PrivacyPolicyModal';
+import ProfilePicture from '../ProfilePicture';
+import UserInfoForm from '../onboarding/UserInfoForm';
+import { useDeleteAccountMutation, useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
+import ConfirmDeleteModal from '../ConfirmDeleteModal';
 
 const Profile = () => {
   const navigation = useNavigation();
 
   const { clearUserDetails, user } = useUser();
   const [privacyPolicyVisible, setPrivacyPolicyVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [deleteAccount] = useDeleteAccountMutation();
+
 
   const {
     data: userInfo,
@@ -39,6 +33,7 @@ const Profile = () => {
     error,
     refetch: userInfoRefetch,
   } = useGetUserDetailsQuery();
+
   const {
     data: profileInfo,
     isLoading: isProfileFetching,
@@ -58,6 +53,24 @@ const Profile = () => {
   const togglePrivacyPolicyModal = () => {
     setPrivacyPolicyVisible(!privacyPolicyVisible);
   };
+
+  const showDeleteModal = () => {
+    setDeleteModalVisible(true);
+  };
+
+  const hideDeleteModal = () => {
+    setDeleteModalVisible(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    await deleteAccount();
+    clearUserDetails();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Landing' }],
+    });
+  };
+
 
   useFocusEffect(
     React.useCallback(() => {
@@ -81,6 +94,16 @@ const Profile = () => {
     });
   };
 
+  const handleAccountDeletion = async () => {
+    clearUserDetails();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Landing' }],
+    });
+  }
+
+  
+
   const renderUserInfoForm = () => {
     if (isUserInfoFetching || isProfileFetching) {
       return <LoadingIndicator subtext="Gathering your info..." />;
@@ -98,20 +121,29 @@ const Profile = () => {
       style={styles.root}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <View style={styles.topSection}>
-        <View style={{ alignSelf: 'flex-end', margin: 15 }}>
-          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontWeight: 'bold' }}>Friends</Text>
-            <ActionIcon
-              onPress={onPressFriends}
-              icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
-            />
-          </View>
+      {/* <View style={styles.topSection}>
+        <View style={{ alignSelf: 'flex-end', margin: 15 }}></View>
+      </View> */}
+      <View
+        style={{
+          flexDirection: 'row',
+          backgroundColor: Colors.primary[200],
+        }}
+      >
+        <View style={styles.profileContainer}>
+          <ProfilePicture username={user.username} />
+          <LText style={styles.userName}>{user.username}</LText>
         </View>
-      </View>
-      <View style={styles.profileContainer}>
-        <ProfilePicture username={user.username} />
-        <LText style={styles.userName}>{user.username}</LText>
+
+        <Pressable onPress={onPressFriends} style={{ paddingTop: 10, paddingRight: 10 }}>
+          <ActionIcon
+            onPress={onPressFriends}
+            icon={
+              <Ionicons style={{ paddingLeft: 5 }} name="people-circle-outline" size={36} color={'black'} />
+            }
+          />
+          <Text style={{ fontWeight: 'bold' }}>Friends</Text>
+        </Pressable>
       </View>
       <View style={styles.rankAndStreak}>
         <ChatStreakContainer />
@@ -131,6 +163,16 @@ const Profile = () => {
         </Button>
       </View>
       <View style={styles.changePasswordView}>
+        <Button
+          rightIcon={<Ionicons name="trash-bin" size={20} color={Colors.gray[0]} />}
+          type="primary"
+          onPress={showDeleteModal}
+          color="red"
+        >
+          Delete My Account
+        </Button>
+      </View>
+      <View style={styles.changePasswordView}>
         <Button type="outlined" onPress={onChangePassword} color="red">
           Change Password
         </Button>
@@ -147,6 +189,11 @@ const Profile = () => {
         </Text>
       </View>
       <PrivacyPolicyModal visible={privacyPolicyVisible} onClose={togglePrivacyPolicyModal} />
+      <ConfirmDeleteModal
+        visible={deleteModalVisible}
+        onConfirm={handleDeleteAccount}
+        onCancel={hideDeleteModal}
+      />
     </ScrollView>
   );
 };
@@ -160,6 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary[200],
     height: 120,
     width: '100%',
+    zIndex: 10000,
   },
   profileImage: {
     width: 130,
@@ -170,12 +218,14 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   profileContainer: {
-    marginTop: -100,
+    // marginTop: 100,
+    flex: 5,
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
     padding: 20,
     gap: 14,
+    zIndex: 10,
   },
   userInformation: {
     marginVertical: 12,
@@ -183,6 +233,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   rankAndStreak: {
+    paddingTop: 20,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

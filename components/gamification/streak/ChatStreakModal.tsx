@@ -39,8 +39,12 @@ const ChatStreakModal = ({
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <CloseIcon onPress={handleModalClose} />
-          <ChatStreakDisplay currentStreak={streak.currentStreak} highestStreak={streak.highestStreak} />
+          <View style={{flex: 1}}>
+            <CloseIcon onPress={handleModalClose} />
+          </View>
+          <View style={{flex: 9}}>
+            <ChatStreakDisplay currentStreak={streak.currentStreak} highestStreak={streak.highestStreak} />
+          </View>
         </View>
       </View>
     </Modal>

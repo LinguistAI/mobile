@@ -53,16 +53,6 @@ const BottomNavigation = () => {
           <View style={styles.tabBar}>
             {state.routes.map((route, index) => {
               const { options } = descriptors[route.key];
-
-              if (!options || options.tabBarIcon === undefined) {
-                console.log('options error');
-                console.log(options);
-              }
-
-              if (!options.tabBarLabel) {
-                console.log('options tab bar label error');
-                console.log(options);
-              }
               const focused = state.index === index;
 
               const onPress = () => {
@@ -72,7 +62,6 @@ const BottomNavigation = () => {
                   canPreventDefault: true,
                 });
 
-                console.log('onPress', route.name);
                 if (!focused && !event.defaultPrevented) {
                   navigation.navigate(route.name);
                 }

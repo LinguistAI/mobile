@@ -15,13 +15,17 @@ import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
 import PrivacyPolicyModal from '../PrivacyPolicyModal';
 import ProfilePicture from '../ProfilePicture';
 import UserInfoForm from '../onboarding/UserInfoForm';
-import { useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
+import { useDeleteAccountMutation, useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
+import ConfirmDeleteModal from '../ConfirmDeleteModal';
 
 const Profile = () => {
   const navigation = useNavigation();
 
   const { clearUserDetails, user } = useUser();
   const [privacyPolicyVisible, setPrivacyPolicyVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [deleteAccount] = useDeleteAccountMutation();
+
 
   const {
     data: userInfo,
@@ -29,6 +33,7 @@ const Profile = () => {
     error,
     refetch: userInfoRefetch,
   } = useGetUserDetailsQuery();
+
   const {
     data: profileInfo,
     isLoading: isProfileFetching,
@@ -48,6 +53,24 @@ const Profile = () => {
   const togglePrivacyPolicyModal = () => {
     setPrivacyPolicyVisible(!privacyPolicyVisible);
   };
+
+  const showDeleteModal = () => {
+    setDeleteModalVisible(true);
+  };
+
+  const hideDeleteModal = () => {
+    setDeleteModalVisible(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    await deleteAccount();
+    clearUserDetails();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Landing' }],
+    });
+  };
+
 
   useFocusEffect(
     React.useCallback(() => {
@@ -70,6 +93,16 @@ const Profile = () => {
       routes: [{ name: 'Landing' }],
     });
   };
+
+  const handleAccountDeletion = async () => {
+    clearUserDetails();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Landing' }],
+    });
+  }
+
+  
 
   const renderUserInfoForm = () => {
     if (isUserInfoFetching || isProfileFetching) {
@@ -102,7 +135,7 @@ const Profile = () => {
           <LText style={styles.userName}>{user.username}</LText>
         </View>
 
-        <Pressable onPress={onPressFriends} style={{ paddingTop: 30, paddingRight: 30 }}>
+        <Pressable onPress={onPressFriends} style={{ paddingTop: 10, paddingRight: 10 }}>
           <ActionIcon
             onPress={onPressFriends}
             icon={
@@ -130,6 +163,16 @@ const Profile = () => {
         </Button>
       </View>
       <View style={styles.changePasswordView}>
+        <Button
+          rightIcon={<Ionicons name="trash-bin" size={20} color={Colors.gray[0]} />}
+          type="primary"
+          onPress={showDeleteModal}
+          color="red"
+        >
+          Delete My Account
+        </Button>
+      </View>
+      <View style={styles.changePasswordView}>
         <Button type="outlined" onPress={onChangePassword} color="red">
           Change Password
         </Button>
@@ -146,6 +189,11 @@ const Profile = () => {
         </Text>
       </View>
       <PrivacyPolicyModal visible={privacyPolicyVisible} onClose={togglePrivacyPolicyModal} />
+      <ConfirmDeleteModal
+        visible={deleteModalVisible}
+        onConfirm={handleDeleteAccount}
+        onCancel={hideDeleteModal}
+      />
     </ScrollView>
   );
 };

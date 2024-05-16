@@ -115,10 +115,14 @@ export type QProfilePicture = {
   };
 };
 
-export type QUserLanguage = {
+export type RUserLanguage = {
   userId: string;
   username: string;
   email: string;
+  language: string;
+};
+
+export type QUserLanguage = {
   language: string;
 };
 

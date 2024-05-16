@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -12,6 +13,7 @@ import LText from '../../common/Text';
 import LanguageSelection from './LanguageSelection';
 import { useGetUserLanguageQuery, useSetUserLanguageMutation } from '../userApi';
 import useNotifications from "../../../hooks/useNotifications";
+import { changeLanguage } from '../../../redux/chatSlice';
 
 const languages = [
   { name: 'English', code: 'ENG', flag: require('../../../assets/lang/eng.png'), isBeta: false },
@@ -24,6 +26,7 @@ const languages = [
 ];
 
 const ChangeLanguage = () => {
+  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [selectedVisibleLanguage, setSelectedVisibleLanguage] = useState('ENG');
@@ -65,7 +68,7 @@ const ChangeLanguage = () => {
 
     userLanguageRefetch();
 
-    if (response && response.data && response.data.language) {
+    if (response?.data?.language) {
       const responseLanguageObj = languages.find(language => language.code === response.data.language.toUpperCase());
       const responseLanguageName = responseLanguageObj ? responseLanguageObj.name : null;
 
@@ -73,6 +76,8 @@ const ChangeLanguage = () => {
         setSelectedVisibleLanguage(responseLanguageObj.code);
         setSelectedVisibleLanguageFlag(responseLanguageObj.flag);
       }
+      
+      dispatch(changeLanguage({ currentLanguage: responseLanguageObj.code }));
 
       add({
         type: 'success',
@@ -88,7 +93,7 @@ const ChangeLanguage = () => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.root}
-        onPress={() => setModalVisible(true)}
+        onPress={() => { setModalVisible(true); }}
       >
         <Image source={selectedVisibleLanguageFlag} style={styles.flag} />
       </TouchableOpacity>
@@ -97,7 +102,7 @@ const ChangeLanguage = () => {
         animationType='slide'
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => { setModalVisible(false); }}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -108,7 +113,7 @@ const ChangeLanguage = () => {
               keyExtractor={(item) => item.code}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  onPress={() => handleLanguageSelect(item)}
+                  onPress={() => { handleLanguageSelect(item); }}
                 >
                   <LanguageSelection
                     flag={item.flag}
@@ -125,7 +130,7 @@ const ChangeLanguage = () => {
                 <Button loading={isUserLanguageLoading} type='primary' color={'primary'} onPress={handleConfirm}>Confirm</Button>
               </View>
               <View style={styles.button}>
-                <Button loading={isUserLanguageLoading} loadingColor={Colors.primary[500]} type='outlined' color={'primary'} onPress={() => setModalVisible(false)}>Cancel</Button>
+                <Button loading={isUserLanguageLoading} loadingColor={Colors.primary[500]} type='outlined' color={'primary'} onPress={() => { setModalVisible(false); }}>Cancel</Button>
               </View>
             </View>
           </View>

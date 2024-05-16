@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { chatApi } from '../components/chat/api';
-import { TChatBot, TConversation } from '../components/chat/types';
+import { type TChatBot, type TConversation } from '../components/chat/types';
 import { gamificationApi } from '../components/gamification/api';
 import { userApi } from '../components/user/userApi';
 import { wordBankApi } from '../components/word-bank/api';
@@ -9,6 +9,7 @@ import { wordBankApi } from '../components/word-bank/api';
 export interface ChatState {
   selectedBot: TChatBot | null;
   currentConversation: TConversation | null;
+  currentLanguage: string;
 }
 
 const chatSlice = createSlice({
@@ -16,6 +17,7 @@ const chatSlice = createSlice({
   initialState: {
     selectedBot: null,
     currentConversation: null,
+    currentLanguage: 'ENG',
   } as ChatState,
   reducers: {
     startConversation: (state, action) => {
@@ -34,9 +36,15 @@ const chatSlice = createSlice({
     updateSelectedConversation: (state, action) => {
       state.currentConversation = action.payload.conversation;
     },
+    changeLanguage: (state, action) => {
+      state.currentLanguage = action.payload.currentLanguage;
+      console.log(`CUR LANG ${state.currentLanguage}`);
+      console.log(`CUR LANG 2 ${action.payload}`);
+      console.log(`CUR LANG 3 ${action.payload.currentLanguage}`);
+    },
   },
 });
 
-export const { startConversation, resetApiState, clearMessages, updateSelectedConversation } =
+export const { startConversation, resetApiState, clearMessages, updateSelectedConversation, changeLanguage } =
   chatSlice.actions;
 export default chatSlice.reducer;

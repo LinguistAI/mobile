@@ -2,20 +2,20 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosSecure, createAxiosBaseQuery } from '../../services';
 
 import {
-  IMessageCountQuery,
-  Message,
-  MessageCount,
-  QTranscribe,
-  RTranscribeMsg,
-  RTranscribeResult,
+  type IMessageCountQuery,
+  type Message,
+  type MessageCount,
+  type QTranscribe,
+  type RTranscribeMsg,
+  type RTranscribeResult,
   QGetSpeech,
-  QMessages,
-  QSynthesizeSpeech,
-  RSynthesizeSpeech,
-  TChatBot,
-  TConversation,
+  type QMessages,
+  type QSynthesizeSpeech,
+  type RSynthesizeSpeech,
+  type TChatBot,
+  type TConversation,
 } from './types';
-import { Page } from '../../types';
+import { type Page } from '../../types';
 import { ChatMessage } from '../../screens/chat/types';
 
 export const chatApi = createApi({
@@ -23,10 +23,11 @@ export const chatApi = createApi({
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}/ml/conversation` }),
   tagTypes: ['Conversations', 'Message', 'Stat'],
   endpoints: (builder) => ({
-    getAvailableBots: builder.query<TChatBot[], void>({
-      query: () => ({
+    getAvailableBots: builder.query<TChatBot[], string>({
+      query: (language: string) => ({
         method: 'GET',
         url: '/bots',
+        params: { language },
       }),
     }),
     getConversation: builder.query<TConversation, string | undefined>({
@@ -37,10 +38,11 @@ export const chatApi = createApi({
       keepUnusedDataFor: 0,
       providesTags: (result, error, arg) => [{ type: 'Conversations', id: arg }],
     }),
-    getAllConversations: builder.query<TConversation[], void>({
-      query: () => ({
+    getAllConversations: builder.query<TConversation[], string>({
+      query: (language: string) => ({
         method: 'GET',
         url: '/user',
+        params: { language },
       }),
       providesTags: ['Conversations'],
     }),

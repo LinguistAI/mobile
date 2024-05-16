@@ -1,6 +1,6 @@
 import { FlatList, Pressable } from 'react-native';
-import { TConversation } from '../types';
-import { useDispatch } from 'react-redux';
+import { type TConversation } from '../types';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useGetAllConversationsQuery } from '../api';
 import { startConversation } from '../../../redux/chatSlice';
@@ -9,11 +9,13 @@ import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
 import Conversation from './Conversation';
 import { useCallback } from 'react';
+import { selectCurrentLanguage } from '../../../redux/chatSelectors';
 
 const ConversationList = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { data: conversations, isLoading, isError, refetch } = useGetAllConversationsQuery();
+  const userLanguageCode = useSelector(selectCurrentLanguage);
+  const { data: conversations, isLoading, isError, refetch } = useGetAllConversationsQuery(userLanguageCode);
 
   useFocusEffect(
     useCallback(() => {
@@ -31,12 +33,12 @@ const ConversationList = () => {
   const handleConversationClick = (id: string) => {
     navigation.navigate('ChatScreen', { conversationId: id });
     const conversation = conversations.find((c) => c.id === id);
-    dispatch(startConversation({ bot: conversation?.bot || null, conversation: conversation }));
+    dispatch(startConversation({ bot: conversation?.bot || null, conversation }));
   };
 
   const renderConversation = (item: TConversation) => {
     return (
-      <Pressable onPress={() => handleConversationClick(item.id)}>
+      <Pressable onPress={() => { handleConversationClick(item.id); }}>
         <Conversation data={item} />
       </Pressable>
     );

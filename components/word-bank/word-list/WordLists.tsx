@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import useError from '../../../hooks/useError';
@@ -37,7 +37,14 @@ const WordLists = () => {
     data: wordLists,
     isLoading: isLoadingWordLists,
     error: wordListFetchError,
+    refetch: refetchWordLists,
   } = useGetWordListsQuery();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchWordLists();
+    }, [refetchWordLists])
+  );
 
   useEffect(() => {
     if (wordLists?.lists) {

@@ -1,5 +1,5 @@
 import { Nunito_400Regular, Nunito_700Bold, Nunito_900Black, useFonts } from '@expo-google-fonts/nunito';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -23,7 +23,13 @@ import ForgotPasswordNewPasswordScreen from './screens/common/auth/forgot-passwo
 import ForgotPasswordScreen from './screens/common/auth/forgot-password/ForgotPasswordScreen';
 import { CustomErrorBoundary } from './screens/errors/ErrorBoundary';
 import Colors from './theme/colors';
+import messaging from '@react-native-firebase/messaging';
 import { CopilotProvider } from 'react-native-copilot';
+import PushNotificationWrapper from './components/PushNotificationWrapper';
+import Modals from './components/modals/Modals';
+import { onDisplayNotification } from './utils';
+
+messaging().setBackgroundMessageHandler(onDisplayNotification);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,9 +56,7 @@ export default function App() {
     if (!fontsLoaded) {
       return <Splash />;
     }
-  } catch (error) {
-    console.log('Could not load fonts', error);
-  }
+  } catch (error) {}
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -64,43 +68,46 @@ export default function App() {
                 <CustomErrorBoundary>
                   <NavigationContainer>
                     <SafeAreaView style={styles.root}>
-                      <KeyboardAvoidingView
-                        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                        style={styles.root}
-                        contentContainerStyle={styles.root}
-                      >
-                        <StatusBar />
-                        <Stack.Navigator
-                          screenOptions={{
-                            contentStyle: {
-                              backgroundColor: 'white',
-                            },
-                          }}
-                          initialRouteName="Landing"
+                      <PushNotificationWrapper>
+                        <Modals />
+                        <KeyboardAvoidingView
+                          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                          style={styles.root}
+                          contentContainerStyle={styles.root}
                         >
-                          <Stack.Screen
-                            name="Landing"
-                            component={LandingScreen}
-                            options={{ headerShown: false }}
-                          />
-                          <Stack.Screen name="Login" component={LoginScreen} />
-                          <Stack.Screen name="Register" component={RegisterScreen} />
-                          <Stack.Screen
-                            name="Welcome Conversation"
-                            component={PostRegistrationConversation}
-                            options={{ headerShown: false }}
-                          />
-                          <Stack.Screen
-                            name="Main"
-                            component={BottomNavigation}
-                            options={{ headerShown: false }}
-                          />
-                          <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
-                          <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
-                          <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
-                          <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
-                        </Stack.Navigator>
-                      </KeyboardAvoidingView>
+                          <StatusBar />
+                          <Stack.Navigator
+                            screenOptions={{
+                              contentStyle: {
+                                backgroundColor: 'white',
+                              },
+                            }}
+                            initialRouteName="Landing"
+                          >
+                            <Stack.Screen
+                              name="Landing"
+                              component={LandingScreen}
+                              options={{ headerShown: false }}
+                            />
+                            <Stack.Screen name="Login" component={LoginScreen} />
+                            <Stack.Screen name="Register" component={RegisterScreen} />
+                            <Stack.Screen
+                              name="Welcome Conversation"
+                              component={PostRegistrationConversation}
+                              options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                              name="Main"
+                              component={BottomNavigation}
+                              options={{ headerShown: false }}
+                            />
+                            <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
+                            <Stack.Screen name="Forgot Password Code" component={ForgotPasswordCodeScreen} />
+                            <Stack.Screen name="New Password" component={ForgotPasswordNewPasswordScreen} />
+                            <Stack.Screen name="Change Password" component={ChangePasswordScreen} />
+                          </Stack.Navigator>
+                        </KeyboardAvoidingView>
+                      </PushNotificationWrapper>
                     </SafeAreaView>
                   </NavigationContainer>
                 </CustomErrorBoundary>

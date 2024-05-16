@@ -21,11 +21,11 @@ const LandingScreen = (props: LandingScreenProps) => {
     mutationFn: () => checkAuth(),
     onSuccess: (res) => {
       updateLoginTime();
+      setCheckingAuth(false);
       props.navigation.reset({
         index: 0,
         routes: [{ name: 'Main', screen: 'Profile' }],
       });
-      setCheckingAuth(false);
     },
     onError: (error: any) => {
       setCheckingAuth(false);

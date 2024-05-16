@@ -1,3 +1,6 @@
+import notifee, { AndroidImportance } from '@notifee/react-native';
+import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+
 export const formatAsStr = (input: string | string[]): string => {
   if (Array.isArray(input)) {
     return input.join(', ');
@@ -25,3 +28,32 @@ export const msToSeconds = (ms: number, pretty = false) => {
 
   return seconds;
 };
+
+export async function onDisplayNotification(message: FirebaseMessagingTypes.RemoteMessage) {
+  // Request permissions (required for iOS)
+  await notifee.requestPermission();
+
+  // Create a channel (required for Android)
+  const channelId = await notifee.createChannel({
+    id: 'default',
+    name: 'Default Channel',
+    importance: AndroidImportance.HIGH, // Set importance to high
+  });
+
+  // Display a notification
+  await notifee.displayNotification({
+    title: message.notification?.title ?? 'Notification Title',
+    body: message.notification?.body ?? 'Main body content of the notification',
+    android: {
+      channelId,
+      pressAction: {
+        id: 'default',
+      },
+    },
+    ios: {
+      // iOS specific options
+      sound: 'default',
+      critical: true,
+    },
+  });
+}

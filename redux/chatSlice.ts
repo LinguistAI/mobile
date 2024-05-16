@@ -9,6 +9,12 @@ import { wordBankApi } from '../components/word-bank/api';
 export interface ChatState {
   selectedBot: TChatBot | null;
   currentConversation: TConversation | null;
+  isQuestReminderModalOpen: boolean;
+  levelUpModalConfig: {
+    previousLevel: number;
+    newLevel: number;
+    visible: boolean;
+  };
 }
 
 const chatSlice = createSlice({
@@ -16,6 +22,12 @@ const chatSlice = createSlice({
   initialState: {
     selectedBot: null,
     currentConversation: null,
+    isQuestReminderModalOpen: false,
+    levelUpModalConfig: {
+      previousLevel: 0,
+      newLevel: 0,
+      visible: false,
+    },
   } as ChatState,
   reducers: {
     startConversation: (state, action) => {
@@ -34,9 +46,21 @@ const chatSlice = createSlice({
     updateSelectedConversation: (state, action) => {
       state.currentConversation = action.payload.conversation;
     },
+    setQuestReminderModalOpen: (state, action) => {
+      state.isQuestReminderModalOpen = action.payload;
+    },
+    setLevelUpModalConfig: (state, action) => {
+      state.levelUpModalConfig = action.payload;
+    },
   },
 });
 
-export const { startConversation, resetApiState, clearMessages, updateSelectedConversation } =
-  chatSlice.actions;
+export const {
+  startConversation,
+  resetApiState,
+  clearMessages,
+  updateSelectedConversation,
+  setQuestReminderModalOpen,
+  setLevelUpModalConfig,
+} = chatSlice.actions;
 export default chatSlice.reducer;

@@ -9,6 +9,7 @@ export interface RegisterDto {
   username: string;
   email: string;
   password: string;
+  fcmToken: string;
 }
 
 export interface RRegister extends StoredUserInfoWithTokens {}

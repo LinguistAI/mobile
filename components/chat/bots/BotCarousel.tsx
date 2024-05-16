@@ -12,13 +12,14 @@ import FetchError from '../../common/feedback/FetchError';
 import Colors from '../../../theme/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { getDifficultyLevel } from './utils';
-import { TChatBot } from '../types';
+import { type TChatBot } from '../types';
 import { useNavigation } from '@react-navigation/native';
 import useNotifications from '../../../hooks/useNotifications';
 import { generateErrorResponseMessage } from '../../../utils/httpUtils';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startConversation } from '../../../redux/chatSlice';
 import { isDataResponse } from '../../../services';
+import { selectCurrentLanguage } from '../../../redux/chatSelectors';
 
 const BotCarouselShimmer = () => {
   const width = Dimensions.get('window').width;
@@ -47,8 +48,9 @@ const shimmerStyles = StyleSheet.create({
 });
 
 const BotCarousel = () => {
-  const { data: conversations } = useGetAllConversationsQuery();
-  const { data: bots, isLoading: isLoadingBots, isError: botsLoadError } = useGetAvailableBotsQuery();
+  const userLanguageCode = useSelector(selectCurrentLanguage);
+  const { data: conversations } = useGetAllConversationsQuery(userLanguageCode);
+  const { data: bots, isLoading: isLoadingBots, isError: botsLoadError } = useGetAvailableBotsQuery(userLanguageCode);
   const [createConvo, { isLoading: pendingBotCreateResponse, error: createConversationError }] =
     useCreateNewConversationMutation();
   const navigation = useNavigation();
@@ -115,7 +117,7 @@ const BotCarousel = () => {
         pagingEnabled={true}
         mode="parallax"
         renderItem={({ item }) => (
-          <Pressable onPress={() => handleBotPress(item)} style={{ flex: 1 }}>
+          <Pressable onPress={async () => { await handleBotPress(item); }} style={{ flex: 1 }}>
             <View
               style={{
                 height: itemHeight,

@@ -1,7 +1,7 @@
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
-import { TChatBot } from '../types';
+import { type TChatBot } from '../types';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   useCreateNewConversationMutation,
   useGetAllConversationsQuery,
@@ -14,16 +14,18 @@ import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import BotProfileCard from './BotProfileCard';
 import useNotifications from '../../../hooks/useNotifications';
 import { isDataResponse } from '../../../services';
+import { selectCurrentLanguage } from '../../../redux/chatSelectors';
 
 const BotLists = () => {
+  const userLanguageCode = useSelector(selectCurrentLanguage);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {
     data: conversations,
     isLoading: isLoadingConversations,
     isError: conversationsNotLoaded,
-  } = useGetAllConversationsQuery();
-  const { data: bots, isLoading: isLoadingBots, isError: botsNotLoaded } = useGetAvailableBotsQuery();
+  } = useGetAllConversationsQuery(userLanguageCode);
+  const { data: bots, isLoading: isLoadingBots, isError: botsNotLoaded } = useGetAvailableBotsQuery(userLanguageCode);
   const [createConvo, { isLoading: pendingBotCreateResponse, error: createConversationError }] =
     useCreateNewConversationMutation();
   const { add: notify } = useNotifications();
@@ -69,7 +71,7 @@ const BotLists = () => {
       <FlatList
         data={bots}
         renderItem={({ item }) => (
-          <Pressable onPress={() => handleBotPress(item)} style={styles.profile}>
+          <Pressable onPress={async () => { await handleBotPress(item); }} style={styles.profile}>
             <BotProfileCard bot={item} />
           </Pressable>
         )}

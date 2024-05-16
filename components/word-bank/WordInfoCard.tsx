@@ -11,13 +11,15 @@ import WordAddContainer from './WordAddContainer';
 import { useSelector } from 'react-redux';
 import { selectCurrentActiveWords, selectCurrentConversation } from '../../redux/chatSelectors';
 import LText from '../common/Text';
+import ReactNativeModal from 'react-native-modal';
 
 interface WordInfoCardProps {
   selectedWord: string;
+  visible: boolean;
   onDismiss: () => void;
 }
 
-const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
+const WordInfoCard = ({ selectedWord, visible, onDismiss }: WordInfoCardProps) => {
   const activeWords = useSelector(selectCurrentActiveWords);
   const lowercaseWord = selectedWord.toLowerCase();
   const { data, isLoading, isError } = useGetWordMeaningsQuery([lowercaseWord], {
@@ -49,31 +51,32 @@ const WordInfoCard = ({ selectedWord, onDismiss }: WordInfoCardProps) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.overlay} onPress={onDismiss} activeOpacity={1} />
-      <ScrollView contentContainerStyle={styles.cardContainer}>
-        <CloseIcon onPress={onDismiss} />
-        <View>
-          <LText centered={true} style={[styles.word, isActiveWord ? styles.activeWord : null]}>
-            {selectedWord}
-            {isActiveWord ? '*' : ''}
-          </LText>
-          <Title centered size="h4">
-            Add to your list
-          </Title>
-          <View style={styles.actionsContainer}>
-            <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
+    <ReactNativeModal isVisible={visible} onBackdropPress={onDismiss}>
+      <View>
+        <ScrollView contentContainerStyle={styles.cardContainer}>
+          <CloseIcon onPress={onDismiss} />
+          <View>
+            <LText centered={true} style={[styles.word, isActiveWord ? styles.activeWord : null]}>
+              {selectedWord}
+              {isActiveWord ? '*' : ''}
+            </LText>
+            <Title centered size="h4">
+              Add to your list
+            </Title>
+            <View style={styles.actionsContainer}>
+              <WordAddContainer onDismiss={onDismiss} selectedWord={selectedWord} />
+            </View>
+            <Divider />
+            {isActiveWord ? (
+              <Text style={styles.activeWordDescription}>
+                *This word is highlighted because it is being actively taught during this conversation.
+              </Text>
+            ) : null}
+            {renderWordDetails()}
           </View>
-          <Divider />
-          {isActiveWord ? (
-            <Text style={styles.activeWordDescription}>
-              *This word is highlighted because it is being actively taught during this conversation.
-            </Text>
-          ) : null}
-          {renderWordDetails()}
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </ReactNativeModal>
   );
 };
 

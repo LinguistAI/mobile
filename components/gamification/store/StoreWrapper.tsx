@@ -1,13 +1,9 @@
 import StoreItemsList from './StoreItemsList';
 import StoreHeader from './StoreHeader';
 import React, { useCallback, useState } from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import CenteredFeedback from '../../common/feedback/CenteredFeedback';
-import {
-  useGetStoreItemsQuery,
-  useGetTransactionQuery,
-  useGetUserItemsQuery,
-} from '../api';
+import { useGetStoreItemsQuery, useGetTransactionQuery, useGetUserItemsQuery } from '../api';
 import FetchError from '../../common/feedback/FetchError';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -80,7 +76,9 @@ const StoreWrapper = () => {
         onRefresh={onRefresh}
       />
       <ScrollView>
-        <Title style={styles.subtitle} size="h4">Consumables</Title>
+        <Title style={styles.subtitle} size="h4">
+          Consumables
+        </Title>
         <StoreItemsList
           storeItemsPage={storeItemsPage}
           userItemsPage={userItemsPage}
@@ -88,11 +86,19 @@ const StoreWrapper = () => {
           onRefresh={onRefresh}
         />
         <Divider />
-        <Title style={styles.subtitle} size="h4">Cosmetics</Title>
-        <LText style={styles.comingSoon} size={20} centered={true}>Coming soon...</LText>
+        <Title style={styles.subtitle} size="h4">
+          Cosmetics
+        </Title>
+        <LText style={styles.comingSoon} size={16} centered={true}>
+          Coming soon...
+        </LText>
         <Divider />
-        <Title style={styles.subtitle} size="h4">Themes</Title>
-        <LText style={styles.comingSoon} size={20} centered={true}>Coming soon...</LText>
+        <Title style={styles.subtitle} size="h4">
+          Themes
+        </Title>
+        <LText style={styles.comingSoon} size={16} centered={true}>
+          Coming soon...
+        </LText>
       </ScrollView>
     </View>
   );

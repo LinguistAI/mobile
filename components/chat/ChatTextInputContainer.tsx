@@ -11,6 +11,13 @@ import useUser from '../../hooks/useUser';
 import { useLazyGetTranscriptionResultQuery, useSendTranscriptionRequestMutation } from './api';
 import { isDataResponse } from '../../services';
 import useNotifications from '../../hooks/useNotifications';
+import {
+  AndroidAudioEncoder,
+  AndroidOutputFormat,
+  IOSAudioQuality,
+  IOSOutputFormat,
+  RecordingOptionsPresets,
+} from 'expo-av/build/Audio';
 
 interface ChatTextInputContainerProps {
   isPending: boolean;
@@ -36,6 +43,34 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  RecordingOptionsPresets.HIGH_QUALITY = {
+    isMeteringEnabled: true,
+    android: {
+      // android is low quality
+      extension: '.3gp',
+      outputFormat: AndroidOutputFormat.THREE_GPP,
+      audioEncoder: AndroidAudioEncoder.AMR_NB,
+      sampleRate: 44100,
+      numberOfChannels: 2,
+      bitRate: 128000,
+    },
+    ios: {
+      extension: '.m4a',
+      outputFormat: IOSOutputFormat.MPEG4AAC,
+      audioQuality: IOSAudioQuality.MIN,
+      sampleRate: 44100,
+      numberOfChannels: 2,
+      bitRate: 128000,
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
+    },
+    web: {
+      mimeType: 'audio/webm',
+      bitsPerSecond: 128000,
+    },
+  };
+
   const startRecording = async () => {
     try {
       // Needed for IoS
@@ -49,7 +84,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
       const newRecording = new Audio.Recording();
       setIsRecording(true);
 
-      await newRecording.prepareToRecordAsync();
+      await newRecording.prepareToRecordAsync(RecordingOptionsPresets.HIGH_QUALITY);
       await newRecording.startAsync();
       setRecording(newRecording);
 
@@ -73,8 +108,7 @@ const ChatTextInputContainer = (props: ChatTextInputContainerProps) => {
           encoding: FileSystem.EncodingType.Base64,
         });
 
-        const fileName = `${user.username}-${Date.now()}-recording.3gp`;
-
+        const fileName = `${user.username}-${Date.now()}-recording.mp3`;
         setRecording(null);
         setIsRecording(false);
         let currentJobName = '';

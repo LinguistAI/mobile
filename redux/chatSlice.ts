@@ -38,9 +38,6 @@ const chatSlice = createSlice({
     },
     changeLanguage: (state, action) => {
       state.currentLanguage = action.payload.currentLanguage;
-      console.log(`CUR LANG ${state.currentLanguage}`);
-      console.log(`CUR LANG 2 ${action.payload}`);
-      console.log(`CUR LANG 3 ${action.payload.currentLanguage}`);
     },
   },
 });

@@ -1,23 +1,21 @@
 import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import StoreItemCard from './StoreItemCard';
-import {
-  usePurchaseItemMutation,
-} from '../api';
+import { usePurchaseItemMutation } from '../api';
 import { IStoreItemWithQuantity, RStoreItemsPage, RUserItemsPage } from '../types';
 import useNotifications from '../../../hooks/useNotifications';
 import useError from '../../../hooks/useError';
 import { isDataResponse } from '../../../services';
-import Colors from "../../../theme/colors";
+import Colors from '../../../theme/colors';
 import { useEffect, useState } from 'react';
 
 interface StoreItemsListProps {
   storeItemsPage: RStoreItemsPage;
   userItemsPage: RUserItemsPage;
   isRefreshing: boolean;
-  onRefresh:  () => Promise<void>;
+  onRefresh: () => Promise<void>;
 }
 
-const StoreItemsList  = ({ storeItemsPage, userItemsPage, isRefreshing, onRefresh }: StoreItemsListProps) => {
+const StoreItemsList = ({ storeItemsPage, userItemsPage, isRefreshing, onRefresh }: StoreItemsListProps) => {
   const [purchase, { isError: isPurchaseError, error: purchaseError }] = usePurchaseItemMutation();
   useError(purchaseError);
 
@@ -59,16 +57,26 @@ const StoreItemsList  = ({ storeItemsPage, userItemsPage, isRefreshing, onRefres
       <FlatList
         data={mergedItems}
         renderItem={({ item }) => {
-          if ( item.id !== purchasingItemId ) {
+          if (item.id !== purchasingItemId) {
             return (
-              <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={false} />
+              <StoreItemCard
+                gemDisplay={item.price}
+                storeItem={item}
+                onGemsPress={() => handleGemsPress(item)}
+                purchasing={false}
+              />
             );
           }
 
           // if the item is being purchased
           return (
-            <StoreItemCard gemDisplay={item.price} storeItem={item} onGemsPress={() => handleGemsPress(item)} purchasing={true} />
-          )
+            <StoreItemCard
+              gemDisplay={item.price}
+              storeItem={item}
+              onGemsPress={() => handleGemsPress(item)}
+              purchasing={true}
+            />
+          );
         }}
         numColumns={2}
         keyExtractor={(item) => item.id}

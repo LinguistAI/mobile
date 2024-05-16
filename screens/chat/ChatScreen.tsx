@@ -272,7 +272,11 @@ const ChatScreen = ({ route }: ChatScreenProps) => {
         onRequestClose={onSelectedWordDismiss}
       >
         <View style={styles.centeredView}>
-          <WordInfoCard selectedWord={selectedWord} onDismiss={onSelectedWordDismiss} />
+          <WordInfoCard
+            selectedWord={selectedWord}
+            onDismiss={onSelectedWordDismiss}
+            visible={modalVisible}
+          />
         </View>
       </Modal>
       <CopilotStep

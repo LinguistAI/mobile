@@ -48,7 +48,7 @@ export default function App() {
     });
 
     if (!fontsLoaded) {
-      return <Splash />;
+      return;
     }
   } catch (error) {
     console.log('Could not load fonts', error);

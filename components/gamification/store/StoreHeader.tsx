@@ -1,17 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../../../theme/colors';
 import GemsIndicatorButton from '../transaction/GemsIndicatorButton';
 import useNotifications from '../../../hooks/useNotifications';
 import { RUserGems } from '../types';
-import GemsIndicator from "../transaction/GemsIndicator";
-
+import GemsIndicator from '../transaction/GemsIndicator';
 
 interface StoreHeaderProps {
   userGemsData: RUserGems;
   isUserGemsLoading: boolean;
   isRefreshing: boolean;
-  onRefresh:  () => Promise<void>;
+  onRefresh: () => Promise<void>;
 }
 
 const StoreHeader = ({ userGemsData, isUserGemsLoading, isRefreshing, onRefresh }: StoreHeaderProps) => {

@@ -1,7 +1,16 @@
-import {Animated, StyleSheet, View, Image, ViewStyle, StyleProp, Easing, ActivityIndicator} from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  View,
+  Image,
+  ViewStyle,
+  StyleProp,
+  Easing,
+  ActivityIndicator,
+} from 'react-native';
 import Colors from '../../../theme/colors';
 import LText from '../../common/Text';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ActionButton from '../../common/ActionButton';
 
 interface GemsIndicatorButtonProps {
@@ -20,30 +29,34 @@ const GemsIndicatorButton = ({ gemCount, onClick, style, loading = false }: Gems
         toValue: 0.8,
         duration: 100,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 1.5,
         duration: 200,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 0.8,
         duration: 200,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 1.0,
         duration: 100,
         easing: Easing.linear,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
     ]).start();
   };
 
-  const trueGemCount = loading ? <ActivityIndicator style={styles.loading} size="small" color={Colors.gray[0]} /> : gemCount;
+  const trueGemCount = loading ? (
+    <ActivityIndicator style={styles.loading} size="small" color={Colors.gray[0]} />
+  ) : (
+    gemCount
+  );
 
   return (
     <View style={[styles.root, style]}>
@@ -51,10 +64,18 @@ const GemsIndicatorButton = ({ gemCount, onClick, style, loading = false }: Gems
         bgColor={Colors.primary[500]}
         onPress={onClick}
         marginTop={-10}
-        marginBottom={-15}
+        marginBottom={-10}
         title={
           <View style={styles.root}>
-            <LText style={styles.gems} isAnimated={true} animationTrigger={gemCount} animationSequence={triggerAnimation} scaleAnimation={scaleAnim}>{trueGemCount ?? 0}</LText>
+            <LText
+              style={styles.gems}
+              isAnimated={true}
+              animationTrigger={gemCount}
+              animationSequence={triggerAnimation}
+              scaleAnimation={scaleAnim}
+            >
+              {trueGemCount ?? 0}
+            </LText>
             <Image source={require('../../../assets/gem1.png')} style={styles.image} />
           </View>
         }

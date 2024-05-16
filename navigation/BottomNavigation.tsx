@@ -1,14 +1,13 @@
 import IonIcons from '@expo/vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeStackNavigator from './HomeStackNavigator';
+import { useNavigation } from '@react-navigation/native';
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../theme/colors';
-import WordBankNavigation from './WordBankNavigation';
 import ChatStackNavigator from './ChatStackNavigator';
+import HomeStackNavigator from './HomeStackNavigator';
 import LeaderboardNavigator from './LeaderboardNavigator';
 import StoreNavigation from './StoreNavigation';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation, useNavigationState } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import WordBankNavigation from './WordBankNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -54,6 +53,16 @@ const BottomNavigation = () => {
           <View style={styles.tabBar}>
             {state.routes.map((route, index) => {
               const { options } = descriptors[route.key];
+
+              if (!options || options.tabBarIcon === undefined) {
+                console.log('options error');
+                console.log(options);
+              }
+
+              if (!options.tabBarLabel) {
+                console.log('options tab bar label error');
+                console.log(options);
+              }
               const focused = state.index === index;
 
               const onPress = () => {
@@ -63,22 +72,25 @@ const BottomNavigation = () => {
                   canPreventDefault: true,
                 });
 
+                console.log('onPress', route.name);
                 if (!focused && !event.defaultPrevented) {
                   navigation.navigate(route.name);
                 }
               };
 
               return (
-                <TouchableOpacity
+                <Pressable
                   key={route.key}
                   onPress={onPress}
                   style={[
                     styles.tabItem,
                     {
                       backgroundColor: Colors.gray['0'],
+                      width: '20%',
+                      height: 50,
                     },
                   ]}
-                  activeOpacity={route.name !== 'Chat' ? 0.98 : 1}
+                  // activeOpacity={route.name !== 'Chat' ? 0.98 : 1}
                 >
                   {options.tabBarIcon({
                     focused: focused,
@@ -86,10 +98,15 @@ const BottomNavigation = () => {
                     size: 24,
                   })}
                   {route.name === 'Chat' && <ChatButton focused={focused} />}
-                  <Text style={{ color: focused ? Colors.primary[600] : Colors.gray[600], fontSize: 10 }}>
+                  <Text
+                    style={{
+                      color: focused ? Colors.primary[600] : Colors.gray[600],
+                      fontSize: 10,
+                    }}
+                  >
                     {options.tabBarLabel ?? route.name}
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               );
             })}
           </View>

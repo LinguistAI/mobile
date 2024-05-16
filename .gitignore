@@ -41,3 +41,9 @@ service-account*.json*
 .idea
 android
 .vscode
+
+ios/*
+ios/
+
+android/
+android/*

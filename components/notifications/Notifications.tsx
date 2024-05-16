@@ -1,9 +1,8 @@
 import { StyleSheet, View } from 'react-native';
-import Animated, { FadeInLeft, FadeOutLeft, FadeOutRight } from 'react-native-reanimated';
+import Animated, { FadeInLeft, FadeOutLeft } from 'react-native-reanimated';
 import useNotifications from '../../hooks/useNotifications';
-import Notification from './Notification';
 import { useSwipe } from '../../hooks/useSwipe';
-import { useState } from 'react';
+import Notification from './Notification';
 
 const Notifications = () => {
   const { notifications, remove } = useNotifications();
@@ -23,7 +22,14 @@ const Notifications = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          display: notifications.length ? 'flex' : 'none',
+        },
+      ]}
+    >
       {notifications.map((notification) => (
         <Animated.View
           key={notification.id}

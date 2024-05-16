@@ -1,31 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useState } from 'react';
-import {
-  Image,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import useUser from '../../../hooks/useUser';
 import Colors from '../../../theme/colors';
+import ActionIcon from '../../common/ActionIcon';
 import Divider from '../../common/Divider';
+import LText from '../../common/Text';
+import FetchError from '../../common/feedback/FetchError';
+import LoadingIndicator from '../../common/feedback/LoadingIndicator';
 import Button from '../../common/form/Button';
+import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
 import ChatStreakContainer from '../../gamification/streak/ChatStreakContainer';
+import PrivacyPolicyModal from '../PrivacyPolicyModal';
+import ProfilePicture from '../ProfilePicture';
 import UserInfoForm from '../onboarding/UserInfoForm';
 import { useGetProfileQuery, useGetUserDetailsQuery } from '../userApi';
-import ActionIcon from '../../common/ActionIcon';
-import LoadingIndicator from '../../common/feedback/LoadingIndicator';
-import FetchError from '../../common/feedback/FetchError';
-import LText from '../../common/Text';
-import UserExperienceBar from '../../gamification/experience/UserExperienceBar';
-import { AWS_PROFILE_PICTURE_UPLOAD_ENDPOINT } from '../../../utils/aws';
-import ProfilePicture from '../ProfilePicture';
-import PrivacyPolicyModal from '../PrivacyPolicyModal';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -98,20 +88,29 @@ const Profile = () => {
       style={styles.root}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <View style={styles.topSection}>
-        <View style={{ alignSelf: 'flex-end', margin: 15 }}>
-          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontWeight: 'bold' }}>Friends</Text>
-            <ActionIcon
-              onPress={onPressFriends}
-              icon={<Ionicons name="people-circle-outline" size={36} color={'black'} />}
-            />
-          </View>
+      {/* <View style={styles.topSection}>
+        <View style={{ alignSelf: 'flex-end', margin: 15 }}></View>
+      </View> */}
+      <View
+        style={{
+          flexDirection: 'row',
+          backgroundColor: Colors.primary[200],
+        }}
+      >
+        <View style={styles.profileContainer}>
+          <ProfilePicture username={user.username} />
+          <LText style={styles.userName}>{user.username}</LText>
         </View>
-      </View>
-      <View style={styles.profileContainer}>
-        <ProfilePicture username={user.username} />
-        <LText style={styles.userName}>{user.username}</LText>
+
+        <Pressable onPress={onPressFriends} style={{ paddingTop: 30, paddingRight: 30 }}>
+          <ActionIcon
+            onPress={onPressFriends}
+            icon={
+              <Ionicons style={{ paddingLeft: 5 }} name="people-circle-outline" size={36} color={'black'} />
+            }
+          />
+          <Text style={{ fontWeight: 'bold' }}>Friends</Text>
+        </Pressable>
       </View>
       <View style={styles.rankAndStreak}>
         <ChatStreakContainer />
@@ -160,6 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary[200],
     height: 120,
     width: '100%',
+    zIndex: 10000,
   },
   profileImage: {
     width: 130,
@@ -170,12 +170,14 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   profileContainer: {
-    marginTop: -100,
+    // marginTop: 100,
+    flex: 5,
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
     padding: 20,
     gap: 14,
+    zIndex: 10,
   },
   userInformation: {
     marginVertical: 12,
@@ -183,6 +185,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   rankAndStreak: {
+    paddingTop: 20,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import useError from '../../../hooks/useError';
@@ -37,7 +37,14 @@ const WordLists = () => {
     data: wordLists,
     isLoading: isLoadingWordLists,
     error: wordListFetchError,
+    refetch: refetchWordLists,
   } = useGetWordListsQuery();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchWordLists();
+    }, [refetchWordLists])
+  );
 
   useEffect(() => {
     if (wordLists?.lists) {
@@ -51,12 +58,6 @@ const WordLists = () => {
 
   if (wordListFetchError) {
     return <FetchError />;
-  }
-
-  if (!wordLists?.lists || wordLists?.lists?.length === 0) {
-    return (
-      <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />
-    );
   }
 
   const validateSubmit = (data: any) => {
@@ -165,6 +166,18 @@ const WordLists = () => {
       </View>
     );
   };
+
+  if (!wordLists?.lists || wordLists?.lists?.length === 0) {
+    return (
+      <View style={{ flex: 1 }}>
+        <CenteredFeedback message="You have no word lists. You can use the add button to create a word list!" />
+        <View>
+          <FloatingButton text='Add List' handlePress={handleOpenAddListModal} />
+        </View>
+        {renderAddListModal()}
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>

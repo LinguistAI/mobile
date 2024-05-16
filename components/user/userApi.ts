@@ -11,7 +11,7 @@ import {
   RLeaderboard,
   QProfile,
   RProfile,
-  FriendProfile, RProfilePicture, QProfilePicture,
+  FriendProfile, RProfilePicture, QProfilePicture, QUserLanguage, RUserLanguage,
 } from './types';
 import { Page, User } from '../../types';
 import { RUserQuests } from '../quest/types';
@@ -19,7 +19,7 @@ import { RUserQuests } from '../quest/types';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: createAxiosBaseQuery({ baseUrl: `${axiosSecure.defaults.baseURL}` }),
-  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo'],
+  tagTypes: ['User', 'FriendRequest', 'Friend', 'Profile', 'FriendProfileInfo', 'UserLanguage'],
   endpoints: (builder) => ({
     setUserDetails: builder.mutation<void, IUserDetailedInfo>({
       query: (userAnswers) => ({
@@ -155,6 +155,20 @@ export const userApi = createApi({
         body: picture,
       }),
     }),
+    setUserLanguage: builder.mutation<RUserLanguage, QUserLanguage>({
+      query: ({ language }) => ({
+        url: `/auth/language/${language}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['UserLanguage'],
+    }),
+    getUserLanguage: builder.query<RUserLanguage, void>({
+      query: () => ({
+        url: '/auth/language',
+        method: 'GET',
+      }),
+      providesTags: ['UserLanguage'],
+    }),
   }),
 });
 
@@ -175,4 +189,6 @@ export const {
   useGetFriendProfileQuery,
   useGetProfilePictureQuery,
   useSetProfilePictureMutation,
+  useSetUserLanguageMutation,
+  useGetUserLanguageQuery,
 } = userApi;

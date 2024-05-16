@@ -11,7 +11,7 @@ import {
   RLeaderboard,
   QProfile,
   RProfile,
-  FriendProfile, RProfilePicture, QProfilePicture, QUserLanguage,
+  FriendProfile, RProfilePicture, QProfilePicture, QUserLanguage, RUserLanguage,
 } from './types';
 import { Page, User } from '../../types';
 import { RUserQuests } from '../quest/types';
@@ -155,14 +155,14 @@ export const userApi = createApi({
         body: picture,
       }),
     }),
-    setUserLanguage: builder.mutation<void, QUserLanguage>({
+    setUserLanguage: builder.mutation<RUserLanguage, QUserLanguage>({
       query: ({ language }) => ({
         url: `/auth/language/${language}`,
         method: 'POST',
       }),
       invalidatesTags: ['UserLanguage'],
     }),
-    getUserLanguage: builder.query<void, QUserLanguage>({
+    getUserLanguage: builder.query<RUserLanguage, void>({
       query: () => ({
         url: '/auth/language',
         method: 'GET',
